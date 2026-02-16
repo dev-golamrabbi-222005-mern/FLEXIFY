@@ -29,6 +29,8 @@
 ·   	Industry Standard & Resume Value
 7. Team Members:
 · Jubayer Hossain (Team Member)
+· MD. Siam Khan
+· Golam Rabbi (Team Leader)
 ·
 ·
 ·
