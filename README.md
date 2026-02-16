@@ -28,7 +28,11 @@
 ·   	Easy AI Integration
 ·   	Industry Standard & Resume Value
 7. Team Members:
-· My name is Md. Altaf Mahmud 
+· Md. Altaf Mahmud 
+· MD.Jubayer Hossain
+· Md Ashiqur Rahman Pranto
+· MD. Siam Khan
+· Golam Rabbi (Team Leader)
 ·
 ·
 ·
