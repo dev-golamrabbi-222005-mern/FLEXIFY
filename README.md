@@ -28,7 +28,7 @@
 ·   	Easy AI Integration
 ·   	Industry Standard & Resume Value
 7. Team Members:
-·
+· Golam Rabbi (Team Leader)
 ·
 ·
 ·
