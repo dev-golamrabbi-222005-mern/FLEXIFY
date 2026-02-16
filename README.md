@@ -28,7 +28,7 @@
 ·   	Easy AI Integration
 ·   	Industry Standard & Resume Value
 7. Team Members:
-· My name is Md Altaf Mahmud Shuvo
+· My name is Md. Altaf Mahmud 
 ·
 ·
 ·
