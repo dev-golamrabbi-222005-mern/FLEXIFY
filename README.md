@@ -28,6 +28,7 @@
 ·   	Easy AI Integration
 ·   	Industry Standard & Resume Value
 7. Team Members:
+· Md Ashiqur Rahman Pranto
 · MD. Siam Khan
 · Golam Rabbi (Team Leader)
 ·
