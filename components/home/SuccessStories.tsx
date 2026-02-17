@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SUCCESS DATA  (edit here to update all cards)
+// SUCCESS DATA
 // ─────────────────────────────────────────────────────────────────────────────
 const SUCCESS_DATA = [
   {
@@ -27,7 +27,7 @@ const SUCCESS_DATA = [
     quote:
       "Precision programming that actually understands recovery. My best marathon time yet — 3:42!",
     image:
-      "https://media.istockphoto.com/id/843183096/photo/young-woman-running-the-race-crossing-the-finish-line.jpg?s=612x612&w=0&k=20&c=tIGJKpYIVJFYeiGOoNGJ0V-llYQVehmiEByWwOtA0-E=",
+      "https://plus.unsplash.com/premium_photo-1663089951282-53b47c38e7a0?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     alt: "Woman runner crossing marathon finish line triumphant",
   },
   {
@@ -131,34 +131,43 @@ const badgeColor: Record<BadgeType, string> = {
   pr: "var(--success)",
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Framer variants
-// ─────────────────────────────────────────────────────────────────────────────
-const slideVariants = {
-  enter: (dir: number) => ({
-    x: dir > 0 ? "60%" : "-60%",
-    opacity: 0,
-    scale: 0.97,
-  }),
-  center: {
-    x: "0%",
-    opacity: 1,
-    scale: 1,
-  },
-  exit: (dir: number) => ({
-    x: dir > 0 ? "-60%" : "60%",
-    opacity: 0,
-    scale: 0.97,
-  }),
-};
+const TOTAL = SUCCESS_DATA.length;
+
+// Wrap index infinitely
+const wrap = (index: number) => ((index % TOTAL) + TOTAL) % TOTAL;
+
+// Get N items starting from index, wrapping around
+const getWindow = (startIndex: number, count: number) =>
+  Array.from({ length: count }, (_, i) => SUCCESS_DATA[wrap(startIndex + i)]);
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Single Success Card
+// useCardsPerView
+// ─────────────────────────────────────────────────────────────────────────────
+function useCardsPerView() {
+  const getCount = () => {
+    if (typeof window === "undefined") return 3;
+    if (window.innerWidth >= 1024) return 3;
+    if (window.innerWidth >= 768) return 2;
+    return 1;
+  };
+
+  const [count, setCount] = useState(getCount);
+
+  useEffect(() => {
+    const handler = () => setCount(getCount());
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+
+  return count;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Single Card
 // ─────────────────────────────────────────────────────────────────────────────
 function SuccessCard({ item }: { item: (typeof SUCCESS_DATA)[0] }) {
   return (
-    <div className="flex flex-col gap-3 w-full">
-      {/* Image */}
+    <div className="flex flex-col gap-3 w-full min-w-0">
       <div
         className="relative w-full overflow-hidden rounded-2xl"
         style={{ aspectRatio: "4/5" }}
@@ -168,14 +177,11 @@ function SuccessCard({ item }: { item: (typeof SUCCESS_DATA)[0] }) {
           alt={item.alt}
           fill
           className="object-cover object-top transition-transform duration-700 hover:scale-[1.04]"
-          sizes="(max-width: 640px) 100vw, 45vw"
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 45vw, 30vw"
           unoptimized
         />
-        {/* bottom vignette */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
       </div>
-
-      {/* Text */}
       <div className="px-1 space-y-1">
         <div className="flex items-center gap-2 flex-wrap">
           <span
@@ -206,42 +212,40 @@ function SuccessCard({ item }: { item: (typeof SUCCESS_DATA)[0] }) {
 // Main Section
 // ─────────────────────────────────────────────────────────────────────────────
 function SuccessStory() {
-  const CARDS_PER_VIEW = 2;
-  const totalSlides = Math.ceil(SUCCESS_DATA.length / CARDS_PER_VIEW);
+  const cardsPerView = useCardsPerView();
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // `activeIndex` = the index of the LEFT-MOST visible card
+  const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [paused, setPaused] = useState(false);
 
-  const goTo = useCallback(
-    (slideIndex: number, dir: number) => {
-      setDirection(dir);
-      setCurrentIndex(((slideIndex % totalSlides) + totalSlides) % totalSlides);
-    },
-    [totalSlides],
-  );
+  const go = useCallback((dir: 1 | -1) => {
+    setDirection(dir);
+    setActiveIndex((prev) => wrap(prev + dir));
+  }, []);
 
-  const next = useCallback(
-    () => goTo(currentIndex + 1, 1),
-    [currentIndex, goTo],
-  );
-  const prev = useCallback(
-    () => goTo(currentIndex - 1, -1),
-    [currentIndex, goTo],
-  );
+  const next = useCallback(() => go(1), [go]);
+  const prev = useCallback(() => go(-1), [go]);
 
-  // Auto-advance
   useEffect(() => {
     if (paused) return;
     const timer = setInterval(next, 4444);
     return () => clearInterval(timer);
   }, [next, paused]);
 
-  // Current pair of cards
-  const currentPair = SUCCESS_DATA.slice(
-    currentIndex * CARDS_PER_VIEW,
-    currentIndex * CARDS_PER_VIEW + CARDS_PER_VIEW,
-  );
+  // The visible window: cardsPerView cards starting at activeIndex
+  const visibleCards = getWindow(activeIndex, cardsPerView);
+
+  // One extra card slides in from the edge — direction determines which side
+  // We render cardsPerView + 1 cards and clip the overflow
+  // Instead: use AnimatePresence on the ENTERING card only
+  // Simpler: key the whole row on activeIndex and slide entire row
+  const gridCols =
+    cardsPerView === 3
+      ? "grid-cols-3"
+      : cardsPerView === 2
+        ? "grid-cols-2"
+        : "grid-cols-1";
 
   return (
     <section
@@ -250,15 +254,11 @@ function SuccessStory() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="max-w-4xl mx-auto">
-        {/* ── Heading ── */}
+      <div className="max-w-7xl mx-auto">
+        {/* Heading */}
         <motion.h2
-          className="font-bold mb-10"
-          style={{
-            color: "var(--text-primary)",
-            fontSize: "clamp(1.5rem, 3vw, 2rem)",
-            letterSpacing: "-0.025em",
-          }}
+          className="font-bold mb-10 text-4xl text-center"
+          style={{ color: "var(--text-primary)", letterSpacing: "-0.025em" }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -267,61 +267,77 @@ function SuccessStory() {
           Engineered Success
         </motion.h2>
 
-        {/* ── Carousel window ── */}
+        {/* ── Carousel ── */}
         <div className="relative overflow-hidden">
-          <AnimatePresence mode="popLayout" custom={direction}>
+          <AnimatePresence mode="popLayout" custom={direction} initial={false}>
             <motion.div
-              key={currentIndex}
+              key={activeIndex}
               custom={direction}
-              variants={slideVariants}
+              variants={{
+                enter: (dir: number) => ({
+                  x: dir > 0 ? "100%" : "-100%",
+                  opacity: 0,
+                }),
+                center: { x: "0%", opacity: 1 },
+                exit: (dir: number) => ({
+                  x: dir > 0 ? "-100%" : "100%",
+                  opacity: 0,
+                }),
+              }}
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{
-                duration: 0.52,
-                ease: [0.25, 0.46, 0.45, 0.94],
-              }}
-              className="grid gap-8"
-              style={{
-                gridTemplateColumns:
-                  "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
-              }}
+              transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className={`grid gap-8 ${gridCols}`}
             >
-              {currentPair.map((item) => (
-                <SuccessCard key={item.id} item={item} />
+              {visibleCards.map((item, i) => (
+                <motion.div
+                  key={`${activeIndex}-${i}`}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    delay: i * 0.07,
+                    duration: 0.4,
+                    ease: "easeOut",
+                  }}
+                >
+                  <SuccessCard item={item} />
+                </motion.div>
               ))}
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* ── Controls row ── */}
+        {/* Controls */}
         <div className="flex items-center justify-between mt-8">
-          {/* Pill dots */}
+          {/* Dots — one per card, highlights the active one */}
           <div className="flex items-center gap-2">
-            {Array.from({ length: totalSlides }).map((_, i) => (
+            {SUCCESS_DATA.map((_, i) => (
               <motion.button
                 key={i}
-                onClick={() => goTo(i, i > currentIndex ? 1 : -1)}
-                aria-label={`Go to slide ${i + 1}`}
-                className="rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2"
+                onClick={() => {
+                  const dir = i > activeIndex ? 1 : -1;
+                  setDirection(dir);
+                  setActiveIndex(i);
+                }}
+                aria-label={`Go to card ${i + 1}`}
+                className="rounded-full transition-all duration-300"
                 style={{
-                  width: i === currentIndex ? 24 : 8,
+                  width: i === activeIndex ? 24 : 8,
                   height: 8,
                   backgroundColor:
-                    i === currentIndex
+                    i === activeIndex
                       ? "var(--primary)"
                       : "var(--border-color)",
-                  focusRingColor: "var(--primary)",
                 }}
-                whileHover={{ scale: 1.15 }}
+                whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.9 }}
               />
             ))}
           </div>
 
-          {/* Arrow buttons */}
+          {/* Arrows */}
           <div className="flex gap-3">
-            {/* Prev */}
             <motion.button
               onClick={prev}
               whileHover={{ scale: 1.08 }}
@@ -332,7 +348,7 @@ function SuccessStory() {
                 backgroundColor: "var(--card-bg)",
                 color: "var(--text-primary)",
               }}
-              aria-label="Previous slide"
+              aria-label="Previous"
             >
               <svg
                 width="15"
@@ -348,14 +364,13 @@ function SuccessStory() {
               </svg>
             </motion.button>
 
-            {/* Next */}
             <motion.button
               onClick={next}
               whileHover={{ scale: 1.08 }}
               whileTap={{ scale: 0.92 }}
               className="w-10 h-10 rounded-full flex items-center justify-center"
               style={{ backgroundColor: "var(--primary)", color: "#fff" }}
-              aria-label="Next slide"
+              aria-label="Next"
             >
               <svg
                 width="15"
@@ -373,15 +388,16 @@ function SuccessStory() {
           </div>
         </div>
 
-        {/* Slide counter */}
+        {/* Counter */}
         <p
           className="text-xs text-right mt-2"
           style={{ color: "var(--text-secondary)" }}
         >
-          {currentIndex + 1} / {totalSlides}
+          {activeIndex + 1} / {TOTAL}
         </p>
       </div>
     </section>
   );
 }
+
 export default SuccessStory;
