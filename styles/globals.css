@@ -1,14 +1,5 @@
 @import "tailwindcss";
 
-:root {
-    /* Common Shared Colors - Used in both modes */
-    --primary: #F97316;
-    /* Main brand color (Buttons, active links, highlights) */
-    --secondary: #FB923C;
-    /* Complementary color (Hover states, secondary buttons) */
-    --success: #10B981;
-    /* Accent color (Success messages, badges, completion indicators) */
-}
 
 .light-mode {
     --bg-primary: #F8F4E3;
