@@ -28,7 +28,8 @@
 ·   	Easy AI Integration
 ·   	Industry Standard & Resume Value
 7. Team Members:
-· MD.Jubayer Hossain--1
+· Md. Altaf Mahmud 
+· MD.Jubayer Hossain
 · Md Ashiqur Rahman Pranto
 · MD. Siam Khan
 · Golam Rabbi (Team Leader)
