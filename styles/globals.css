@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 
-.light-mode {
+.light {
     --bg-primary: #F8F4E3;
     /* Main page background (Body) */
     --bg-secondary: #FFFFFF;
@@ -20,7 +20,7 @@
     /* Soft shadows for light interface depth */
 }
 
-.dark-mode {
+.dark {
     --bg-primary: #1E1E1E;
     /* Main dark background (Body) */
     --bg-secondary: #2D2D2D;
