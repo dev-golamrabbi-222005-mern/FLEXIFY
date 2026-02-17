@@ -4,9 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
-// ─────────────────────────────────────────────────────────────────────────────
 // SUCCESS DATA
-// ─────────────────────────────────────────────────────────────────────────────
 const SUCCESS_DATA = [
   {
     id: 1,
@@ -120,9 +118,7 @@ const SUCCESS_DATA = [
   },
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Helpers
-// ─────────────────────────────────────────────────────────────────────────────
 type BadgeType = "weight" | "muscle" | "pr";
 
 const badgeColor: Record<BadgeType, string> = {
@@ -140,9 +136,7 @@ const wrap = (index: number) => ((index % TOTAL) + TOTAL) % TOTAL;
 const getWindow = (startIndex: number, count: number) =>
   Array.from({ length: count }, (_, i) => SUCCESS_DATA[wrap(startIndex + i)]);
 
-// ─────────────────────────────────────────────────────────────────────────────
 // useCardsPerView
-// ─────────────────────────────────────────────────────────────────────────────
 function useCardsPerView() {
   const getCount = () => {
     if (typeof window === "undefined") return 3;
@@ -162,9 +156,7 @@ function useCardsPerView() {
   return count;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Single Card
-// ─────────────────────────────────────────────────────────────────────────────
 function SuccessCard({ item }: { item: (typeof SUCCESS_DATA)[0] }) {
   return (
     <div className="flex flex-col gap-3 w-full min-w-0">
@@ -208,9 +200,7 @@ function SuccessCard({ item }: { item: (typeof SUCCESS_DATA)[0] }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Main Section
-// ─────────────────────────────────────────────────────────────────────────────
 function SuccessStory() {
   const cardsPerView = useCardsPerView();
 
@@ -236,10 +226,6 @@ function SuccessStory() {
   // The visible window: cardsPerView cards starting at activeIndex
   const visibleCards = getWindow(activeIndex, cardsPerView);
 
-  // One extra card slides in from the edge — direction determines which side
-  // We render cardsPerView + 1 cards and clip the overflow
-  // Instead: use AnimatePresence on the ENTERING card only
-  // Simpler: key the whole row on activeIndex and slide entire row
   const gridCols =
     cardsPerView === 3
       ? "grid-cols-3"
