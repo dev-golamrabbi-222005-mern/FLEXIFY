@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+
+:root {
+  /* Common Shared Colors - Used in both modes */
+  --primary: #F97316;           /* Main brand color (Buttons, active links, highlights) */
+  --secondary: #FB923C;         /* Complementary color (Hover states, secondary buttons) */
+  --success: #10B981;           /* Accent color (Success messages, badges, completion indicators) */
+}
+
+.light-mode {
+  --bg-primary: #F8F4E3;       /* Main page background (Body) */
+  --bg-secondary: #FFFFFF;     /* Elevated surfaces (Cards, Modals, Dropdowns) */
+  --text-primary: #374151;     /* Primary text (Headings, titles, main body text) */
+  --text-secondary: #4B5563;   /* Sub-text (Descriptions, captions, placeholders) */
+  --border-color: rgba(249, 115, 22, 0.2); /* Subtle borders and dividers */
+  --border-highlight: var(--primary);      /* Active or focused border state */
+  --card-bg: rgba(255, 255, 255, 0.7);     /* Semi-transparent background for glassmorphism */
+  --shadow: rgba(0, 0, 0, 0.05);           /* Soft shadows for light interface depth */
+}
+
+.dark-mode {
+  --bg-primary: #1E1E1E;       /* Main dark background (Body) */
+  --bg-secondary: #2D2D2D;     /* Darker surfaces for contrast (Cards, sections) */
+  --text-primary: #E5E7EB;     /* High contrast text for dark mode (Headings) */
+  --text-secondary: #9CA3AF;   /* Muted text for dark mode (Descriptions) */
+  --border-color: rgba(249, 115, 22, 0.3); /* Defined borders for dark surfaces */
+  --border-highlight: var(--secondary);    /* Accent border for dark mode elements */
+  --card-bg: rgba(45, 45, 45, 0.7);        /* Glassmorphic cards for dark theme */
+  --shadow: rgba(0, 0, 0, 0.4);            /* Deep shadows for dark mode elevation */
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* UI Component Examples */
+.btn-primary {
+  background-color: var(--primary); /* Main action button color */
+  color: #FFFFFF;                   /* White text on primary buttons */
+}
+
+.text-accent {
+  color: var(--success);            /* Text for positive status or success */
+}
