@@ -20,8 +20,8 @@ const pathname = usePathname();
   ];
 
   return (
-    <nav className="bg-[#F8F4E3] text-[#374151] dark:bg-[#191919] dark:text-[#E5E7EB] shadow-md">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <nav className="bg-[#F8F4E3] text-[#374151] dark:bg-[#191919] dark:text-[#E5E7EB] sticky top-0 z-50 shadow-md">
+      <div className="max-w-7xl mx-auto px-6 py-1 flex justify-between items-center">
 
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">

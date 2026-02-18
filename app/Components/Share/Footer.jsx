@@ -4,7 +4,7 @@ import { FaFacebookF, FaLinkedinIn, FaGithub, FaMediumM } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="pt-14 shadow-md bg-[#F8F4E3] text-[#374151] dark:bg-[#191919] dark:text-[#E5E7EB]  ">
+    <footer className="pt-10 shadow-md bg-[#F8F4E3] text-[#374151] dark:bg-[#191919] dark:text-[#E5E7EB]  ">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
 
         {/* Left Section */}
