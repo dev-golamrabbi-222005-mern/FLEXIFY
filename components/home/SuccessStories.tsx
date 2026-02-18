@@ -236,12 +236,12 @@ function SuccessStory() {
 
   return (
     <section
-      className="w-full py-16 px-6"
+      className="w-full pb-8 md:pb-12"
       style={{ backgroundColor: "var(--bg-primary)" }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-6">
         {/* Heading */}
         <motion.h2
           style={{ color: "var(--text-primary)", letterSpacing: "-0.025em" }}

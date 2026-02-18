@@ -51,10 +51,10 @@ const pathname = usePathname();
             <Link
               key={link.path}
               href={link.path}
-              className={`font-medium transition text-[var(--primary)] ${
+              className={`transition text-[var(--primary)] ${
                 pathname === link.path
-                  ? "border-b-3 border-blue-600 p-2 rounded-lg"
-                  : " hover:text-blue-500 px-3 py-2 rounded-lg"
+                  ? "border-b-3 border-(--border-highlight) font-bold p-2 rounded-lg"
+                  : " hover:text-(--secondary) px-3 py-2 rounded-lg"
               }`}
             >
               {link.name}
