@@ -66,3 +66,18 @@ body {
     color: var(--success);
     /* Text for positive status or success */
 }
+
+.arrow-btn {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  transition: all 0.25s ease;
+}
+
+.arrow-btn:hover {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 0 0 6px rgba(249, 115, 22, 0.15);
+  cursor: pointer;
+}
