@@ -4,7 +4,7 @@ import { FaFacebookF, FaLinkedinIn, FaGithub, FaMediumM } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="pt-14 shadow-md bg-[#F8F4E3] text-[#374151] dark:bg-[#191919] dark:text-[#E5E7EB]  ">
+    <footer className="pt-10 shadow-md bg-[var(--bg-primary)]">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
 
         {/* Left Section */}
@@ -41,10 +41,10 @@ const Footer = () => {
             Quick Links
           </h3>
           <ul className="space-y-2 text-sm">
-            <li className="hover:text-white cursor-pointer">Home</li>
-            <li className="hover:text-white cursor-pointer">All Services</li>
-            <li className="hover:text-white cursor-pointer">About</li>
-            <li className="hover:text-white cursor-pointer">Contact Us</li>
+            <li className="hover:text-blue-500 cursor-pointer">Home</li>
+            <li className="hover:text-blue-500 cursor-pointer">All Services</li>
+            <li className="hover:text-blue-500 cursor-pointer">About</li>
+            <li className="hover:text-blue-500 cursor-pointer">Contact Us</li>
           </ul>
         </div>
 
@@ -61,10 +61,10 @@ const Footer = () => {
           </p>
 
           <div className="flex gap-4 text-lg">
-            <FaFacebookF className="hover:text-white cursor-pointer" />
-            <FaLinkedinIn className="hover:text-white cursor-pointer" />
-            <FaGithub className="hover:text-white cursor-pointer" />
-            <FaMediumM className="hover:text-white cursor-pointer" />
+            <FaFacebookF className="hover:text-blue-500 cursor-pointer" />
+            <FaLinkedinIn className="hover:text-blue-500 cursor-pointer" />
+            <FaGithub className="hover:text-blue-500 cursor-pointer" />
+            <FaMediumM className="hover:text-blue-500 cursor-pointer" />
           </div>
         </div>
       </div>

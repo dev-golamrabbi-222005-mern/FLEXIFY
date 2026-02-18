@@ -5,7 +5,7 @@ import { MdSettingsInputComponent } from "react-icons/md";
 
 const Precision = () => {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-[var(--bg-primary)]">
       <div className="max-w-7xl mx-auto px-4 text-center">
         <h2 className="text-4xl font-semibold text-gray-800">
           Precision Programming
