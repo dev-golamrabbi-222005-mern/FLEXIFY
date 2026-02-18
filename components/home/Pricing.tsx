@@ -2,11 +2,11 @@ import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const Pricing = () => {
     return (
-        <section className="px-6 py-24 bg-[#f8f4e3] dark:bg-[#1e1e1e]" id="pricing">
+        <section className="px-6 py-24 bg-[var(--bg-primary)] shadow-md" id="pricing">
         <div className="mx-auto max-w-7xl">
             <div className="flex flex-col items-center mb-16 text-center">
-                <h2 className="text-4xl font-bold tracking-tight text-(--text-primary)">Choose Your Architecture</h2>
-                <p className="mt-4 text-(--text-secondary)">Plans designed to fit every level of logical optimization.</p>
+                <h2 className="text-4xl font-bold tracking-tight text-[var(--text-primary)]">Choose Your Architecture</h2>
+                <p className="mt-4 text-[var(--text-secondary)]">Plans designed to fit every level of logical optimization.</p>
             </div>
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
                 {/* Basic */}
