@@ -1,4 +1,7 @@
 
+
+
+import SectionTitle from "@/app/Components/ui/section-title";
 import { ReactNode } from "react";
 import {
   FaUsers,
@@ -7,7 +10,7 @@ import {
   FaUserTie,
 } from "react-icons/fa";
 
-// 🔹 Type definition
+// 🔹 Type
 type StatItem = {
   id: number;
   value: string;
@@ -17,77 +20,80 @@ type StatItem = {
 
 // 🔹 Data
 const stats: StatItem[] = [
-  {
-    id: 1,
-    value: "10K+",
-    label: "Active Users",
-    icon: <FaUsers />,
-  },
-  {
-    id: 2,
-    value: "25K+",
-    label: "Workouts Completed",
-    icon: <FaDumbbell />,
-  },
-  {
-    id: 3,
-    value: "8K+",
-    label: "Goals Achieved",
-    icon: <FaBullseye />,
-  },
-  {
-    id: 4,
-    value: "120+",
-    label: "Expert Trainers",
-    icon: <FaUserTie />,
-  },
+  { id: 1, value: "10K+", label: "Active Users", icon: <FaUsers /> },
+  { id: 2, value: "25K+", label: "Workouts Completed", icon: <FaDumbbell /> },
+  { id: 3, value: "8K+", label: "Goals Achieved", icon: <FaBullseye /> },
+  { id: 4, value: "120+", label: "Expert Trainers", icon: <FaUserTie /> },
 ];
 
 export default function StatsSection() {
   return (
-    <section className="relative py-20 bg-gradient-to-br from-black via-gray-900 to-black overflow-hidden">
-      
-      {/* Background blur effects */}
-      <div className="absolute -top-20 -left-20 w-72 h-72 bg-green-500/30 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-72 h-72 bg-emerald-400/20 rounded-full blur-3xl" />
+    <section
+      className="
+        relative overflow-hidden
+        py-16 md:py-20
+        bg-[var(--bg-primary)]
+      "
+    >
+      {/* 🔹 Ambient glow (same theme as pricing) */}
+      <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[var(--primary)]/20 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[var(--primary)]/10 blur-3xl" />
 
-      <div className="relative max-w-7xl mx-auto px-6">
-        
-        {/* Heading */}
-        <div className="text-center mb-14">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white">
-            Flexify <span className="text-green-400">Impact</span>
+      <div className="relative mx-auto max-w-7xl px-6">
+        {/* 🔹 Heading */}
+        {/* <div className="mb-12 text-center">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--text-primary)]">
+            Flexify <span className="text-[var(--primary)]">Impact</span>
           </h2>
-          <p className="text-gray-400 mt-4 max-w-xl mx-auto">
+          <p className="mx-auto mt-4 max-w-xl text-sm md:text-base text-[var(--text-secondary)]">
             Building healthier lifestyles through smart fitness tracking
           </p>
-        </div>
+        </div> */}
+       <SectionTitle
+       
+       title="Flexify Impact" subtitle="Building healthier lifestyles through smart fitness tracking">
+        
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+       </SectionTitle>
+        {/* 🔹 Stats Grid */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
             <div
               key={stat.id}
-              className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-center
-              hover:border-green-400/50 hover:shadow-[0_0_30px_rgba(34,197,94,0.3)]
-              transition-all duration-300 hover:-translate-y-2"
+              className="
+                group rounded-3xl
+                bg-(--card-bg)
+                border border-white/10
+                p-6 md:p-8
+                text-center
+                transition-all duration-300
+                hover:-translate-y-2
+                hover:border-(--primary)/50
+                hover:shadow-[0_0_30px_var(--border-highlight)]
+              "
             >
-              <div className="flex justify-center mb-5">
-                <div className="text-green-400 text-4xl group-hover:scale-110 transition-transform">
+              <div className="mb-5 flex justify-center">
+                <div
+                  className="
+                    text-4xl
+                    text-(--primary)
+                    transition-transform duration-300
+                    group-hover:scale-110
+                  "
+                >
                   {stat.icon}
                 </div>
               </div>
 
-              <h3 className="text-4xl font-extrabold text-white">
+              <h3 className="text-3xl md:text-4xl font-extrabold text-[var(--text-primary)]">
                 {stat.value}
               </h3>
-              <p className="text-gray-400 mt-2 text-sm tracking-wide uppercase">
+              <p className="mt-2 text-xs md:text-sm uppercase tracking-wide text-[var(--text-secondary)]">
                 {stat.label}
               </p>
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );
