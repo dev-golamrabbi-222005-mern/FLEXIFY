@@ -24,9 +24,9 @@ const Precision = () => {
           steps, adapting in real-time to your biological feedback."
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4">
           <div className="bg-(--card-bg) rounded-2xl p-8 text-left relative">
-            <span className="absolute top-6 right-6 text-5xl font-bold ">
+            <span className="absolute top-6 right-6 text-5xl font-bold opacity-20">
               01
             </span>
 
@@ -46,7 +46,7 @@ const Precision = () => {
           </div>
 
           <div className="bg-(--card-bg) rounded-2xl p-8 text-left relative">
-            <span className="absolute top-6 right-6 text-5xl font-bold ">
+            <span className="absolute top-6 right-6 text-5xl font-bold opacity-20">
               02
             </span>
 
@@ -66,7 +66,7 @@ const Precision = () => {
           </div>
 
           <div className="bg-(--card-bg) rounded-2xl p-8 text-left relative">
-            <span className="absolute top-6 right-6 text-5xl font-bold ">
+            <span className="absolute top-6 right-6 text-5xl font-bold opacity-20">
               03
             </span>
 

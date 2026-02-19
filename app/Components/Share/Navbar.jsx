@@ -12,8 +12,6 @@ const pathname = usePathname();
 
     const navLinks = [
     { name: "Home", path: "/" },
-    { name: "How it Works", path: "/how-it-works" },
-    { name: "Success Stories", path: "/success-stories" },
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact" },
     { name: "Pricing", path: "/pricing" },
@@ -64,14 +62,9 @@ const pathname = usePathname();
         {/* Auth Buttons */}
         <div className="flex items-center gap-4">
         <ThemeToggle />
-          <div className="hidden md:flex gap-4 font-medium">
-            <Link href="/login" className="border-[border-color] px-4 py-1 rounded hover:bg-gray-500 hover:text-black transition">
-            Login
+          <Link href="/auth-login" className="btn-primary text-[1.05rem] font-semibold text-center">
+            Get Started
           </Link>
-          <Link href="/signup" className="px-4 py-1 rounded hover:bg-gray-400 hover:text-black transition">
-            Register
-          </Link>
-          </div>
         </div>
 
         {/* Mobile Menu Button */}

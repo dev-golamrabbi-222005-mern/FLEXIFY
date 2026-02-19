@@ -60,6 +60,14 @@ body {
     /* Main action button color */
     color: #FFFFFF;
     /* White text on primary buttons */
+    padding: 12px 24px;
+    border-radius: 12px;
+}
+@media only screen and (max-width: 600px) {
+    .btn-primary{
+        padding: 8px 12px;
+        font-size: small;
+    }
 }
 
 .text-accent {
