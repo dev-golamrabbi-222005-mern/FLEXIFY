@@ -25,61 +25,61 @@ const Precision = () => {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-[#FBF7EB] rounded-2xl p-8 text-left relative">
-            <span className="absolute top-6 right-6 text-5xl font-bold text-[#F3E7C6]">
+          <div className="bg-(--card-bg) rounded-2xl p-8 text-left relative">
+            <span className="absolute top-6 right-6 text-5xl font-bold ">
               01
             </span>
 
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6">
-              <span className="text-orange-500 text-xl">
+            <div className="w-12 h-12 border border-(--primary)  rounded-xl flex items-center justify-center mb-6">
+              <span className="text-orange-500 text-xl ">
                 <IoServer />
               </span>
             </div>
 
-            <h3 className="text-xl font-semibold text-gray-800 mb-3">
+            <h3 className="text-xl font-bold mb-3">
               Input Metrics
             </h3>
-            <p className="text-gray-600">
+            <p className="text-(--text-secondary)">
               Log your biology, preferences, and performance goals into our
               secure portal for initial processing.
             </p>
           </div>
 
-          <div className="bg-[#FBF7EB] rounded-2xl p-8 text-left relative">
-            <span className="absolute top-6 right-6 text-5xl font-bold text-[#F3E7C6]">
+          <div className="bg-(--card-bg) rounded-2xl p-8 text-left relative">
+            <span className="absolute top-6 right-6 text-5xl font-bold ">
               02
             </span>
 
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6">
+            <div className="w-12 h-12 border border-(--primary) rounded-xl flex items-center justify-center mb-6">
               <span className="text-orange-500 text-xl">
                 <MdSettingsInputComponent />
               </span>
             </div>
 
-            <h3 className="text-xl font-semibold text-gray-800 mb-3">
+            <h3 className="text-xl font-bold  mb-3">
               Algorithmic Design
             </h3>
-            <p className="text-gray-600">
+            <p className="text-(--text-secondary)">
               Our engine applies 500+ logic rules to your profile to architect a
               custom training and nutrition blueprint.
             </p>
           </div>
 
-          <div className="bg-[#FBF7EB] rounded-2xl p-8 text-left relative">
-            <span className="absolute top-6 right-6 text-5xl font-bold text-[#F3E7C6]">
+          <div className="bg-(--card-bg) rounded-2xl p-8 text-left relative">
+            <span className="absolute top-6 right-6 text-5xl font-bold ">
               03
             </span>
 
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6">
+            <div className="w-12 h-12 border border-(--primary) rounded-xl flex items-center justify-center mb-6">
               <span className="text-orange-500 text-xl">
                 <IoMdTrendingUp />
               </span>
             </div>
 
-            <h3 className="text-xl font-semibold text-gray-800 mb-3">
+            <h3 className="text-xl font-bold  mb-3">
               Dynamic Evolution
             </h3>
-            <p className="text-gray-600">
+            <p className="text-(--text-secondary)">
               Your plan automatically recalibrates and adjusts as you hit new
               milestones and physiological shifts.
             </p>
