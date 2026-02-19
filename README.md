@@ -32,9 +32,6 @@
 · Md.Jubayer Hossain
 · Md Ashiqur Rahman Pranto
 · Md: Siam Khan
-· Md. Nayeem Babu
+. Md. Nayeem Babu
 · Md. Golam Rabbi (Team Leader)
- 
-·
-·
-·
+
