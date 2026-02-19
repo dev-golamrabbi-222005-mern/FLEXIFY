@@ -4,15 +4,14 @@ import { FaFacebookF, FaLinkedinIn, FaGithub, FaMediumM } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="pt-10 shadow-md bg-[var(--bg-primary)]">
+    <footer className="pt-10 shadow-md bg-[var(--bg-nav-footer)]">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
-
         {/* Left Section */}
         <div>
           <Link href="/" className="flex items-center gap-2 mb-4">
             <Image src="/logo.png" alt="logo" width={140} height={140} />
-             {/* Light Logo */}
-      {/* <Image
+            {/* Light Logo */}
+            {/* <Image
         src="/logo-light.png"
         alt="Flexify Logo"
         width={140}
@@ -20,51 +19,48 @@ const Footer = () => {
         className="block dark:hidden"
       /> */}
 
-      {/* Dark Logo */}
-      {/* <Image
+            {/* Dark Logo */}
+            {/* <Image
         src="/logo-dark.png"
         alt="Flexify Logo"
         width={140}
         height={40}
         className="hidden dark:block"
       /> */}
-            
           </Link>
           <p className="text-sm leading-relaxed">
-           A fitness Planner Platform <br /> that helps users create personalized workout plans, track their progress, and achieve their fitness goals with ease.
+            A fitness Planner Platform <br /> that helps users create
+            personalized workout plans, track their progress, and achieve their
+            fitness goals with ease.
           </p>
         </div>
 
         {/* Quick Links */}
         <div>
-          <h3 className="font-semibold mb-4">
-            Quick Links
-          </h3>
+          <h3 className="font-semibold mb-4">Quick Links</h3>
           <ul className="space-y-2 text-sm">
-            <li className="hover:text-blue-500 cursor-pointer">Home</li>
-            <li className="hover:text-blue-500 cursor-pointer">All Services</li>
-            <li className="hover:text-blue-500 cursor-pointer">About</li>
-            <li className="hover:text-blue-500 cursor-pointer">Contact Us</li>
+            <li className="hover:text-(--secondary) cursor-pointer">Home</li>
+            <li className="hover:text-(--secondary) cursor-pointer">
+              All Services
+            </li>
+            <li className="hover:text-(--secondary) cursor-pointer">About</li>
+            <li className="hover:text-(--secondary) cursor-pointer">
+              Contact Us
+            </li>
           </ul>
         </div>
 
         {/* Contact */}
         <div>
-          <h3 className="font-semibold mb-4">
-            Contact Us
-          </h3>
-          <p className="text-sm mb-2">
-            Email: info@flexify.com
-          </p>
-          <p className="text-sm mb-4">
-            Phone: +8801 23456789
-          </p>
+          <h3 className="font-semibold mb-4">Contact Us</h3>
+          <p className="text-sm mb-2">Email: info@flexify.com</p>
+          <p className="text-sm mb-4">Phone: +8801 23456789</p>
 
           <div className="flex gap-4 text-lg">
-            <FaFacebookF className="hover:text-blue-500 cursor-pointer" />
-            <FaLinkedinIn className="hover:text-blue-500 cursor-pointer" />
-            <FaGithub className="hover:text-blue-500 cursor-pointer" />
-            <FaMediumM className="hover:text-blue-500 cursor-pointer" />
+            <FaFacebookF className="hover:text-(--secondary) cursor-pointer" />
+            <FaLinkedinIn className="hover:text-(--secondary) cursor-pointer" />
+            <FaGithub className="hover:text-(--secondary) cursor-pointer" />
+            <FaMediumM className="hover:text-(--secondary) cursor-pointer" />
           </div>
         </div>
       </div>
