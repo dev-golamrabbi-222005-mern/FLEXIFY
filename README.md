@@ -29,12 +29,9 @@
 ·   	Industry Standard & Resume Value
 7. Team Members:
 · Md. Altaf Mahmud 
-· MD.Jubayer Hossain
+· Md.Jubayer Hossain
 · Md Ashiqur Rahman Pranto
-· MD. Siam Khan
-· Golam Rabbi (Team Leader)
-· Md.Nayeem Babu
-·
-·
-·
-·
+· Md. Siam Khan
+. Md. Nayeem Babu
+· Md. Golam Rabbi (Team Leader)
+
