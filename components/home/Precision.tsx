@@ -1,3 +1,4 @@
+import SectionTitle from "@/app/Components/ui/section-title";
 import React from "react";
 import { IoMdTrendingUp } from "react-icons/io";
 import { IoServer } from "react-icons/io5";
@@ -5,9 +6,9 @@ import { MdSettingsInputComponent } from "react-icons/md";
 
 const Precision = () => {
   return (
-    <section className="py-20 bg-white">
+    <section className="pb-8 md:pb-12 bg-[var(--bg-primary)]">
       <div className="max-w-7xl mx-auto px-4 text-center">
-        <h2 className="text-4xl font-semibold text-gray-800">
+        {/* <h2 className="text-4xl font-semibold text-gray-800">
           Precision Programming
         </h2>
 
@@ -16,18 +17,23 @@ const Precision = () => {
         <p className="max-w-2xl mx-auto text-gray-500 text-lg mb-16">
           Our intelligent system builds your perfect routine in three logical
           steps, adapting in real-time to your biological feedback.
-        </p>
+        </p> */}
+        <SectionTitle
+          title="Precision Programming"
+          subtitle="Our intelligent system builds your perfect routine in three logical
+          steps, adapting in real-time to your biological feedback."
+        />
 
-      
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
           <div className="bg-[#FBF7EB] rounded-2xl p-8 text-left relative">
             <span className="absolute top-6 right-6 text-5xl font-bold text-[#F3E7C6]">
               01
             </span>
 
             <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6">
-              <span className="text-orange-500 text-xl"><IoServer /></span>
+              <span className="text-orange-500 text-xl">
+                <IoServer />
+              </span>
             </div>
 
             <h3 className="text-xl font-semibold text-gray-800 mb-3">
@@ -39,14 +45,15 @@ const Precision = () => {
             </p>
           </div>
 
-         
           <div className="bg-[#FBF7EB] rounded-2xl p-8 text-left relative">
             <span className="absolute top-6 right-6 text-5xl font-bold text-[#F3E7C6]">
               02
             </span>
 
             <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6">
-              <span className="text-orange-500 text-xl"><MdSettingsInputComponent /></span>
+              <span className="text-orange-500 text-xl">
+                <MdSettingsInputComponent />
+              </span>
             </div>
 
             <h3 className="text-xl font-semibold text-gray-800 mb-3">
@@ -58,14 +65,15 @@ const Precision = () => {
             </p>
           </div>
 
-          
           <div className="bg-[#FBF7EB] rounded-2xl p-8 text-left relative">
             <span className="absolute top-6 right-6 text-5xl font-bold text-[#F3E7C6]">
               03
             </span>
 
             <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6">
-              <span className="text-orange-500 text-xl"><IoMdTrendingUp /></span>
+              <span className="text-orange-500 text-xl">
+                <IoMdTrendingUp />
+              </span>
             </div>
 
             <h3 className="text-xl font-semibold text-gray-800 mb-3">

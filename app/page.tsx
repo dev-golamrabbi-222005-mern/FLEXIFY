@@ -9,8 +9,8 @@ export default function Home() {
   return (
     <div>
       <FlexifyHero/>
-      <SuccessStory/>
       <Precision/>
+      <SuccessStory/>
       <Pricing/>
       <StatsSection></StatsSection>
     </div>

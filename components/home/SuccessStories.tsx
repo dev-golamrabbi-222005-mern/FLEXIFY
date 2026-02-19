@@ -3,10 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import SectionTitle from "@/app/Components/ui/section-title";
 
-// ─────────────────────────────────────────────────────────────────────────────
 // SUCCESS DATA
-// ─────────────────────────────────────────────────────────────────────────────
 const SUCCESS_DATA = [
   {
     id: 1,
@@ -120,9 +119,7 @@ const SUCCESS_DATA = [
   },
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Helpers
-// ─────────────────────────────────────────────────────────────────────────────
 type BadgeType = "weight" | "muscle" | "pr";
 
 const badgeColor: Record<BadgeType, string> = {
@@ -140,9 +137,7 @@ const wrap = (index: number) => ((index % TOTAL) + TOTAL) % TOTAL;
 const getWindow = (startIndex: number, count: number) =>
   Array.from({ length: count }, (_, i) => SUCCESS_DATA[wrap(startIndex + i)]);
 
-// ─────────────────────────────────────────────────────────────────────────────
 // useCardsPerView
-// ─────────────────────────────────────────────────────────────────────────────
 function useCardsPerView() {
   const getCount = () => {
     if (typeof window === "undefined") return 3;
@@ -162,9 +157,7 @@ function useCardsPerView() {
   return count;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Single Card
-// ─────────────────────────────────────────────────────────────────────────────
 function SuccessCard({ item }: { item: (typeof SUCCESS_DATA)[0] }) {
   return (
     <div className="flex flex-col gap-3 w-full min-w-0">
@@ -186,7 +179,7 @@ function SuccessCard({ item }: { item: (typeof SUCCESS_DATA)[0] }) {
         <div className="flex items-center gap-2 flex-wrap">
           <span
             className="font-semibold"
-            style={{ color: "var(--text-primary)", fontSize: "0.95rem" }}
+            style={{ color: "var(--text-primary)", fontSize: "1.1rem" }}
           >
             {item.name}
           </span>
@@ -198,7 +191,7 @@ function SuccessCard({ item }: { item: (typeof SUCCESS_DATA)[0] }) {
           </span>
         </div>
         <p
-          className="text-sm leading-relaxed italic"
+          className="text-[0.95rem] leading-relaxed"
           style={{ color: "var(--text-secondary)" }}
         >
           &ldquo;{item.quote}&rdquo;
@@ -208,9 +201,7 @@ function SuccessCard({ item }: { item: (typeof SUCCESS_DATA)[0] }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Main Section
-// ─────────────────────────────────────────────────────────────────────────────
 function SuccessStory() {
   const cardsPerView = useCardsPerView();
 
@@ -236,10 +227,6 @@ function SuccessStory() {
   // The visible window: cardsPerView cards starting at activeIndex
   const visibleCards = getWindow(activeIndex, cardsPerView);
 
-  // One extra card slides in from the edge — direction determines which side
-  // We render cardsPerView + 1 cards and clip the overflow
-  // Instead: use AnimatePresence on the ENTERING card only
-  // Simpler: key the whole row on activeIndex and slide entire row
   const gridCols =
     cardsPerView === 3
       ? "grid-cols-3"
@@ -249,22 +236,21 @@ function SuccessStory() {
 
   return (
     <section
-      className="w-full py-16 px-6"
+      className="w-full pb-8 md:pb-12"
       style={{ backgroundColor: "var(--bg-primary)" }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-6">
         {/* Heading */}
         <motion.h2
-          className="font-bold mb-10 text-4xl text-center"
           style={{ color: "var(--text-primary)", letterSpacing: "-0.025em" }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.55, ease: "easeOut" }}
         >
-          Engineered Success
+          <SectionTitle title="Engineered Success" />
         </motion.h2>
 
         {/* ── Carousel ── */}
@@ -342,12 +328,7 @@ function SuccessStory() {
               onClick={prev}
               whileHover={{ scale: 1.08 }}
               whileTap={{ scale: 0.92 }}
-              className="w-10 h-10 rounded-full flex items-center justify-center border"
-              style={{
-                borderColor: "var(--border-color)",
-                backgroundColor: "var(--card-bg)",
-                color: "var(--text-primary)",
-              }}
+              className="arrow-btn w-10 h-10 rounded-full flex items-center justify-center"
               aria-label="Previous"
             >
               <svg
@@ -368,12 +349,7 @@ function SuccessStory() {
               onClick={next}
               whileHover={{ scale: 1.08 }}
               whileTap={{ scale: 0.92 }}
-              className="w-10 h-10 rounded-full flex items-center justify-center border"
-              style={{
-                borderColor: "var(--border-color)",
-                backgroundColor: "var(--card-bg)",
-                color: "var(--text-primary)",
-              }}
+              className="arrow-btn w-10 h-10 rounded-full flex items-center justify-center"
               aria-label="Next"
             >
               <svg
