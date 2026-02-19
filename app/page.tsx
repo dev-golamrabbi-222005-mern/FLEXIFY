@@ -4,7 +4,6 @@ import Pricing from "@/components/home/Pricing";
 import SuccessStory from "@/components/home/SuccessStories";
 import StatsSection from "@/components/home/StatsSection";
 
-
 export default function Home() {
   return (
     <div>
