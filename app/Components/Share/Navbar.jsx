@@ -26,23 +26,6 @@ const pathname = usePathname();
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
         <Image src="/logo.png" alt="logo" width={140} height={140} />
-          {/* Light Logo */}
-      {/* <Image
-        src="/logo-light.png"
-        alt="Flexify Logo"
-        width={140}
-        height={40}
-        className="block dark:hidden"
-      /> */}
-
-      {/* Dark Logo */}
-      {/* <Image
-        src="/logo-dark.png"
-        alt="Flexify Logo"
-        width={140}
-        height={40}
-        className="hidden dark:block"
-      /> */}
         </Link>
 
       {/* Navigation Links */}

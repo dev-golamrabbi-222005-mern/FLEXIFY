@@ -11,24 +11,6 @@ const Footer = () => {
         <div>
           <Link href="/" className="flex items-center gap-2 mb-4">
             <Image src="/logo.png" alt="logo" width={140} height={140} />
-             {/* Light Logo */}
-      {/* <Image
-        src="/logo-light.png"
-        alt="Flexify Logo"
-        width={140}
-        height={40}
-        className="block dark:hidden"
-      /> */}
-
-      {/* Dark Logo */}
-      {/* <Image
-        src="/logo-dark.png"
-        alt="Flexify Logo"
-        width={140}
-        height={40}
-        className="hidden dark:block"
-      /> */}
-            
           </Link>
           <p className="text-sm leading-relaxed">
            A fitness Planner Platform <br /> that helps users create personalized workout plans, track their progress, and achieve their fitness goals with ease.
