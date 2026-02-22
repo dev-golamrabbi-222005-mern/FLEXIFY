@@ -24,7 +24,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 py-1 flex justify-between items-center">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.png" alt="logo" width={140} height={140} />
+        <Image src="/logo.png" alt="logo" width={140} height={140} />
         </Link>
 
         {/* Navigation Links */}
@@ -64,7 +64,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {open && (
-        <div className="md:hidden px-6 pb-6 space-y-4 text-sm w-44">
+        <div className="md:hidden px-6 pb-6 space-y-4 text-sm w-30">
           {navLinks.map((link) => (
             <Link
               key={link.path}
