@@ -4,7 +4,7 @@ import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 const Pricing = () => {
     return (
       <section className="pb-8 md:pb-12 bg-[var(--bg-primary)]" id="pricing">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="px-6 mx-auto max-w-7xl">
           {/* <div className="flex flex-col items-center mb-16 text-center">
                 <h2 className="text-4xl font-bold tracking-tight text-[var(--text-primary)]">Choose Your Architecture</h2>
                 <p className="mt-4 text-[var(--text-secondary)]">Plans designed to fit every level of logical optimization.</p>
