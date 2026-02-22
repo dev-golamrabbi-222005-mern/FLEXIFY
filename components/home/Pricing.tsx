@@ -18,7 +18,7 @@ const Pricing = () => {
           />
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             {/* Basic */}
-            <div className="flex flex-col p-8 bg-(--card-bg) shadow-sm shadow- rounded-3xl">
+            <div className="flex flex-col p-8 bg-(--card-bg) shadow-sm shadow- rounded-3xl hover:-translate-y-2 transition-all duration-300">
               <h3 className="text-xl font-bold">Observer</h3>
               <div className="flex items-baseline gap-1 mt-4">
                 <span className="text-4xl font-bold">$19</span>
@@ -58,7 +58,7 @@ const Pricing = () => {
               </button>
             </div>
             {/* Pro (Featured) */}
-            <div className="relative z-10 flex flex-col p-8 scale-105 bg-(--card-bg) shadow-2xl shadow- rounded-3xl ring-2 ring-(--primary)">
+            <div className="relative z-10 flex flex-col p-8 scale-105 bg-(--card-bg) shadow-2xl shadow- rounded-3xl ring-2 ring-(--primary) hover:-translate-y-2 transition-all duration-300">
               <div className="absolute px-4 py-1 text-xs font-bold text-white uppercase -translate-x-1/2 rounded-full -top-4 left-1/2 bg-(--primary)">
                 Recommended
               </div>
@@ -103,7 +103,7 @@ const Pricing = () => {
               </button>
             </div>
             {/* Elite */}
-            <div className="flex flex-col p-8 bg-(--card-bg) shadow-sm shadow- rounded-3xl">
+            <div className="flex flex-col p-8 bg-(--card-bg) shadow-sm shadow- rounded-3xl hover:-translate-y-2 transition-all duration-300">
               <h3 className="text-xl font-bold">Synthesizer</h3>
               <div className="flex items-baseline gap-1 mt-4">
                 <span className="text-4xl font-bold">$99</span>

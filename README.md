@@ -29,19 +29,9 @@
 ·   	Industry Standard & Resume Value
 7. Team Members:
 · Md. Altaf Mahmud 
-· MD.Jubayer Hossain
+· Md.Jubayer Hossain
 · Md Ashiqur Rahman Pranto
-· MD: Siam Khan
-· Golam Rabbi (Team Leader)
-<<<<<<< HEAD
-..
+· Md. Siam Khan
+. Md. Nayeem Babu
+· Md. Golam Rabbi (Team Leader)
 
- 
-·Golam Rabbi (Team Leader) brother sob thik ase ???
-=======
->>>>>>> d29e0f45e907513c59a88c89a3b8ff0e227fafa6
- 
-·
-·
-·
-·
