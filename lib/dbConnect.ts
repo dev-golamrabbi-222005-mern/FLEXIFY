@@ -1,7 +1,15 @@
-import { MongoClient, ServerApiVersion, Collection } from "mongodb";
+import { MongoClient, ServerApiVersion, Collection, Document } from "mongodb";
 
-const uri: string = process.env.MONGODB_URI as string;
-const dbName: string = process.env.DB_NAME as string;
+const uri: string | undefined = process.env.MONGODB_URI;
+const dbName: string | undefined = process.env.DB_NAME;
+
+if (!uri) {
+  throw new Error("MONGODB_URI is not defined in environment variables");
+}
+
+if (!dbName) {
+  throw new Error("DB_NAME is not defined in environment variables");
+}
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -11,13 +19,8 @@ const client = new MongoClient(uri, {
   },
 });
 
-export const dbConnect = async (collectionName: string): Promise<Collection | undefined> => {
-  try {
-    const db = client.db(dbName);
-    console.log("MongoDB connected!");
-    return db.collection(collectionName);
-  } catch (e) {
-    console.log(e);
-    return undefined;
-  }
+export const dbConnect = <T extends Document = Document>(
+  cname: string
+): Collection<T> => {
+  return client.db(dbName).collection<T>(cname);
 };
