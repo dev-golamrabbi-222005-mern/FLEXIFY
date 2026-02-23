@@ -106,7 +106,7 @@ const About = () => {
           {teamMembers.map((member, index) => (
             <div
               key={index}
-              className="bg-[var(--card-bg)] rounded-xl shadow p-6 hover:shadow-lg transition"
+              className="bg-[var(--card-bg)] rounded-xl shadow p-6 hover:shadow-lg hover:scale-105 transition"
             >
               <img
                 src={member.image}
@@ -123,10 +123,10 @@ const About = () => {
               </p>
 
               <div className="flex justify-center gap-4 mt-4 text-lg">
-                <FaPassport />
-                <FaFacebookF />
-                <FaLinkedinIn />
-                <FaGithub />
+                <FaPassport className="hover:text-[var(--secondary)] cursor-pointer" />
+                <FaFacebookF className="hover:text-[var(--secondary)] cursor-pointer" />
+                <FaLinkedinIn className="hover:text-[var(--secondary)] cursor-pointer" />
+                <FaGithub className="hover:text-[var(--secondary)] cursor-pointer" />
               </div>
             </div>
           ))}
