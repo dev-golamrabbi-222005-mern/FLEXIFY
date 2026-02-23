@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <section className="min-h-screen flex items-center justify-center bg-[var(--bg-nav-footer)] px-6">
+    <section className="min-h-screen flex items-center justify-center bg-[var(--bg-primary)] px-6">
       <div className="text-center max-w-md">
         <h1 className="text-7xl font-bold text-[var(--text-primary)]">404</h1>
 
@@ -17,9 +17,9 @@ export default function NotFound() {
 
         <Link
           href="/"
-          className="inline-block px-4 py-3 mt-10 font-bold text-white shadow-lg rounded-xl bg-(--primary) shadow-(--primary)/30 hover:bg-orange-600 transition"
+          className="inline-block px-4 py-3 mt-10 font-bold text-white shadow-lg rounded-xl bg-[var(--primary)] shadow-[var(--primary)]/30 hover:bg-orange-600 transition"
         >
-          ⬅ Back to Home
+          ← Back to Home
         </Link>
       </div>
     </section>

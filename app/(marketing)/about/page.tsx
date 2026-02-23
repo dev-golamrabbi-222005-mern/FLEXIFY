@@ -10,7 +10,7 @@ const About = () => {
       image: "https://i.postimg.cc/J0tXV88W/images.jpg",
       facebook: "https://www.facebook.com/golamrabbi",
       linkedin: "https://www.linkedin.com/in/golam-rabbi-9b1a4b1b3/",
-      github: "https://github.com/golamrabbi"
+      github: "https://github.com/golamrabbi",
     },
     {
       name: "Jubayer Hossain",
@@ -18,7 +18,7 @@ const About = () => {
       image: "https://i.postimg.cc/FzTr6D42/JUBAYER_Photo.jpg",
       facebook: "https://www.facebook.com/jubayer.hossain.9",
       linkedin: "https://www.linkedin.com/in/jubayer-hossain-9b1a4b1b3/",
-      github: "https://github.com/jubayerhossain"
+      github: "https://github.com/jubayerhossain",
     },
     {
       name: "Md Ashiqur Rahman Pranto",
@@ -26,7 +26,7 @@ const About = () => {
       image: "https://i.postimg.cc/J0tXV88W/images.jpg",
       facebook: "https://www.facebook.com/ashiqur.rahman.pranto",
       linkedin: "https://www.linkedin.com/in/ashiqur-rahman-pranto-9b1a4b1b3/",
-      github: "https://github.com/ashiqurrahmanpranto"
+      github: "https://github.com/ashiqurrahmanpranto",
     },
     {
       name: "Md Altaf Mahmud",
@@ -34,7 +34,7 @@ const About = () => {
       image: "https://i.postimg.cc/J0tXV88W/images.jpg",
       facebook: "https://www.facebook.com/altaf.mahmud.9",
       linkedin: "https://www.linkedin.com/in/altaf-mahmud-9b1a4b1b3/",
-      github: "https://github.com/altafmahmud"
+      github: "https://github.com/altafmahmud",
     },
     {
       name: "Md Siam Khan",
@@ -42,7 +42,7 @@ const About = () => {
       image: "https://i.postimg.cc/J0tXV88W/images.jpg",
       facebook: "https://www.facebook.com/siam.khan.9",
       linkedin: "https://www.linkedin.com/in/siam-khan-9b1a4b1b3/",
-      github: "https://github.com/siamkhan"
+      github: "https://github.com/siamkhan",
     },
     {
       name: "Md Nayeem Babu",
@@ -50,77 +50,94 @@ const About = () => {
       image: "https://i.postimg.cc/J0tXV88W/images.jpg",
       facebook: "https://www.facebook.com/nayeem.babu.9",
       linkedin: "https://www.linkedin.com/in/nayeem-babu-9b1a4b1b3/",
-      github: "https://github.com/nayeembabu"
+      github: "https://github.com/nayeembabu",
     },
   ];
   return (
-    <div className="bg-[var(--bg-nav-footer)]">
-        <section className="py-16 px-6 md:px-20 w-7xl mx-auto">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center ">
-        {/* Left Text Section */}
-        <div>
-          <h2 className="text-3xl md:text-4xl font-semibold text-[var(--text-primary)] mb-6">
-            About Flexify
-          </h2>
+    <div className="bg-[var(--bg-primary)]">
+  <section className="py-12 md:py-16 px-4 md:px-6 max-w-7xl mx-auto">
 
-          <p className="text-[var(--text-secondary)] text-lg leading-7 mb-4">
-            Flexify is a modern fitness planner platform built by a passionate team of six dedicated developers, led by our Founder & Lead Developer. Our mission is to make fitness simple, accessible, and personalized for everyone. We combine smart technology with user-friendly design to help people track workouts, plan routines, and stay motivated on their fitness journey. Each team member brings unique skills and creativity, allowing us to build reliable, high-quality features. At Flexify, we believe consistency creates results, and we are committed to supporting users with powerful tools that turn healthy goals into daily habits.
-          </p>
-        </div>
+    {/* About Section */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
 
-        {/* Right Image Section */}
-        <div className="flex justify-center">
-          <img
-            src="https://i.postimg.cc/5tSRf1g7/vision.webp"
-            alt="about illustration"
-            className="w-full max-w-md rounded"
-          />
-        </div>
+      {/* Left Text */}
+      <div className="text-center md:text-left">
+        <h2 className="text-2xl md:text-4xl font-semibold text-[var(--text-primary)] mb-4">
+          About Flexify
+        </h2>
+
+        <p className="text-[var(--text-secondary)] text-base md:text-lg text-start mb-6">
+          Flexify is a modern fitness planner platform built by a passionate team
+          of six dedicated developers, led by our Founder & Lead Developer. Our
+          mission is to make fitness simple, accessible, and personalized for
+          everyone. We combine smart technology with user-friendly design to
+          help people track workouts, plan routines, and stay motivated.
+        </p>
       </div>
 
-      <section className=" py-16">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          {/* Heading */}
-          <h2 className="text-4xl font-bold text-[var(--text-primary)] mb-4">
-            Meet the Team
-          </h2>
+      {/* Right Image */}
+      <div className="flex justify-center">
+        <img
+          src="https://i.postimg.cc/5tSRf1g7/vision.webp"
+          alt="about illustration"
+          className="rounded-xl shadow-md w-full max-w-md"
+        />
+      </div>
 
-          <p className="text-[var(--text-secondary)] max-w-2xl mx-auto mb-12">
-            Meet our passionate team of six dedicated professionals, led by our Founder & Lead Developer. Together, we collaborate to design, build, and improve Flexify, combining creativity and technology to deliver a powerful, user-friendly fitness planning experience for everyone.
-          </p>
-
-          {/* Team Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {teamMembers.map((member, index) => (
-              <div
-                key={index}
-                className="bg-[var(--bg-primary)] rounded-xl shadow-md p-8 hover:shadow-xl transition"
-              >
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-28 h-28 mx-auto rounded-full object-cover mb-4"
-                />
-
-                <h3 className="text-xl font-semibold text-[var(--text-primary)]">
-                  {member.name}
-                </h3>
-
-                <p className="text-[var(--text-secondary)] mt-1">{member.role}</p>
-                <div className="flex items-center justify-center gap-4 text-lg mt-4">
-                  <FaPassport className="hover:text-[var(--secondary)] cursor-pointer"/>
-                  <FaFacebookF className="hover:text-[var(--secondary)] cursor-pointer" />
-                  <FaLinkedinIn className="hover:text-[var(--secondary)] cursor-pointer" />
-                  <FaGithub className="hover:text-[var(--secondary)] cursor-pointer" />
-          </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    </section>
     </div>
-  );
+
+    {/* Meet Team Section */}
+    <section className="pt-16">
+
+      <div className="text-center px-2">
+
+        <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-3">
+          Meet the Team
+        </h2>
+
+        <p className="text-[var(--text-secondary)] max-w-xl mx-auto mb-10 text-sm md:text-base">
+          Meet our passionate team of six professionals led by our Founder & Lead Developer.
+          Together we build Flexify with creativity and technology.
+        </p>
+
+        {/* Team Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          {teamMembers.map((member, index) => (
+            <div
+              key={index}
+              className="bg-[var(--card-bg)] rounded-xl shadow p-6 hover:shadow-lg transition"
+            >
+              <img
+                src={member.image}
+                alt={member.name}
+                className="w-24 h-24 mx-auto rounded-full object-cover mb-3"
+              />
+
+              <h3 className="text-lg font-semibold text-[var(--text-primary)]">
+                {member.name}
+              </h3>
+
+              <p className="text-sm text-[var(--text-secondary)]">
+                {member.role}
+              </p>
+
+              <div className="flex justify-center gap-4 mt-4 text-lg">
+                <FaPassport />
+                <FaFacebookF />
+                <FaLinkedinIn />
+                <FaGithub />
+              </div>
+            </div>
+          ))}
+
+        </div>
+
+      </div>
+    </section>
+
+  </section>
+</div>);
 };
 
 export default About;

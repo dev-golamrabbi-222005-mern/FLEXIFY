@@ -6,8 +6,8 @@ import { MdEmail } from "react-icons/md";
 const Contact = () => {
   return (
     <div>
-      <section className="bg-[var(--bg-nav-footer)] py-16 px-6 md:px-20">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+      <section className="bg-[var(--bg-primary)] py-16 px-6 md:px-20">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
           {/* Left: Contact Info */}
           <div>
             <h2 className="text-3xl md:text-4xl font-semibold text-[var(--text-primary)] mb-6">
@@ -37,7 +37,7 @@ const Contact = () => {
           </div>
 
           {/* Right: Contact Form */}
-          <div className="bg-[var(--bg-primary)] shadow-md rounded-xl p-8">
+          <div className="bg-[var(--card-bg)] shadow-md rounded-xl p-8">
             <h3 className="text-2xl font-semibold text-[var(--text-primary)] mb-6">
               Send us a Message
             </h3>
