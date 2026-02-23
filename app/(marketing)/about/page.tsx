@@ -27,6 +27,7 @@ const About = () => {
       name: "Md Ashiqur Rahman Pranto",
       role: "Founder & Developer",
       image: "https://i.ibb.co.com/Kx1bTKhB/IMG-20220522-WA0002-1.jpg",
+      portfolio: "https://ashiqur-rahman-pranto.netlify.app/",
       facebook: "https://www.facebook.com/ashiqurrahmanpranto1",
       linkedin: "https://www.linkedin.com/in/md-ashiqur-rahman-pranto/",
       github: "https://github.com/ashiqurrahman696",
