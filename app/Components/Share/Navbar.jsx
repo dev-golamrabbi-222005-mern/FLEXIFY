@@ -68,7 +68,7 @@ const pathname = usePathname();
             <Link href="/login" className="border-[border-color] px-4 py-1 rounded hover:bg-gray-500 hover:text-black transition">
             Login
           </Link>
-          <Link href="/signup" className="px-4 py-1 rounded hover:bg-gray-400 hover:text-black transition">
+          <Link href="/register" className="px-4 py-1 rounded hover:bg-gray-400 hover:text-black transition">
             Register
           </Link>
           </div>
