@@ -59,6 +59,7 @@ const About = () => {
       github: "https://github.com/nayeembabu",
     },
   ];
+
   return (
     <div className="bg-[var(--bg-primary)]">
       <section className="py-12 md:py-16 px-4 md:px-6 max-w-7xl mx-auto">
@@ -102,60 +103,45 @@ const About = () => {
               Lead Developer. Together we build Flexify with creativity and
               technology.
             </p>
+          </div>
 
-        {/* Team Cards */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Team Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {teamMembers.map((member, index) => (
+              <div
+                key={index}
+                className="bg-[var(--card-bg)] rounded-xl shadow text-center p-6 hover:shadow-lg hover:scale-105 transition hover:bg-[var(--primary)] hover:text-white"
+              >
+                <img
+                  src={member.image}
+                  alt={member.name}
+                  className="w-24 h-24 mx-auto rounded-full object-cover mb-3"
+                />
 
-          {teamMembers.map((member, index) => (
-            <div
-              key={index}
-              className="bg-[var(--card-bg)] rounded-xl shadow p-6 hover:shadow-lg hover:scale-105 transition"
-            >
-              <img
-                src={member.image}
-                alt={member.name}
-                className="object-cover w-24 h-24 mx-auto mb-3 rounded-full"
-              />
-            {/* Team Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {teamMembers.map((member, index) => (
-                <div
-                  key={index}
-                  className="bg-[var(--card-bg)] rounded-xl shadow p-6 hover:shadow-lg hover:scale-105 transition hover:bg-(--primary) hover:text-white"
-                >
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-24 h-24 mx-auto rounded-full object-cover mb-3"
-                  />
+                <h3 className="text-xl font-bold hover:text-white transition">
+                  {member.name}
+                </h3>
 
-                  <h3 className="text-xl font-bold">
-                    {member.name}
-                  </h3>
+                <p className="font-semibold hover:text-white/80 transition">
+                  {member.role}
+                </p>
 
-                  <p className="font-semibold">{member.role}</p>
-
-                  <div className="flex justify-center gap-4 mt-4 text-lg">
-                    <Link href={member.portfolio || "/"}>
-                      {" "}
-                      <FaPassport className="hover:text-[var(--secondary)] cursor-pointer" />
-                    </Link>
-                    <Link href={member.facebook || "/"}>
-                      {" "}
-                      <FaFacebookF className="hover:text-[var(--secondary)] cursor-pointer" />
-                    </Link>
-                    <Link href={member.linkedin || "/"}>
-                      {" "}
-                      <FaLinkedinIn className="hover:text-[var(--secondary)] cursor-pointer" />
-                    </Link>
-                    <Link href={member.github || "/"}>
-                      {" "}
-                      <FaGithub className="hover:text-[var(--secondary)] cursor-pointer" />
-                    </Link>
-                  </div>
+                <div className="flex justify-center gap-4 mt-4 text-lg">
+                  <Link href={member.portfolio || "/"}>
+                    <FaPassport className="hover:text-[var(--secondary)] cursor-pointer transition" />
+                  </Link>
+                  <Link href={member.facebook || "/"}>
+                    <FaFacebookF className="hover:text-[var(--secondary)] cursor-pointer transition" />
+                  </Link>
+                  <Link href={member.linkedin || "/"}>
+                    <FaLinkedinIn className="hover:text-[var(--secondary)] cursor-pointer transition" />
+                  </Link>
+                  <Link href={member.github || "/"}>
+                    <FaGithub className="hover:text-[var(--secondary)] cursor-pointer transition" />
+                  </Link>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </section>
       </section>
