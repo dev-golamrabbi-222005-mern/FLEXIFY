@@ -26,11 +26,10 @@ const About = () => {
     {
       name: "Md Ashiqur Rahman Pranto",
       role: "Founder & Developer",
-      image: "https://i.postimg.cc/J0tXV88W/images.jpg",
-      portfolio: "",
-      facebook: "https://www.facebook.com/ashiqur.rahman.pranto",
-      linkedin: "https://www.linkedin.com/in/ashiqur-rahman-pranto-9b1a4b1b3/",
-      github: "https://github.com/ashiqurrahmanpranto",
+      image: "https://i.ibb.co.com/Kx1bTKhB/IMG-20220522-WA0002-1.jpg",
+      facebook: "https://www.facebook.com/ashiqurrahmanpranto1",
+      linkedin: "https://www.linkedin.com/in/md-ashiqur-rahman-pranto/",
+      github: "https://github.com/ashiqurrahman696",
     },
     {
       name: "Md Altaf Mahmud",
@@ -104,6 +103,19 @@ const About = () => {
               technology.
             </p>
 
+        {/* Team Cards */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+          {teamMembers.map((member, index) => (
+            <div
+              key={index}
+              className="bg-[var(--card-bg)] rounded-xl shadow p-6 hover:shadow-lg hover:scale-105 transition"
+            >
+              <img
+                src={member.image}
+                alt={member.name}
+                className="object-cover w-24 h-24 mx-auto mb-3 rounded-full"
+              />
             {/* Team Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {teamMembers.map((member, index) => (
