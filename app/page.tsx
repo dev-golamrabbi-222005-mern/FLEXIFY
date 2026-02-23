@@ -3,16 +3,19 @@ import Precision from "@/components/home/Precision";
 import Pricing from "@/components/home/Pricing";
 import SuccessStory from "@/components/home/SuccessStories";
 import StatsSection from "@/components/home/StatsSection";
-
+import BMI from "@/components/home/BMI";
+import Motivation from "@/components/home/Motivation";
 
 export default function Home() {
   return (
     <div>
       <FlexifyHero/>
       <Precision/>
-      <SuccessStory/>
+      <StatsSection/>
       <Pricing/>
-      <StatsSection></StatsSection>
+      <SuccessStory/>
+      <BMI/>
+      <Motivation/>
     </div>
   );
 }

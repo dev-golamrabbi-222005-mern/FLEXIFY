@@ -21,7 +21,7 @@ export default function SectionTitle({
   return (
     <div className={`flex flex-col gap-3 mt-8 md:mt-12 lg:mt-16 mb-10 ${alignStyle} ${className}`}>
       {/* Title */}
-      <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">{title}</h2>
+      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{title}</h2>
       {/* Decorative line */}
       <span className="h-1 w-14 rounded-full bg-orange-500" />
       {subtitle && (
