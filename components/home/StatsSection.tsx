@@ -1,22 +1,74 @@
+"use client";
 import SectionTitle from "@/app/Components/ui/section-title";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { FaUsers, FaDumbbell, FaBullseye, FaUserTie } from "react-icons/fa";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  animate,
+  useInView,
+} from "framer-motion";
 
 // 🔹 Type
 type StatItem = {
   id: number;
-  value: string;
+  value: number;
+  suffix: string;
   label: string;
   icon: ReactNode;
 };
 
 // 🔹 Data
 const stats: StatItem[] = [
-  { id: 1, value: "10K+", label: "Active Users", icon: <FaUsers /> },
-  { id: 2, value: "25K+", label: "Workouts Completed", icon: <FaDumbbell /> },
-  { id: 3, value: "8K+", label: "Goals Achieved", icon: <FaBullseye /> },
-  { id: 4, value: "120+", label: "Expert Trainers", icon: <FaUserTie /> },
+  { id: 1, value: 50, suffix: "K+", label: "Active Users", icon: <FaUsers /> },
+  {
+    id: 2,
+    value: 300,
+    suffix: "K+",
+    label: "Workouts Completed",
+    icon: <FaDumbbell />,
+  },
+  {
+    id: 3,
+    value: 44,
+    suffix: "K+",
+    label: "Goals Achieved",
+    icon: <FaBullseye />,
+  },
+  {
+    id: 4,
+    value: 100,
+    suffix: "+",
+    label: "Expert Trainers",
+    icon: <FaUserTie />,
+  },
 ];
+
+// 🔹 Counter Component
+function Counter({ value, suffix }: { value: number; suffix: string }) {
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, (latest) => Math.round(latest));
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  useEffect(() => {
+    if (isInView) {
+      const controls = animate(count, value, {
+        duration: 3,
+        ease: "easeOut",
+      });
+      return controls.stop;
+    }
+  }, [isInView, count, value]);
+
+  return (
+    <span ref={ref}>
+      <motion.span>{rounded}</motion.span>
+      {suffix}
+    </span>
+  );
+}
 
 export default function StatsSection() {
   return (
@@ -29,9 +81,13 @@ export default function StatsSection() {
 
         {/* 🔹 Stats Grid */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => (
-            <div
+          {stats.map((stat, index) => (
+            <motion.div
               key={stat.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
               className="
                 group rounded-3xl
                 bg-[var(--card-bg)]
@@ -58,7 +114,7 @@ export default function StatsSection() {
                 </div>
               </div>
 
-              {/* Value */}
+              {/* Value with Counter */}
               <h3
                 className="
                   text-3xl md:text-4xl font-extrabold
@@ -67,7 +123,7 @@ export default function StatsSection() {
                   group-hover:text-white
                 "
               >
-                {stat.value}
+                <Counter value={stat.value} suffix={stat.suffix} />
               </h3>
 
               {/* Label */}
@@ -81,7 +137,7 @@ export default function StatsSection() {
               >
                 {stat.label}
               </p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
