@@ -34,11 +34,11 @@ const About = () => {
     {
       name: "Md Altaf Mahmud",
       role: "Founder & Developer",
-      image: "https://i.postimg.cc/J0tXV88W/images.jpg",
-      portfolio: "",
-      facebook: "https://www.facebook.com/altaf.mahmud.9",
-      linkedin: "https://www.linkedin.com/in/altaf-mahmud-9b1a4b1b3/",
-      github: "https://github.com/altafmahmud",
+      image: "https://lh3.googleusercontent.com/a/ACg8ocJKJ5VsIdSszgl0_wLT7TR1xMlIO3J9NYVXPjkVeRk_3FLaUdMPcg=s411-c-no",
+      portfolio: "https://md-mahmud-1426-protfolio.netlify.app/",
+      facebook: "https://www.facebook.com/amshuvo1426",
+      linkedin: "https://www.linkedin.com/in/md-altaf-mahmud/",
+      github: "https://github.com/amshuvo2002",
     },
     {
       name: "Md Siam Khan",
