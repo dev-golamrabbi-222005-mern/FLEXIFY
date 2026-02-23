@@ -295,7 +295,7 @@ export default function HowItWorksPage() {
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
           <h1
-            className="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight"
+            className="text-3xl md:text-5xl font-bold mb-4 tracking-tight"
             style={{ color: "var(--text-primary)" }}
           >
             How <span style={{ color: "var(--primary)" }}>Flexify</span> Works
@@ -350,7 +350,7 @@ export default function HowItWorksPage() {
 
         {/* CTA Footer */}
         <motion.div
-          className="text-center my-12 md:my-20 p-10 rounded-3xl relative overflow-hidden"
+          className="text-center py-12 md:my-20 rounded-3xl relative overflow-hidden"
           style={{
             backgroundColor: "var(--bg-secondary)",
             border: "1px solid var(--border-color)",
@@ -360,14 +360,18 @@ export default function HowItWorksPage() {
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          {/* Decorative gradient orbs */}
-          <div
-            className="absolute -top-10 -left-10 w-40 h-40 rounded-full blur-3xl opacity-20"
-            style={{ backgroundColor: "var(--primary)" }}
-          />
-          <div
-            className="absolute -bottom-10 -right-10 w-40 h-40 rounded-full blur-3xl opacity-20"
-            style={{ backgroundColor: "var(--success)" }}
+          {/* Animated gradient background */}
+          <motion.div
+            className="absolute inset-0 opacity-10"
+            animate={{
+              background: [
+                "radial-gradient(circle at 0% 0%, var(--primary) 0%, transparent 50%)",
+                "radial-gradient(circle at 100% 100%, var(--success) 0%, transparent 50%)",
+                "radial-gradient(circle at 0% 100%, var(--secondary) 0%, transparent 50%)",
+                "radial-gradient(circle at 100% 0%, var(--primary) 0%, transparent 50%)",
+              ],
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
           />
 
           <h3
