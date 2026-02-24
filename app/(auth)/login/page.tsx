@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, FormEvent, JSX } from "react";
 import { FcGoogle } from "react-icons/fc";
 import {
   FaFacebookF,
@@ -10,19 +10,63 @@ import {
   FaLock,
 } from "react-icons/fa";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import Swal from "sweetalert2";
+import { signIn } from "next-auth/react";
 
-export default function LoginPage() {
+export default function LoginPage(): JSX.Element {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const params = useSearchParams();
+  const router = useRouter();
+  const callbackUrl = params.get("callbackUrl") || "/";
+
+  const handleSubmit = async (
+    e: FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+
+    const email = (
+      form.elements.namedItem("email") as HTMLInputElement
+    ).value;
+
+    const password = (
+      form.elements.namedItem("password") as HTMLInputElement
+    ).value;
+
+    if (!email || !password) {
+      await Swal.fire("Error", "Email and password are required", "error");
+      return;
+    }
+
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+      callbackUrl,
+    });
+
+    if (!result || !result.ok) {
+      await Swal.fire(
+        "Error",
+        "Email or password not matched. Try Google login or register.",
+        "error"
+      );
+      return;
+    }
+
+    await Swal.fire("Success", "Login successful", "success");
+    router.push(callbackUrl);
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4 --secondary">
-      <div className="w-full max-w-md p-8 border bg-white/5 backdrop-blur-xl border-white/10 rounded-2xl"
-      style={{
-    backgroundImage:
-      "url('')",
-  }}
+      <div
+        className="w-full max-w-md p-8 border bg-white/5 backdrop-blur-xl border-white/10 rounded-2xl"
+        style={{ backgroundImage: "url('')" }}
       >
-
         {/* Header */}
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold color">
@@ -34,8 +78,7 @@ export default function LoginPage() {
         </div>
 
         {/* Form */}
-        <form className="space-y-5">
-          
+        <form className="space-y-5" onSubmit={handleSubmit}>
           {/* Email */}
           <div>
             <label className="text-sm text-gray-300">Email</label>
@@ -43,8 +86,8 @@ export default function LoginPage() {
               <FaEnvelope className="absolute left-3 top-3.5 text-gray-400" />
               <input
                 type="email"
-                className="w-full pl-10 py-3 rounded-lg bg-black/40 border border-white/10
-                text-white outline-none focus:border-(--primary)"
+                name="email"
+                className="w-full pl-10 py-3 rounded-lg bg-black/40 border border-white/10 text-white outline-none focus:border-(--primary)"
                 placeholder="you@example.com"
               />
             </div>
@@ -57,13 +100,13 @@ export default function LoginPage() {
               <FaLock className="absolute left-3 top-3.5 text-gray-400" />
               <input
                 type={showPassword ? "text" : "password"}
-                className="w-full pl-10 pr-10 py-3 rounded-lg bg-black/40 border border-white/10
-                text-white outline-none focus:border-(--primary)"
+                name="password"
+                className="w-full pl-10 pr-10 py-3 rounded-lg bg-black/40 border border-white/10 text-white outline-none focus:border-(--primary)"
                 placeholder="••••••••"
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowPassword((prev) => !prev)}
                 className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-200 transition"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -113,7 +156,6 @@ export default function LoginPage() {
             Sign up
           </Link>
         </p>
-
       </div>
     </div>
   );
