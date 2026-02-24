@@ -92,7 +92,7 @@ export default function RegisterPage(): JSX.Element {
     
     const result = await postUser(formData);
 
-    if (result?.acknowledged) {
+    if (result.success) {
       const signInResult = await signIn("credentials", {
         email: formData.email,
         password: formData.password,
@@ -101,11 +101,11 @@ export default function RegisterPage(): JSX.Element {
       });
 
       if (signInResult?.ok) {
-        await Swal.fire("Success", "Registered successfully", "success");
+        await Swal.fire("Success", result.message, "success");
         router.push(callbackUrl);
       }
     } else {
-      await Swal.fire("Error", "Registration failed", "error");
+      await Swal.fire("Error", result.message, "error");
     }
   };
 

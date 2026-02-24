@@ -8,6 +8,7 @@ import { loginUser } from "@/actions/server/auth";
 interface DbUser {
   _id?: string;
   provider?: string;
+  providerId?: string;
   email: string;
   name?: string;
   imageUrl?: string;
@@ -47,27 +48,28 @@ export const authOptions: AuthOptions = {
 
   callbacks: {
     async signIn({ user, account }) {
-      const collection = dbConnect<DbUser>("users");
-
-      const isExist = await collection.findOne({
-        email: user.email,
-      });
-
-      if (isExist) {
+      try{
+        const collection = dbConnect<DbUser>("users");
+        const newUser: DbUser = {
+          ...user,
+          provider: account?.provider,
+          providerId: account?.providerAccountId,
+          role: "user",
+        };
+        if(!newUser?.email){
+          return false;
+        }
+        const isExist = await collection.findOne({
+          email: user.email,
+        });
+        if (!isExist) {
+          const result = await collection.insertOne(newUser);
+        }
         return true;
       }
-
-      const newUser: DbUser = {
-        provider: account?.provider,
-        email: user.email!,
-        name: user.name ?? "",
-        imageUrl: user.image ?? "",
-        phone: user.phone ?? "",
-        role: "user",
-      };
-
-      const result = await collection.insertOne(newUser);
-      return result.acknowledged;
+      catch(error){
+        return false;
+      }
     },
 
     async session({ session, token }) {

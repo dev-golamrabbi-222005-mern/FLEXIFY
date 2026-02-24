@@ -25,31 +25,38 @@ interface DbUser {
 }
 
 export const postUser = async (payload: UserPayload) => {
-  const { email, password, name, phone } = payload;
-
-  if (!email || !password || !phone) {
-    return { success: false };
-  }
+  const { email, password } = payload;
 
   const collection = dbConnect<DbUser>("users");
 
   const isExist = await collection.findOne({ email });
   if (isExist) {
-    return { success: false };
+    return {
+      success: false,
+      message: "Email already exists"
+    };
   }
 
   const hashedPassword = await bcrypt.hash(password, 14);
 
   const newUser: DbUser = {
     ...payload,
-    password: await bcrypt.hash(password, 14),
+    password: hashedPassword,
   };
 
   const result = await collection.insertOne(newUser);
 
-  return {
-    ...result,
-    insertedId: result.insertedId.toString(),
+  if(result.acknowledged){
+    return{
+      success: true,
+      message: "Registration successful."
+    }
+  }
+  else{
+    return{
+      success: false,
+      message: "Something went wrong. Try again."
+    }
   };
 };
 
