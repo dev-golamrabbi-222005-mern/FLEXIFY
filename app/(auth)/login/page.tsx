@@ -62,14 +62,14 @@ export default function LoginPage(): JSX.Element {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-4 --secondary">
+    <div className="relative flex items-center justify-center min-h-screen px-4 bg-center bg-cover" style={{ backgroundImage: "url('https://i.ibb.co.com/1f17SJk4/gym-backgound.jpg')" }}>
+      <div className="absolute inset-0 h-full bg-black/70"></div>
       <div
         className="w-full max-w-md p-8 border bg-white/5 backdrop-blur-xl border-white/10 rounded-2xl"
-        style={{ backgroundImage: "url('')" }}
       >
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold color">
+          <h1 className="text-3xl font-bold text-white color">
             Login to <span className="text-(--primary)">Flexify</span>
           </h1>
           <p className="mt-2 text-gray-400">
