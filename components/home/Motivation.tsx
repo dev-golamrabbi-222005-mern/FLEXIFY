@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import SectionTitle from "@/app/Components/ui/section-title";
 
+
 const defaultMotivations = [
    "Hard work beats talent when talent doesn’t work hard.",
   "Dream big. Start small. Stay consistent.",
@@ -58,7 +59,7 @@ const Motivation = () => {
       <div className="relative max-w-7xl mx-auto px-4 text-center text-white">
         <SectionTitle
           title="Daily Motivation"
-          subtitle="Fuel your mindset. Elevate your discipline. Transform daily."
+          
         />
 
         <div className="max-w-4xl mx-auto">

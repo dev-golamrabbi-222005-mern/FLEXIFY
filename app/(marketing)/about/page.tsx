@@ -35,7 +35,7 @@ const About = () => {
     {
       name: "Md Altaf Mahmud",
       role: "Founder & Developer",
-      image: "https://lh3.googleusercontent.com/a/ACg8ocJKJ5VsIdSszgl0_wLT7TR1xMlIO3J9NYVXPjkVeRk_3FLaUdMPcg=s411-c-no",
+      image: "https://i.ibb.co.com/8W7XwbL/1000096371-removebg-preview.jpg",
       portfolio: "https://md-mahmud-1426-protfolio.netlify.app/",
       facebook: "https://www.facebook.com/amshuvo1426",
       linkedin: "https://www.linkedin.com/in/md-altaf-mahmud/",
