@@ -13,6 +13,8 @@
 .light {
     --bg-primary: #F8F4E3;
     /* Main page background (Body) */
+    --bg-nav-footer: #eee6c1;
+    /* Main page Nav & Footer background (Body) */
     --bg-secondary: #FFFFFF;
     /* Elevated surfaces (Cards, Modals, Dropdowns) */
     --text-primary: #374151;
@@ -30,8 +32,10 @@
 }
 
 .dark {
-    --bg-primary: #1E1E1E;
+    --bg-primary: #222222;
     /* Main dark background (Body) */
+    --bg-nav-footer: #1a1a1a;
+    /* Main page Nav & Footer background (Body) */
     --bg-secondary: #2D2D2D;
     /* Darker surfaces for contrast (Cards, sections) */
     --text-primary: #E5E7EB;

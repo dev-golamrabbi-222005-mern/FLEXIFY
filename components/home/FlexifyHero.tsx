@@ -51,7 +51,7 @@ export default function FlexifyHero() {
           <motion.div
             key={index}
             initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 0.12, scale: 1 }}
+            animate={{ opacity: 0.50, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
             className="w-full h-full"
@@ -66,7 +66,7 @@ export default function FlexifyHero() {
         </AnimatePresence>
       </div>
 
-      <div className="relative z-10 w-full max-w-[1280px]  mb-8 md:mb-12 px-6 mx-auto  flex flex-col md:flex-row gap-12 md:gap-16 items-center justify-center">
+      <div className="relative z-10 w-full max-w-7xl mb-8 md:mb-12 px-6 mx-auto  flex flex-col md:flex-row gap-12 md:gap-16 items-center justify-center">
         <div className="w-full md:w-1/2">
           <AnimatePresence mode="wait">
             <motion.div
