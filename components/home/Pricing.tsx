@@ -7,16 +7,12 @@ const Pricing = () => {
         className="pb-8 md:pb-12 bg-[var(--bg-primary)]"
         id="pricing"
       >
-        <div className="mx-auto max-w-7xl px-6 pb-12 shadow-md">
-          {/* <div className="flex flex-col items-center mb-16 text-center">
-                <h2 className="text-4xl font-bold tracking-tight text-[var(--text-primary)]">Choose Your Architecture</h2>
-                <p className="mt-4 text-[var(--text-secondary)]">Plans designed to fit every level of logical optimization.</p>
-            </div> */}
+        <div className="mx-auto max-w-7xl px-6 pb-12">
           <SectionTitle
             title="Choose Your Architecture"
             subtitle="Plans designed to fit every level of logical optimization."
           />
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 mt-16">
             {/* Basic */}
             <div className="flex flex-col p-8 bg-(--card-bg) shadow-sm shadow- rounded-3xl hover:-translate-y-2 transition-all duration-300">
               <h3 className="text-xl font-bold">Observer</h3>
