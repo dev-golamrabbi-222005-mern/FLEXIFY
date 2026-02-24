@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa";
 
+
 const defaultMotivations = [
   "Hard work beats talent when talent doesn’t work hard.",
   "Dream big. Start small. Stay consistent.",
