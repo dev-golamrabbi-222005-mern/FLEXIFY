@@ -1,43 +1,83 @@
-
-
 "use client";
 
-import { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
+import { useState, FormEvent, JSX } from "react";
 import {
-  FaFacebookF,
   FaEye,
   FaEyeSlash,
   FaEnvelope,
   FaLock,
 } from "react-icons/fa";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import Swal from "sweetalert2";
+import { signIn } from "next-auth/react";
+import SocialButtons from "@/components/auth/SocialButtons";
 
-export default function LoginPage() {
+export default function LoginPage(): JSX.Element {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  return (
-    <div className="min-h-screen flex items-center justify-center --secondary px-4">
-      <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8"
-      style={{
-    backgroundImage:
-      "url('')",
-  }}
-      >
+  const params = useSearchParams();
+  const router = useRouter();
+  const callbackUrl = params.get("callbackUrl") || "/";
 
+  const handleSubmit = async (
+    e: FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+
+    const email = (
+      form.elements.namedItem("email") as HTMLInputElement
+    ).value;
+
+    const password = (
+      form.elements.namedItem("password") as HTMLInputElement
+    ).value;
+
+    if (!email || !password) {
+      await Swal.fire("Error", "Email and password are required", "error");
+      return;
+    }
+
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+      callbackUrl,
+    });
+
+    if (!result || !result.ok) {
+      await Swal.fire(
+        "Error",
+        "Email or password not matched. Try Google login or register.",
+        "error"
+      );
+      return;
+    }
+
+    await Swal.fire("Success", "Login successful", "success");
+    router.push(callbackUrl);
+  };
+
+  return (
+    <div className="relative flex items-center justify-center min-h-screen px-4 bg-center bg-cover" style={{ backgroundImage: "url('https://i.ibb.co.com/1f17SJk4/gym-backgound.jpg')" }}>
+      <div className="absolute inset-0 h-full bg-black/70"></div>
+      <div
+        className="w-full max-w-md p-8 border bg-white/5 backdrop-blur-xl border-white/10 rounded-2xl"
+      >
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold color">
-            Login to <span className="text-green-400">Flexify</span>
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-bold text-white color">
+            Login to <span className="text-(--primary)">Flexify</span>
           </h1>
-          <p className="text-gray-400 mt-2">
+          <p className="mt-2 text-gray-400">
             Continue your fitness journey
           </p>
         </div>
 
         {/* Form */}
-        <form className="space-y-5">
-          
+        <form className="space-y-5" onSubmit={handleSubmit}>
           {/* Email */}
           <div>
             <label className="text-sm text-gray-300">Email</label>
@@ -45,8 +85,8 @@ export default function LoginPage() {
               <FaEnvelope className="absolute left-3 top-3.5 text-gray-400" />
               <input
                 type="email"
-                className="w-full pl-10 py-3 rounded-lg bg-black/40 border border-white/10
-                text-white outline-none focus:border-green-400"
+                name="email"
+                className="w-full pl-10 py-3 rounded-lg bg-black/40 border border-white/10 text-white outline-none focus:border-(--primary)"
                 placeholder="you@example.com"
               />
             </div>
@@ -59,13 +99,13 @@ export default function LoginPage() {
               <FaLock className="absolute left-3 top-3.5 text-gray-400" />
               <input
                 type={showPassword ? "text" : "password"}
-                className="w-full pl-10 pr-10 py-3 rounded-lg bg-black/40 border border-white/10
-                text-white outline-none focus:border-green-400"
+                name="password"
+                className="w-full pl-10 pr-10 py-3 rounded-lg bg-black/40 border border-white/10 text-white outline-none focus:border-(--primary)"
                 placeholder="••••••••"
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowPassword((prev) => !prev)}
                 className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-200 transition"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -76,7 +116,7 @@ export default function LoginPage() {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full btn-primary font-semibold py-3 rounded-lg transition"
+            className="w-full py-3 font-semibold transition rounded-lg btn-primary"
           >
             Login
           </button>
@@ -90,34 +130,15 @@ export default function LoginPage() {
         </div>
 
         {/* Social Login */}
-        <div className="flex gap-5">
-          <button
-            type="button"
-            className="w-full flex items-center justify-center gap-3 py-3 rounded-lg
-            bg-white text-black font-medium hover:bg-gray-200 transition"
-          >
-            <FcGoogle />
-            Google
-          </button>
-
-          <button
-            type="button"
-            className="w-full flex items-center justify-center gap-3 py-3 rounded-lg
-            bg-blue-600 hover:bg-blue-700 text-white font-medium transition"
-          >
-            <FaFacebookF />
-            Facebook
-          </button>
-        </div>
+        <SocialButtons/>
 
         {/* Footer */}
-        <p className="text-center text-sm text-gray-400 mt-6">
+        <p className="mt-6 text-sm text-center text-gray-400">
           Don’t have an account?{" "}
-          <Link href="/register" className="text-green-400 hover:underline">
+          <Link href="/register" className="text-(--primary) hover:underline">
             Sign up
           </Link>
         </p>
-
       </div>
     </div>
   );

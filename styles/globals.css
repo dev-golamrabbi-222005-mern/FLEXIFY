@@ -66,6 +66,7 @@ body {
     /* White text on primary buttons */
     padding: 12px 24px;
     border-radius: 12px;
+    cursor: pointer;
 }
 @media only screen and (max-width: 600px) {
     .btn-primary{
