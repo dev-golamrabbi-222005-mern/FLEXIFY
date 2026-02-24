@@ -6,9 +6,9 @@ const GoogleLogin = () => {
     const params = useSearchParams();
 
     const handleSignIn = async () => {
-        const result = await signIn("google", {
-        // redirect: "false",
-        callbackUrl: params.get("callbackUrl") || "/",
+            const result = await signIn("google", {
+            // redirect: "false",
+            callbackUrl: params.get("callbackUrl") || "/",
         });
     };
     return (
