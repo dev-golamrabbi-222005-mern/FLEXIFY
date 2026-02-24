@@ -17,8 +17,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   return (
-    <div className="min-h-screen flex items-center justify-center --secondary px-4">
-      <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8"
+    <div className="flex items-center justify-center min-h-screen px-4 --secondary">
+      <div className="w-full max-w-md p-8 border bg-white/5 backdrop-blur-xl border-white/10 rounded-2xl"
       style={{
     backgroundImage:
       "url('')",
@@ -26,11 +26,11 @@ export default function LoginPage() {
       >
 
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold color">
-            Login to <span className="text-green-400">Flexify</span>
+            Login to <span className="text-(--primary)">Flexify</span>
           </h1>
-          <p className="text-gray-400 mt-2">
+          <p className="mt-2 text-gray-400">
             Continue your fitness journey
           </p>
         </div>
@@ -46,7 +46,7 @@ export default function LoginPage() {
               <input
                 type="email"
                 className="w-full pl-10 py-3 rounded-lg bg-black/40 border border-white/10
-                text-white outline-none focus:border-green-400"
+                text-white outline-none focus:border-(--primary)"
                 placeholder="you@example.com"
               />
             </div>
@@ -60,7 +60,7 @@ export default function LoginPage() {
               <input
                 type={showPassword ? "text" : "password"}
                 className="w-full pl-10 pr-10 py-3 rounded-lg bg-black/40 border border-white/10
-                text-white outline-none focus:border-green-400"
+                text-white outline-none focus:border-(--primary)"
                 placeholder="••••••••"
               />
               <button
@@ -76,7 +76,7 @@ export default function LoginPage() {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full btn-primary font-semibold py-3 rounded-lg transition"
+            className="w-full py-3 font-semibold transition rounded-lg btn-primary"
           >
             Login
           </button>
@@ -93,8 +93,7 @@ export default function LoginPage() {
         <div className="flex gap-5">
           <button
             type="button"
-            className="w-full flex items-center justify-center gap-3 py-3 rounded-lg
-            bg-white text-black font-medium hover:bg-gray-200 transition"
+            className="flex items-center justify-center w-full gap-3 py-3 font-medium text-black transition bg-white rounded-lg hover:bg-gray-200"
           >
             <FcGoogle />
             Google
@@ -102,8 +101,7 @@ export default function LoginPage() {
 
           <button
             type="button"
-            className="w-full flex items-center justify-center gap-3 py-3 rounded-lg
-            bg-blue-600 hover:bg-blue-700 text-white font-medium transition"
+            className="flex items-center justify-center w-full gap-3 py-3 font-medium text-white transition bg-blue-600 rounded-lg hover:bg-blue-700"
           >
             <FaFacebookF />
             Facebook
@@ -111,9 +109,9 @@ export default function LoginPage() {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-sm text-gray-400 mt-6">
+        <p className="mt-6 text-sm text-center text-gray-400">
           Don’t have an account?{" "}
-          <Link href="/register" className="text-green-400 hover:underline">
+          <Link href="/register" className="text-(--primary) hover:underline">
             Sign up
           </Link>
         </p>

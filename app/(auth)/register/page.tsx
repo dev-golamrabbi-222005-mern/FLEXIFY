@@ -22,7 +22,7 @@ export default function RegisterPage() {
 
   return (
     <div
-      className="min-h-screen flex items-center  justify-center px-4 bg-cover bg-center relative"
+      className="relative flex items-center justify-center min-h-screen px-4 bg-center bg-cover"
       style={{
         backgroundImage:
           "url('https://i.ibb.co/W4SrF8Vn/pngtree-rows-of-dumbbells-in-the-gym-image-15662386.jpg')",
@@ -32,13 +32,13 @@ export default function RegisterPage() {
       <div className="absolute inset-0 bg-black/70"></div>
 
       {/* Card */}
-      <div className="relative z-10 w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+      <div className="relative z-10 w-full max-w-md p-8 border bg-white/5 backdrop-blur-xl border-white/10 rounded-2xl">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-white">
-            Create <span className="text-green-400">Flexify</span> Account
+            Create <span className="text-(--primary)">Flexify</span> Account
           </h1>
-          <p className="text-gray-400 mt-2">
+          <p className="mt-2 text-gray-400">
             Start your fitness journey today
           </p>
         </div>
@@ -52,7 +52,7 @@ export default function RegisterPage() {
               <FaUser className="absolute left-3 top-3.5 text-gray-400" />
               <input
                 type="text"
-                className="w-full pl-10 py-3 rounded-lg bg-black/40 border border-white/10 text-white outline-none focus:border-green-400"
+                className="w-full py-3 pl-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-green-400"
                 placeholder="Your name"
               />
             </div>
@@ -65,7 +65,7 @@ export default function RegisterPage() {
               <FaEnvelope className="absolute left-3 top-3.5 text-gray-400" />
               <input
                 type="email"
-                className="w-full pl-10 py-3 rounded-lg bg-black/40 border border-white/10 text-white outline-none focus:border-green-400"
+                className="w-full py-3 pl-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-green-400"
                 placeholder="you@example.com"
               />
             </div>
@@ -78,7 +78,7 @@ export default function RegisterPage() {
               <FaImage className="absolute left-3 top-3.5 text-gray-400" />
               <input
                 type="text"
-                className="w-full pl-10 py-3 rounded-lg bg-black/40 border border-white/10 text-white outline-none focus:border-green-400"
+                className="w-full py-3 pl-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-green-400"
                 placeholder="https://image-url.com"
               />
             </div>
@@ -91,7 +91,7 @@ export default function RegisterPage() {
               <FaLock className="absolute left-3 top-3.5 text-gray-400" />
               <input
                 type={showPassword ? "text" : "password"}
-                className="w-full pl-10 pr-10 py-3 rounded-lg bg-black/40 border border-white/10 text-white outline-none focus:border-green-400"
+                className="w-full py-3 pl-10 pr-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-green-400"
                 placeholder="••••••••"
               />
               <button
@@ -106,7 +106,7 @@ export default function RegisterPage() {
 
           {/* Role */}
           <div>
-            <label className="text-sm text-gray-300 mb-2 block">
+            <label className="block mb-2 text-sm text-gray-300">
               Register as
             </label>
             <div className="flex gap-6 text-gray-300">
@@ -141,7 +141,7 @@ export default function RegisterPage() {
             />
             <span>
               I agree to the{" "}
-              <span className="text-green-400 underline cursor-pointer">
+              <span className="text-(--primary) underline cursor-pointer">
                 Terms & Conditions
               </span>
             </span>
@@ -151,7 +151,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={!agree}
-            className="w-full py-3 rounded-lg btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold transition"
+            className="w-full py-3 font-semibold text-black transition rounded-lg btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Register
           </button>
@@ -166,21 +166,21 @@ export default function RegisterPage() {
 
         {/* Social */}
         <div className="flex gap-4">
-          <button className="w-full flex items-center justify-center gap-3 py-3 rounded-lg bg-white text-black font-medium">
+          <button className="flex items-center justify-center w-full gap-3 py-3 font-medium text-black bg-white rounded-lg">
             <FcGoogle />
             Google
           </button>
 
-          <button className="w-full flex items-center justify-center gap-3 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium">
+          <button className="flex items-center justify-center w-full gap-3 py-3 font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
             <FaFacebookF />
             Facebook
           </button>
         </div>
 
         {/* Footer */}
-        <p className="text-center text-sm text-gray-400 mt-6">
+        <p className="mt-6 text-sm text-center text-gray-400">
           Already have an account?{" "}
-          <Link href="/login" className="text-green-400 hover:underline">
+          <Link href="/login" className="text-(--primary) hover:underline">
             Login
           </Link>
         </p>
