@@ -93,3 +93,20 @@ body {
   box-shadow: 0 0 0 6px rgba(249, 115, 22, 0.15);
   cursor: pointer;
 }
+
+/* input field */
+
+.input-style {
+          background-color: var(--bg-primary);
+          border: 1px solid var(--border-color);
+          color: var(--text-primary);
+          padding: 14px;
+          border-radius: 12px;
+          outline: none;
+          width: 100%;
+          font-size: 0.9rem;
+          transition: border-color 0.2s;
+        }
+        .input-style:focus { border-color: var(--primary); }
+        label { color: var(--text-secondary); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;
+         }
