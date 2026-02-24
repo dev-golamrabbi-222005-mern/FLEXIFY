@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, FormEvent, JSX } from "react";
-import { FcGoogle } from "react-icons/fc";
 import {
-  FaFacebookF,
   FaEye,
   FaEyeSlash,
   FaEnvelope,
@@ -13,6 +11,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Swal from "sweetalert2";
 import { signIn } from "next-auth/react";
+import SocialButtons from "@/components/auth/SocialButtons";
 
 export default function LoginPage(): JSX.Element {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -131,23 +130,7 @@ export default function LoginPage(): JSX.Element {
         </div>
 
         {/* Social Login */}
-        <div className="flex gap-5">
-          <button
-            type="button"
-            className="flex items-center justify-center w-full gap-3 py-3 font-medium text-black transition bg-white rounded-lg hover:bg-gray-200"
-          >
-            <FcGoogle />
-            Google
-          </button>
-
-          <button
-            type="button"
-            className="flex items-center justify-center w-full gap-3 py-3 font-medium text-white transition bg-blue-600 rounded-lg hover:bg-blue-700"
-          >
-            <FaFacebookF />
-            Facebook
-          </button>
-        </div>
+        <SocialButtons/>
 
         {/* Footer */}
         <p className="mt-6 text-sm text-center text-gray-400">

@@ -2,9 +2,7 @@
 
 import { useState, FormEvent, JSX } from "react";
 import Link from "next/link";
-import { FcGoogle } from "react-icons/fc";
 import {
-  FaFacebookF,
   FaEye,
   FaEyeSlash,
   FaMobileAlt,
@@ -17,6 +15,7 @@ import { postUser } from "@/actions/server/auth";
 import { signIn } from "next-auth/react";
 import Swal from "sweetalert2";
 import { useRouter, useSearchParams } from "next/navigation";
+import SocialButtons from "@/components/auth/SocialButtons";
 
 interface RegisterFormData {
   name: string;
@@ -266,17 +265,7 @@ export default function RegisterPage(): JSX.Element {
           <div className="flex-1 h-px bg-white/10"></div>
         </div>
 
-        <div className="flex gap-4">
-          <button className="flex items-center justify-center w-full gap-3 py-3 font-medium text-black bg-white rounded-lg">
-            <FcGoogle />
-            Google
-          </button>
-
-          <button className="flex items-center justify-center w-full gap-3 py-3 font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-            <FaFacebookF />
-            Facebook
-          </button>
-        </div>
+        <SocialButtons/>
 
         <p className="mt-6 text-sm text-center text-gray-400">
           Already have an account?{" "}
