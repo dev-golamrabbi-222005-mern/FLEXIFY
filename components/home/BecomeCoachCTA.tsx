@@ -29,10 +29,7 @@ export default function BecomeCoachCTA() {
   ];
 
   return (
-    <section
-      className="py-16 md:py-24 px-6 relative overflow-hidden"
-      style={{ backgroundColor: "var(--bg-primary)" }}
-    >
+    <section className="py-16 md:py-24 px-6 relative overflow-hidden">
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -40,40 +37,53 @@ export default function BecomeCoachCTA() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7 }}
           className="relative rounded-3xl overflow-hidden"
-          style={{
-            background: `linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)`,
-            boxShadow: "0 20px 60px rgba(249, 115, 22, 0.4)",
-          }}
         >
-          {/* Animated Background Elements */}
-          <div className="absolute inset-0 opacity-20">
-            {/* Dots pattern */}
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage: `radial-gradient(circle, #fff 2px, transparent 2px)`,
-                backgroundSize: "40px 40px",
-              }}
-            />
-            {/* Floating circles */}
-            <motion.div
-              className="absolute top-10 left-10 w-32 h-32 rounded-full bg-white/10 blur-2xl"
-              animate={{ y: [0, 20, 0], x: [0, 10, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-white/10 blur-2xl"
-              animate={{ y: [0, -30, 0], x: [0, -15, 0] }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </div>
+          {/* Background Image with Slow Zoom */}
+          <motion.div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url("https://images.unsplash.com/photo-1687350119840-3e2cc5977e92?w=1600&auto=format&fit=crop&q=80")`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+            animate={{ scale: [1, 1.08, 1] }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+
+          {/* Dark + Blur Overlay */}
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+
+          {/* Animated Dots Pattern */}
+          <div
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage: `radial-gradient(circle, #fff 2px, transparent 2px)`,
+              backgroundSize: "40px 40px",
+            }}
+          />
+
+          {/* Floating Glow Elements */}
+          <motion.div
+            className="absolute top-10 left-10 w-32 h-32 rounded-full bg-white/10 blur-3xl"
+            animate={{ y: [0, 20, 0], x: [0, 10, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          <motion.div
+            className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-white/10 blur-3xl"
+            animate={{ y: [0, -30, 0], x: [0, -15, 0] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
 
           {/* Content */}
           <div className="relative z-10 p-8 md:p-16">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               {/* Left Content */}
               <div>
-                {/* Badge */}
                 <motion.div
                   initial={{ opacity: 0, y: -20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -86,7 +96,6 @@ export default function BecomeCoachCTA() {
                   </span>
                 </motion.div>
 
-                {/* Heading */}
                 <motion.h2
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -96,7 +105,7 @@ export default function BecomeCoachCTA() {
                 >
                   Join Flexify as a
                   <br />
-                  <span className="relative inline-block">
+                  <span className="relative inline-block text-[var(--primary)] ">
                     Certified Coach
                     <motion.div
                       className="absolute -bottom-2 left-0 right-0 h-2 bg-white rounded-full"
@@ -108,7 +117,6 @@ export default function BecomeCoachCTA() {
                   </span>
                 </motion.h2>
 
-                {/* Description */}
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -121,7 +129,6 @@ export default function BecomeCoachCTA() {
                   real difference.
                 </motion.p>
 
-                {/* CTA Button */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -133,11 +140,11 @@ export default function BecomeCoachCTA() {
                       className="group px-8 py-4 rounded-xl font-bold text-lg shadow-2xl inline-flex items-center gap-3 cursor-pointer"
                       style={{
                         backgroundColor: "#fff",
-                        color: "var(--primary)",
+                        color: "#f97316",
                       }}
                       whileHover={{
                         scale: 1.05,
-                        boxShadow: "0 15px 50px rgba(255, 255, 255, 0.4)",
+                        boxShadow: "0 15px 50px rgba(255,255,255,0.4)",
                       }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -160,7 +167,7 @@ export default function BecomeCoachCTA() {
                 </motion.div>
               </div>
 
-              {/* Right - Benefits Grid */}
+              {/* Right Benefits */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {benefits.map((benefit, i) => (
                   <motion.div
