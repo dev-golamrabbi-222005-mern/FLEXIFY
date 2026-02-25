@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import SectionTitle from "@/app/Components/ui/section-title";
+import SectionTitle from "@/app/(website)/components/ui/section-title";
 import ImgBMI from "../../public/bmi-calculator.jpg"
 
 const BMI = () => {

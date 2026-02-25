@@ -1,11 +1,11 @@
 "use client";
 
-import {Home, Flag, Calendar, Trophy, BarChart2, Settings} from "lucide-react";
+import {Home, Flag, Calendar, Trophy, BarChart2, Settings, Dumbbell, Salad, Moon} from "lucide-react";
 import Link from "next/link";
 
 const Dashboard = () => {
   return (
-    <div className="bg-[var(--bg-primary)] flex min-h-screen">
+    <div className="bg-[var(--bg-primary)] flex min-h-screen max-w-7xl mx-auto">
       {/* Sidebar */}
       <aside className="w-[260px] bg-[var(--card-bg)] rounded-2xl p-4 shadow-lg flex flex-col justify-between">
         {/* Top */}
@@ -88,7 +88,10 @@ const Dashboard = () => {
                          transition-all duration-300
                          hover:-translate-y-2
                          hover:shadow-[0_20px_40px_rgba(0,0,0,0.25)] text-[var(--text-primary)]">
+            <div className="flex items-center gap-4 font-bold">
+              <Dumbbell size={32} className="mb-2" />
             <h3>Exercises</h3>
+            </div>
             <p className="text-3xl font-bold mt-2">10</p>
             <span>1h 50m</span>
           </div>
@@ -97,7 +100,10 @@ const Dashboard = () => {
                          transition-all duration-300
                          hover:-translate-y-2
                          hover:shadow-[0_20px_40px_rgba(0,0,0,0.25)] text-[var(--text-primary)]">
-            <h3>Meals</h3>
+            <div className="flex items-center gap-4 font-bold">
+              <Salad size={32} className="mb-2" />
+              <h3>Meals</h3>
+            </div>
             <p className="text-3xl font-bold mt-2">6</p>
             <span>1600 Cal</span>
           </div>
@@ -106,7 +112,10 @@ const Dashboard = () => {
                          transition-all duration-300
                          hover:-translate-y-2
                          hover:shadow-[0_20px_40px_rgba(0,0,0,0.25)] text-[var(--text-primary)]">
-            <h3>Sleep</h3>
+            <div className="flex items-center gap-4 font-bold">
+              <Moon size={32} className="mb-2" />
+              <h3>Sleep</h3>
+            </div>
             <p className="text-3xl font-bold mt-2">8h</p>
           </div>
         </div>

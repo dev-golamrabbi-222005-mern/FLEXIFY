@@ -1,4 +1,4 @@
-import SectionTitle from "@/app/Components/ui/section-title";
+import SectionTitle from "@/app/(website)/components/ui/section-title";
 import Link from "next/link";
 import React from "react";
 import { FaFacebookF, FaLinkedinIn, FaMediumM } from "react-icons/fa";
