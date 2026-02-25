@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { FaFire, FaClock } from "react-icons/fa";
-import SectionTitle from "@/app/Components/ui/section-title";
+import SectionTitle from "@/app/(website)/components/ui/section-title";
 
 const workouts = [
   {

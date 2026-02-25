@@ -6,10 +6,12 @@ import { usePathname } from "next/navigation";
 import { FiMenu, FiX } from "react-icons/fi";
 import ThemeToggle from "./ThemeToggle";
 import { motion } from "framer-motion";
+import { signOut, useSession } from "next-auth/react";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const session = useSession();
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -17,6 +19,7 @@ const Navbar = () => {
     {name: "Features", path: "/features"},
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact" },
+    { name: "Dashboard", path: "/dashboard" },
   ];
 
   return (
@@ -54,7 +57,9 @@ const Navbar = () => {
             }}
             whileTap={{ scale: 0.95 }}
           >
-            <Link href={"/register"}>Get Started</Link>
+            {session?.status === "authenticated" ? <span onClick={() => signOut()}>Logout</span> : <>
+              <Link href={"/register"}>Get Started</Link>
+            </>}
           </motion.button>
         </div>
 
