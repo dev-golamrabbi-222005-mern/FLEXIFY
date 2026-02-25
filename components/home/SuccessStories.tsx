@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import SectionTitle from "@/app/Components/ui/section-title";
+import SectionTitle from "@/app/(website)/components/ui/section-title";
 
 // SUCCESS DATA
 const SUCCESS_DATA = [

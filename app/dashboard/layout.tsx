@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import "../styles/globals.css"
-import Navbar from './Components/Share/Navbar';
-import Footer from './Components/Share/Footer';
+import "../../styles/globals.css"
 import Providers from "./providers";
+import DashboardNavbar from "./Share/DashboardNavbar";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Flexify",
+  title: "Flexify | Dashboard",
   description: "A fitness Planner Platform.",
 };
 
@@ -32,9 +32,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
         <Providers>
-          <Navbar />
+          <DashboardNavbar />
           {children}
-          <Footer />
         </Providers>
       </body>
     </html>

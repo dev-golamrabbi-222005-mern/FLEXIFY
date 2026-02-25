@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import SectionTitle from "@/app/Components/ui/section-title";
+import SectionTitle from "@/app/(website)/components/ui/section-title";
+import ImgBMI from "../../public/bmi-calculator.jpg"
 
 const BMI = () => {
   const [height, setHeight] = useState("");
@@ -49,25 +50,25 @@ const BMI = () => {
 
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-
-        {/* Left Image */}
-<div
-  className="group flex justify-center transition-all duration-300"
->
-  <div
-    className="rounded-2xl overflow-hidden transition-all duration-300
+          {/* Left Image */}
+          <div className="group flex justify-center transition-all duration-300">
+            <div
+              className="rounded-2xl overflow-hidden transition-all duration-300
                group-hover:-translate-y-2
                group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.25)]"
-  >
-    <Image
-      src="https://images.unsplash.com/photo-1707902665498-a202981fb5ac?q=80&w=1170&auto=format&fit=crop"
-      alt="BMI Illustration"
-      width={480}
-      height={400}
-      className="rounded-2xl object-cover"
-    />
-  </div>
-</div>
+            >
+              <Image
+                src={
+                  "https://www.godigit.com/content/dam/godigit/directportal/en/bmi-calculator-for-men-women-and-kids.jpg"
+                }
+                alt="BMI Illustration"
+                width={400}
+                height={400}
+                className="rounded-2xl object-cover"
+                unoptimized
+              />
+            </div>
+          </div>
 
           {/* BMI Card */}
           <div className="max-w-md mx-auto w-full">

@@ -1,4 +1,4 @@
-import SectionTitle from "@/app/Components/ui/section-title";
+import SectionTitle from "@/app/(website)/components/ui/section-title";
 import { IoMdTrendingUp } from "react-icons/io";
 import { IoServer } from "react-icons/io5";
 import { MdSettingsInputComponent } from "react-icons/md";
