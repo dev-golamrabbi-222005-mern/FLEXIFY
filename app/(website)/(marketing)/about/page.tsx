@@ -66,9 +66,9 @@ const About = () => {
 
   return (
     <div className="bg-[var(--bg-primary)]">
-      <section className="py-12 md:py-16 px-4 md:px-6 max-w-7xl mx-auto">
+      <section className="px-4 py-12 mx-auto md:py-16 md:px-6 max-w-7xl">
         {/* About Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+        <div className="grid items-center grid-cols-1 gap-10 md:grid-cols-2">
           {/* Left Text */}
           <div className="text-center md:text-left">
             <h2 className="text-2xl md:text-4xl font-semibold text-[var(--text-primary)] mb-4">
@@ -90,14 +90,14 @@ const About = () => {
             <img
               src="https://i.postimg.cc/5tSRf1g7/vision.webp"
               alt="about illustration"
-              className="rounded-xl shadow-md w-full max-w-md"
+              className="w-full max-w-md shadow-md rounded-xl"
             />
           </div>
         </div>
 
         {/* Meet Team Section */}
         <section className="pt-8 md:pt-12">
-          {/* <div className="text-center px-2">
+          {/* <div className="px-2 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-3">
               Meet the Team
             </h2>
@@ -116,7 +116,7 @@ const About = () => {
           />
 
           {/* Team Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {teamMembers.map((member, index) => (
               <div
                 key={index}
@@ -125,14 +125,14 @@ const About = () => {
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-24 h-24 mx-auto rounded-full object-cover mb-3"
+                  className="object-cover w-24 h-24 mx-auto mb-3 rounded-full"
                 />
 
-                <h3 className="text-xl font-bold hover:text-white transition">
+                <h3 className="text-xl font-bold transition hover:text-white">
                   {member.name}
                 </h3>
 
-                <p className="font-semibold hover:text-white/80 transition">
+                <p className="font-semibold transition hover:text-white/80">
                   {member.role}
                 </p>
 

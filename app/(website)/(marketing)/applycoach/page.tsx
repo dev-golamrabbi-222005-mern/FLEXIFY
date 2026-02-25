@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const coachSchema = z.object({
   fullName: z.string().min(3, "Full name is required"),
@@ -42,8 +43,8 @@ const ApplyCoachPage = () => {
       const response = await axios.post("/api/coach/apply", { ...data, status: "pending" });
       return response.data;
     },
-    onSuccess: () => alert("Application submitted! Waiting for Admin approval."),
-    onError: (err: any) => alert(err.response?.data?.message || "Submission failed"),
+    onSuccess: () => Swal.fire("Success", "Application submitted! Waiting for Admin approval.", "success"),
+    onError: (err: any) => Swal.fire("Error", err.response?.data?.message || "Submission failed", "error"),
   });
 
   const { register, control, handleSubmit, formState: { errors } } = useForm<CoachFormValues>({
