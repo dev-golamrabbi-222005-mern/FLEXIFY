@@ -38,7 +38,11 @@ export interface Coach {
 }
 
 /* ===============================
+<<<<<<< HEAD
     GET - Fetch All Coaches
+=======
+   GET - Fetch All Coaches
+>>>>>>> e2a5fb5 ([ADDED]: Coach GET & POST API)
 ================================= */
 
 export async function GET(): Promise<Response> {
@@ -57,7 +61,11 @@ export async function GET(): Promise<Response> {
 }
 
 /* ===============================
+<<<<<<< HEAD
     POST - Create New Coach
+=======
+   POST - Create New Coach
+>>>>>>> e2a5fb5 ([ADDED]: Coach GET & POST API)
 ================================= */
 
 export async function POST(request: Request): Promise<Response> {
@@ -66,6 +74,7 @@ export async function POST(request: Request): Promise<Response> {
 
         // Basic required field validation
         if (!body.fullName || !body.email || !body.phone) {
+<<<<<<< HEAD
             return Response.json(
                 { message: "Missing required fields" },
                 { status: 400 }
@@ -78,6 +87,12 @@ export async function POST(request: Request): Promise<Response> {
                 { message: "Email already exists" },
                 { status: 500 }
             );
+=======
+        return Response.json(
+            { message: "Missing required fields" },
+            { status: 400 }
+        );
+>>>>>>> e2a5fb5 ([ADDED]: Coach GET & POST API)
         }
 
         const result = await dbConnect<Coach>("coaches").insertOne(body);
@@ -91,8 +106,13 @@ export async function POST(request: Request): Promise<Response> {
         );
     } catch (error) {
         return Response.json(
+<<<<<<< HEAD
             { message: "Failed to create coach" },
             { status: 500 }
+=======
+        { message: "Failed to create coach" },
+        { status: 500 }
+>>>>>>> e2a5fb5 ([ADDED]: Coach GET & POST API)
         );
     }
 }
