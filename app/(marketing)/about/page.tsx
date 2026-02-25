@@ -1,3 +1,4 @@
+import SectionTitle from "@/app/Components/ui/section-title";
 import Link from "next/link";
 import React from "react";
 import { FaFacebookF, FaLinkedinIn, FaMediumM } from "react-icons/fa";
@@ -16,16 +17,16 @@ const About = () => {
     },
     {
       name: "Jubayer Hossain",
-      role: "Founder & Developer",
+      role: "Frontend Developer",
       image: "https://i.postimg.cc/FzTr6D42/JUBAYER_Photo.jpg",
-      portfolio: "",
+      portfolio: "https://jubayer-portfolio-seven.vercel.app/",
       facebook: "https://www.facebook.com/jubayer.hossain.9",
       linkedin: "https://www.linkedin.com/in/jubayer-hossain-9b1a4b1b3/",
       github: "https://github.com/jubayerhossain",
     },
     {
       name: "Md Ashiqur Rahman Pranto",
-      role: "Founder & Developer",
+      role: "Backend Developer",
       image: "https://i.ibb.co.com/Kx1bTKhB/IMG-20220522-WA0002-1.jpg",
       portfolio: "https://ashiqur-rahman-pranto.netlify.app/",
       facebook: "https://www.facebook.com/ashiqurrahmanpranto1",
@@ -43,18 +44,18 @@ const About = () => {
     },
     {
       name: "Md Siam Khan",
-      role: "Founder & Developer",
+      role: "Backend Developer",
       image: "https://i.postimg.cc/J0tXV88W/images.jpg",
-      portfolio: "",
+      portfolio: "https://my-portfolio-ruby-eight-42.vercel.app/",
       facebook: "https://www.facebook.com/siam.khan.9",
       linkedin: "https://www.linkedin.com/in/siam-khan-9b1a4b1b3/",
       github: "https://github.com/siamkhan",
     },
     {
       name: "Md Nayeem Babu",
-      role: "Founder & Developer",
+      role: "Frontend Developer",
       image: "https://i.postimg.cc/J0tXV88W/images.jpg",
-      portfolio: "",
+      portfolio: "https://portfolio-showpiece.vercel.app/",
       facebook: "https://www.facebook.com/nayeem.babu.9",
       linkedin: "https://www.linkedin.com/in/nayeem-babu-9b1a4b1b3/",
       github: "https://github.com/nayeembabu",
@@ -74,11 +75,11 @@ const About = () => {
 
             <p className="text-[var(--text-secondary)] text-base md:text-lg text-start mb-6">
               Flexify is a modern fitness planner platform built by a passionate
-              team of six dedicated developers, led by our Founder & Lead
-              Developer. Our mission is to make fitness simple, accessible, and
-              personalized for everyone. We combine smart technology with
-              user-friendly design to help people track workouts, plan routines,
-              and stay motivated.
+              team of six dedicated Full-Stack (MERN) developers, led by our
+              Founder & Lead Developer. Our mission is to make fitness simple,
+              accessible, and personalized for everyone. We combine smart
+              technology with user-friendly design to help people track
+              workouts, plan routines, and stay motivated.
             </p>
           </div>
 
@@ -93,8 +94,8 @@ const About = () => {
         </div>
 
         {/* Meet Team Section */}
-        <section className="pt-16">
-          <div className="text-center px-2">
+        <section className="pt-8 md:pt-12">
+          {/* <div className="text-center px-2">
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-3">
               Meet the Team
             </h2>
@@ -104,7 +105,13 @@ const About = () => {
               Lead Developer. Together we build Flexify with creativity and
               technology.
             </p>
-          </div>
+          </div> */}
+          <SectionTitle
+            title="Meet the Team"
+            subtitle="Meet our passionate team of six professionals led by our Founder &
+              Lead Developer. Together we build Flexify with creativity and
+              technology."
+          />
 
           {/* Team Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

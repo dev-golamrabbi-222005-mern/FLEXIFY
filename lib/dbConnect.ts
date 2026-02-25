@@ -1,7 +1,7 @@
 import { MongoClient, ServerApiVersion, Collection, Document } from "mongodb";
 
-const uri: string | undefined = process.env.MONGODB_URI;
-const dbName: string | undefined = process.env.DB_NAME;
+const uri = process.env.MONGODB_URI as string;
+const dbName = process.env.DB_NAME as string;
 
 if (!uri) {
   throw new Error("MONGODB_URI is not defined in environment variables");
