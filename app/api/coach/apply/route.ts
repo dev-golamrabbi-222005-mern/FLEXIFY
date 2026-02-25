@@ -28,7 +28,7 @@ export interface Coach {
     // ["Sunday", "Monday", "Wednesday"]
     preferredClients: string[],
     // ["Beginner", "Intermediate", "Advanced"]
-    languages: string[],
+    languages: string,
     pricing: {
         monthly?: number,
         perSession?: number
@@ -38,7 +38,7 @@ export interface Coach {
 }
 
 /* ===============================
-   GET - Fetch All Coaches
+    GET - Fetch All Coaches
 ================================= */
 
 export async function GET(): Promise<Response> {
@@ -57,7 +57,7 @@ export async function GET(): Promise<Response> {
 }
 
 /* ===============================
-   POST - Create New Coach
+    POST - Create New Coach
 ================================= */
 
 export async function POST(request: Request): Promise<Response> {
@@ -66,10 +66,18 @@ export async function POST(request: Request): Promise<Response> {
 
         // Basic required field validation
         if (!body.fullName || !body.email || !body.phone) {
-        return Response.json(
-            { message: "Missing required fields" },
-            { status: 400 }
-        );
+            return Response.json(
+                { message: "Missing required fields" },
+                { status: 400 }
+            );
+        }
+
+        const isExist = await  dbConnect<Coach>("coaches").findOne({email: body.email});
+        if (isExist) {
+            return Response.json(
+                { message: "Email already exists" },
+                { status: 500 }
+            );
         }
 
         const result = await dbConnect<Coach>("coaches").insertOne(body);
@@ -83,8 +91,8 @@ export async function POST(request: Request): Promise<Response> {
         );
     } catch (error) {
         return Response.json(
-        { message: "Failed to create coach" },
-        { status: 500 }
+            { message: "Failed to create coach" },
+            { status: 500 }
         );
     }
 }
