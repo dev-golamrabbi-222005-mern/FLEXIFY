@@ -1,5 +1,6 @@
 "use client";
 
+import SectionTitle from "@/app/(website)/components/ui/section-title";
 import { useEffect, useState } from "react";
 import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa";
 
@@ -54,13 +55,25 @@ const Motivation = () => {
       {/* Dark + Blur Overlay */}
       <div className="absolute inset-0 bg-black/55 backdrop-blur-xs"></div>
 
-      {/* Content */}
-      <div className="relative max-w-7xl mx-auto px-6 text-white my-10">
-        <FaQuoteLeft className="text-5xl md:text-7xl opacity-25 absolute top-20 left-20" />
-        <p className="text-2xl md:text-3xl font-semibold py-50 text-center">
-          {displayText}
-        </p>
-        <FaQuoteRight className="text-5xl md:text-7xl opacity-25 absolute bottom-20 right-20" />
+      <div className="relative max-w-7xl mx-auto px-4 text-center text-white">
+        <SectionTitle
+          title="Daily Motivation"
+          
+        />
+
+        <div className="max-w-4xl mx-auto">
+          <div
+            className="group bg-white/10 backdrop-blur-lg border border-white/20
+                       rounded-2xl p-10 text-center relative
+                       transition-all duration-300
+                       hover:-translate-y-2
+                       hover:shadow-[0_20px_40px_rgba(0,0,0,0.35)]"
+          >
+            <p className="text-xl md:text-2xl font-semibold min-h-[80px]">
+              “{displayText}”
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );
