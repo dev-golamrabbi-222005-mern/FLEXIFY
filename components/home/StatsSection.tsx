@@ -1,5 +1,5 @@
 "use client";
-import SectionTitle from "@/app/Components/ui/section-title";
+import SectionTitle from "@/app/(website)/components/ui/section-title";
 import { ReactNode, useEffect, useRef } from "react";
 import { FaUsers, FaDumbbell, FaBullseye, FaUserTie } from "react-icons/fa";
 import {

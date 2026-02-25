@@ -1,4 +1,4 @@
-import SectionTitle from "@/app/Components/ui/section-title";
+import SectionTitle from "@/app/(website)/components/ui/section-title";
 import Link from "next/link";
 import React from "react";
 import { FaFacebookF, FaLinkedinIn, FaMediumM } from "react-icons/fa";
@@ -20,9 +20,9 @@ const About = () => {
       role: "Frontend Developer",
       image: "https://i.postimg.cc/FzTr6D42/JUBAYER_Photo.jpg",
       portfolio: "https://jubayer-portfolio-seven.vercel.app/",
-      facebook: "https://www.facebook.com/jubayer.hossain.9",
-      linkedin: "https://www.linkedin.com/in/jubayer-hossain-9b1a4b1b3/",
-      github: "https://github.com/jubayerhossain",
+      facebook: "https://www.facebook.com/jubayer.natore",
+      linkedin: "https://www.linkedin.com/in/jubayer-hossain1/",
+      github: "https://github.com/jubayer726",
     },
     {
       name: "Md Ashiqur Rahman Pranto",

@@ -6,17 +6,16 @@ import { usePathname } from "next/navigation";
 import { FiMenu, FiX } from "react-icons/fi";
 import ThemeToggle from "./ThemeToggle";
 import { motion } from "framer-motion";
+import { User, LogOut } from "lucide-react";
 
-const Navbar = () => {
+const DashboardNavbar = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "How it works", path: "/howItWorks"},
-    {name: "Features", path: "/features"},
-    { name: "About", path: "/about" },
-    { name: "Contact", path: "/contact" },
+    { name: "Dashboard", path: "/dashboard" },
+    
+    
   ];
 
   return (
@@ -29,33 +28,13 @@ const Navbar = () => {
 
         {/* Navigation Links */}
         <ul className="hidden gap-4 text-sm font-medium md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              href={link.path}
-              className={`transition text-[var(--primary)] ${
-                pathname === link.path
-                  ? "border-b-3 border-(--border-highlight) font-bold p-2 rounded-lg"
-                  : " hover:text-(--secondary) px-3 py-2 rounded-lg"
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
+          <Link href={"/"} className="text-xl font-bold">Dashboard</Link>
         </ul>
-        {/* Auth Buttons */}
+
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          <motion.button
-            className="relative z-10 font-semibold shadow-xl btn-primary"
-            whileHover={{
-              scale: 1.05,
-              boxShadow: "0 10px 40px rgba(249, 115, 22, 0.3)",
-            }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Link href={"/register"}>Get Started</Link>
-          </motion.button>
+          <User className="w-6 h-6" />
+          <LogOut className="w-6 h-6 cursor-pointer" />
         </div>
 
        {/* Mobile Menu Button */}
@@ -115,4 +94,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default DashboardNavbar;
