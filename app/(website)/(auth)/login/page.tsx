@@ -82,7 +82,7 @@ export default function LoginPage(): JSX.Element {
           <div>
             <label className="text-sm text-gray-300">Email</label>
             <div className="relative mt-1">
-              <FaEnvelope className="absolute left-3 top-3.5 text-gray-400" />
+              <FaEnvelope className="absolute left-3 top-4.5 text-gray-400" />
               <input
                 type="email"
                 name="email"
@@ -96,7 +96,7 @@ export default function LoginPage(): JSX.Element {
           <div>
             <label className="text-sm text-gray-300">Password</label>
             <div className="relative mt-1">
-              <FaLock className="absolute left-3 top-3.5 text-gray-400" />
+              <FaLock className="absolute left-3 top-4 text-gray-400" />
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
@@ -106,7 +106,7 @@ export default function LoginPage(): JSX.Element {
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-200 transition"
+                className="absolute right-3 top-4 cursor-pointer text-gray-400 hover:text-gray-200 transition"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>

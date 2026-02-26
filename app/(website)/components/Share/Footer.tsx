@@ -1,8 +1,17 @@
+"use client"
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FaFacebookF, FaLinkedinIn, FaGithub, FaMediumM } from "react-icons/fa";
 
 const Footer = () => {
+  const pathname = usePathname();
+
+  const linkClass = (path: string) =>
+    `cursor-pointer hover:text-[var(--secondary)] ${
+      pathname === path ? "text-[var(--secondary)] font-semibold" : ""
+    }`;
+
   return (
     <footer className="pt-10 shadow-md bg-[var(--bg-nav-footer)]">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -21,14 +30,30 @@ const Footer = () => {
         {/* Quick Links */}
         <div>
           <h3 className="font-semibold mb-4">Quick Links</h3>
+
           <ul className="space-y-2 text-sm">
-            <li className="hover:text-(--secondary) cursor-pointer">Home</li>
-            <li className="hover:text-(--secondary) cursor-pointer">
-              All Services
+            <li>
+              <Link href="/" className={linkClass("/")}>
+                Home
+              </Link>
             </li>
-            <li className="hover:text-(--secondary) cursor-pointer">About</li>
-            <li className="hover:text-(--secondary) cursor-pointer">
-              Contact Us
+
+            <li>
+              <Link href="/services" className={linkClass("/services")}>
+                All Services
+              </Link>
+            </li>
+
+            <li>
+              <Link href="/about" className={linkClass("/about")}>
+                About
+              </Link>
+            </li>
+
+            <li>
+              <Link href="/contact" className={linkClass("/contact")}>
+                Contact Us
+              </Link>
             </li>
           </ul>
         </div>

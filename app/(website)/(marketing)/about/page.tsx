@@ -45,7 +45,7 @@ const About = () => {
     {
       name: "Md Siam Khan",
       role: "Backend Developer",
-      image: "https://i.postimg.cc/J0tXV88W/images.jpg",
+      image: "https://i.ibb.co.com/1Y210CTQ/1000009644-2.png",
       portfolio: "https://my-portfolio-ruby-eight-42.vercel.app/",
       facebook: "https://www.facebook.com/siam.khan.9",
       linkedin: "https://www.linkedin.com/in/siam-khan-9b1a4b1b3/",
@@ -54,7 +54,8 @@ const About = () => {
     {
       name: "Md Nayeem Babu",
       role: "Frontend Developer",
-      image: "https://i.postimg.cc/J0tXV88W/images.jpg",
+      image:
+        "https://i.ibb.co.com/TD3hfrGG/Whats-App-Image-2026-02-26-at-12-20-47-PM.jpg",
       portfolio: "https://portfolio-showpiece.vercel.app/",
       facebook: "https://www.facebook.com/nayeem.babu.9",
       linkedin: "https://www.linkedin.com/in/nayeem-babu-9b1a4b1b3/",
@@ -69,8 +70,8 @@ const About = () => {
         <div className="grid items-center grid-cols-1 gap-10 md:grid-cols-2">
           {/* Left Text */}
           <div className="text-center md:text-left">
-            <h2 className="text-2xl md:text-4xl font-semibold text-[var(--text-primary)] mb-4">
-              About Flexify
+            <h2 className="text-3xl md:text-5xl font-bold text-[var(--text-primary)] mb-4">
+              About <span className="text-(--primary)"> Flexify </span>
             </h2>
 
             <p className="text-[var(--text-secondary)] text-base md:text-lg text-start mb-6">
