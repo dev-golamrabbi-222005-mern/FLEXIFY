@@ -1,7 +1,6 @@
 "use client";
 
-import {Home, Flag, Calendar, Trophy, BarChart2, Settings, Dumbbell, Salad, Moon} from "lucide-react";
-import Link from "next/link";
+import {Dumbbell, Salad, Moon} from "lucide-react";
 
 const Dashboard = () => {
   return (
