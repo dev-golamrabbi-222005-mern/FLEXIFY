@@ -19,10 +19,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center --secondary px-4">
       <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8"
-      style={{
-    backgroundImage:
-      "url('')",
-  }}
+     
       >
 
         {/* Header */}
