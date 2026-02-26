@@ -45,7 +45,7 @@ const About = () => {
     {
       name: "Md Siam Khan",
       role: "Backend Developer",
-      image: "https://i.postimg.cc/J0tXV88W/images.jpg",
+      image: "https://i.ibb.co.com/1Y210CTQ/1000009644-2.png",
       portfolio: "https://my-portfolio-ruby-eight-42.vercel.app/",
       facebook: "https://www.facebook.com/siam.khan.9",
       linkedin: "https://www.linkedin.com/in/siam-khan-9b1a4b1b3/",
