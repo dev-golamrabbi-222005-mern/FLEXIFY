@@ -12,14 +12,14 @@ export default function Home() {
   return (
     <div>
       <FlexifyHero/>
-      <Precision/>
       <StatsSection/>
+      <Precision/>
+      <BMI/>
+      <PopularWorkouts/>
+      <SuccessStory/>
       <BecomeCoachCTA/>
       <Pricing/>
-      <BMI/>
       <Motivation/>
-      <SuccessStory/>
-      <PopularWorkouts/>
     </div>
   );
 }

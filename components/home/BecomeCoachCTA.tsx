@@ -29,7 +29,7 @@ export default function BecomeCoachCTA() {
   ];
 
   return (
-    <section className="py-16 md:py-24 px-6 relative overflow-hidden">
+    <section className="py-8 md:py-12 px-6 relative overflow-hidden">
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
