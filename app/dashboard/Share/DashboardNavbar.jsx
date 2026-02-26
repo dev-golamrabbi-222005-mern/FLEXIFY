@@ -13,7 +13,7 @@ const DashboardNavbar = () => {
   const pathname = usePathname();
 
   const navLinks = [
-    { name: "Dashboard", path: "/dashboard" },
+    { name: "Dashboard", path: "/" },
     
     
   ];
