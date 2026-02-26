@@ -18,8 +18,8 @@ export default function Home() {
       <BMI/>
       <PopularWorkouts/>
       <SuccessStory/>
-      <BecomeCoachCTA/>
       <TopCoaches/>
+      <BecomeCoachCTA/>
       <Pricing/>
       <Motivation/>
     </div>
