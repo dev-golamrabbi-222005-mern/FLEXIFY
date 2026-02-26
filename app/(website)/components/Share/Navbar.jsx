@@ -8,6 +8,8 @@ import ThemeToggle from "./ThemeToggle";
 import { motion } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
 
+
+
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();

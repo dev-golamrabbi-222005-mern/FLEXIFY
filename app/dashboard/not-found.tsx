@@ -16,7 +16,7 @@ export default function NotFound() {
         </p>
 
         <Link
-          href="/"
+          href="/dashboard"
           className="inline-block px-4 py-3 mt-10 font-bold text-white shadow-lg rounded-xl bg-[var(--primary)] shadow-[var(--primary)]/30 hover:bg-orange-600 transition"
         >
           ← Back to Home
