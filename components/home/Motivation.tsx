@@ -44,7 +44,7 @@ const Motivation = () => {
 
   return (
     <section
-      className="relative min-h-111 bg-cover bg-center my-12 md:my-16"
+      className="relative min-h-111 bg-cover bg-center mt-12 md:mt-16"
       style={{
         backgroundImage:
           "url('https://images.unsplash.com/photo-1599058917212-d750089bc07e?q=80&w=1170&auto=format&fit=crop')",

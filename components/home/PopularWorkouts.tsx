@@ -50,7 +50,7 @@ export default function PopularWorkouts() {
         />
 
         {/* Workout Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {workouts.map((workout, index) => (
             <motion.div
               key={index}
