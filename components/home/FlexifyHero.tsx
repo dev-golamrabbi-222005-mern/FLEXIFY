@@ -13,6 +13,8 @@ const slides = [
     desc: "Join thousands of viewers watching real-time transformations and success stories.",
     img: "https://i.ibb.co.com/M5kfgdR2/image.png",
     icon: <Users size={24} />,
+    joinLink:"/",
+    learnMoreLink: "/"
   },
   {
     id: 2,
@@ -22,6 +24,8 @@ const slides = [
     desc: "Push beyond your boundaries with our AI-powered exercise tracking system.",
     img: "https://i.ibb.co.com/27PD6wh6/image.png",
     icon: <Dumbbell size={24} />,
+    joinLink:"/",
+    learnMoreLink: "/"
   },
   {
     id: 3,
@@ -31,6 +35,8 @@ const slides = [
     desc: "Empower others. Manage your students with the most advanced coach dashboard.",
     img: "https://i.ibb.co.com/8Df59Q4p/image.png",
     icon: <Target size={24} />,
+    joinLink:"/applycoach",
+    learnMoreLink: "/coaches"
   }
 ];
 
@@ -97,10 +103,10 @@ export default function FlexifyHero() {
               </p>
 
               <div className="flex flex-col lg:flex-row  gap-6">
-                <button className="bg-[var(--primary)] text-white font-black px-8 py-4 md:py-6 w-full rounded-2xl flex items-center justify-center gap-4 transition-all hover:scale-105 shadow-2xl shadow-orange-500/20 uppercase text-lg ">
+                <button onClick={() => window.location.href = slides[index].joinLink} className="bg-[var(--primary)] text-white font-black px-8 py-4 md:py-6 w-full rounded-2xl flex items-center justify-center gap-4 transition-all hover:scale-105 shadow-2xl shadow-orange-500/20 uppercase text-lg ">
                   Join Now <ArrowRight size={24} />
                 </button>
-                <button className="px-8 py-4 md:py-6 rounded-2xl border-2 w-full border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all bg-transparent backdrop-blur-sm flex items-center justify-center gap-3 font-bold uppercase tracking-tight text-center">
+                <button onClick={() => window.location.href = slides[index].learnMoreLink} className="px-8 py-4 md:py-6 rounded-2xl border-2 w-full border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all bg-transparent backdrop-blur-sm flex items-center justify-center gap-3 font-bold uppercase tracking-tight text-center">
                   Learn More <Zap size={22} className="fill-current" />
                 </button>
               </div>
@@ -124,7 +130,8 @@ export default function FlexifyHero() {
                   scale: 1,
                 }}
                 exit={{ opacity: 0, filter: "blur(10px)", scale: 1.05 }}
-                transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
+                transition={{ duration: 5.0
+                  , ease: [0.4, 0, 0.2, 1] }}
                 className="absolute inset-0 w-full h-full"
               >
                 <img
