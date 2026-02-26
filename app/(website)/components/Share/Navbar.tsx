@@ -61,7 +61,7 @@ const Navbar = () => {
             whileTap={{ scale: 0.95 }}
           >
             {session?.status === "authenticated" ? <span onClick={() => signOut()}>Logout</span> : <>
-              <Link href={"/register"}>Get Started</Link>
+              <Link href={"/login"}>Get Started</Link>
             </>}
           </motion.button>
         </div>
