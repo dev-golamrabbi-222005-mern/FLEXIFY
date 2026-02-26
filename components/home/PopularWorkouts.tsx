@@ -41,7 +41,7 @@ const workouts = [
 
 export default function PopularWorkouts() {
   return (
-    <section className="pb-20 px-6 bg-[var(--bg-primary)]">
+    <section className="pb-8 md:pb-12 px-6 bg-[var(--bg-primary)]">
       <div className="max-w-7xl mx-auto">
 
         {/* ✅ BMI Style Section Title */}
