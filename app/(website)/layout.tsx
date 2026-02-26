@@ -7,7 +7,7 @@ import "../../styles/globals.css"
 
 import Navbar from "./components/Share/Navbar";
 import Footer from "./components/Share/Footer";
-import Providers from "../dashboard/providers";
+import ReactQueryProvider from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,11 +37,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
-        <Providers>
+        <ReactQueryProvider>
           <Navbar/>
           {children}
           <Footer />
-        </Providers>
+        </ReactQueryProvider>
       </body>
     </html>
   );
