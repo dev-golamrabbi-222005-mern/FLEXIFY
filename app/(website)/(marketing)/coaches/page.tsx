@@ -3,6 +3,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import CoachCard from "@/components/cards/CoachCard/page";
+import BecomeCoachCTA from "./BecomeCoachCTA";
 
 const CoachesPage = () => {
   const {
@@ -41,6 +42,7 @@ const CoachesPage = () => {
           <CoachCard key={coach._id} coach={coach} />
         ))}
       </div>
+      <BecomeCoachCTA/>
     </div>
   );
 };
