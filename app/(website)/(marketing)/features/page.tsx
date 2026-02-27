@@ -257,9 +257,9 @@ function Counter({
   decimals?: number;
 }) {
   const count = useMotionValue(0);
-  const rounded = useTransform(count, (latest) =>
-    decimals > 0 ? latest.toFixed(decimals) : Math.round(latest),
-  );
+const rounded = useTransform(count, (latest) =>
+  decimals > 0 ? latest.toFixed(decimals) : Math.round(latest).toString(),
+);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
