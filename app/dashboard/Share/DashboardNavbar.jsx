@@ -13,7 +13,7 @@ const DashboardNavbar = () => {
   const pathname = usePathname();
 
   const navLinks = [
-    { name: "Dashboard", path: "/" },
+    { name: "Dashboard", path: "/dashboard" },
     
     
   ];
@@ -28,7 +28,7 @@ const DashboardNavbar = () => {
 
         {/* Navigation Links */}
         <ul className="hidden gap-4 text-sm font-medium md:flex">
-          <Link href={"/"} className="text-xl font-bold">Dashboard</Link>
+          <Link href={"/dashboard"} className="text-xl font-bold">Dashboard</Link>
         </ul>
 
         <div className="flex items-center gap-4">

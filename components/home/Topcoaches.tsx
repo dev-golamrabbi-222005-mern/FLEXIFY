@@ -7,24 +7,24 @@ import { motion } from "framer-motion";
 import CoachCard from "@/components/cards/CoachCard/page";
 
 const TopCoaches = () => {
-  const {
-    data: coaches,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["top-coaches"],
-    queryFn: async () => {
-      const { data } = await axios.get("/data.json");
-      return data;
-    },
-  });
+const {
+  data: coaches,
+  isLoading,
+  isError,
+} = useQuery<Coach[]>({
+  queryKey: ["top-coaches"],
+  queryFn: async () => {
+    const { data } = await axios.get<Coach[]>("/data.json");
+    return data;
+  },
+});
 
   // Sort a copy of the data to avoid mutating the original state
-  const topCoaches = coaches
-    ? [...coaches]
-        .sort((a, b) => b.experienceYears - a.experienceYears)
-        .slice(0, 3)
-    : [];
+ const topCoaches = coaches
+   ? [...coaches]
+       .sort((a, b) => b.experienceYears - a.experienceYears)
+       .slice(0, 3)
+   : [];
 
   const rankStyles = [
     "bg-yellow-400 text-black border-2 border-yellow-500", // 🥇 1st
