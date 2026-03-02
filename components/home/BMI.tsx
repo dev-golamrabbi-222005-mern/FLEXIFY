@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import SectionTitle from "@/app/(website)/components/ui/section-title";
-import ImgBMI from "../../public/bmi-calculator.jpg"
+import ImgBMI from "../../public/bmi-calculator.png";
 
 const BMI = () => {
   const [height, setHeight] = useState("");
@@ -59,7 +59,8 @@ const BMI = () => {
             >
               <Image
                 src={
-                  "https://www.godigit.com/content/dam/godigit/directportal/en/bmi-calculator-for-men-women-and-kids.jpg"
+                  // "https://www.godigit.com/content/dam/godigit/directportal/en/bmi-calculator-for-men-women-and-kids.jpg"
+                  ImgBMI
                 }
                 alt="BMI Illustration"
                 width={400}
