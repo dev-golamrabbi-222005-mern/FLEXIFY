@@ -6,17 +6,17 @@ import CoachCard from "@/components/cards/CoachCard/page";
 import BecomeCoachCTA from "./BecomeCoachCTA";
 
 const CoachesPage = () => {
-  const {
-    data: coaches,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["coaches"],
-    queryFn: async () => {
-      const { data } = await axios.get("/data.json");
-      return data;
-    },
-  });
+ const {
+   data: coaches,
+   isLoading,
+   isError,
+ } = useQuery<Coach[]>({
+   queryKey: ["coaches"],
+   queryFn: async () => {
+     const { data } = await axios.get<Coach[]>("/data.json");
+     return data;
+   },
+ });
 
   if (isLoading)
     return (
@@ -38,11 +38,11 @@ const CoachesPage = () => {
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {coaches?.map((coach: any) => (
+        {coaches?.map((coach) => (
           <CoachCard key={coach._id} coach={coach} />
         ))}
       </div>
-      <BecomeCoachCTA/>
+      <BecomeCoachCTA />
     </div>
   );
 };
