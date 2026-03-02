@@ -7,7 +7,7 @@ import "../../styles/globals.css"
 
 import Navbar from "./components/Share/Navbar";
 import Footer from "./components/Share/Footer";
-import Providers from "../dashboard/providers";
+import Providers from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
