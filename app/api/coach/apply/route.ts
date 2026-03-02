@@ -66,10 +66,18 @@ export async function POST(request: Request): Promise<Response> {
 
         // Basic required field validation
         if (!body.fullName || !body.email || !body.phone) {
-        return Response.json(
-            { message: "Missing required fields" },
-            { status: 400 }
-        );
+            return Response.json(
+                { message: "Missing required fields" },
+                { status: 400 }
+            );
+        }
+
+        const isExist = await dbConnect<Coach>("coaches").findOne({email: body.email});
+        if(isExist){
+            return Response.json(
+                { message: "Email already exists" },
+                { status: 400 }
+            );
         }
 
         const result = await dbConnect<Coach>("coaches").insertOne(body);
