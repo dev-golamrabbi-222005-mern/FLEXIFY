@@ -1,23 +1,7 @@
 "use client";
 
-import {
-  BarChart2,
-  Activity,
-  Flame,
-  Scale,
-} from "lucide-react";
-
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  LineElement,
-  PointElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
-
+import { BarChart2, Activity, Flame, Scale,} from "lucide-react";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Tooltip, Legend} from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
 
 ChartJS.register(

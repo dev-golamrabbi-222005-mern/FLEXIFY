@@ -2,15 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Home,
-  Flag,
-  Calendar,
-  Trophy,
-  BarChart2,
-  Settings,
-} from "lucide-react";
-import React from "react";
+import {Home, Flag, Calendar, Trophy, BarChart2, Settings, BrickWallShield, UserRoundCog} from "lucide-react";
+
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -22,6 +15,8 @@ const Sidebar = () => {
     { name: "Achievements", href: "/dashboard/achievements", icon: Trophy },
     { name: "Statistics", href: "/dashboard/statistics", icon: BarChart2 },
     { name: "Settings", href: "/dashboard/settings", icon: Settings },
+    { name: "Admin Stats", href: "/dashboard/admin-stats", icon:  BrickWallShield },
+    { name: "User Management", href: "/dashboard/admin-management", icon:  UserRoundCog },
   ];
 
   return (
