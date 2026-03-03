@@ -4,6 +4,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Search, Filter, ChevronDown, ChevronUp, X } from "lucide-react";
 import SkeletonCard from "@/components/cards/SkeletonCard";
+import ExerciseCard from "@/components/cards/ExerciseCard";
 
 const MUSCLES = ["Abdominals", "Hamstrings", "Biceps", "Shoulders", "Chest", "Quads", "Triceps"];
 const LEVELS = ["Beginner", "Intermediate", "Expert"];
@@ -104,15 +105,7 @@ const ExercisesPage = () => {
         ) : (
           <>
             {data?.pages.map(page => 
-              page.exercises.map((ex: any) => (
-                <div key={ex._id} className="p-6 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl hover:border-[var(--primary)] transition-all shadow-sm group">
-                  <h3 className="font-bold text-[var(--text-primary)] group-hover:text-[var(--primary)] transition-colors line-clamp-1">{ex.name}</h3>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <span className="text-[9px] bg-[var(--bg-primary)] px-2 py-1 rounded-lg border border-[var(--border-color)] text-[var(--primary)] font-bold uppercase">{ex.level}</span>
-                    <span className="text-[9px] bg-[var(--bg-primary)] px-2 py-1 rounded-lg border border-[var(--border-color)] text-[var(--text-secondary)] font-bold uppercase">{ex.equipment}</span>
-                  </div>
-                </div>
-              ))
+              page.exercises.map((ex: any) =><ExerciseCard key={ex._id} exercise={ex} />)
             )}
             {/* Show extra skeleton cards when loading next page */}
             {isFetchingNextPage && Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={`next-${i}`} />)}
