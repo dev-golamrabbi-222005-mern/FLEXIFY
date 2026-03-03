@@ -4,7 +4,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { motion } from "framer-motion";
-import CoachCard from "@/components/cards/CoachCard/page";
+import CoachCard from "../cards/CoachCard";
 
 const TopCoaches = () => {
 const {
