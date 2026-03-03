@@ -6,11 +6,32 @@ import { usePathname } from "next/navigation";
 import { FiMenu, FiX } from "react-icons/fi";
 import ThemeToggle from "./ThemeToggle";
 import { motion } from "framer-motion";
-import { User, LogOut } from "lucide-react";
+import { LogOut, BellDot } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
+
 
 const DashboardNavbar = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Format Date Function
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString("en-GB", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  // Optional: Change Day with Arrows
+  const changeDay = (type: "prev" | "next") => {
+    const newDate = new Date(currentDate);
+    newDate.setDate(currentDate.getDate() + (type === "next" ? 1 : -1));
+    setCurrentDate(newDate);
+  };
+
 
   const navLinks = [
     { name: "Dashboard", path: "/dashboard" },
@@ -26,14 +47,51 @@ const DashboardNavbar = () => {
           <Image src="/logo.png" alt="logo" width={140} height={140} />
         </Link>
 
+        {/* Date & Times */}
+        <div className="px-6 py-3 flex items-center justify-between">
+          {/* Left Section */}
+          <div className="flex items-center gap-4">
+            <CalendarDays className="text-gray-400" size={22} />
+
+            <div className="leading-tight">
+              <p className="text-xs text-[var(--primary)] font-semibold uppercase tracking-wide">
+                Day {currentDate.getDate()}, Week{" "}
+                {Math.ceil(currentDate.getDate() / 7)}
+              </p>
+
+              <p className="text-sm text-gray-500">
+                Today, {formatDate(currentDate)}
+              </p>
+            </div>
+          </div>
+
+          {/* Right Section */}
+          <div className="flex items-center gap-3 text-gray-500">
+            <button
+              onClick={() => changeDay("prev")}
+              className="p-2 rounded-full hover:bg-gray-100 transition"
+            >
+              <ChevronLeft size={20} />
+            </button>
+
+            <button
+              onClick={() => changeDay("next")}
+              className="p-2 rounded-full hover:bg-gray-100 transition"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
+        </div>
+
+
         {/* Navigation Links */}
         <ul className="hidden gap-4 text-sm font-medium md:flex">
-          <Link href={"/"} className="text-xl font-bold">Dashboard</Link>
+          <Link href={"/dashboard"} className="text-xl font-bold">Dashboard</Link>
         </ul>
 
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          <User className="w-6 h-6" />
+          <BellDot className="w-6 h-6 cursor-pointer" />
           <LogOut className="w-6 h-6 cursor-pointer" />
         </div>
 

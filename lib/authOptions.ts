@@ -11,8 +11,8 @@ interface DbUser {
   provider?: string;
   providerId?: string;
   email: string;
-  name?: string;
-  imageUrl?: string;
+  name?: string | null;
+  imageUrl?: string | null;
   phone?: string;
   role?: string;
   password?: string;
@@ -23,21 +23,30 @@ export const authOptions: AuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        // email: { label: "Email", type: "email" },
-        // password: { label: "Password", type: "password" },
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: {email: string, password: string}, req) {
-        console.log(credentials);
-        if (!(credentials?.email as string) || !(credentials?.password as string)) {
+
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
           return null;
         }
 
         const user = await loginUser({
-          email: credentials.email as string,
-          password: credentials.password as string,
+          email: credentials.email,
+          password: credentials.password,
         });
 
-        return user;
+        if (!user) return null;
+
+        return {
+          id: user._id, 
+          email: user.email,
+          name: user.name ?? "",
+          role: user.role,
+          phone: user.phone,
+          image: user.imageUrl,
+        };
       },
     }),
 
@@ -47,35 +56,39 @@ export const authOptions: AuthOptions = {
     }),
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID as string,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string
-    })
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
+    }),
   ],
 
   callbacks: {
     async signIn({ user, account }) {
-      try{
-        const collection = dbConnect<DbUser>("users");
-        const newUser: DbUser = {
-          ...user,
-          provider: account?.provider,
-          providerId: account?.providerAccountId,
-          role: "user",
-        };
-        if(!newUser?.email){
-          return false;
-        }
-        const isExist = await collection.findOne({
-          email: user.email,
-        });
-        if (!isExist) {
-          const result = await collection.insertOne(newUser);
-        }
-        return true;
-      }
-      catch(error){
-        return false;
-      }
-    },
+  try {
+    const collection = dbConnect<DbUser>("users");
+
+    if (!user.email) return false;
+
+    const isExist = await collection.findOne({
+      email: user.email,
+    });
+
+    if (!isExist) {
+      const newUser: DbUser = {
+        email: user.email,
+        name: user.name,
+        imageUrl: user.image,
+        provider: account?.provider,
+        providerId: account?.providerAccountId,
+        role: "user",
+      };
+
+      await collection.insertOne(newUser);
+    }
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+},
 
     async session({ session, token }) {
       if (token) {

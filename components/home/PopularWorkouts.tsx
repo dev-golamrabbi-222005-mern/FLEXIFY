@@ -41,7 +41,7 @@ const workouts = [
 
 export default function PopularWorkouts() {
   return (
-    <section className="pb-20 px-6 bg-[var(--bg-primary)]">
+    <section className="pb-8 md:pb-12 px-6 bg-[var(--bg-primary)]">
       <div className="max-w-7xl mx-auto">
 
         {/* ✅ BMI Style Section Title */}
@@ -50,7 +50,7 @@ export default function PopularWorkouts() {
         />
 
         {/* Workout Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {workouts.map((workout, index) => (
             <motion.div
               key={index}

@@ -8,6 +8,8 @@ import ThemeToggle from "./ThemeToggle";
 import { motion } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
 
+
+
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -17,6 +19,7 @@ const Navbar = () => {
     { name: "Home", path: "/" },
     { name: "How it works", path: "/howItWorks"},
     {name: "Features", path: "/features"},
+    {name: "Coaches", path: "/coaches"},
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact" },
     { name: "Dashboard", path: "/dashboard" },
@@ -58,7 +61,7 @@ const Navbar = () => {
             whileTap={{ scale: 0.95 }}
           >
             {session?.status === "authenticated" ? <span onClick={() => signOut()}>Logout</span> : <>
-              <Link href={"/register"}>Get Started</Link>
+              <Link href={"/login"}>Get Started</Link>
             </>}
           </motion.button>
         </div>

@@ -8,6 +8,7 @@ import "../../styles/globals.css"
 import Navbar from "./components/Share/Navbar";
 import Footer from "./components/Share/Footer";
 import Providers from "./providers";
+import ReactQueryProvider from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,6 +23,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Flexify",
   description: "A fitness Planner Platform.",
+  icons: {
+    icon: '/favicon.ico',
+  }
 };
 
 export default function RootLayout({
@@ -34,11 +38,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
-        <Providers>
+        <ReactQueryProvider>
           <Navbar/>
           {children}
           <Footer />
-        </Providers>
+        </ReactQueryProvider>
       </body>
     </html>
   );
