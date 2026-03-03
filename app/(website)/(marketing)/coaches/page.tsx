@@ -2,8 +2,8 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import CoachCard from "@/components/cards/CoachCard/page";
 import BecomeCoachCTA from "./BecomeCoachCTA";
+import CoachCard from "@/components/cards/CoachCard";
 
 const CoachesPage = () => {
  const {

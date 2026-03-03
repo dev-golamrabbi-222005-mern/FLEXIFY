@@ -23,6 +23,10 @@ export async function GET(request: Request): Promise<Response> {
         const limit = parseInt(searchParams.get("limit") || "12");
         const search = searchParams.get("search") || "";
         const muscle = searchParams.get("muscle") || "";
+        const level = searchParams.get("level") || "";
+        const equipment = searchParams.get("equipment") || "";
+        const category = searchParams.get("category") || "";
+        const force = searchParams.get("force") || "";
 
         const skip = (page - 1) * limit;
 
@@ -34,7 +38,18 @@ export async function GET(request: Request): Promise<Response> {
         if (muscle) {
             query.primaryMuscles = { $in: [muscle.toLowerCase()] };
         }
-
+        if (level) {
+            query.level = level.toLowerCase();
+        }
+        if (equipment) {
+            query.equipment = equipment.toLowerCase();
+        }
+        if (category) {
+            query.category = category.toLowerCase();
+        }
+        if (force) {
+            query.force = force.toLowerCase();
+        }
         const collection = await dbConnect<Exercise>("exercises");
         
      
