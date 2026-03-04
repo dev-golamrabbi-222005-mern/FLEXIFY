@@ -30,12 +30,12 @@ export default function ReactQueryProvider({
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <SessionProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-        </ThemeProvider>
-      </QueryClientProvider>
+     <SessionProvider>
+    <QueryClientProvider client={queryClient}>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      {children}
+    </ThemeProvider>
+    </QueryClientProvider>
     </SessionProvider>
   );
 }

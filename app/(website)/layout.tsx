@@ -7,6 +7,7 @@ import "../../styles/globals.css"
 
 import Navbar from "./components/Share/Navbar";
 import Footer from "./components/Share/Footer";
+import Providers from "./providers";
 import ReactQueryProvider from "./providers";
 
 const geistSans = Geist({
