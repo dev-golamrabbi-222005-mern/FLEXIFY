@@ -17,6 +17,7 @@ interface Exercise {
 }
 
 export default function ExerciseDetails({ exercise }: { exercise: Exercise }) {
+  
   return (
     <div className="max-w-6xl p-6 mx-auto bg-(--bg-secondary) shadow-xl rounded-2xl md:p-10">
       
@@ -41,7 +42,13 @@ export default function ExerciseDetails({ exercise }: { exercise: Exercise }) {
         {exercise.images.map((img, index) => (
           <div key={index} className="relative w-full overflow-hidden bg-(--bg-primary) h-80 rounded-xl">
             <Image
-              src={img}
+              src={img
+                ? img.startsWith("http")
+                  ? img
+                  : `/exercises/${img.startsWith('/')
+                    ? img.slice(1)
+                    : img}`
+                : "/placeholder-exercise.jpg"}
               alt={exercise.name}
               fill
               className="object-cover duration-300 hover:scale-110"

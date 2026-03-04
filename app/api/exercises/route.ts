@@ -1,7 +1,8 @@
 import { dbConnect } from "@/lib/dbConnect";
+import { ObjectId } from "mongodb";
 
 export interface Exercise {
-  _id?: any;
+  _id?: ObjectId;
   id: string;
   name: string;
   force: string | null;
@@ -52,7 +53,6 @@ export async function GET(request: Request): Promise<Response> {
         }
         const collection = await dbConnect<Exercise>("exercises");
         
-     
         const exercises = await collection
             .find(query)
             .skip(skip)
