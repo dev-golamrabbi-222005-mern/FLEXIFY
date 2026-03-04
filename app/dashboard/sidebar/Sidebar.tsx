@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {Home, Flag, Calendar, Trophy, BarChart2, Settings, BrickWallShield, UserRoundCog, Utensils} from "lucide-react";
+import {Home, Flag, Calendar, Trophy, BarChart2, Settings, BrickWallShield, UserRoundCog, Speech, UserPen, ChartNoAxesGanttIcon, Utensils} from "lucide-react";
+
 
 
 const Sidebar = () => {
@@ -14,10 +15,15 @@ const Sidebar = () => {
     { name: "Nutrition", href: "/dashboard/nutrition-tracker", icon: Utensils },
     { name: "Schedule", href: "/dashboard/schedule", icon: Calendar },
     { name: "Achievements", href: "/dashboard/achievements", icon: Trophy },
-    { name: "Statistics", href: "/dashboard/statistics", icon: BarChart2 },
-    { name: "Settings", href: "/dashboard/settings", icon: Settings },
+    { name: "Statistics", href: "/dashboard/statistics", icon: BarChart2},
     { name: "Admin Stats", href: "/dashboard/admin-stats", icon:  BrickWallShield },
     { name: "User Management", href: "/dashboard/admin-management", icon:  UserRoundCog },
+    { name: "Coach Stats", href: "/dashboard/coach-stats", icon:  UserRoundCog },
+    { name: "Client Management", href: "/dashboard/client-management", icon:  ChartNoAxesGanttIcon },
+    { name: "Client Progress", href: "/dashboard/client-progress", icon:  UserPen },
+    { name: "Session Planner", href: "/dashboard/session-planner", icon:  Speech },
+
+    { name: "Settings", href: "/dashboard/settings", icon: Settings },
   ];
 
   return (
