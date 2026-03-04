@@ -2,21 +2,21 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import CoachCard from "@/components/cards/CoachCard/CoachCard";
 import BecomeCoachCTA from "./BecomeCoachCTA";
-import CoachCard from "@/components/cards/CoachCard";
 
 const CoachesPage = () => {
- const {
-   data: coaches,
-   isLoading,
-   isError,
- } = useQuery<Coach[]>({
-   queryKey: ["coaches"],
-   queryFn: async () => {
-     const { data } = await axios.get<Coach[]>("/data.json");
-     return data;
-   },
- });
+  const {
+    data: coaches,
+    isLoading,
+    isError,
+  } = useQuery<Coach[]>({
+    queryKey: ["coaches"],
+    queryFn: async () => {
+      const { data } = await axios.get<Coach[]>("/data.json");
+      return data;
+    },
+  });
 
   if (isLoading)
     return (

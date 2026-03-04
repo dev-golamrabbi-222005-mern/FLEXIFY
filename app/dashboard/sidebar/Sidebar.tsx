@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {Home, Flag, Calendar, Trophy, BarChart2, Settings, BrickWallShield, UserRoundCog} from "lucide-react";
+import {Home, Flag, Calendar, Trophy, BarChart2, Settings, BrickWallShield, UserRoundCog, Utensils} from "lucide-react";
 
 
 const Sidebar = () => {
@@ -11,6 +11,7 @@ const Sidebar = () => {
   const menuItems = [
     { name: "Home", href: "/dashboard", icon: Home },
     { name: "My goals", href: "/dashboard/my-goals", icon: Flag },
+    { name: "Nutrition", href: "/dashboard/nutrition-tracker", icon: Utensils },
     { name: "Schedule", href: "/dashboard/schedule", icon: Calendar },
     { name: "Achievements", href: "/dashboard/achievements", icon: Trophy },
     { name: "Statistics", href: "/dashboard/statistics", icon: BarChart2 },
