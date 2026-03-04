@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   Home,
   Flag,
+  Utensils,
   Calendar,
   Trophy,
   BarChart2,
@@ -18,6 +19,7 @@ const Sidebar = () => {
   const menuItems = [
     { name: "Home", href: "/dashboard", icon: Home },
     { name: "My goals", href: "/dashboard/my-goals", icon: Flag },
+    { name: "Nutrition", href: "/dashboard/nutrition-tracker", icon: Utensils },
     { name: "Schedule", href: "/dashboard/schedule", icon: Calendar },
     { name: "Achievements", href: "/dashboard/achievements", icon: Trophy },
     { name: "Statistics", href: "/dashboard/statistics", icon: BarChart2 },
