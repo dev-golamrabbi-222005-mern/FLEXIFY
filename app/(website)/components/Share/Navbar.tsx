@@ -26,6 +26,7 @@ const Navbar = () => {
   if (session?.status === "authenticated") {
     navLinks.push({ name: "Dashboard", path: "/dashboard" });
   }
+  console.log(session);
 
   return (
     <nav className="bg-[var(--bg-nav-footer)] sticky top-0 z-50 shadow-md">
