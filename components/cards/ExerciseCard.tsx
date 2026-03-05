@@ -33,11 +33,11 @@ const ExerciseCard = ({ exercise }: { exercise: Exercise }) => {
       
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-gradient-to-t from-black/60 to-transparent group-hover:opacity-100" />
       </div>
 
-      <div className="p-5 flex flex-col flex-grow">
-        <div className="flex justify-between items-start mb-3">
+      <div className="flex flex-col flex-grow p-5">
+        <div className="flex items-start justify-between mb-3">
           <h3 className="font-bold text-lg text-[var(--text-primary)] group-hover:text-[var(--primary)] transition-colors line-clamp-2 leading-tight uppercase tracking-tight">
             {exercise.name}
           </h3>

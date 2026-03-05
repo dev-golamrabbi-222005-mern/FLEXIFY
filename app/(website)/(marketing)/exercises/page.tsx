@@ -35,14 +35,14 @@ const ExercisesPage = () => {
   const resetFilters = () => setFilters({ search: "", muscle: "", level: "", equipment: "" });
 
   return (
-    <div className="min-h-screen my-8 px-6 max-w-7xl mx-auto">
+    <div className="min-h-screen px-6 mx-auto my-8 max-w-7xl">
       <div className="mb-10 text-center">
         <h1 className="text-4xl md:text-6xl font-black text-[var(--text-primary)] uppercase tracking-tighter">
           Workouts <span className="text-[var(--primary)]">Vault</span>
         </h1>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
+      <div className="flex flex-col gap-4 mb-6 md:flex-row">
         <div className="relative flex-grow">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" size={20} />
           <input 
@@ -98,7 +98,7 @@ const ExercisesPage = () => {
         </p>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {isLoading ? (
          
           Array.from({ length: 12 }).map((_, i) => <SkeletonCard key={i} />)
@@ -118,7 +118,7 @@ const ExercisesPage = () => {
           <button 
             onClick={() => fetchNextPage()} 
             disabled={isFetchingNextPage}
-            className="btn-primary font-black uppercase tracking-widest text-xs transition-transform active:scale-95 disabled:opacity-50"
+            className="text-xs font-black tracking-widest uppercase transition-transform btn-primary active:scale-95 disabled:opacity-50"
           >
             {isFetchingNextPage ? "Discovering..." : "Discover More"}
           </button>
