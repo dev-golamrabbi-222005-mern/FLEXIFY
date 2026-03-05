@@ -55,6 +55,11 @@ const Footer = () => {
                 Contact Us
               </Link>
             </li>
+            <li>
+              <Link href="/terms-privacy" className={linkClass("/terms-privacy")}>
+                Terms & Privacy
+              </Link>
+            </li>
           </ul>
         </div>
 
