@@ -8,8 +8,6 @@ import ThemeToggle from "./ThemeToggle";
 import { motion } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
 
-
-
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -23,8 +21,11 @@ const Navbar = () => {
     {name: "Exercises", path: "/exercises"},
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact" },
-    { name: "Dashboard", path: "/dashboard" },
   ];
+
+  if (session?.status === "authenticated") {
+    navLinks.push({ name: "Dashboard", path: "/dashboard" });
+  }
 
   return (
     <nav className="bg-[var(--bg-nav-footer)] sticky top-0 z-50 shadow-md">
