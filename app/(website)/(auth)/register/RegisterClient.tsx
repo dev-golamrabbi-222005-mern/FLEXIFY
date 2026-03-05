@@ -66,38 +66,45 @@ export default function RegisterPage(): JSX.Element {
       return;
     } else if (!emailPattern.test(formData.email)) {
       await Swal.fire("Error", "Invalid email", "error");
+      return;
     } else if (!imageUrlPattern.test(formData.imageUrl)) {
       await Swal.fire("Error", "Invalid image URL", "error");
+      return;
     } else if (!min8Pattern.test(formData.password)) {
       await Swal.fire(
         "Error",
         "Password must be at least 8 characters long",
         "error",
       );
+      return;
     } else if (!noSpacePattern.test(formData.password)) {
       await Swal.fire(
         "Error",
         "Password must not contain any whitespaces",
         "error",
       );
+      return;
     } else if (!casePattern.test(formData.password)) {
       await Swal.fire(
         "Error",
         "Password must contain at least one uppercase and one lowercase letter",
         "error",
       );
+      return;
     } else if (!numberPattern.test(formData.password)) {
       await Swal.fire(
         "Error",
         "Password must contain at least one number",
         "error",
       );
+      return;
     } else if (!specialCharPattern.test(formData.password)) {
       await Swal.fire(
         "Error",
         "Password must contain at least one special character",
         "error",
       );
+      return;
     }
 
     const result = await postUser(formData);
@@ -142,7 +149,7 @@ export default function RegisterPage(): JSX.Element {
           <div>
             <label className="text-sm text-gray-300">Name</label>
             <div className="relative mt-1">
-              <FaUser className="absolute left-3 top-4 text-gray-400" />
+              <FaUser className="absolute text-gray-400 left-3 top-4" />
               <input
                 type="text"
                 name="name"
@@ -156,7 +163,7 @@ export default function RegisterPage(): JSX.Element {
           <div>
             <label className="text-sm text-gray-300">Phone Number</label>
             <div className="relative mt-1">
-              <FaMobileAlt className="absolute left-3 top-4 text-gray-400" />
+              <FaMobileAlt className="absolute text-gray-400 left-3 top-4" />
               <input
                 type="text"
                 name="phone"
