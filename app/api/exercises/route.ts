@@ -1,78 +1,81 @@
 import { dbConnect } from "@/lib/dbConnect";
-import { ObjectId } from "mongodb";
+import { Filter, ObjectId } from "mongodb";
+import { NextRequest } from "next/server";
+import { Exercise } from "./[id]/route";
 
-export interface Exercise {
-  _id?: ObjectId;
-  id: string;
-  name: string;
-  force: string | null;
-  level: string;
-  mechanic: string | null;
-  equipment: string | null;
-  primaryMuscles: string[];
-  secondaryMuscles: string[];
-  instructions: string[];
-  category: string;
-  images: string[];
-}
+// ... (Keep your Exercise interface) ...
 
-export async function GET(request: Request): Promise<Response> {
-    try {
-        const { searchParams } = new URL(request.url);
-        
-        const page = parseInt(searchParams.get("page") || "1");
-        const limit = parseInt(searchParams.get("limit") || "12");
-        const search = searchParams.get("search") || "";
-        const muscle = searchParams.get("muscle") || "";
-        const level = searchParams.get("level") || "";
-        const equipment = searchParams.get("equipment") || "";
-        const category = searchParams.get("category") || "";
-        const force = searchParams.get("force") || "";
+export async function GET(
+  request: NextRequest,
+  // REMOVED: { params } because this is /api/exercises/route.ts (no [id] in path)
+): Promise<Response> {
+  try {
+    const { searchParams } = new URL(request.url);
 
-        const skip = (page - 1) * limit;
+    // If you need an ID in this route, get it from the query string (?id=...)
+    const idParam = searchParams.get("id");
 
-       
-        let query: any = {};
-        if (search) {
-            query.name = { $regex: search, $options: "i" }; 
-        }
-        if (muscle) {
-            query.primaryMuscles = { $in: [muscle.toLowerCase()] };
-        }
-        if (level) {
-            query.level = level.toLowerCase();
-        }
-        if (equipment) {
-            query.equipment = equipment.toLowerCase();
-        }
-        if (category) {
-            query.category = category.toLowerCase();
-        }
-        if (force) {
-            query.force = force.toLowerCase();
-        }
-        const collection = await dbConnect<Exercise>("exercises");
-        
-        const exercises = await collection
-            .find(query)
-            .skip(skip)
-            .limit(limit)
-            .toArray();
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "12");
+    const search = searchParams.get("search") || "";
+    const muscle = searchParams.get("muscle") || "";
+    const level = searchParams.get("level") || "";
+    const equipment = searchParams.get("equipment") || "";
+    const category = searchParams.get("category") || "";
+    const force = searchParams.get("force") || "";
 
-        const total = await collection.countDocuments(query);
+    const skip = (page - 1) * limit;
 
-        return Response.json({
-            exercises,
-            total,
-            currentPage: page,
-            totalPages: Math.ceil(total / limit)
-        }, { status: 200 });
+    const query: Filter<Exercise> = {};
 
-    } catch (error) {
-        console.error("Exercise Fetch Error:", error);
-        return Response.json(
-            { message: "Failed to fetch exercises" },
-            { status: 500 }
-        );
+    // Only add ID to query if it was actually provided in the URL
+    if (idParam && ObjectId.isValid(idParam)) {
+      query._id = new ObjectId(idParam);
     }
+
+    if (search) {
+      query.name = { $regex: search, $options: "i" };
+    }
+    if (muscle) {
+      query.primaryMuscles = { $in: [muscle.toLowerCase()] };
+    }
+    if (level) {
+      query.level = level.toLowerCase();
+    }
+    if (equipment) {
+      query.equipment = equipment.toLowerCase();
+    }
+    if (category) {
+      query.category = category.toLowerCase();
+    }
+    if (force) {
+      query.force = force.toLowerCase();
+    }
+
+    const collection = await dbConnect<Exercise>("exercises");
+
+    const exercises = await collection
+      .find(query)
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+
+    const total = await collection.countDocuments(query);
+
+    return Response.json(
+      {
+        exercises,
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+      },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error("Exercise Fetch Error:", error);
+    return Response.json(
+      { message: "Failed to fetch exercises" },
+      { status: 500 },
+    );
+  }
 }
