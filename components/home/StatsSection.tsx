@@ -1,83 +1,112 @@
-
-
-
-import SectionTitle from "@/app/Components/ui/section-title";
-import { ReactNode } from "react";
+"use client";
+import SectionTitle from "@/app/(website)/components/ui/section-title";
+import { ReactNode, useEffect, useRef } from "react";
+import { FaUsers, FaDumbbell, FaBullseye, FaUserTie } from "react-icons/fa";
 import {
-  FaUsers,
-  FaDumbbell,
-  FaBullseye,
-  FaUserTie,
-} from "react-icons/fa";
+  motion,
+  useMotionValue,
+  useTransform,
+  animate,
+  useInView,
+} from "framer-motion";
 
 // 🔹 Type
 type StatItem = {
   id: number;
-  value: string;
+  value: number;
+  suffix: string;
   label: string;
   icon: ReactNode;
 };
 
 // 🔹 Data
 const stats: StatItem[] = [
-  { id: 1, value: "10K+", label: "Active Users", icon: <FaUsers /> },
-  { id: 2, value: "25K+", label: "Workouts Completed", icon: <FaDumbbell /> },
-  { id: 3, value: "8K+", label: "Goals Achieved", icon: <FaBullseye /> },
-  { id: 4, value: "120+", label: "Expert Trainers", icon: <FaUserTie /> },
+  { id: 1, value: 50, suffix: "K+", label: "Active Users", icon: <FaUsers /> },
+  {
+    id: 2,
+    value: 300,
+    suffix: "K+",
+    label: "Workouts Completed",
+    icon: <FaDumbbell />,
+  },
+  {
+    id: 3,
+    value: 44,
+    suffix: "K+",
+    label: "Goals Achieved",
+    icon: <FaBullseye />,
+  },
+  {
+    id: 4,
+    value: 100,
+    suffix: "+",
+    label: "Expert Trainers",
+    icon: <FaUserTie />,
+  },
 ];
+
+// 🔹 Counter Component
+function Counter({ value, suffix }: { value: number; suffix: string }) {
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, (latest) => Math.round(latest));
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  useEffect(() => {
+    if (isInView) {
+      const controls = animate(count, value, {
+        duration: 3,
+        ease: "easeOut",
+      });
+      return controls.stop;
+    }
+  }, [isInView, count, value]);
+
+  return (
+    <span ref={ref}>
+      <motion.span>{rounded}</motion.span>
+      {suffix}
+    </span>
+  );
+}
 
 export default function StatsSection() {
   return (
-    <section
-      className="
-        relative overflow-hidden
-        py-16 md:py-20
-        bg-[var(--bg-primary)]
-      "
-    >
-      {/* 🔹 Ambient glow (same theme as pricing) */}
-      <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[var(--primary)]/20 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[var(--primary)]/10 blur-3xl" />
-
+    <section className="relative overflow-hidden pb-8 md:pb-12 bg-[var(--bg-primary)]">
       <div className="relative mx-auto max-w-7xl px-6">
-        {/* 🔹 Heading */}
-        {/* <div className="mb-12 text-center">
-          <h2 className="text-3xl md:text-5xl font-extrabold text-[var(--text-primary)]">
-            Flexify <span className="text-[var(--primary)]">Impact</span>
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-sm md:text-base text-[var(--text-secondary)]">
-            Building healthier lifestyles through smart fitness tracking
-          </p>
-        </div> */}
-       <SectionTitle
-       
-       title="Flexify Impact" subtitle="Building healthier lifestyles through smart fitness tracking">
-        
+        <SectionTitle
+          title="Flexify Impact"
+          subtitle="Building healthier lifestyles through smart fitness tracking"
+        />
 
-       </SectionTitle>
         {/* 🔹 Stats Grid */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => (
-            <div
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {stats.map((stat, index) => (
+            <motion.div
               key={stat.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
               className="
                 group rounded-3xl
-                bg-(--card-bg)
-                border border-white/10
+                bg-[var(--card-bg)]
+                border border-[var(--border-color)]
                 p-6 md:p-8
                 text-center
                 transition-all duration-300
                 hover:-translate-y-2
-                hover:border-(--primary)/50
-                hover:shadow-[0_0_30px_var(--border-highlight)]
+                hover:bg-[var(--primary)]
               "
             >
+              {/* Icon */}
               <div className="mb-5 flex justify-center">
                 <div
                   className="
                     text-4xl
-                    text-(--primary)
-                    transition-transform duration-300
+                    text-[var(--primary)]
+                    transition-all duration-300
+                    group-hover:text-white
                     group-hover:scale-110
                   "
                 >
@@ -85,13 +114,30 @@ export default function StatsSection() {
                 </div>
               </div>
 
-              <h3 className="text-3xl md:text-4xl font-extrabold text-[var(--text-primary)]">
-                {stat.value}
+              {/* Value with Counter */}
+              <h3
+                className="
+                  text-3xl md:text-4xl font-extrabold
+                  text-[var(--text-primary)]
+                  transition-colors duration-300
+                  group-hover:text-white
+                "
+              >
+                <Counter value={stat.value} suffix={stat.suffix} />
               </h3>
-              <p className="mt-2 text-xs md:text-sm uppercase tracking-wide text-[var(--text-secondary)]">
+
+              {/* Label */}
+              <p
+                className="
+                  mt-2 text-xs md:text-sm uppercase tracking-wide
+                  text-[var(--text-secondary)]
+                  transition-colors duration-300
+                  group-hover:text-white/90
+                "
+              >
                 {stat.label}
               </p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

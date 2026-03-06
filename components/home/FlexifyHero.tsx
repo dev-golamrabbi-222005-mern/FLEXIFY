@@ -13,6 +13,8 @@ const slides = [
     desc: "Join thousands of viewers watching real-time transformations and success stories.",
     img: "https://i.ibb.co.com/M5kfgdR2/image.png",
     icon: <Users size={24} />,
+    joinLink:"/",
+    learnMoreLink: "/"
   },
   {
     id: 2,
@@ -22,6 +24,8 @@ const slides = [
     desc: "Push beyond your boundaries with our AI-powered exercise tracking system.",
     img: "https://i.ibb.co.com/27PD6wh6/image.png",
     icon: <Dumbbell size={24} />,
+    joinLink:"/",
+    learnMoreLink: "/"
   },
   {
     id: 3,
@@ -31,6 +35,8 @@ const slides = [
     desc: "Empower others. Manage your students with the most advanced coach dashboard.",
     img: "https://i.ibb.co.com/8Df59Q4p/image.png",
     icon: <Target size={24} />,
+    joinLink:"/applycoach",
+    learnMoreLink: "/coaches"
   }
 ];
 
@@ -51,7 +57,7 @@ export default function FlexifyHero() {
           <motion.div
             key={index}
             initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 0.12, scale: 1 }}
+            animate={{ opacity: 0.50, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
             className="w-full h-full"
@@ -66,8 +72,8 @@ export default function FlexifyHero() {
         </AnimatePresence>
       </div>
 
-      <div className="relative z-10 w-full max-w-[1280px]  mb-8 md:mb-12 px-6 mx-auto  grid lg:grid-cols-2 gap-16 items-center">
-        <div className="w-full">
+      <div className="relative z-10 w-full max-w-7xl mb-8 md:mb-12 px-6 mx-auto  flex flex-col md:flex-row gap-12 md:gap-16 items-center justify-center">
+        <div className="w-full md:w-1/2">
           <AnimatePresence mode="wait">
             <motion.div
               key={index}
@@ -85,7 +91,7 @@ export default function FlexifyHero() {
                 </span>
               </div>
 
-              <h2 className="text-7xl md:text-[110px] font-black text-[var(--text-primary)] leading-[0.8] mb-10 tracking-[ -0.05em] uppercase">
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-[var(--text-primary)] leading-[0.8] mb-10 tracking-[ -0.05em] uppercase">
                 FLEXIFY <br />
                 <span className="text-[var(--primary)]">
                   {slides[index].highlight}
@@ -97,10 +103,10 @@ export default function FlexifyHero() {
               </p>
 
               <div className="flex flex-col lg:flex-row  gap-6">
-                <button className="bg-[var(--primary)] text-white font-black px-12 py-6 w-full rounded-2xl flex items-center justify-center gap-4 transition-all hover:scale-105 shadow-2xl shadow-orange-500/20 uppercase text-lg ">
+                <button onClick={() => window.location.href = slides[index].joinLink} className="bg-[var(--primary)] text-white font-black px-8 py-4 md:py-6 w-full rounded-2xl flex items-center justify-center gap-4 transition-all hover:scale-105 shadow-2xl shadow-orange-500/20 uppercase text-lg ">
                   Join Now <ArrowRight size={24} />
                 </button>
-                <button className="px-8 py-6 rounded-2xl border-2 w-full border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all bg-transparent backdrop-blur-sm flex items-center justify-center gap-3 font-bold uppercase tracking-tight text-center">
+                <button onClick={() => window.location.href = slides[index].learnMoreLink} className="px-8 py-4 md:py-6 rounded-2xl border-2 w-full border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all bg-transparent backdrop-blur-sm flex items-center justify-center gap-3 font-bold uppercase tracking-tight text-center">
                   Learn More <Zap size={22} className="fill-current" />
                 </button>
               </div>
@@ -108,8 +114,8 @@ export default function FlexifyHero() {
           </AnimatePresence>
         </div>
 
-        <div className="relative flex justify-end items-center h-full">
-          <div className="relative w-full max-w-[520px] aspect-[9/9] rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)]">
+        <div className="relative w-full md:w-1/2 flex justify-center md:justify-end items-center h-full">
+          <div className="relative w-full aspect-[9/9]  rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] shadow-[0_10px_40px_-5px_rgba(0,0,0,0.2)]">
             <AnimatePresence initial={false} mode="popLayout">
               <motion.div
                 key={index}
@@ -124,7 +130,8 @@ export default function FlexifyHero() {
                   scale: 1,
                 }}
                 exit={{ opacity: 0, filter: "blur(10px)", scale: 1.05 }}
-                transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
+                transition={{ duration: 5.0
+                  , ease: [0.4, 0, 0.2, 1] }}
                 className="absolute inset-0 w-full h-full"
               >
                 <img
@@ -145,12 +152,12 @@ export default function FlexifyHero() {
                         />
                       ))}
                     </div>
-                    <p className="text-white font-black text-5xl uppercase tracking-tighter drop-shadow-2xl">
+                    <p className="text-white font-black text-4xl md:text-5xl uppercase tracking-tighter drop-shadow-2xl">
                       {slides[index].highlight}
                     </p>
                   </div>
                   <div className="p-5 bg-[var(--primary)] rounded-2xl shadow-xl">
-                    <Zap className="text-white" fill="white" size={32} />
+                    <Zap className="text-white w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10" fill="white"  />
                   </div>
                 </div>
               </motion.div>

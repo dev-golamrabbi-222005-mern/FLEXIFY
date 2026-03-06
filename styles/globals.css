@@ -13,6 +13,8 @@
 .light {
     --bg-primary: #F8F4E3;
     /* Main page background (Body) */
+    --bg-nav-footer: #eee6c1;
+    /* Main page Nav & Footer background (Body) */
     --bg-secondary: #FFFFFF;
     /* Elevated surfaces (Cards, Modals, Dropdowns) */
     --text-primary: #374151;
@@ -30,8 +32,10 @@
 }
 
 .dark {
-    --bg-primary: #1E1E1E;
+    --bg-primary: #222222;
     /* Main dark background (Body) */
+    --bg-nav-footer: #1a1a1a;
+    /* Main page Nav & Footer background (Body) */
     --bg-secondary: #2D2D2D;
     /* Darker surfaces for contrast (Cards, sections) */
     --text-primary: #E5E7EB;
@@ -60,6 +64,15 @@ body {
     /* Main action button color */
     color: #FFFFFF;
     /* White text on primary buttons */
+    padding: 12px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+@media only screen and (max-width: 600px) {
+    .btn-primary{
+        padding: 8px 12px;
+        font-size: small;
+    }
 }
 
 .text-accent {
@@ -81,3 +94,20 @@ body {
   box-shadow: 0 0 0 6px rgba(249, 115, 22, 0.15);
   cursor: pointer;
 }
+
+/* input field */
+
+.input-style {
+          background-color: var(--bg-primary);
+          border: 1px solid var(--border-color);
+          color: var(--text-primary);
+          padding: 14px;
+          border-radius: 12px;
+          outline: none;
+          width: 100%;
+          font-size: 0.9rem;
+          transition: border-color 0.2s;
+        }
+        .input-style:focus { border-color: var(--primary); }
+        label { color: var(--text-secondary); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;
+         }
