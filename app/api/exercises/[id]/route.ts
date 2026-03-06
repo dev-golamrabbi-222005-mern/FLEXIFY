@@ -17,7 +17,6 @@ export interface Exercise {
   images: string[];
 }
 
-// FIXED: params must be a Promise in Next.js 15
 interface RouteParams {
   params: Promise<{
     id: string;
@@ -26,12 +25,11 @@ interface RouteParams {
 
 export async function GET(
   request: NextRequest,
-  { params }: RouteParams, // This now correctly matches Next.js expectation
+  { params }: RouteParams, 
 ): Promise<Response> {
   try {
     const collection = await dbConnect<Exercise>("exercises");
 
-    // Awaiting here is correct, but the type above must match
     const { id } = await params;
 
     if (!ObjectId.isValid(id)) {
@@ -48,7 +46,7 @@ export async function GET(
     return Response.json(
       {
         ...result,
-        _id: result._id?.toString(), // Use optional chaining to be safe
+        _id: result._id?.toString(), 
       },
       { status: 200 },
     );

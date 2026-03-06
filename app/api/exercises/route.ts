@@ -1,29 +1,19 @@
 import { dbConnect } from "@/lib/dbConnect";
 import { Filter, ObjectId } from "mongodb";
 import { NextRequest } from "next/server";
+import { Exercise } from "./[id]/route";
 
-export interface Exercise {
-  _id?: ObjectId;
-  id: string;
-  name: string;
-  force: string | null;
-  level: string;
-  mechanic: string | null;
-  equipment: string | null;
-  primaryMuscles: string[];
-  secondaryMuscles: string[];
-  instructions: string[];
-  category: string;
-  images: string[];
-}
+// ... (Keep your Exercise interface) ...
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  // REMOVED: { params } because this is /api/exercises/route.ts (no [id] in path)
 ): Promise<Response> {
   try {
-    const { id } = await params;
     const { searchParams } = new URL(request.url);
+
+    // If you need an ID in this route, get it from the query string (?id=...)
+    const idParam = searchParams.get("id");
 
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "12");
@@ -36,7 +26,13 @@ export async function GET(
 
     const skip = (page - 1) * limit;
 
-    const query: Filter<Exercise> = {id};
+    const query: Filter<Exercise> = {};
+
+    // Only add ID to query if it was actually provided in the URL
+    if (idParam && ObjectId.isValid(idParam)) {
+      query._id = new ObjectId(idParam);
+    }
+
     if (search) {
       query.name = { $regex: search, $options: "i" };
     }
@@ -55,6 +51,7 @@ export async function GET(
     if (force) {
       query.force = force.toLowerCase();
     }
+
     const collection = await dbConnect<Exercise>("exercises");
 
     const exercises = await collection
