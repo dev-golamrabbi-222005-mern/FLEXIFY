@@ -1,5 +1,6 @@
 import { dbConnect } from "@/lib/dbConnect";
 import { Filter, ObjectId } from "mongodb";
+import { NextRequest } from "next/server";
 
 export interface Exercise {
   _id?: ObjectId;
@@ -16,16 +17,12 @@ export interface Exercise {
   images: string[];
 }
 
-type Context = {
-  params: Promise<{ id: string }>;
-};
-
 export async function GET(
-  request: Request,
-  context: Context, 
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
 ): Promise<Response> {
   try {
-    const { id } = await context.params;
+    const { id } = await params;
     const { searchParams } = new URL(request.url);
 
     const page = parseInt(searchParams.get("page") || "1");
@@ -39,7 +36,7 @@ export async function GET(
 
     const skip = (page - 1) * limit;
 
-    const query: Filter<Exercise> = {};
+    const query: Filter<Exercise> = {id};
     if (search) {
       query.name = { $regex: search, $options: "i" };
     }
