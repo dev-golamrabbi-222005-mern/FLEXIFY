@@ -1,8 +1,11 @@
 "use client";
 
+import { ObjectId } from "mongodb";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Exercise {
+  _id: ObjectId;
   name: string;
   force: string;
   level: string;
@@ -13,7 +16,6 @@ interface Exercise {
   instructions: string[];
   category: string;
   images: string[];
-  id: string;
 }
 
 export default function ExerciseDetails({ exercise }: { exercise: Exercise }) {
@@ -56,6 +58,13 @@ export default function ExerciseDetails({ exercise }: { exercise: Exercise }) {
           </div>
         ))}
       </div>
+
+      <Link
+        href={`/workout/start/${exercise._id}`}
+        className="inline-block px-6 py-3 mb-8 font-bold text-white rounded-lg bg-(--primary)"
+      >
+        Start Exercise
+      </Link>
 
       {/* Info Grid */}
       <div className="grid grid-cols-1 gap-6 mb-10 md:grid-cols-3">
