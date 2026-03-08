@@ -22,7 +22,6 @@ const Sidebar = () => {
     { name: "Client Management", href: "/dashboard/client-management", icon:  ChartNoAxesGanttIcon },
     { name: "Client Progress", href: "/dashboard/client-progress", icon:  UserPen },
     { name: "Session Planner", href: "/dashboard/session-planner", icon:  Speech },
-
     { name: "Settings", href: "/dashboard/settings", icon: Settings },
   ];
 
