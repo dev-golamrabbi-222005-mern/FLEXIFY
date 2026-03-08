@@ -92,9 +92,9 @@ export const authOptions: AuthOptions = {
 
     async session({ session, token }) {
       if (token) {
-        session.role = token.role;
-        session.email = token.email;
-        session.phone = token.phone;
+        session.role = token.role as string;
+        session.email = token.email as string;
+        session.phone = token.phone as string;
       }
       return session;
     },
