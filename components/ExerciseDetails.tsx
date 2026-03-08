@@ -60,7 +60,7 @@ export default function ExerciseDetails({ exercise }: { exercise: Exercise }) {
       </div>
 
       <Link
-        href={`/workout/start/${exercise._id}`}
+        href={`/workouts/start/${exercise._id}`}
         className="inline-block px-6 py-3 mb-8 font-bold text-white rounded-lg bg-(--primary)"
       >
         Start Exercise
