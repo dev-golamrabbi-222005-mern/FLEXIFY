@@ -6,11 +6,9 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
 
     const session = await getServerSession(authOptions);
-
-    const user = await dbConnect("users");
-    const singleUser = user.findOne({email: session?.user?.email});
-
-    if (!singleUser) {
+    const users = await dbConnect("users");
+    const singleUser = await users.findOne({email: session?.email});
+    if (!singleUser?.email) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const body = await req.json();
@@ -18,6 +16,7 @@ export async function POST(req: Request) {
     const collection = await dbConnect("workout_sessions");
 
     const workoutSession = {
+        userId: singleUser._id.toString(),
         exerciseId: body.exerciseId,
         currentSet: 1,
         currentRep: 0,
