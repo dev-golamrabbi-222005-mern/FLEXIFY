@@ -14,7 +14,7 @@ const FacebookLogin = () => {
         <button
             onClick={handleSignIn}
             type="button"
-            className="flex items-center justify-center w-full gap-3 py-3 cursor-pointer font-bold text-white transition bg-blue-600 rounded-lg hover:bg-blue-700"
+            className="flex items-center justify-center w-full gap-3 py-3 font-bold text-white transition bg-blue-600 rounded-lg cursor-pointer hover:bg-blue-700"
         >
             <FaFacebookF />
             Facebook
