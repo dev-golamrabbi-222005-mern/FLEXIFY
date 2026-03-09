@@ -8,6 +8,7 @@ import ThemeToggle from "./ThemeToggle";
 import { motion } from "framer-motion";
 import { LogOut, BellDot } from "lucide-react";
 import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 
 const DashboardNavbar = () => {
@@ -92,7 +93,7 @@ const DashboardNavbar = () => {
         <div className="flex items-center gap-4">
           <ThemeToggle />
           <BellDot className="w-6 h-6 cursor-pointer" />
-          <LogOut className="w-6 h-6 cursor-pointer" />
+          <LogOut onClick={() => signOut()} className="w-6 h-6 cursor-pointer" />
         </div>
 
        {/* Mobile Menu Button */}
