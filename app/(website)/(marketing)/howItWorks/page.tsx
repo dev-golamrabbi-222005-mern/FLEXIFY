@@ -289,7 +289,7 @@ export default function HowItWorksPage() {
       <div className="max-w-7xl mx-auto px-6">
         {/* Hero Header */}
         <motion.div
-          className="text-center my-8 md:mb-12"
+          className="text-center mt-8 md:mt-12 mb-10"
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut" }}

@@ -1,6 +1,7 @@
 "use client";
 
 import SectionTitle from "@/app/(website)/components/ui/section-title";
+import {motion} from "framer-motion";
 import {
   FiBarChart2,
   FiCoffee,
@@ -80,12 +81,22 @@ const newFaqs = [
 
 export default function MoreFAQPage() {
   return (
-    <section className="py-16 bg-[var(--bg-primary)] min-h-screen">
+    <section className="min-h-screen mt-8 md:mt-12 mb-10">
       <div className="max-w-6xl mx-auto px-4 text-center">
-        <SectionTitle
-          title="More Frequently Asked Questions"
-          subtitle="Explore additional details about Flexify and get answers to common questions."
-        />
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.7 }}
+          className="text-3xl md:text-5xl font-bold mb-6 tracking-tight"
+          style={{ color: "var(--text-primary)" }}
+        >
+          More Frequently Asked Questions
+        </motion.h1>
+
+        <p className="max-w-xl mx-auto text-[var(--text-secondary)]">
+          Explore additional details about Flexify and get answers to common
+          questions.
+        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
           {newFaqs.map((faq, index) => (

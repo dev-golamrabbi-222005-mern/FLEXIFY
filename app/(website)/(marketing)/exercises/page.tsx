@@ -35,26 +35,29 @@ const ExercisesPage = () => {
   const resetFilters = () => setFilters({ search: "", muscle: "", level: "", equipment: "" });
 
   return (
-    <div className="min-h-screen px-6 mx-auto my-8 max-w-7xl">
+    <div className="min-h-screen px-6 mx-auto mt-8 md:mt-12 mb-10 max-w-7xl">
       <div className="mb-10 text-center">
-        <h1 className="text-4xl md:text-6xl font-black text-[var(--text-primary)] uppercase tracking-tighter">
+        <h1 className="text-3xl md:text-5xl font-bold text-[var(--text-primary)] tracking-tighter">
           Workouts <span className="text-[var(--primary)]">Vault</span>
         </h1>
       </div>
 
       <div className="flex flex-col gap-4 mb-6 md:flex-row">
         <div className="relative flex-grow">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" size={20} />
-          <input 
-            name="search" 
-            type="text" 
-            placeholder="Search exercise name..." 
-            className="input-style !pl-12 h-14" 
+          <Search
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]"
+            size={20}
+          />
+          <input
+            name="search"
+            type="text"
+            placeholder="Search exercise name..."
+            className="input-style !pl-12 h-14"
             value={filters.search}
-            onChange={handleFilterChange} 
+            onChange={handleFilterChange}
           />
         </div>
-        <button 
+        <button
           onClick={() => setShowFilters(!showFilters)}
           className="flex items-center justify-center gap-2 px-6 py-4 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl font-bold uppercase text-xs tracking-widest hover:border-[var(--primary)] transition-all shadow-sm"
         >
@@ -63,30 +66,62 @@ const ExercisesPage = () => {
         </button>
       </div>
 
-      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showFilters ? "max-h-[500px] opacity-100 mb-10" : "max-h-0 opacity-0"}`}>
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${showFilters ? "max-h-[500px] opacity-100 mb-10" : "max-h-0 opacity-0"}`}
+      >
         <div className="p-6 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-6 relative shadow-sm">
           <div className="space-y-2">
             <label>Target Muscle</label>
-            <select name="muscle" className="input-style" value={filters.muscle} onChange={handleFilterChange}>
+            <select
+              name="muscle"
+              className="input-style"
+              value={filters.muscle}
+              onChange={handleFilterChange}
+            >
               <option value="">All Muscles</option>
-              {MUSCLES.map(m => <option key={m} value={m}>{m}</option>)}
+              {MUSCLES.map((m) => (
+                <option key={m} value={m}>
+                  {m}
+                </option>
+              ))}
             </select>
           </div>
           <div className="space-y-2">
             <label>Difficulty</label>
-            <select name="level" className="input-style" value={filters.level} onChange={handleFilterChange}>
+            <select
+              name="level"
+              className="input-style"
+              value={filters.level}
+              onChange={handleFilterChange}
+            >
               <option value="">All Levels</option>
-              {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
+              {LEVELS.map((l) => (
+                <option key={l} value={l}>
+                  {l}
+                </option>
+              ))}
             </select>
           </div>
           <div className="space-y-2">
             <label>Equipment</label>
-            <select name="equipment" className="input-style" value={filters.equipment} onChange={handleFilterChange}>
+            <select
+              name="equipment"
+              className="input-style"
+              value={filters.equipment}
+              onChange={handleFilterChange}
+            >
               <option value="">All Equipment</option>
-              {EQUIPMENTS.map(e => <option key={e} value={e}>{e}</option>)}
+              {EQUIPMENTS.map((e) => (
+                <option key={e} value={e}>
+                  {e}
+                </option>
+              ))}
             </select>
           </div>
-          <button onClick={resetFilters} className="sm:col-span-3 text-[10px] font-bold uppercase text-[var(--primary)] hover:underline flex items-center justify-center gap-1 mt-2">
+          <button
+            onClick={resetFilters}
+            className="sm:col-span-3 text-[10px] font-bold uppercase text-[var(--primary)] hover:underline flex items-center justify-center gap-1 mt-2"
+          >
             <X size={12} /> Reset All
           </button>
         </div>
@@ -94,29 +129,36 @@ const ExercisesPage = () => {
 
       {!isLoading && (
         <p className="mb-6 text-xs font-bold text-[var(--text-secondary)] uppercase tracking-widest">
-          Results: <span className="text-[var(--primary)]">{data?.pages[0]?.total || 0}</span>
+          Results:{" "}
+          <span className="text-[var(--primary)]">
+            {data?.pages[0]?.total || 0}
+          </span>
         </p>
       )}
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {isLoading ? (
-         
           Array.from({ length: 12 }).map((_, i) => <SkeletonCard key={i} />)
         ) : (
           <>
-            {data?.pages.map(page => 
-              page.exercises.map((ex: any) =><ExerciseCard key={ex._id} exercise={ex} />)
+            {data?.pages.map((page) =>
+              page.exercises.map((ex: any) => (
+                <ExerciseCard key={ex._id} exercise={ex} />
+              )),
             )}
             {/* Show extra skeleton cards when loading next page */}
-            {isFetchingNextPage && Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={`next-${i}`} />)}
+            {isFetchingNextPage &&
+              Array.from({ length: 4 }).map((_, i) => (
+                <SkeletonCard key={`next-${i}`} />
+              ))}
           </>
         )}
       </div>
 
       {hasNextPage && (
         <div className="mt-16 text-center">
-          <button 
-            onClick={() => fetchNextPage()} 
+          <button
+            onClick={() => fetchNextPage()}
             disabled={isFetchingNextPage}
             className="text-xs font-black tracking-widest uppercase transition-transform btn-primary active:scale-95 disabled:opacity-50"
           >
