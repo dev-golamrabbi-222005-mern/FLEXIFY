@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Swal from "sweetalert2";
 
 export default function WorkoutSessionPage() {
@@ -13,6 +13,8 @@ export default function WorkoutSessionPage() {
     const TOTAL_SETS = 3;
     const REPS = 12;
     const REST_TIME = 60;
+
+    const startedRef = useRef(false);
 
     const [rep, setRep] = useState(0);
     const [setNumber, setSetNumber] = useState(1);
@@ -37,7 +39,9 @@ export default function WorkoutSessionPage() {
     // START WORKOUT SESSION
     // -----------------------------
     useEffect(() => {
-        if (!exercise) return;
+        if (!exercise || startedRef.current) return;
+
+        startedRef.current = true;
 
         const startWorkout = async () => {
             try {
@@ -63,20 +67,27 @@ export default function WorkoutSessionPage() {
         if (!isResting) return;
 
         const timer = setInterval(() => {
-            setTimeLeft((prev) => {
-                if (prev <= 1) {
-                    clearInterval(timer);
-                    setIsResting(false);
-                    setTimeLeft(REST_TIME);
-                    setRep(0);
-                    setSetNumber((prev) => prev + 1);
-                }
-                return prev - 1;
-            });
+            setTimeLeft((prev) => prev - 1);
         }, 1000);
 
         return () => clearInterval(timer);
     }, [isResting]);
+
+    useEffect(() => {
+        if (timeLeft !== 0) return;
+
+        setIsResting(false);
+        setRep(0);
+        setTimeLeft(REST_TIME);
+
+        setSetNumber((prev) => {
+            if (prev < TOTAL_SETS) {
+                return prev + 1;
+            }
+            return prev;
+        });
+
+    }, [timeLeft]);
 
     if (isLoading || !exercise) {
         return <div className="p-10 text-center">Loading Workout...</div>;
@@ -92,6 +103,7 @@ export default function WorkoutSessionPage() {
     // REP BUTTON LOGIC
     // -----------------------------
     const addRep = async () => {
+        if (isResting || rep >= REPS) return;
         const newRep = rep + 1;
         setRep(newRep);
 
@@ -121,6 +133,7 @@ export default function WorkoutSessionPage() {
                     Swal.fire("Workout completion failed", error.message, "error");
                 }
             } else {
+                setTimeLeft(REST_TIME);
                 setIsResting(true);
             }
         }
@@ -195,7 +208,7 @@ export default function WorkoutSessionPage() {
 
                 <button
                 onClick={addRep}
-                disabled={isResting}
+                disabled={isResting || rep === REPS}
                 className="px-6 py-3 text-white rounded-lg bg-(--primary)"
                 >
                 +1 Rep
@@ -230,7 +243,7 @@ export default function WorkoutSessionPage() {
                 <div
                     className="h-3 rounded-full bg-(--primary)"
                     style={{
-                    width: `${((setNumber - 1) / TOTAL_SETS) * 100}%`,
+                    width: `${((setNumber - 1 + rep / REPS) / TOTAL_SETS) * 100}%`,
                     }}
                 />
 
