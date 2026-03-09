@@ -1,3 +1,6 @@
+import { FoodItem } from "@/types/food";
+import { useRef, useState } from "react";
+
 export default function AddFoodModal({
   onClose,
   onAdd,

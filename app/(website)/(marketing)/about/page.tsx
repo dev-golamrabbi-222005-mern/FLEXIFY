@@ -65,7 +65,7 @@ const About = () => {
 
   return (
     <div className="bg-[var(--bg-primary)]">
-      <section className="px-4 py-12 mx-auto md:py-16 md:px-6 max-w-7xl">
+      <section className="px-4 mx-auto mt-8 md:mt-12 mb-10 max-w-7xl">
         {/* About Section */}
         <div className="grid items-center grid-cols-1 gap-10 md:grid-cols-2">
           {/* Left Text */}
@@ -96,17 +96,6 @@ const About = () => {
 
         {/* Meet Team Section */}
         <section className="pt-8 md:pt-12">
-          {/* <div className="px-2 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-3">
-              Meet the Team
-            </h2>
-
-            <p className="text-[var(--text-secondary)] max-w-xl mx-auto mb-10 text-sm md:text-base">
-              Meet our passionate team of six professionals led by our Founder &
-              Lead Developer. Together we build Flexify with creativity and
-              technology.
-            </p>
-          </div> */}
           <SectionTitle
             title="Meet the Team"
             subtitle="Meet our passionate team of six professionals led by our Founder &

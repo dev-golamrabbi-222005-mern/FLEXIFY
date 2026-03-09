@@ -1,3 +1,5 @@
+import { MealSection } from "@/types/food";
+
 export default function MealCard({
   meal,
   onAddFood,

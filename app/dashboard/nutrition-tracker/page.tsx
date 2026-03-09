@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
-import type { FoodItem, MealEntry, MealSection } from "@/types/food";
+import { useState } from "react";
+import type { FoodItem, MealSection } from "@/types/food";
 import CircularProgress from "../components/nutritions/CircularProgress";
 import AddFoodModal from "../components/nutritions/AddFoodModal";
 import MealCard from "../components/nutritions/MealCard";

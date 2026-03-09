@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+<<<<<<< HEAD
 import { Home, Flag, Calendar, Trophy, BarChart2, Settings, BrickWallShield, UserRoundCog, Speech, UserPen, ChartNoAxesGanttIcon, Utensils} from "lucide-react";
+=======
+import {Home, Flag, Calendar, Trophy, BarChart2, Settings, UserCheck, Users, MessageCircle, BrickWallShield, UserRoundCog, Speech, UserPen, ChartNoAxesGanttIcon, Utensils} from "lucide-react";
+
+>>>>>>> 960e5da8cc7e2458e3f109b0e4fd0ed4f022f7c3
 
 import { useSession } from "next-auth/react";
 
@@ -15,6 +20,7 @@ const Sidebar = () => {
 
   // Menu Items
   const menuItems = [
+<<<<<<< HEAD
     // USER
     { name: "Home", href: "/dashboard", icon: Home, role: ["user", "admin", "coach"] },
     { name: "My goals", href: "/dashboard/my-goals", icon: Flag, role: ["user"] },
@@ -34,6 +40,28 @@ const Sidebar = () => {
     { name: "Session Planner", href: "/dashboard/session-planner", icon: Speech, role: ["coach"] },
 
     { name: "Settings", href: "/dashboard/settings", icon: Settings, role: ["user","admin","coach"] },
+=======
+    { name: "Home", href: "/dashboard", icon: Home },
+    { name: "My goals", href: "/dashboard/my-goals", icon: Flag },
+    { name: "Nutrition", href: "/dashboard/nutrition-tracker", icon: Utensils },
+    { name: "Schedule", href: "/dashboard/schedule", icon: Calendar },
+    { name: "Achievements", href: "/dashboard/achievements", icon: Trophy },
+
+   
+    // Coaches section
+    { name: "Assigned Coach", href: "/dashboard/assigned-coach", icon: UserCheck },
+    { name: "Browse Coaches", href: "/dashboard/browse-coach", icon: Users},
+    { name: "Messages", href: "/dashboard/messages", icon: MessageCircle },
+
+    { name: "Statistics", href: "/dashboard/statistics", icon: BarChart2},
+    { name: "Admin Stats", href: "/dashboard/admin-stats", icon:  BrickWallShield },
+    { name: "User Management", href: "/dashboard/admin-management", icon:  UserRoundCog },
+    { name: "Coach Stats", href: "/dashboard/coach-stats", icon:  UserRoundCog },
+    { name: "Client Management", href: "/dashboard/client-management", icon:  ChartNoAxesGanttIcon },
+    { name: "Client Progress", href: "/dashboard/client-progress", icon:  UserPen },
+    { name: "Session Planner", href: "/dashboard/session-planner", icon:  Speech },
+    { name: "Settings", href: "/dashboard/settings", icon: Settings },
+>>>>>>> 960e5da8cc7e2458e3f109b0e4fd0ed4f022f7c3
   ];
 
   // Role menu filter
