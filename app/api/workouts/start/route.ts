@@ -20,8 +20,8 @@ export async function POST(req: Request) {
         exerciseId: body.exerciseId,
         currentSet: 1,
         currentRep: 0,
-        totalSets: 3,
-        totalReps: 12,
+        totalSets: body.totalSets,
+        totalReps: body.totalReps,
         completed: false,
         startedAt: new Date(),
         updatedAt: new Date()
