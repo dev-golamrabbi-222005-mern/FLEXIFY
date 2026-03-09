@@ -59,8 +59,7 @@ const FAQ = () => {
   };
 
   return (
-    <section className="pb-12 md:pb-16 bg-[var(--bg-primary)]">
-      <div className="max-w-7xl mx-auto px-4 text-center">
+    <section className="pb-8 md:pb-12 max-w-7xl px-6 mx-auto relative overflow-hidden">
         <SectionTitle title="Frequently Asked Questions" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-6">
@@ -102,11 +101,7 @@ const FAQ = () => {
                 <FiChevronDown
                   className={`text-[var(--primary)] text-xl transition-all duration-300
                               group-hover:text-white
-                              ${
-                                openIndex === index
-                                  ? "rotate-180"
-                                  : ""
-                              }`}
+                              ${openIndex === index ? "rotate-180" : ""}`}
                 />
               </div>
 
@@ -131,7 +126,7 @@ const FAQ = () => {
         </div>
 
         {/* See More Button */}
-        <div className="mt-12">
+        <div className="mt-12 flex justify-center items-center">
           <a
             href="/more-faq"
             className="inline-block px-8 py-3 rounded-xl font-semibold
@@ -144,7 +139,7 @@ const FAQ = () => {
             See More FAQs
           </a>
         </div>
-      </div>
+      
     </section>
   );
 };

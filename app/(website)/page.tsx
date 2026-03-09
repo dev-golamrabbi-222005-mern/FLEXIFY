@@ -22,8 +22,8 @@ export default function Home() {
       <TopCoaches/>
       <BecomeCoachCTA/>
       <Pricing/>
-      <Motivation/>
       <FAQ/>
+      <Motivation/>
     </div>
   );
 }

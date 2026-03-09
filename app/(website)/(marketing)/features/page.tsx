@@ -326,7 +326,7 @@ function StatsSection() {
           className="text-center relative z-10"
         >
           <div
-            className="text-3xl md:text-5xl font-extrabold mb-2"
+            className="text-3xl md:text-4xl font-extrabold mb-2"
             style={{ color: "var(--primary)" }}
           >
             <Counter
@@ -362,7 +362,7 @@ function HeroSection() {
     <motion.div
       ref={ref}
       style={{ y, opacity }}
-      className="text-center my-8 md:mb-12"
+      className="text-center mt-8 md:mt-12 mb-10"
     >
       {/* Floating badge */}
       <motion.div
