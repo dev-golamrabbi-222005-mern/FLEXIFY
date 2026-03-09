@@ -60,9 +60,9 @@ const Sidebar = () => {
   ];
 
   // Role menu filter
-  const filteredMenu = menuItems.filter((item) =>
-    item.role.includes(userRole)
-   );
+ const filteredMenu = menuItems.filter(
+  (item) => item.role?.includes(userRole || "")
+);
 
    
   return (
