@@ -2,12 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-<<<<<<< HEAD
-import { Home, Flag, Calendar, Trophy, BarChart2, Settings, BrickWallShield, UserRoundCog, Speech, UserPen, ChartNoAxesGanttIcon, Utensils} from "lucide-react";
-=======
 import {Home, Flag, Calendar, Trophy, BarChart2, Settings, UserCheck, Users, MessageCircle, BrickWallShield, UserRoundCog, Speech, UserPen, ChartNoAxesGanttIcon, Utensils} from "lucide-react";
 
->>>>>>> 960e5da8cc7e2458e3f109b0e4fd0ed4f022f7c3
 
 import { useSession } from "next-auth/react";
 
@@ -20,7 +16,6 @@ const Sidebar = () => {
 
   // Menu Items
   const menuItems = [
-<<<<<<< HEAD
     // USER
     { name: "Home", href: "/dashboard", icon: Home, role: ["user", "admin", "coach"] },
     { name: "My goals", href: "/dashboard/my-goals", icon: Flag, role: ["user"] },
@@ -40,7 +35,7 @@ const Sidebar = () => {
     { name: "Session Planner", href: "/dashboard/session-planner", icon: Speech, role: ["coach"] },
 
     { name: "Settings", href: "/dashboard/settings", icon: Settings, role: ["user","admin","coach"] },
-=======
+
     { name: "Home", href: "/dashboard", icon: Home },
     { name: "My goals", href: "/dashboard/my-goals", icon: Flag },
     { name: "Nutrition", href: "/dashboard/nutrition-tracker", icon: Utensils },
@@ -61,7 +56,7 @@ const Sidebar = () => {
     { name: "Client Progress", href: "/dashboard/client-progress", icon:  UserPen },
     { name: "Session Planner", href: "/dashboard/session-planner", icon:  Speech },
     { name: "Settings", href: "/dashboard/settings", icon: Settings },
->>>>>>> 960e5da8cc7e2458e3f109b0e4fd0ed4f022f7c3
+
   ];
 
   // Role menu filter
@@ -69,8 +64,7 @@ const Sidebar = () => {
     item.role.includes(userRole)
    );
 
-    console.log(session);
-
+   
   return (
     <aside className="w-[260px] bg-[var(--card-bg)] min-h-screen rounded-2xl p-4 shadow-lg flex flex-col justify-between">
       
