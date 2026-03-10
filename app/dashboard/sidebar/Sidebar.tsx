@@ -70,7 +70,7 @@ const menuConfig = [
     ],
   },
   {
-    label: "ADMIN & COACH",
+    label: "ADMIN",
     items: [
       {
         name: "Admin Stats",
@@ -84,6 +84,11 @@ const menuConfig = [
         icon: UserRoundCog,
         roles: ["admin"],
       },
+    ],
+  },
+  {
+    label: "COACH",
+    items: [
       {
         name: "Client Progress",
         href: "/dashboard/client-progress",

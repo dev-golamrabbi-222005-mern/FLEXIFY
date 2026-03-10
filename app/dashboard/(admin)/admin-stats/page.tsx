@@ -64,8 +64,8 @@ const subscriptionData = [
 const COLORS = ["#3b82f6", "#8b5cf6", "#f97316"];
 
   return (
-    <div className="mt-10 max-w-7xl mx-auto bg-[var(--bg-primary)] px-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-6">
+    <div className="mt-6 md:mt-8 bg-[var(--bg-primary)] md:px-4 py-6 rounded-2xl shadow">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6">
       {stats.map((stat, index) => {
         const Icon = stat.icon;
         return (
@@ -91,7 +91,7 @@ const COLORS = ["#3b82f6", "#8b5cf6", "#f97316"];
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-10">
 
       {/* Monthly Revenue */}
-      <div className="bg-[var(--card-bg)] p-6 rounded-2xl shadow text-[var(--text-primary)]">
+      <div className="bg-[var(--card-bg)] p-2 md:p-6 rounded-2xl shadow text-[var(--text-primary)]">
         <h3 className="font-semibold mb-4">Monthly Revenue</h3>
         <ResponsiveContainer width="100%" height={250}>
           <LineChart data={revenueData}>
@@ -104,7 +104,7 @@ const COLORS = ["#3b82f6", "#8b5cf6", "#f97316"];
       </div>
 
       {/* User Growth */}
-      <div className="bg-[var(--card-bg)] p-6 rounded-2xl shadow text-[var(--text-primary)]">
+      <div className="bg-[var(--card-bg)] p-2 md:p-6 rounded-2xl shadow text-[var(--text-primary)]">
         <h3 className="font-semibold mb-4">User Growth</h3>
         <ResponsiveContainer width="100%" height={250}>
           <BarChart data={userGrowthData}>
@@ -117,7 +117,7 @@ const COLORS = ["#3b82f6", "#8b5cf6", "#f97316"];
       </div>
 
       {/* Subscription Pie */}
-      <div className="bg-[var(--card-bg)] p-6 rounded-2xl shadow text-[var(--text-primary)]">
+      <div className="bg-[var(--card-bg)] p-2 md:p-6 rounded-2xl shadow text-[var(--text-primary)]">
         <h3 className="font-semibold mb-4">Subscription Distribution</h3>
         <ResponsiveContainer width="100%" height={250}>
           <PieChart>
@@ -141,7 +141,7 @@ const COLORS = ["#3b82f6", "#8b5cf6", "#f97316"];
       <div className="bg-[var(--card-bg)] p-6 rounded-2xl shadow text-[var(--text-primary)]">
         <h3 className="font-semibold mb-4">Activity Heatmap</h3>
 
-        <div className="grid grid-cols-7 gap-2">
+        <div className="grid grid-cols-7 gap-1 md:gap-2">
           {Array.from({ length: 35 }).map((_, index) => {
             const intensity = Math.floor(Math.random() * 4);
             const colors = [
@@ -153,7 +153,7 @@ const COLORS = ["#3b82f6", "#8b5cf6", "#f97316"];
             return (
               <div
                 key={index}
-                className={`h-6 w-6 rounded ${colors[intensity]}`}
+                className={`h-4 w-4 md:h-6 md:w-6 rounded ${colors[intensity]}`}
               />
             );
           })}
