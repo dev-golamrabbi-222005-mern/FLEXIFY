@@ -13,17 +13,22 @@ const Footer = () => {
     }`;
 
   return (
-    <footer className="pt-10 shadow-md bg-[var(--bg-nav-footer)]">
+    <footer className="pt-10 shadow-md bg-[var(--bg-nav-footer)] border-t-2 border-[#add4c7]">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
         {/* Left Section */}
         <div>
           <Link href="/" className="flex items-center gap-2 mb-4">
-            <Image src="/logo.png" alt="logo" width={140} height={140} />
+            <Image
+              src="/Logo-Flexify.png"
+              alt="logo"
+              width={123}
+              height={123}
+            />
           </Link>
           <p className="text-sm leading-relaxed">
-            A fitness Planner Platform <br /> that helps users create
-            personalized workout plans, track their progress, and achieve their
-            fitness goals with ease.
+            <strong>A fitness Planner Platform</strong> <br /> that helps users
+            create personalized workout plans, track their progress, and achieve
+            their fitness goals with ease.
           </p>
         </div>
 
@@ -56,7 +61,10 @@ const Footer = () => {
               </Link>
             </li>
             <li>
-              <Link href="/terms-privacy" className={linkClass("/terms-privacy")}>
+              <Link
+                href="/terms-privacy"
+                className={linkClass("/terms-privacy")}
+              >
                 Terms & Privacy
               </Link>
             </li>
