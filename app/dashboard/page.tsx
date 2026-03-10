@@ -4,10 +4,10 @@ import {Dumbbell, Salad, Moon} from "lucide-react";
 
 const Dashboard = () => {
   return (
-    <div className="bg-[var(--bg-primary)] flex min-h-screen max-w-7xl mx-auto">
+    <div className="bg-[var(--bg-primary)] flex min-h-screen">
 
       {/* Main */}
-      <main className="flex-1 p-8">
+      <main className="flex-1 py-8 md:px-6">
         <h1 className="text-2xl font-bold mb-6">Build Muscles</h1>
 
         {/* Cards */}

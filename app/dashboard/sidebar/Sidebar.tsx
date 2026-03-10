@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {Home, Flag, Calendar, Trophy, BarChart2, Settings, UserCheck, Users, MessageCircle, BrickWallShield, UserRoundCog, Speech, UserPen, ChartNoAxesGanttIcon, Utensils} from "lucide-react";
-
-
 import { useSession } from "next-auth/react";
 
 const Sidebar = () => {
@@ -66,7 +64,7 @@ const Sidebar = () => {
 
    
   return (
-    <aside className="w-[260px] bg-[var(--card-bg)] min-h-screen rounded-2xl p-4 shadow-lg flex flex-col justify-between">
+    <aside className="fixed md:relative z-40 w-[200px] md:w-[260px] h-screen bg-[var(--card-bg)] px-2 py-4 shadow-lg flex flex-col justify-between">
       
       {/* TOP SECTION */}
       <div>
@@ -76,7 +74,7 @@ const Sidebar = () => {
           <div className="relative w-fit mx-auto">
             <img
               src={session?.user?.image || "https://i.postimg.cc/FzTr6D42/JUBAYER_Photo.jpg"}
-              className="w-16 h-16 rounded-full object-cover mx-auto"
+              className="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover mx-auto"
             />
 
             <span className="absolute -right-8 top-1 text-xs text-pink-400 cursor-pointer">
@@ -94,7 +92,7 @@ const Sidebar = () => {
         </div>
 
         {/* Height Weight */}
-        <div className="flex border border-gray-300/50 rounded-xl overflow-hidden mb-6">
+        <div className="flex border border-gray-300/50 rounded-xl overflow-hidden mb-6 text-sm md:text-base">
           <div className="w-1/2 text-center py-3 border-r border-gray-300/50">
             <p className="text-xs text-orange-500 font-semibold">HEIGHT</p>
             <p className="font-bold">
@@ -119,7 +117,7 @@ const Sidebar = () => {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all
+                className={`flex items-center gap-3 px-3 py-2 text-sm md:text-base rounded-lg transition-all
                   ${
                     isActive
                       ? "bg-orange-500/20 text-orange-500 font-semibold"

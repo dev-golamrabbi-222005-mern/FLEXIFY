@@ -42,7 +42,7 @@ const DashboardNavbar = () => {
 
   return (
     <nav className="bg-[var(--bg-nav-footer)] sticky top-0 z-50 shadow-md">
-      <div className="flex items-center justify-between px-2 py-1 mx-auto max-w-7xl">
+      <div className="flex items-center justify-between px-2 py-1 md:px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image src="/logo.png" alt="logo" width={140} height={140} />
@@ -60,7 +60,7 @@ const DashboardNavbar = () => {
                 {Math.ceil(currentDate.getDate() / 7)}
               </p>
 
-              <p className="text-sm text-gray-500">
+              <p className="hidden md:block shadow text-sm text-gray-500">
                 Today, {formatDate(currentDate)}
               </p>
             </div>

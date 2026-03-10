@@ -38,10 +38,10 @@ export default function AdminManagementSection() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto bg-[var(--bg-primary)] px-4 space-y-12 mt-12">
+    <div className="mx-auto bg-[var(--bg-primary)] px-4 space-y-8">
 
       {/* ================= USER MANAGEMENT ================= */}
-      <section className="bg-[var(--card-bg)] p-6 rounded-2xl shadow">
+      <section className="bg-[var(--card-bg)] p-2 rounded-2xl shadow">
         <div className="flex items-center gap-3 mb-6">
             <Users />
         <h2 className="text-xl font-bold mb-4"> User Management</h2>

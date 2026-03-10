@@ -38,13 +38,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <div className="min-h-screen max-w-7xl mx-auto">
+          <div className="min-h-screen">
             <div className="sticky top-0 z-50 shadow-md">
               {/* TOP NAVBAR */}
               <DashboardNavbar />
             </div>
-
-            
 
             {/* RIGHT CONTENT */}
             <div className="flex flex-1">
@@ -55,7 +53,7 @@ export default function RootLayout({
               
 
               {/* PAGE CONTENT */}
-              <main className="flex-1 p-6 bg-[var(--bg-primary)]">
+              <main className="flex-1 bg-[var(--bg-primary)]">
                 {children}
               </main>
 
