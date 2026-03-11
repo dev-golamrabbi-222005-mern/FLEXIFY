@@ -38,7 +38,7 @@ export default function AdminManagementSection() {
   };
 
   return (
-    <div className="mx-auto bg-[var(--bg-primary)] px-4 space-y-8">
+    <div className="mx-auto bg-[var(--bg-primary)] px-2 md:px-4 space-y-8">
 
       {/* ================= USER MANAGEMENT ================= */}
       <section className="bg-[var(--card-bg)] p-2 rounded-2xl shadow">

@@ -1,113 +1,171 @@
-@import "tailwindcss";
+@import "tailwindcss";   /* or @tailwind base; @tailwind components; @tailwind utilities;  — depending on your setup */
 
-.light, .dark {
-    /* Common Shared Colors - Used in both modes */
-    --primary: #F97316;
-    /* Main brand color (Buttons, active links, highlights) */
-    --secondary: #FB923C;
-    /* Complementary color (Hover states, secondary buttons) */
-    --success: #10B981;
-    /* Accent color (Success messages, badges, completion indicators) */
+:root {
+  /* ───────────────────────────────────────────────
+     Core Brand Colors – Energetic & Fresh Green Theme
+  ─────────────────────────────────────────────── */
+  --primary:    #10B981;     /* Vivid emerald green – main CTA, buttons, links */
+  --primary-dark: #059669;   /* Deeper version for hover/active states */
+  --primary-light: #34D399;  /* Lighter vivid green – accents, highlights */
+
+  --secondary:  #8B5CF6;     /* Vibrant violet – complementary energetic accent */
+  --secondary-dark: #7C3AED;
+
+  --success:    #10B981;     /* Same as primary – or #22C55E for variation */
+  --warning:    #F59E0B;
+  --danger:     #EF4444;
+  --info:       #3B82F6;
+
+  /* Neutrals – clean & professional */
+  --neutral-900: #111827;    /* Almost black – best dark text */
+  --neutral-800: #1F2937;
+  --neutral-700: #374151;
+  --neutral-600: #4B5563;
+  --neutral-500: #6B7280;
+  --neutral-400: #9CA3AF;
+  --neutral-300: #D1D5DB;
+  --neutral-200: #E5E7EB;
+  --neutral-100: #F3F4F6;
+  --neutral-50:  #F9FAFB;
 }
 
+/* ───────────────────────────────────────────────
+   Light Mode – Fresh, clean, energetic daytime feel
+─────────────────────────────────────────────── */
 .light {
-    --bg-primary: #F8F4E3;
-    /* Main page background (Body) */
-    --bg-nav-footer: #eee6c1;
-    /* Main page Nav & Footer background (Body) */
-    --bg-secondary: #FFFFFF;
-    /* Elevated surfaces (Cards, Modals, Dropdowns) */
-    --text-primary: #374151;
-    /* Primary text (Headings, titles, main body text) */
-    --text-secondary: #4B5563;
-    /* Sub-text (Descriptions, captions, placeholders) */
-    --border-color: rgba(249, 115, 22, 0.2);
-    /* Subtle borders and dividers */
-    --border-highlight: var(--primary);
-    /* Active or focused border state */
-    --card-bg: rgba(255, 255, 255, 0.7);
-    /* Semi-transparent background for glassmorphism */
-    --shadow: rgba(0, 0, 0, 0.05);
-    /* Soft shadows for light interface depth */
+  --bg-primary:      var(--neutral-50);     /* Very light gray-white – clean bg */
+  --bg-nav-footer:   #f0fdfa;               /* Very pale turquoise-green */
+  --bg-secondary:    #ffffff;               /* Pure white cards/modals */
+  --bg-tertiary:     var(--neutral-100);    /* Subtle sections */
+
+  --text-primary:    var(--neutral-900);    /* Strong dark text */
+  --text-secondary:  var(--neutral-700);    /* Softer body text */
+  --text-muted:      var(--neutral-500);    /* Captions, labels, placeholders */
+
+  --border-color:    var(--neutral-200);    /* Subtle light borders */
+  --border-highlight: var(--primary);       /* Focus / active borders */
+
+  --card-bg:         rgba(255, 255, 255, 0.75);  /* Slight glass effect */
+  --shadow:          0 10px 15px -3px rgba(0, 0, 0, 0.05),
+                     0 4px 6px -2px rgba(0, 0, 0, 0.025);
+  --shadow-sm:       0 1px 3px rgba(0,0,0,0.08);
 }
 
+/* ───────────────────────────────────────────────
+   Dark Mode – Energetic dark + glowing green accents
+─────────────────────────────────────────────── */
 .dark {
-    --bg-primary: #222222;
-    /* Main dark background (Body) */
-    --bg-nav-footer: #1a1a1a;
-    /* Main page Nav & Footer background (Body) */
-    --bg-secondary: #2D2D2D;
-    /* Darker surfaces for contrast (Cards, sections) */
-    --text-primary: #E5E7EB;
-    /* High contrast text for dark mode (Headings) */
-    --text-secondary: #9CA3AF;
-    /* Muted text for dark mode (Descriptions) */
-    --border-color: rgba(249, 115, 22, 0.3);
-    /* Defined borders for dark surfaces */
-    --border-highlight: var(--secondary);
-    /* Accent border for dark mode elements */
-    --card-bg: rgba(45, 45, 45, 0.7);
-    /* Glassmorphic cards for dark theme */
-    --shadow: rgba(0, 0, 0, 0.4);
-    /* Deep shadows for dark mode elevation */
+  --bg-primary:      #0F172A;               /* Deep slate – modern dark bg */
+  --bg-nav-footer:   #0F172A;               /* Same or slightly darker */
+  --bg-secondary:    #1E293B;               /* Card / surface bg */
+  --bg-tertiary:     #334155;
+
+  --text-primary:    #F1F5F9;               /* Bright off-white text */
+  --text-secondary:  #CBD5E1;
+  --text-muted:      #94A3B8;
+
+  --border-color:    #334155;               /* Subtle dark borders */
+  --border-highlight: var(--primary-light); /* Glowing green focus */
+
+  --card-bg:         rgba(30, 41, 59, 0.7); /* Glassmorphic dark cards */
+  --shadow:          0 10px 15px -3px rgba(0, 0, 0, 0.6),
+                     0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  --shadow-sm:       0 1px 3px rgba(0,0,0,0.5);
 }
 
+/* ───────────────────────────────────────────────
+   Global base styles
+─────────────────────────────────────────────── */
 body {
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* UI Component Examples */
-.btn-primary {
-    background-color: var(--primary);
-    /* Main action button color */
-    color: #FFFFFF;
-    /* White text on primary buttons */
-    padding: 12px 24px;
-    border-radius: 12px;
-    cursor: pointer;
-}
-@media only screen and (max-width: 600px) {
-    .btn-primary{
-        padding: 8px 12px;
-        font-size: small;
-    }
-}
-
-.text-accent {
-    color: var(--success);
-    /* Text for positive status or success */
-}
-
-.arrow-btn {
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
   color: var(--text-primary);
+  transition: background-color 0.4s ease, color 0.4s ease;
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+}
+
+/* Buttons – Energetic primary style */
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+  padding: 0.75rem 1.75rem;
+  border-radius: 1rem;            /* modern rounded */
+  font-weight: 600;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+}
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+}
+
+/* Secondary / outline button */
+.btn-secondary {
+  background-color: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  padding: 0.65rem 1.5rem;
+  border-radius: 1rem;
+  font-weight: 600;
   transition: all 0.25s ease;
 }
 
-.arrow-btn:hover {
+.btn-secondary:hover {
   background-color: var(--primary);
-  border-color: var(--primary);
-  color: #ffffff;
-  box-shadow: 0 0 0 6px rgba(249, 115, 22, 0.15);
-  cursor: pointer;
+  color: white;
 }
 
-/* input field */
-
+/* Input / Form fields – clean & modern */
 .input-style {
-          background-color: var(--bg-primary);
-          border: 1px solid var(--border-color);
-          color: var(--text-primary);
-          padding: 14px;
-          border-radius: 12px;
-          outline: none;
-          width: 100%;
-          font-size: 0.9rem;
-          transition: border-color 0.2s;
-        }
-        .input-style:focus { border-color: var(--primary); }
-        label { color: var(--text-secondary); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;
-         }
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 0.9rem 1.1rem;
+  border-radius: 0.875rem;
+  outline: none;
+  width: 100%;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-style:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+label {
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+/* Accent text */
+.text-accent { color: var(--primary); font-weight: 600; }
+
+/* Glassmorphic card example */
+.card-glass {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow);
+  padding: 1.75rem;
+}
+
+/* Responsive button adjustment */
+@media only screen and (max-width: 600px) {
+  .btn-primary {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}

@@ -6,13 +6,13 @@ export default function SessionPlanner() {
       client: "Rahim",
       time: "10:00 AM",
       type: "Workout Session",
-      meeting: "https://meet.google.com/abc-defg",
+      meeting: "https://meet.google.com/pwh-fetr-kfx",
     },
     {
       client: "Karim",
       time: "02:00 PM",
       type: "Nutrition Consultation",
-      meeting: "https://meet.google.com/xyz-hijk",
+      meeting: "https://meet.google.com/pwh-fetr-kfx",
     },
   ];
 

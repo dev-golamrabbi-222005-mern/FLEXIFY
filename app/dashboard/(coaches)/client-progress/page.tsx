@@ -19,7 +19,7 @@ const weightData = [
 
 export default function ClientProgressSection() {
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-10 max-w-7xl mx-auto bg-[var(--bg-primary)] px-4">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-10 bg-[var(--bg-primary)] px-4">
 
       {/* Weight Tracking */}
       <div className="bg-[var(--card-bg)] p-6 rounded-2xl shadow">
