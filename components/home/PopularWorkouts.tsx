@@ -42,7 +42,7 @@ const workouts = [
 export default function PopularWorkouts() {
   return (
     <section className="pb-8 md:pb-12 px-6 bg-[var(--bg-primary)]">
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto max-w-7xl">
 
         {/* ✅ BMI Style Section Title */}
         <SectionTitle
@@ -50,7 +50,7 @@ export default function PopularWorkouts() {
         />
 
         {/* Workout Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {workouts.map((workout, index) => (
             <motion.div
               key={index}
@@ -59,42 +59,42 @@ export default function PopularWorkouts() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -10 }}
-              className="relative group rounded-2xl overflow-hidden bg-white/5 backdrop-blur-lg border border-white/10 shadow-xl"
+              className="relative overflow-hidden border shadow-xl group rounded-2xl bg-white/5 backdrop-blur-lg border-white/10"
             >
               {/* Image */}
               <div className="relative h-56 overflow-hidden">
                 <img
                   src={workout.image}
                   alt={workout.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
+                  className="object-cover w-full h-full transition duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-black/40"></div>
 
                 {/* Level Badge */}
-                <span className="absolute top-4 left-4 bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
+                <span className="absolute top-4 left-4 bg-(--primary) text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
                   {workout.level}
                 </span>
               </div>
 
               {/* Content */}
               <div className="p-6">
-                <h3 className="text-xl font-bold mb-4">
+                <h3 className="mb-4 text-xl font-bold">
                   {workout.title}
                 </h3>
 
                 <div className="flex items-center justify-between text-sm text-zinc-400">
                   <div className="flex items-center gap-2">
-                    <FaClock className="text-orange-500" />
+                    <FaClock className="text-(--primary)" />
                     {workout.duration}
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <FaFire className="text-orange-500" />
+                    <FaFire className="text-(--primary)" />
                     {workout.calories}
                   </div>
                 </div>
 
-                <button className="mt-6 w-full py-3 rounded-lg bg-orange-500 text-white font-semibold hover:bg-orange-600 transition duration-300 shadow-lg">
+                <button className="mt-6 w-full py-3 rounded-lg bg-(--primary) text-white font-semibold hover:bg-(--primary-dark) transition duration-300 shadow-lg">
                   Start Workout
                 </button>
               </div>
