@@ -87,7 +87,7 @@ const menuConfig = [
         roles: ["admin"],
       },
       {
-        name: "User Management",
+        name: "Admin Management",
         href: "/dashboard/admin-management",
         icon: UserRoundCog,
         roles: ["admin"],
