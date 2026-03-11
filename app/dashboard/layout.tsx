@@ -55,7 +55,7 @@ export default function RootLayout({
               
 
               {/* PAGE CONTENT */}
-              <main className="flex-1 p-6 bg-[var(--bg-primary)]">
+              <main className="flex-1 min-w-0 p-6 bg-[var(--bg-primary)]">
                 {children}
               </main>
 
