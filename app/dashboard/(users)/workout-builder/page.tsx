@@ -62,22 +62,41 @@ export default function WorkoutBuilder() {
 
   const stats = useMemo(() => {
     const counts: Record<string, number> = {};
-    bodyParts.forEach((part) => {
-      if (part === "back") {
-        counts[part] = exercisesData.filter((ex) =>
-          BACK_SUB_MUSCLES.some((m) => ex.primaryMuscles.includes(m))
-        ).length;
-      } else {
-        counts[part] = exercisesData.filter((ex) =>
-          ex.primaryMuscles.includes(part)
-        ).length;
-      }
+   bodyParts.forEach((part) => {
+      const filteredForMuscle = exercisesData.filter((ex) => {
+        const matchesSearch = ex.name.toLowerCase().includes(search.toLowerCase());
+        const matchesLevel = selectedLevel ? ex.level === selectedLevel : true;
+        const matchesEquip = selectedEquipment ? ex.equipment === selectedEquipment : true;
+        
+        let matchesPart = false;
+        if (part === "back") {
+          matchesPart = BACK_SUB_MUSCLES.some((m) => ex.primaryMuscles.includes(m));
+        } else {
+          matchesPart = ex.primaryMuscles.includes(part);
+        }
+        
+        return matchesSearch && matchesLevel && matchesEquip && matchesPart;
+      });
+      counts[part] = filteredForMuscle.length;
     });
+
     equipments.forEach((eq) => {
-      counts[eq] = exercisesData.filter((ex) => ex.equipment === eq).length;
+      const filteredForEquip = exercisesData.filter((ex) => {
+        const matchesSearch = ex.name.toLowerCase().includes(search.toLowerCase());
+        const matchesLevel = selectedLevel ? ex.level === selectedLevel : true;
+        const matchesPart = selectedBodyPart 
+          ? (selectedBodyPart === "back" 
+              ? BACK_SUB_MUSCLES.some(m => ex.primaryMuscles.includes(m)) 
+              : ex.primaryMuscles.includes(selectedBodyPart))
+          : true;
+
+        return matchesSearch && matchesLevel && matchesPart && ex.equipment === eq;
+      });
+      counts[eq] = filteredForEquip.length;
     });
+
     return counts;
-  }, [exercisesData]);
+  }, [exercisesData, search, selectedLevel, selectedEquipment, selectedBodyPart]);
 
   const filteredData = useMemo(() => {
     return exercisesData.filter((ex) => {
