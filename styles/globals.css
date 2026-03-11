@@ -1,4 +1,4 @@
-@import "tailwindcss";   /* or @tailwind base; @tailwind components; @tailwind utilities;  — depending on your setup */
+@import "tailwindcss";
 
 :root {
   /* ───────────────────────────────────────────────
@@ -6,7 +6,7 @@
   ─────────────────────────────────────────────── */
   --primary:    #10B981;     /* Vivid emerald green – main CTA, buttons, links */
   --primary-dark: #059669;   /* Deeper version for hover/active states */
-  --primary-light: #34D399;  /* Lighter vivid green – accents, highlights */
+  --primary-light: #46d4a0;  /* Lighter vivid green – accents, highlights */
 
   --secondary:  #8B5CF6;     /* Vibrant violet – complementary energetic accent */
   --secondary-dark: #7C3AED;
@@ -26,7 +26,7 @@
   --neutral-300: #D1D5DB;
   --neutral-200: #E5E7EB;
   --neutral-100: #F3F4F6;
-  --neutral-50:  #F9FAFB;
+  --neutral-50:  #ebf7f1;
 }
 
 /* ───────────────────────────────────────────────
@@ -34,7 +34,7 @@
 ─────────────────────────────────────────────── */
 .light {
   --bg-primary:      var(--neutral-50);     /* Very light gray-white – clean bg */
-  --bg-nav-footer:   #f0fdfa;               /* Very pale turquoise-green */
+  --bg-nav-footer:   #e3f9e9;               /* Very pale turquoise-green */
   --bg-secondary:    #ffffff;               /* Pure white cards/modals */
   --bg-tertiary:     var(--neutral-100);    /* Subtle sections */
 
@@ -55,8 +55,8 @@
    Dark Mode – Energetic dark + glowing green accents
 ─────────────────────────────────────────────── */
 .dark {
-  --bg-primary:      #0F172A;               /* Deep slate – modern dark bg */
-  --bg-nav-footer:   #0F172A;               /* Same or slightly darker */
+  --bg-primary:      #010714;               /* Deep slate – modern dark bg */
+  --bg-nav-footer:   #0b0e14;               /* Same or slightly darker */
   --bg-secondary:    #1E293B;               /* Card / surface bg */
   --bg-tertiary:     #334155;
 
