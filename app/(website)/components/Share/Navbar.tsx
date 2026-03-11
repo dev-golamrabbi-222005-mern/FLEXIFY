@@ -32,8 +32,8 @@ const Navbar = () => {
     <nav className="bg-[var(--bg-nav-footer)] sticky top-0 z-50 shadow-md">
       <div className="flex items-center justify-between px-2 py-1 mx-auto max-w-7xl">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.png" alt="logo" width={140} height={140} />
+        <Link href="/" className="flex items-center gap-2 my-3">
+          <Image src="/Logo-Flexify.png" alt="logo" width={123} height={123} />
         </Link>
 
         {/* Navigation Links */}

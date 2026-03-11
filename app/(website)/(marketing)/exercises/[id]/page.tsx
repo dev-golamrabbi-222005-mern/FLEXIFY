@@ -24,6 +24,8 @@ export default function ExercisePage() {
   if (isError) {
     return <div className="p-10 text-center">Failed to load exercise.</div>;
   }
+  console.log(exercise);
+  
   return (
     <div className="min-h-screen px-4 py-10 bg-(--bg-primary)">
       <ExerciseDetails exercise={exercise} />

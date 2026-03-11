@@ -34,7 +34,7 @@
 ─────────────────────────────────────────────── */
 .light {
   --bg-primary:      var(--neutral-50);     /* Very light gray-white – clean bg */
-  --bg-nav-footer:   #f0fdfa;               /* Very pale turquoise-green */
+  --bg-nav-footer:   #e3f9e9;               /* Very pale turquoise-green */
   --bg-secondary:    #ffffff;               /* Pure white cards/modals */
   --bg-tertiary:     var(--neutral-100);    /* Subtle sections */
 
@@ -55,8 +55,8 @@
    Dark Mode – Energetic dark + glowing green accents
 ─────────────────────────────────────────────── */
 .dark {
-  --bg-primary:      #0F172A;               /* Deep slate – modern dark bg */
-  --bg-nav-footer:   #0F172A;               /* Same or slightly darker */
+  --bg-primary:      #010714;               /* Deep slate – modern dark bg */
+  --bg-nav-footer:   #0b0e14;               /* Same or slightly darker */
   --bg-secondary:    #1E293B;               /* Card / surface bg */
   --bg-tertiary:     #334155;
 
