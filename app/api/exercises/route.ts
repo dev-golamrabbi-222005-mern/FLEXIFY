@@ -1,80 +1,56 @@
+// app/api/exercises/route.ts
 import { dbConnect } from "@/lib/dbConnect";
-import { Filter, ObjectId } from "mongodb";
-import { NextRequest } from "next/server";
-import { Exercise } from "./[id]/route";
+import { NextRequest, NextResponse } from "next/server";
 
-// ... (Keep your Exercise interface) ...
-
-export async function GET(
-  request: NextRequest,
-  // REMOVED: { params } because this is /api/exercises/route.ts (no [id] in path)
-): Promise<Response> {
+export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-
-    // If you need an ID in this route, get it from the query string (?id=...)
-    const idParam = searchParams.get("id");
-
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "12");
-    const search = searchParams.get("search") || "";
-    const muscle = searchParams.get("muscle") || "";
-    const level = searchParams.get("level") || "";
-    const equipment = searchParams.get("equipment") || "";
+    const { searchParams } = new URL(req.url);
+    const q = searchParams.get("q") || searchParams.get("search") || "";
     const category = searchParams.get("category") || "";
-    const force = searchParams.get("force") || "";
+    const level = searchParams.get("level") || "";
+    const muscle = searchParams.get("muscle") || "";
+    const equipment = searchParams.get("equipment") || "";
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "20");
 
-    const skip = (page - 1) * limit;
+    const collection = dbConnect("exercises");
 
-    const query: Filter<Exercise> = {};
+    const filter: Record<string, unknown> = {};
+    if (q) filter.name = { $regex: q, $options: "i" };
+    if (category) filter.category = { $regex: category, $options: "i" };
+    if (level) filter.level = { $regex: level, $options: "i" };
+    if (muscle)
+      filter.primaryMuscles = { $elemMatch: { $regex: muscle, $options: "i" } };
+    if (equipment) filter.equipment = { $regex: equipment, $options: "i" };
 
-    // Only add ID to query if it was actually provided in the URL
-    if (idParam && ObjectId.isValid(idParam)) {
-      query._id = new ObjectId(idParam);
-    }
+    const [exercises, total] = await Promise.all([
+      collection
+        .find(filter)
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .toArray(),
+      collection.countDocuments(filter),
+    ]);
 
-    if (search) {
-      query.name = { $regex: search, $options: "i" };
-    }
-    if (muscle) {
-      query.primaryMuscles = { $in: [muscle.toLowerCase()] };
-    }
-    if (level) {
-      query.level = level.toLowerCase();
-    }
-    if (equipment) {
-      query.equipment = equipment.toLowerCase();
-    }
-    if (category) {
-      query.category = category.toLowerCase();
-    }
-    if (force) {
-      query.force = force.toLowerCase();
-    }
+    // Ensure every exercise has a usable `id` field for routing
+    const normalized = exercises.map((ex) => ({
+      ...ex,
+      // Use existing `id` string field, fall back to string version of _id
+      id: (ex as any).id ?? ex._id?.toString(),
+    }));
 
-    const collection = await dbConnect<Exercise>("exercises");
-
-    const exercises = await collection
-      .find(query)
-      .skip(skip)
-      .limit(limit)
-      .toArray();
-
-    const total = await collection.countDocuments(query);
-
-    return Response.json(
-      {
-        exercises,
-        total,
-        currentPage: page,
-        totalPages: Math.ceil(total / limit),
-      },
-      { status: 200 },
-    );
-  } catch (error) {
-    console.error("Exercise Fetch Error:", error);
-    return Response.json(
-      { message: "Failed to fetch exercises" },
+    return NextResponse.json({
+      exercises: normalized,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+    });
+  } catch (err) {
+    console.error("Exercises fetch error:", err);
+    return NextResponse.json(
+      { error: "Failed to fetch exercises", detail: String(err) },
       { status: 500 },
     );
   }

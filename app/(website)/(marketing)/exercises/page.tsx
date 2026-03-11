@@ -2,37 +2,68 @@
 import React, { useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Search, Filter, ChevronDown, ChevronUp, X } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
 import SkeletonCard from "@/components/cards/SkeletonCard";
 import ExerciseCard from "@/components/cards/ExerciseCard";
 
-const MUSCLES = ["Abdominals", "Hamstrings", "Biceps", "Shoulders", "Chest", "Quads", "Triceps"];
+const MUSCLES = [
+  "Abdominals",
+  "Hamstrings",
+  "Biceps",
+  "Shoulders",
+  "Chest",
+  "Quads",
+  "Triceps",
+];
 const LEVELS = ["Beginner", "Intermediate", "Expert"];
-const EQUIPMENTS = ["Body only", "Dumbbell", "Barbell", "Machine", "Kettlebells"];
-
+const EQUIPMENTS = [
+  "Body only",
+  "Dumbbell",
+  "Barbell",
+  "Machine",
+  "Kettlebells",
+];
 
 const ExercisesPage = () => {
   const [showFilters, setShowFilters] = useState(false);
-  const [filters, setFilters] = useState({ search: "", muscle: "", level: "", equipment: "" });
-
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfiniteQuery({
-    queryKey: ["exercises", filters],
-    queryFn: async ({ pageParam = 1 }) => {
-      const { search, muscle, level, equipment } = filters;
-      const res = await axios.get(
-        `/api/exercises?page=${pageParam}&limit=12&search=${search}&muscle=${muscle}&level=${level}&equipment=${equipment}`
-      );
-      return res.data;
-    },
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => lastPage.currentPage < lastPage.totalPages ? lastPage.currentPage + 1 : undefined,
+  const [filters, setFilters] = useState({
+    search: "",
+    muscle: "",
+    level: "",
+    equipment: "",
   });
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFilters(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useInfiniteQuery({
+      queryKey: ["exercises", filters],
+      queryFn: async ({ pageParam = 1 }) => {
+        const { search, muscle, level, equipment } = filters;
+        const res = await axios.get(
+          `/api/exercises?page=${pageParam}&limit=12&search=${search}&muscle=${muscle}&level=${level}&equipment=${equipment}`,
+        );
+        return res.data;
+      },
+      initialPageParam: 1,
+      getNextPageParam: (lastPage) =>
+        lastPage.currentPage < lastPage.totalPages
+          ? lastPage.currentPage + 1
+          : undefined,
+    });
+
+  const handleFilterChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    setFilters((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const resetFilters = () => setFilters({ search: "", muscle: "", level: "", equipment: "" });
+  const resetFilters = () =>
+    setFilters({ search: "", muscle: "", level: "", equipment: "" });
+
+  const activeFilterCount = [
+    filters.muscle,
+    filters.level,
+    filters.equipment,
+  ].filter(Boolean).length;
 
   return (
     <div className="min-h-screen px-6 mx-auto mt-8 md:mt-12 mb-10 max-w-7xl">
@@ -42,88 +73,277 @@ const ExercisesPage = () => {
         </h1>
       </div>
 
-      <div className="flex flex-col gap-4 mb-6 md:flex-row">
-        <div className="relative flex-grow">
+      {/* ── Search + Filter Toggle ── */}
+      <div className="flex flex-col gap-3 mb-4 md:flex-row md:items-center">
+        {/* Search bar */}
+        <div className="relative flex-grow group">
+          <div
+            className="absolute inset-0 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"
+            style={{ boxShadow: "0 0 0 2px var(--primary)" }}
+          />
           <Search
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]"
-            size={20}
+            className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200"
+            size={18}
+            style={{ color: "var(--text-secondary)" }}
           />
           <input
             name="search"
             type="text"
-            placeholder="Search exercise name..."
-            className="input-style !pl-12 h-14"
+            placeholder="Search exercises…"
+            className="w-full h-14 pl-11 pr-4 rounded-2xl text-sm font-medium outline-none transition-all duration-200"
+            style={{
+              background: "var(--bg-secondary)",
+              border: "1px solid var(--border-color)",
+              color: "var(--text-primary)",
+            }}
             value={filters.search}
             onChange={handleFilterChange}
           />
         </div>
+
+        {/* Filter toggle button */}
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className="flex items-center justify-center gap-2 px-6 py-4 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl font-bold uppercase text-xs tracking-widest hover:border-[var(--primary)] transition-all shadow-sm"
+          className="relative flex items-center justify-center gap-2.5 h-14 px-6 rounded-2xl font-bold text-xs tracking-widest uppercase transition-all duration-200 shrink-0"
+          style={{
+            background: showFilters ? "var(--primary)" : "var(--bg-secondary)",
+            border: `1px solid ${showFilters ? "var(--primary)" : "var(--border-color)"}`,
+            color: showFilters ? "#fff" : "var(--text-primary)",
+          }}
         >
-          <Filter size={18} /> {showFilters ? "Hide" : "Filters"}
-          {showFilters ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          <SlidersHorizontal size={16} />
+          Filters
+          {activeFilterCount > 0 && (
+            <span
+              className="flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-black"
+              style={{
+                background: showFilters
+                  ? "rgba(255,255,255,0.25)"
+                  : "var(--primary)",
+                color: showFilters ? "#fff" : "#fff",
+              }}
+            >
+              {activeFilterCount}
+            </span>
+          )}
         </button>
       </div>
 
+      {/* ── Filter Panel ── */}
       <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${showFilters ? "max-h-[500px] opacity-100 mb-10" : "max-h-0 opacity-0"}`}
+        className="overflow-hidden transition-all duration-500"
+        style={{
+          maxHeight: showFilters ? 500 : 0,
+          opacity: showFilters ? 1 : 0,
+          marginBottom: showFilters ? 32 : 0,
+        }}
       >
-        <div className="p-6 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-6 relative shadow-sm">
-          <div className="space-y-2">
-            <label>Target Muscle</label>
-            <select
-              name="muscle"
-              className="input-style"
-              value={filters.muscle}
-              onChange={handleFilterChange}
+        <div
+          className="rounded-3xl p-6 relative"
+          style={{
+            background: "var(--bg-secondary)",
+            border: "1px solid var(--border-color)",
+          }}
+        >
+          {/* Top row label + reset */}
+          <div className="flex items-center justify-between mb-5">
+            <p
+              className="text-[10px] font-black uppercase tracking-[0.2em]"
+              style={{ color: "var(--text-secondary)" }}
             >
-              <option value="">All Muscles</option>
-              {MUSCLES.map((m) => (
-                <option key={m} value={m}>
-                  {m}
-                </option>
-              ))}
-            </select>
+              Refine Results
+            </p>
+            {activeFilterCount > 0 && (
+              <button
+                onClick={resetFilters}
+                className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider transition-opacity hover:opacity-70"
+                style={{ color: "var(--primary)" }}
+              >
+                <X size={11} /> Clear all
+              </button>
+            )}
           </div>
-          <div className="space-y-2">
-            <label>Difficulty</label>
-            <select
-              name="level"
-              className="input-style"
-              value={filters.level}
-              onChange={handleFilterChange}
-            >
-              <option value="">All Levels</option>
-              {LEVELS.map((l) => (
-                <option key={l} value={l}>
-                  {l}
-                </option>
-              ))}
-            </select>
+
+          {/* Three filter groups */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            {/* Muscle */}
+            <div>
+              <p
+                className="text-[10px] font-black uppercase tracking-widest mb-2.5"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                🎯 Target Muscle
+              </p>
+              {/* Pill chips */}
+              <div className="flex flex-wrap gap-1.5">
+                {MUSCLES.map((m) => {
+                  const active = filters.muscle === m;
+                  return (
+                    <button
+                      key={m}
+                      onClick={() =>
+                        setFilters((p) => ({ ...p, muscle: active ? "" : m }))
+                      }
+                      className="px-3 py-1.5 rounded-full text-[11px] font-bold transition-all duration-150"
+                      style={{
+                        background: active
+                          ? "var(--primary)"
+                          : "var(--bg-primary)",
+                        border: `1px solid ${active ? "var(--primary)" : "var(--border-color)"}`,
+                        color: active ? "#fff" : "var(--text-secondary)",
+                      }}
+                    >
+                      {m}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Level */}
+            <div>
+              <p
+                className="text-[10px] font-black uppercase tracking-widest mb-2.5"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                ⚡ Difficulty
+              </p>
+              <div className="flex flex-col gap-2">
+                {LEVELS.map((l) => {
+                  const active = filters.level === l;
+                  const dot =
+                    l === "Beginner"
+                      ? "#22c55e"
+                      : l === "Intermediate"
+                        ? "var(--primary)"
+                        : "#ef4444";
+                  return (
+                    <button
+                      key={l}
+                      onClick={() =>
+                        setFilters((p) => ({ ...p, level: active ? "" : l }))
+                      }
+                      className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-left transition-all duration-150"
+                      style={{
+                        background: active ? `${dot}15` : "var(--bg-primary)",
+                        border: `1px solid ${active ? `${dot}40` : "var(--border-color)"}`,
+                        color: active ? dot : "var(--text-primary)",
+                      }}
+                    >
+                      <span
+                        className="w-2 h-2 rounded-full shrink-0"
+                        style={{ background: dot }}
+                      />
+                      {l}
+                      {active && (
+                        <span className="ml-auto text-[10px] font-black">
+                          ✓
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Equipment */}
+            <div>
+              <p
+                className="text-[10px] font-black uppercase tracking-widest mb-2.5"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                🔧 Equipment
+              </p>
+              <div className="flex flex-col gap-2">
+                {EQUIPMENTS.map((eq) => {
+                  const active = filters.equipment === eq;
+                  return (
+                    <button
+                      key={eq}
+                      onClick={() =>
+                        setFilters((p) => ({
+                          ...p,
+                          equipment: active ? "" : eq,
+                        }))
+                      }
+                      className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-left transition-all duration-150"
+                      style={{
+                        background: active
+                          ? "rgba(244,121,32,0.08)"
+                          : "var(--bg-primary)",
+                        border: `1px solid ${active ? "rgba(244,121,32,0.3)" : "var(--border-color)"}`,
+                        color: active
+                          ? "var(--primary)"
+                          : "var(--text-primary)",
+                      }}
+                    >
+                      <span
+                        className="w-2 h-2 rounded-full shrink-0 transition-all"
+                        style={{
+                          background: active
+                            ? "var(--primary)"
+                            : "var(--border-color)",
+                        }}
+                      />
+                      {eq}
+                      {active && (
+                        <span
+                          className="ml-auto text-[10px] font-black"
+                          style={{ color: "var(--primary)" }}
+                        >
+                          ✓
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
-          <div className="space-y-2">
-            <label>Equipment</label>
-            <select
-              name="equipment"
-              className="input-style"
-              value={filters.equipment}
-              onChange={handleFilterChange}
-            >
-              <option value="">All Equipment</option>
-              {EQUIPMENTS.map((e) => (
-                <option key={e} value={e}>
-                  {e}
-                </option>
-              ))}
-            </select>
-          </div>
-          <button
-            onClick={resetFilters}
-            className="sm:col-span-3 text-[10px] font-bold uppercase text-[var(--primary)] hover:underline flex items-center justify-center gap-1 mt-2"
+
+          {/* Hidden selects for handleFilterChange compatibility (keep the name-based API working) */}
+          <select
+            name="muscle"
+            value={filters.muscle}
+            onChange={handleFilterChange}
+            className="sr-only"
+            aria-hidden="true"
           >
-            <X size={12} /> Reset All
-          </button>
+            <option value="" />
+            {MUSCLES.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+          <select
+            name="level"
+            value={filters.level}
+            onChange={handleFilterChange}
+            className="sr-only"
+            aria-hidden="true"
+          >
+            <option value="" />
+            {LEVELS.map((l) => (
+              <option key={l} value={l}>
+                {l}
+              </option>
+            ))}
+          </select>
+          <select
+            name="equipment"
+            value={filters.equipment}
+            onChange={handleFilterChange}
+            className="sr-only"
+            aria-hidden="true"
+          >
+            <option value="" />
+            {EQUIPMENTS.map((e) => (
+              <option key={e} value={e}>
+                {e}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
@@ -146,7 +366,6 @@ const ExercisesPage = () => {
                 <ExerciseCard key={ex._id} exercise={ex} />
               )),
             )}
-            {/* Show extra skeleton cards when loading next page */}
             {isFetchingNextPage &&
               Array.from({ length: 4 }).map((_, i) => (
                 <SkeletonCard key={`next-${i}`} />

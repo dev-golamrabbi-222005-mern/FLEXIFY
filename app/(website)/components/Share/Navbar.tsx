@@ -15,10 +15,10 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Home", path: "/" },
+    {name: "Exercises", path: "/exercises"},
+    {name: "Coaches", path: "/coaches"},
     { name: "How it works", path: "/howItWorks"},
     {name: "Features", path: "/features"},
-    {name: "Coaches", path: "/coaches"},
-    {name: "Exercises", path: "/exercises"},
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact" },
   ];

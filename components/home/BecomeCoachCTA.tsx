@@ -140,7 +140,7 @@ export default function BecomeCoachCTA() {
                       className="group px-8 py-4 rounded-xl font-bold text-lg shadow-2xl inline-flex items-center gap-3 cursor-pointer"
                       style={{
                         backgroundColor: "#fff",
-                        color: "#f97316",
+                        color: "#10B981",
                       }}
                       whileHover={{
                         scale: 1.05,
