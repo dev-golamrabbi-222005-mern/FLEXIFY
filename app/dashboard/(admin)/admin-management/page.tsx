@@ -55,7 +55,16 @@ export default function AdminManagementSection() {
   };
 
   const rejectCoach = (id: ObjectId) => {
-    // setCoaches(coaches.filter(c => c.id !== id));
+    try{
+      axios.patch("/api/coach/approve", {
+        id,
+        status: "rejected"
+      });
+      Swal.fire("Rejected", "Coach rejected by admin", "success");
+    }
+    catch(error){
+      Swal.fire("Error", error.message, "error");
+    }
   };
 
   return (
