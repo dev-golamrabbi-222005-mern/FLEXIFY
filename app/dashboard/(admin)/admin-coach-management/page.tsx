@@ -168,84 +168,54 @@ export default function CoachManagementPage() {
 
       {/* ================= COACH TABLE ================= */}
 
-      <section className="bg-[var(--card-bg)] p-4 md:p-6 rounded-2xl shadow">
+     <section className="space-y-6">
 
-        <h2 className="text-lg md:text-xl font-bold mb-6">
-          Approved Coaches
-        </h2>
+  <h2 className="text-xl font-bold mb-4">Approved Coaches</h2>
 
-        <div className="overflow-x-auto">
+  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {coaches.map((coach) => (
+      <div
+        key={coach.id}
+        className="bg-[var(--card-bg)] p-6 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between gap-3"
+      >
+        {/* COACH INFO */}
+        <div className="space-y-1">
+          <h3 className="text-lg font-semibold">{coach.name}</h3>
+          <p className="text-sm text-gray-500">Clients: {coach.clients}</p>
+          <p className="text-sm text-gray-500">Rating: {coach.rating}</p>
 
-          <table className="w-full min-w-[600px] border-collapse">
-
-            <thead className="border-b text-left">
-              <tr>
-                <th className="py-3 text-sm md:text-base">Name</th>
-                <th className="text-sm md:text-base">Clients</th>
-                <th className="text-sm md:text-base">Rating</th>
-                <th className="text-sm md:text-base">Status</th>
-                <th className="text-sm md:text-base">Action</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              {coaches.map((coach) => (
-                <tr key={coach.id} className="border-b">
-
-                  <td className="py-3 text-sm md:text-base">
-                    {coach.name}
-                  </td>
-
-                  <td className="text-sm md:text-base">
-                    {coach.clients}
-                  </td>
-
-                  <td className="text-sm md:text-base">
-                    {coach.rating}
-                  </td>
-
-                  <td>
-                    <span
-                      className={`px-2 py-1 text-xs md:text-sm rounded-full ${
-                        coach.status === "Active"
-                          ? "bg-green-100 text-green-600"
-                          : "bg-red-100 text-red-600"
-                      }`}
-                    >
-                      {coach.status}
-                    </span>
-                  </td>
-
-                  <td className="space-x-2 md:space-x-3">
-
-                    <button
-                      onClick={() => warnCoach(coach.id)}
-                      className="text-yellow-600 text-xs md:text-sm"
-                    >
-                      Warn
-                    </button>
-
-                    <button
-                      onClick={() => removeCoach(coach.id)}
-                      className="text-red-600 text-xs md:text-sm"
-                    >
-                      Remove
-                    </button>
-
-                  </td>
-
-                </tr>
-              ))}
-
-            </tbody>
-
-          </table>
-
+          {/* STATUS BADGE */}
+          <span
+            className={`inline-block mt-2 px-3 py-1 text-xs rounded-full ${
+              coach.status === "Active"
+                ? "bg-green-100 text-green-600"
+                : "bg-red-100 text-red-600"
+            }`}
+          >
+            {coach.status}
+          </span>
         </div>
 
-      </section>
+        {/* ACTION BUTTONS */}
+        <div className="flex gap-3 mt-3 flex-wrap">
+          <button
+            onClick={() => warnCoach(coach.id)}
+            className="text-yellow-600 text-sm hover:underline transition"
+          >
+            Warn
+          </button>
 
+          <button
+            onClick={() => removeCoach(coach.id)}
+            className="text-red-600 text-sm hover:underline transition"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
     </div>
   );
 }

@@ -13,7 +13,6 @@ type CoachApplication = {
 };
 
 export default function AdminCoachApplications() {
-
   const [applications, setApplications] = useState<CoachApplication[]>([
     {
       id: 1,
@@ -26,6 +25,14 @@ export default function AdminCoachApplications() {
     {
       id: 2,
       name: "Karim Hasan",
+      email: "karim@example.com",
+      specialization: "Yoga Instructor",
+      experience: "3 Years",
+      status: "Pending",
+    },
+    {
+      id: 3,
+      name: "Karim",
       email: "karim@example.com",
       specialization: "Yoga Instructor",
       experience: "3 Years",
@@ -50,52 +57,37 @@ export default function AdminCoachApplications() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 py-10 space-y-8 bg-[var(--bg-primary)] min-h-screen">
 
       {/* PAGE HEADER */}
-
       <div className="flex items-center gap-3">
         <UserCheck size={28} />
-        <h1 className="text-2xl md:text-3xl font-bold">
-          Coach Applications
-        </h1>
+        <h1 className="text-2xl md:text-3xl font-bold">Coach Applications</h1>
       </div>
 
-      {/* APPLICATION LIST */}
-
-      <div className="grid gap-6">
+      {/* APPLICATION GRID */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 
         {applications.map((app) => (
           <div
             key={app.id}
-            className="bg-[var(--card-bg)] p-6 rounded-xl shadow flex flex-col md:flex-row md:items-center md:justify-between gap-6"
+            className="bg-[var(--card-bg)] p-6 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between gap-4"
           >
 
             {/* COACH INFO */}
-
             <div className="space-y-1">
-
-              <h3 className="text-lg font-semibold">
-                {app.name}
-              </h3>
-
-              <p className="text-sm text-gray-500">
-                {app.email}
-              </p>
-
+              <h3 className="text-lg font-semibold">{app.name}</h3>
+              <p className="text-sm text-gray-500">{app.email}</p>
               <p className="text-sm">
                 Specialization: <span className="font-medium">{app.specialization}</span>
               </p>
-
               <p className="text-sm">
                 Experience: <span className="font-medium">{app.experience}</span>
               </p>
 
-              {/* STATUS */}
-
+              {/* STATUS BADGE */}
               <span
-                className={`inline-block mt-2 px-3 py-1 text-xs rounded-full
-                ${
+                className={`inline-block mt-2 px-3 py-1 text-xs rounded-full ${
                   app.status === "Approved"
                     ? "bg-green-100 text-green-600"
                     : app.status === "Rejected"
@@ -105,14 +97,11 @@ export default function AdminCoachApplications() {
               >
                 {app.status}
               </span>
-
             </div>
 
             {/* ACTION BUTTONS */}
-
             {app.status === "Pending" && (
-              <div className="flex gap-3">
-
+              <div className="flex gap-3 mt-3 flex-wrap">
                 <button
                   onClick={() => approveCoach(app.id)}
                   className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
@@ -128,7 +117,6 @@ export default function AdminCoachApplications() {
                   <XCircle size={18} />
                   Reject
                 </button>
-
               </div>
             )}
 
@@ -136,7 +124,6 @@ export default function AdminCoachApplications() {
         ))}
 
       </div>
-
     </div>
   );
 }

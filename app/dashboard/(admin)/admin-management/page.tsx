@@ -68,119 +68,103 @@ export default function AdminManagementSection() {
   };
 
   return (
-    <div className="mx-auto bg-[var(--bg-primary)] px-2 md:px-4 space-y-8">
+    <div className="mx-auto px-4 space-y-8 py-6 bg-[var(--bg-primary)] min-h-screen">
 
       {/* ================= USER MANAGEMENT ================= */}
-      <section className="bg-[var(--card-bg)] p-2 rounded-2xl shadow">
-        <div className="flex items-center gap-3 mb-6">
-            <Users />
-        <h2 className="mb-4 text-xl font-bold"> User Management</h2>
+      <section className="space-y-4">
+        <div className="flex items-center gap-3 mb-2">
+          <Users />
+          <h2 className="text-xl font-bold">User Management</h2>
         </div>
 
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b">
-              <th className="py-2">Name</th>
-              <th>Plan</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map(user => (
-              <tr key={user.id} className="border-b">
-                <td className="py-3">{user.name}</td>
-                <td>{user.plan}</td>
-                <td>
-                  <span className={`px-2 py-1 text-xs rounded-full ${
-                    user.status === "Active"
-                      ? "bg-green-100 text-green-600"
-                      : "bg-red-100 text-red-600"
-                  }`}>
-                    {user.status}
-                  </span>
-                </td>
-                <td className="space-x-2">
-                  <button
-                    onClick={() => suspendUser(user.id)}
-                    className="text-sm text-red-500"
-                  >
-                    Ban
-                  </button>
-                  <button className="text-sm text-blue-500">
-                    Upgrade
-                  </button>
-                  <button className="text-sm text-gray-500">
-                    Reset Password
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {users.map(user => (
+            <div key={user.id} className="bg-[var(--card-bg)] p-4 rounded-2xl shadow hover:shadow-lg transition">
+              <p className="font-semibold">{user.name}</p>
+              <p className="text-gray-500 text-sm mb-2">{user.plan} Plan</p>
+              <span className={`px-2 py-1 text-xs rounded-full ${
+                user.status === "Active"
+                  ? "bg-green-100 text-green-600"
+                  : "bg-red-100 text-red-600"
+              }`}>
+                {user.status}
+              </span>
+              <div className="mt-3 flex gap-2 flex-wrap">
+                <button
+                  onClick={() => suspendUser(user.id)}
+                  className="text-red-500 text-sm"
+                >
+                  Ban
+                </button>
+                <button className="text-blue-500 text-sm">Upgrade</button>
+                <button className="text-gray-500 text-sm">Reset Password</button>
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* ================= COACH MANAGEMENT ================= */}
-      <section className="bg-[var(--card-bg)] p-6 rounded-2xl shadow">
-        <h2 className="mb-4 text-xl font-bold">🧑‍🏫 Coach Management</h2>
+      <section className="space-y-4">
+        <div className="flex items-center gap-3 mb-2">
+          <Users />
+          <h2 className="text-xl font-bold">Coach Management</h2>
+        </div>
 
-        {coaches.map(coach => (
-          <div
-            key={coach._id}
-            className="flex items-center justify-between py-3 border-b"
-          >
-            <span>{coach.fullName}</span>
-            <span>{coach.email}</span>
-
-            <div className="space-x-3">
-              <button
-                onClick={() => approveCoach(coach._id, coach.email)}
-                className="text-sm text-green-600"
-              >
-                Approve
-              </button>
-
-              <button
-                onClick={() => rejectCoach(coach._id)}
-                className="text-sm text-red-600"
-              >
-                Reject
-              </button>
-
-              <button className="text-sm text-blue-600">
-                View Performance
-              </button>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {coaches.map(coach => (
+            <div key={coach.id} className="bg-[var(--card-bg)] p-4 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between">
+              <p className="font-semibold">{coach.name}</p>
+              <span className={`px-2 py-1 text-xs rounded-full ${
+                coach.status === "Pending"
+                  ? "bg-yellow-100 text-yellow-600"
+                  : "bg-green-100 text-green-600"
+              }`}>
+                {coach.status}
+              </span>
+              <div className="mt-3 flex gap-2 flex-wrap">
+                <button
+                  onClick={() => approveCoach(coach.id)}
+                  className="text-green-600 text-sm"
+                >
+                  Approve
+                </button>
+                <button
+                  onClick={() => rejectCoach(coach.id)}
+                  className="text-red-600 text-sm"
+                >
+                  Reject
+                </button>
+                <button className="text-blue-600 text-sm">View Performance</button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </section>
 
       {/* ================= SUBSCRIPTION CONTROL ================= */}
-      <section className="bg-[var(--card-bg)] p-6 rounded-2xl shadow">
-
-        <div className="flex items-center gap-3 mb-6">
-            <CreditCard />
-        <h2 className="mb-4 text-xl font-bold">Subscription Control</h2>
+      <section className="space-y-4">
+        <div className="flex items-center gap-3 mb-2">
+          <CreditCard />
+          <h2 className="text-xl font-bold">Subscription Control</h2>
         </div>
 
-        {plans.map(plan => (
-          <div
-            key={plan.id}
-            className="flex items-center justify-between py-3 border-b"
-          >
-            <div>
-              <p className="font-semibold">{plan.name}</p>
-              <p className="text-sm text-gray-500">${plan.price}/month</p>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {plans.map(plan => (
+            <div key={plan.id} className="bg-[var(--card-bg)] p-4 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between">
+              <div>
+                <p className="font-semibold">{plan.name}</p>
+                <p className="text-gray-500 text-sm">${plan.price}/month</p>
+              </div>
+              <div className="mt-3 flex gap-2 flex-wrap">
+                <button className="text-blue-600 text-sm">Edit</button>
+                <button className="text-red-600 text-sm">Delete</button>
+              </div>
             </div>
+          ))}
+        </div>
 
-            <div className="space-x-3">
-              <button className="text-sm text-blue-600">Edit</button>
-              <button className="text-sm text-red-600">Delete</button>
-            </div>
-          </div>
-        ))}
-
-        <button className="mt-4 bg-[var(--primary)] text-white px-4 py-2 rounded-lg text-sm">
+        <button className="mt-4 bg-[var(--primary)] text-white px-4 py-2 rounded-lg text-sm hover:bg-[var(--secondary)] transition">
           + Create New Plan
         </button>
 
@@ -189,36 +173,31 @@ export default function AdminManagementSection() {
           <input
             type="text"
             placeholder="Enter Coupon Code"
-            className="w-full p-2 border rounded-lg"
+            className="border p-2 rounded-lg w-full bg-[var(--card-bg)]"
           />
         </div>
       </section>
 
       {/* ================= SYSTEM SETTINGS ================= */}
-      <section className="bg-[var(--card-bg)] p-6 rounded-2xl shadow">
-        <div className="flex items-center gap-3 mb-6">
-             <Settings />
-        <h2 className="mb-4 text-xl font-bold">System Settings</h2>
+      <section className="space-y-4">
+        <div className="flex items-center gap-3 mb-2">
+          <Settings />
+          <h2 className="text-xl font-bold">System Settings</h2>
         </div>
 
         <div className="space-y-4">
-
           <div>
-            <label className="block mb-1 text-sm font-medium">
-              Email Configuration
-            </label>
+            <label className="block text-sm font-medium mb-1">Email Configuration</label>
             <input
               type="email"
               placeholder="admin@flexify.com"
-              className="w-full p-2 border rounded-lg"
+              className="border p-2 rounded-lg w-full bg-[var(--card-bg)]"
             />
           </div>
 
           <div>
-            <label className="block mb-1 text-sm font-medium">
-              Notification Control
-            </label>
-            <select className="border p-2 rounded-lg bg-[var(--card-bg)] w-full">
+            <label className="block text-sm font-medium mb-1">Notification Control</label>
+            <select className="border p-2 rounded-lg w-full bg-[var(--card-bg)]">
               <option>Enable All</option>
               <option>Only Important</option>
               <option>Disable</option>
@@ -226,16 +205,13 @@ export default function AdminManagementSection() {
           </div>
 
           <div>
-            <label className="block mb-1 text-sm font-medium">
-              Role Permission
-            </label>
+            <label className="block text-sm font-medium mb-1">Role Permission</label>
             <select className="border p-2 rounded-lg w-full bg-[var(--card-bg)]">
               <option>User</option>
               <option>Coach</option>
               <option>Admin</option>
             </select>
           </div>
-
         </div>
       </section>
 
