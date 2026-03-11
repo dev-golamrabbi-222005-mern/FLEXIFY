@@ -7,6 +7,7 @@ import { SelectionDrawer } from "@/components/user/SelectionDrawer";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { FilterSection } from "@/components/user/FilterSection";
+import { useSession } from "next-auth/react";
 
 const bodyParts = [
   "chest",
@@ -36,6 +37,7 @@ const equipments = [
 ];
 
 export default function WorkoutBuilder() {
+  const { data: session } = useSession();
   const [search, setSearch] = useState("");
   const [selectedLevel, setSelectedLevel] = useState("");
   const [selectedEquipment, setSelectedEquipment] = useState("");
@@ -122,15 +124,31 @@ export default function WorkoutBuilder() {
     }));
   };
 
-  const handleSaveRoutine = (name: string) => {
+  const handleSaveRoutine = async (userData: { planName: string; userName: string; userEmail: string }) => {
     if (selectedExercises.length === 0) {
       alert("Please select at least one exercise!");
       return;
     }
-    alert(`Routine "${name || "My Plan"}" Saved Successfully!`);
-    setSelectedExercises([]);
-    setPlanName("");
-  };
+   
+    try {
+    const routineData = {
+      planName: userData.planName,
+      exercises: selectedExercises,
+      createdAt: new Date(),
+    };
+    
+    const response = await axios.post("/api/routines/save", routineData);
+
+    if (response.data.success) {
+      alert(`Awesome! Your plan "${userData.planName}" is saved.`);
+      setSelectedExercises([]);
+      setPlanName("");
+    }
+  } catch (error: any) {
+    console.error("Save Error:", error);
+    alert(error.response?.data?.message || "Failed to save routine.");
+  }
+};
   const displayData = isFilterActive ? groupedFilteredData : initialGroups;
 
   return (
@@ -203,15 +221,17 @@ export default function WorkoutBuilder() {
             </h3>
 
             <div className="space-y-3">
-              {group.exercises.slice(0, visibleCounts[group.part.toLowerCase()] || 5).map((ex: any, idx: number) => (
-    <ExerciseRow
-      key={`${ex.id}-${idx}`}
-      exercise={ex}
-      onSelect={toggleExercise}
-      isSelected={selectedExercises.some((s) => s.id === ex.id)}
-      onShowDetails={setDetailExercise}
-    />
-  ))}
+              {group.exercises
+                .slice(0, visibleCounts[group.part.toLowerCase()] || 5)
+                .map((ex: any, idx: number) => (
+                  <ExerciseRow
+                    key={`${ex.id}-${idx}`}
+                    exercise={ex}
+                    onSelect={toggleExercise}
+                    isSelected={selectedExercises.some((s) => s.id === ex.id)}
+                    onShowDetails={setDetailExercise}
+                  />
+                ))}
             </div>
 
             {(isFilterActive ? group.exercises.length : group.count) >
@@ -240,6 +260,10 @@ export default function WorkoutBuilder() {
         onSave={handleSaveRoutine}
         planName={planName}
         setPlanName={setPlanName}
+        userSession={{
+        name: session?.user?.name || "",
+        email: session?.user?.email || ""
+      }}
       />
 
       <DetailsModal
