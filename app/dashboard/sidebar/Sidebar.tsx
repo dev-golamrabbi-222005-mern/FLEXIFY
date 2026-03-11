@@ -2,145 +2,265 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {Home, Flag, Calendar, Trophy, BarChart2, Settings, UserCheck, Users, MessageCircle, BrickWallShield, UserRoundCog, Speech, UserPen, ChartNoAxesGanttIcon, Utensils} from "lucide-react";
-
-
 import { useSession } from "next-auth/react";
+import { motion, AnimatePresence } from "framer-motion";
+import { signOut } from "next-auth/react";
+import {
+  Home,
+  Flag,
+  Utensils,
+  Calendar,
+  Trophy,
+  BarChart2,
+  Settings,
+  BrickWallShield,
+  UserRoundCog,
+  ChartNoAxesGanttIcon,
+  UserPen,
+  Speech,
+  X,
+  LogOut,
+} from "lucide-react";
 
-const Sidebar = () => {
+interface SidebarProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+const menuConfig = [
+  {
+    label: "MAIN MENU",
+    items: [
+      {
+        name: "Dashboard",
+        href: "/dashboard",
+        icon: Home,
+        roles: ["user", "admin", "coach"],
+      },
+      {
+        name: "Exercise",
+        href: "/dashboard/exercise",
+        icon: ChartNoAxesGanttIcon,
+        roles: ["user"],
+      },
+      {
+        name: "My Goals",
+        href: "/dashboard/my-goals",
+        icon: Flag,
+        roles: ["user"],
+      },
+      {
+        name: "Nutrition",
+        href: "/dashboard/nutrition-tracker",
+        icon: Utensils,
+        roles: ["user"],
+      },
+      {
+        name: "Schedule",
+        href: "/dashboard/schedule",
+        icon: Calendar,
+        roles: ["user"],
+      },
+      {
+        name: "Achievements",
+        href: "/dashboard/achievements",
+        icon: Trophy,
+        roles: ["user"],
+      },
+    ],
+  },
+  {
+    label: "ADMIN",
+    items: [
+      {
+        name: "Admin Stats",
+        href: "/dashboard/admin-stats",
+        icon: BrickWallShield,
+        roles: ["admin"],
+      },
+      {
+        name: "User Management",
+        href: "/dashboard/admin-management",
+        icon: UserRoundCog,
+        roles: ["admin"],
+      },
+    ],
+  },
+  {
+    label: "COACH",
+    items: [
+      {
+        name: "Client Progress",
+        href: "/dashboard/client-progress",
+        icon: UserPen,
+        roles: ["coach"],
+      },
+      {
+        name: "Session Planner",
+        href: "/dashboard/session-planner",
+        icon: Speech,
+        roles: ["coach"],
+      },
+    ],
+  },
+  {
+    label: "ACCOUNT",
+    items: [
+      {
+        name: "Statistics",
+        href: "/dashboard/statistics",
+        icon: BarChart2,
+        roles: ["user", "admin", "coach"],
+      },
+      {
+        name: "Settings",
+        href: "/dashboard/settings",
+        icon: Settings,
+        roles: ["user", "admin", "coach"],
+      },
+    ],
+  },
+];
+
+// ─── Sidebar Content (shared between desktop & mobile drawer) ─────────────────
+function SidebarContent({ onClose }: { onClose: () => void }) {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const userRole = (session?.role as string) || "user";
 
-  // user role
-  const userRole = session?.role;
-
-  // Menu Items
-  const menuItems = [
-    // USER
-    { name: "Home", href: "/dashboard", icon: Home, role: ["user", "admin", "coach"] },
-    { name: "My goals", href: "/dashboard/my-goals", icon: Flag, role: ["user"] },
-    { name: "Nutrition", href: "/dashboard/nutrition-tracker", icon: Utensils, role: ["user"] },
-    { name: "Schedule", href: "/dashboard/schedule", icon: Calendar, role: ["user"] },
-    { name: "Achievements", href: "/dashboard/achievements", icon: Trophy, role: ["user"] },
-    { name: "Statistics", href: "/dashboard/statistics", icon: BarChart2, role: ["user"] },
-
-    // ADMIN
-    { name: "Admin Stats", href: "/dashboard/admin-stats", icon: BrickWallShield, role: ["admin"] },
-    { name: "User Management", href: "/dashboard/admin-management", icon: UserRoundCog, role: ["admin"] },
-
-    // COACH
-    { name: "Coach Stats", href: "/dashboard/coach-stats", icon: UserRoundCog, role: ["coach"] },
-    { name: "Client Management", href: "/dashboard/client-management", icon: ChartNoAxesGanttIcon, role: ["coach"] },
-    { name: "Client Progress", href: "/dashboard/client-progress", icon: UserPen, role: ["coach"] },
-    { name: "Session Planner", href: "/dashboard/session-planner", icon: Speech, role: ["coach"] },
-
-    { name: "Settings", href: "/dashboard/settings", icon: Settings, role: ["user","admin","coach"] },
-
-    { name: "Home", href: "/dashboard", icon: Home },
-    { name: "My goals", href: "/dashboard/my-goals", icon: Flag },
-    { name: "Nutrition", href: "/dashboard/nutrition-tracker", icon: Utensils },
-    { name: "Schedule", href: "/dashboard/schedule", icon: Calendar },
-    { name: "Achievements", href: "/dashboard/achievements", icon: Trophy },
-
-   
-    // Coaches section
-    { name: "Assigned Coach", href: "/dashboard/assigned-coach", icon: UserCheck },
-    { name: "Browse Coaches", href: "/dashboard/browse-coach", icon: Users},
-    { name: "Messages", href: "/dashboard/messages", icon: MessageCircle },
-
-    { name: "Statistics", href: "/dashboard/statistics", icon: BarChart2},
-    { name: "Admin Stats", href: "/dashboard/admin-stats", icon:  BrickWallShield },
-    { name: "User Management", href: "/dashboard/admin-management", icon:  UserRoundCog },
-    { name: "Coach Stats", href: "/dashboard/coach-stats", icon:  UserRoundCog },
-    { name: "Client Management", href: "/dashboard/client-management", icon:  ChartNoAxesGanttIcon },
-    { name: "Client Progress", href: "/dashboard/client-progress", icon:  UserPen },
-    { name: "Session Planner", href: "/dashboard/session-planner", icon:  Speech },
-    { name: "Settings", href: "/dashboard/settings", icon: Settings },
-
-  ];
-
-  // Role menu filter
- const filteredMenu = menuItems.filter(
-  (item) => item.role?.includes(userRole || "")
-);
-
-   
   return (
-    <aside className="w-[260px] bg-[var(--card-bg)] min-h-screen rounded-2xl p-4 shadow-lg flex flex-col justify-between">
-      
-      {/* TOP SECTION */}
-      <div>
+    <div className="flex flex-col h-full overflow-y-auto custom-scrollbar">
+      {/* ── Close button — mobile drawer only ── */}
+      <div className="md:hidden flex items-center justify-between px-5 py-4 border-b border-[var(--border-color)]">
+        <span className="text-sm font-black tracking-widest text-[var(--text-secondary)] uppercase">
+          Menu
+        </span>
+        <button
+          onClick={onClose}
+          className="p-1.5 rounded-lg hover:bg-[var(--bg-secondary)] transition-colors"
+        >
+          <X size={18} className="text-[var(--text-secondary)]" />
+        </button>
+      </div>
 
-        {/* Profile */}
-        <div className="text-center pb-4">
-          <div className="relative w-fit mx-auto">
-            <img
-              src={session?.user?.image || "https://i.postimg.cc/FzTr6D42/JUBAYER_Photo.jpg"}
-              className="w-16 h-16 rounded-full object-cover mx-auto"
+      {/* ── Navigation ── */}
+      <nav className="flex-1 px-4 py-5 space-y-7">
+        {menuConfig.map((group) => {
+          const filtered = group.items.filter((i) =>
+            i.roles.includes(userRole),
+          );
+          if (filtered.length === 0) return null;
+
+          return (
+            <div key={group.label}>
+              <h3 className="px-4 text-[10px] font-black text-[var(--text-secondary)] tracking-[0.18em] mb-2.5">
+                {group.label}
+              </h3>
+              <div className="space-y-0.5">
+                {filtered.map((item) => {
+                  const isActive = pathname === item.href;
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={onClose}
+                      className={`flex items-center justify-between px-4 py-2.5 rounded-2xl transition-all group
+                        ${
+                          isActive
+                            ? "bg-[var(--primary)]/10 text-[var(--primary)] font-semibold"
+                            : "text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]"
+                        }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <item.icon
+                          size={18}
+                          className={
+                            isActive
+                              ? "text-[var(--primary)]"
+                              : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]"
+                          }
+                        />
+                        <span className="text-[13px]">{item.name}</span>
+                      </div>
+                      {isActive && (
+                        <div className="w-1.5 h-1.5 rounded-full bg-[var(--primary)]" />
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </nav>
+
+      {/* ── Upgrade Card ── */}
+      <div className="px-4 pb-4">
+        <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-[1.5rem] p-5 text-white shadow-lg relative overflow-hidden">
+          <div className="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full" />
+          <div className="bg-white/20 w-9 h-9 rounded-xl flex items-center justify-center mb-3 backdrop-blur-sm">
+            <Trophy size={18} />
+          </div>
+          <h4 className="text-sm font-bold mb-1">Upgrade to Pro</h4>
+          <p className="text-[11px] text-orange-100 mb-3 leading-relaxed">
+            Your trial ends in 7 days. Unlock all features.
+          </p>
+          <button className="w-full bg-white text-orange-600 py-2 rounded-xl text-xs font-extrabold hover:bg-orange-50 transition-all active:scale-95">
+            Upgrade Now
+          </button>
+        </div>
+      </div>
+
+      {/* ── Logout ── */}
+      <div className="px-4 pb-5">
+        <button
+          onClick={() => signOut()}
+          className="flex items-center gap-3 w-full px-4 py-3 text-[var(--text-secondary)] hover:text-red-500 hover:bg-red-500/10 rounded-2xl transition-all group"
+        >
+          <LogOut size={18} className="group-hover:text-red-500" />
+          <span className="text-sm font-semibold">Log Out</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Sidebar (desktop static + mobile drawer) ────────────────────────────
+const Sidebar = ({ open, onClose }: SidebarProps) => {
+  return (
+    <>
+      {/* ── Desktop sidebar — sticky with own scroll ── */}
+      <aside className="hidden md:flex flex-col w-64 shrink-0 h-full overflow-hidden border-r border-[var(--border-color)] bg-[var(--bg-nav-footer)]">
+        <SidebarContent onClose={onClose} />
+      </aside>
+
+      {/* ── Mobile drawer — slides from RIGHT ── */}
+      <AnimatePresence>
+        {open && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={onClose}
+              className="fixed inset-0 z-40 bg-black/50 md:hidden"
             />
 
-            <span className="absolute -right-8 top-1 text-xs text-pink-400 cursor-pointer">
-              EDIT
-            </span>
-          </div>
-
-          <h3 className="mt-2 font-semibold">
-            {session?.user?.name || "User"}
-          </h3>
-
-          <p className="text-xs text-[var(--text-secondary)] capitalize">
-            {userRole}
-          </p>
-        </div>
-
-        {/* Height Weight */}
-        <div className="flex border border-gray-300/50 rounded-xl overflow-hidden mb-6">
-          <div className="w-1/2 text-center py-3 border-r border-gray-300/50">
-            <p className="text-xs text-orange-500 font-semibold">HEIGHT</p>
-            <p className="font-bold">
-              185 <span className="text-sm text-gray-400">cm</span>
-            </p>
-          </div>
-
-          <div className="w-1/2 text-center py-3">
-            <p className="text-xs text-orange-500 font-semibold">WEIGHT</p>
-            <p className="font-bold">
-              76 <span className="text-sm text-gray-400">kg</span>
-            </p>
-          </div>
-        </div>
-
-        {/* MENU */}
-        <nav className="mt-4 space-y-2">
-          {filteredMenu.map((item) => {
-            const isActive = pathname === item.href;
-
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all
-                  ${
-                    isActive
-                      ? "bg-orange-500/20 text-orange-500 font-semibold"
-                      : "text-[var(--text-primary)] hover:bg-gray-500/10"
-                  }
-                `}
-              >
-                <item.icon size={18} />
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
-
-      {/* BOTTOM CARD */}
-      <div className="bg-[var(--primary)] text-[var(--text-primary)] text-center p-4 rounded-xl text-sm mt-6">
-        <h4 className="font-semibold">CONGRATULATIONS!</h4>
-        <p>You have unlocked the “Expert” level.</p>
-      </div>
-    </aside>
+            {/* Drawer from right */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 320, damping: 32 }}
+              className="fixed top-0 right-0 z-50 h-full w-72 md:hidden bg-[var(--bg-nav-footer)] border-l border-[var(--border-color)]"
+            >
+              <SidebarContent onClose={onClose} />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
