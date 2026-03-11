@@ -5,7 +5,32 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { signOut } from "next-auth/react";
-import {Home, Flag, Utensils, Calendar, Trophy, BarChart2, Settings,Video, BrickWallShield, UserRoundCog, ChartNoAxesGanttIcon, UserPen, Speech, X, LogOut,} from "lucide-react";
+import {
+  BarChart2,
+  BellDot,
+  BrickWallShield,
+  Calendar,
+  ChartNoAxesGanttIcon,
+  CircleDollarSign,
+  FileCog,
+  Flag,
+  Home,
+  LayersPlus,
+  LogOut,
+  MessageSquareWarning,
+  NotebookText,
+  Settings,
+  Speech,
+  SquareLibrary,
+  TableOfContents,
+  Trophy,
+  UserPen,
+  UserRoundCog,
+  UserRoundPen,
+  Utensils,
+  Video,
+  X
+} from "lucide-react";
 
 interface SidebarProps {
   open: boolean;
@@ -40,6 +65,56 @@ const menuConfig = [
         icon: UserRoundCog,
         roles: ["admin"],
       },
+       {
+        name: "Coach Applications",
+        href: "/dashboard/admin-coach-applications ",
+        icon: NotebookText,
+        roles: ["admin"],
+      },
+       {
+        name: "Coach Management",
+        href: "/dashboard/admin-coach-management",
+        icon: LayersPlus,
+        roles: ["admin"],
+      },
+       {
+        name: "Workout Library",
+        href: "/dashboard/admin-workout-library",
+        icon: SquareLibrary,
+        roles: ["admin"],
+      },
+       {
+        name: "Content Management",
+        href: "/dashboard/admin-content-management",
+        icon: TableOfContents,
+        roles: ["admin"],
+      },
+       {
+        name: "Reports & Analytics",
+        href: "/dashboard/admin-reports-analytics",
+        icon: MessageSquareWarning,
+        roles: ["admin"],
+      },
+       {
+        name: "Payments / Subscriptions",
+        href: "/dashboard/admin-payments-subscriptions",
+        icon: CircleDollarSign,
+        roles: ["admin"],
+      },
+       {
+        name: "System Settings",
+        href: "/dashboard/admin-system-settings",
+        icon: FileCog,
+        roles: ["admin"],
+      },
+       {
+        name: "Admin Profile",
+        href: "/dashboard/admin-profile",
+        icon: UserRoundPen,
+        roles: ["admin"],
+      },
+
+
     ],
   },
   {
