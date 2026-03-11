@@ -39,7 +39,7 @@ const menuConfig = [
       },
       {
         name: "Exercise",
-        href: "/dashboard/exercise",
+        href: "/dashboard/workout-builder",
         icon: ChartNoAxesGanttIcon,
         roles: ["user"],
       },
