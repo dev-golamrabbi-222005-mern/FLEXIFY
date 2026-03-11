@@ -25,7 +25,7 @@ export const ExerciseRow = ({ exercise, onSelect, isSelected, onShowDetails }: a
         )}
       </div>
       <div className="flex-grow min-w-0">
-        <h4 className="text-[13px] font-black uppercase italic tracking-tight truncate text-[var(--text-primary)] leading-none mb-2">
+        <h4 className="text-[13px] font-black uppercase  tracking-tight truncate text-[var(--text-primary)] leading-none mb-2">
           {exercise.name}
         </h4>
         <div className="flex flex-wrap items-center gap-2">

@@ -16,7 +16,7 @@ export const DetailsModal = ({ exercise, onClose }: any) => {
         {/* Top Header - Sticky style */}
         <div className="flex justify-between items-center px-8 py-6 border-b border-[var(--border-color)] bg-[var(--bg-secondary)]">
           <div className="min-w-0">
-            <h2 className="text-2xl font-black uppercase italic tracking-tighter text-[var(--text-primary)] truncate leading-none mb-1">
+            <h2 className="text-2xl font-black uppercase tracking-tighter text-[var(--text-primary)] truncate leading-none mb-1">
               {exercise.name}
             </h2>
             <div className="flex gap-2 items-center">

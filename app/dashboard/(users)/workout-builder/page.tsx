@@ -2,6 +2,8 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Search, RotateCcw, Dumbbell, Loader2 } from "lucide-react";
 import { ExerciseRow } from "@/components/cards/ExerciseRowCard";
+import { DetailsModal } from "@/components/user/DetailsModal";
+import { SelectionDrawer } from "@/components/user/SelectionDrawer";
 
 const bodyParts = [
   "chest", "back", "shoulders", "quadriceps", "hamstrings", "glutes", 
