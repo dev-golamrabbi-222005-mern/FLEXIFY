@@ -67,8 +67,8 @@ export const SelectionDrawer = ({
           <div className="flex-grow overflow-y-auto p-6 space-y-3 custom-scrollbar">
             {selectedExercises.map((ex) => (
               <div key={ex.id} className="flex items-center gap-4 bg-[var(--bg-primary)] p-3 rounded-[1.5rem] border border-[var(--border-color)] group hover:border-[var(--primary-light)] transition-all animate-in fade-in slide-in-from-right duration-300">
-                <div className="w-14 h-14 bg-white rounded-2xl flex-shrink-0 overflow-hidden border border-[var(--border-color)] p-1">
-                  <img src={`/exercises/${ex.images?.[0]}`} alt="" className="w-full h-full object-contain" />
+                <div className="w-14 h-14 bg-white rounded-2xl flex-shrink-0 overflow-hidden border border-[var(--border-color)]">
+                  <img src={`/exercises/${ex.images?.[0]}`} alt="" className="w-full h-full object-cover rounded-2xl" />
                 </div>
                 <div className="flex-grow min-w-0">
                   <p className="text-[12px] font-black uppercase truncate text-[var(--text-primary)] leading-tight">{ex.name}</p>

@@ -156,7 +156,7 @@ export default function WorkoutBuilder() {
     );
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden px-4 py-8 pb-48 bg-[var(--bg-primary)] min-h-screen">
+    <div className="w-full max-w-full overflow-x-hidden  py-8 pb-48 bg-[var(--bg-primary)] min-h-screen">
       <header className="mb-8">
         <h1 className="text-4xl font-black uppercase tracking-tighter text-[var(--text-primary)]">
           Custom <span className="text-[var(--primary)]">Routine</span>

@@ -8,7 +8,7 @@ export const ExerciseRow = ({ exercise, onSelect, isSelected, onShowDetails }: a
   return (
     <div className={`flex items-center gap-4 p-3 mb-2 rounded-2xl border transition-all duration-300
       ${isSelected 
-        ? 'border-[var(--primary)] bg-[var(--primary)]/10 shadow-[0_0_20px_rgba(16,185,129,0.1)] scale-[1.01]' 
+        ? 'border-[var(--primary)] bg-[var(--primary)]/10 shadow-[0_0_20px_rgba(16,185,129,0.1)] ' 
         : 'border-[var(--border-color)] bg-[var(--bg-secondary)] hover:border-[var(--primary-light)] hover:shadow-sm'}`}>
       
       <div className="w-16 h-16 bg-white rounded-2xl flex-shrink-0 overflow-hidden border border-[var(--border-color)] relative shadow-sm group">
@@ -16,7 +16,7 @@ export const ExerciseRow = ({ exercise, onSelect, isSelected, onShowDetails }: a
           <img 
             src={imageUrl} 
             alt={exercise.name} 
-            className="w-full h-full object-cover p-1 transition-transform duration-500 group-hover:scale-110"
+            className="w-full h-full object-cover  transition-transform rounded-2xl duration-500 group-hover:scale-110"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center font-black text-[var(--primary)] text-xs bg-[var(--bg-primary)] uppercase">
