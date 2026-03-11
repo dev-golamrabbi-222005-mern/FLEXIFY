@@ -2,6 +2,10 @@
 
 import { CreditCard, Settings, Users } from "lucide-react";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { ObjectId } from "mongodb";
+import Swal from "sweetalert2";
 
 export default function AdminManagementSection() {
   const [users, setUsers] = useState([
@@ -10,10 +14,20 @@ export default function AdminManagementSection() {
     { id: 3, name: "Jony", plan: "Premium", status: "Suspended" },
   ]);
 
-  const [coaches, setCoaches] = useState([
-    { id: 1, name: "Coach A", status: "Pending" },
-    { id: 2, name: "Coach B", status: "Pending" },
-  ]);
+  // const [coaches, setCoaches] = useState([
+  //   { id: 1, name: "Coach A", status: "Pending" },
+  //   { id: 2, name: "Coach B", status: "Pending" },
+  // ]);
+
+  const {data: coaches = []} = useQuery({
+    queryKey: ["coaches"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach?status=pending");
+      return res.data;
+    }
+  });
+
+  console.log(coaches);
 
   const [plans, setPlans] = useState([
     { id: 1, name: "Basic", price: 10 },
@@ -27,14 +41,30 @@ export default function AdminManagementSection() {
     ));
   };
 
-  const approveCoach = (id: number) => {
-    setCoaches(coaches.map(c =>
-      c.id === id ? { ...c, status: "Approved" } : c
-    ));
+  const approveCoach = (id: ObjectId, email: string) => {
+    try{
+      axios.patch("/api/coach/approve", {
+        id, email,
+        status: "approved"
+      });
+      Swal.fire("Approved", "Coach approved by admin", "success");
+    }
+    catch(error){
+      Swal.fire("Error", error.message, "error");
+    }
   };
 
-  const rejectCoach = (id: number) => {
-    setCoaches(coaches.filter(c => c.id !== id));
+  const rejectCoach = (id: ObjectId) => {
+    try{
+      axios.patch("/api/coach/approve", {
+        id,
+        status: "rejected"
+      });
+      Swal.fire("Rejected", "Coach rejected by admin", "success");
+    }
+    catch(error){
+      Swal.fire("Error", error.message, "error");
+    }
   };
 
   return (
@@ -139,7 +169,7 @@ export default function AdminManagementSection() {
         </button>
 
         <div className="mt-6">
-          <h3 className="font-semibold mb-2">Coupon System</h3>
+          <h3 className="mb-2 font-semibold">Coupon System</h3>
           <input
             type="text"
             placeholder="Enter Coupon Code"

@@ -1,13 +1,14 @@
 "use client";
 import React, { useState } from "react";
-import { Save, Trash2, X, ListChecks, Dumbbell } from "lucide-react";
+import { Save, Trash2, X, ListChecks, Dumbbell} from "lucide-react";
 
 interface SelectionDrawerProps {
   selectedExercises: any[];
   onRemove: (ex: any) => void;
-  onSave: (planName: string) => void;
+  onSave: (userData: { planName: string; userName: string; userEmail: string }) => void;
   planName: string;
   setPlanName: (name: string) => void;
+  userSession: { name: string; email: string };
 }
 
 export const SelectionDrawer = ({ 
@@ -15,10 +16,9 @@ export const SelectionDrawer = ({
   onRemove, 
   onSave, 
   planName, 
-  setPlanName 
-}: SelectionDrawerProps) => {
+  setPlanName,
+}: Omit<SelectionDrawerProps, 'userSession'>) => {
   const [isOpen, setIsOpen] = useState(false);
-
   if (selectedExercises.length === 0) return null;
 
   return (
@@ -87,29 +87,27 @@ export const SelectionDrawer = ({
             ))}
           </div>
 
-          {/* ফুটার - Save Routine Section */}
-          <div className="p-8 bg-[var(--bg-secondary)] border-t border-[var(--border-color)] space-y-6">
-            <div>
-              <label className="text-[10px] font-black uppercase text-[var(--text-muted)] mb-3 flex items-center gap-2 tracking-[0.15em]">
-                <span className="w-1.5 h-1.5 bg-[var(--primary)] rounded-full"></span>
-                Plan Title
-              </label>
-              <input
-                className="input-style !bg-[var(--bg-primary)] border-[var(--border-color)] focus:border-[var(--primary)] transition-all font-bold"
-                placeholder="e.g., POWER EXPLOSION"
-                value={planName}
-                onChange={(e) => setPlanName(e.target.value.toUpperCase())}
-              />
-            </div>
-            
-            <button
-              disabled={!planName || selectedExercises.length === 0}
-              onClick={() => onSave(planName)}
-              className="btn-primary w-full flex items-center justify-center gap-3 py-5 text-xs font-black tracking-[0.2em] shadow-[0_8px_25px_rgba(16,185,129,0.25)] disabled:grayscale disabled:opacity-30"
-            >
-              <Save size={18} strokeWidth={3} /> SAVE ROUTINE
-            </button>
-          </div>
+          <div className="p-8 bg-[var(--bg-secondary)] border-t border-[var(--border-color)] space-y-5">
+        <div>
+          <label className="text-[10px] font-black uppercase text-[var(--text-muted)] mb-2 flex items-center gap-2">
+            <Dumbbell size={12} className="text-[var(--primary)]" /> Routine Title
+          </label>
+          <input
+            className="input-style !bg-[var(--bg-primary)] border-[var(--border-color)] font-bold uppercase"
+            placeholder="e.g., MORNING WORKOUT"
+            value={planName}
+            onChange={(e) => setPlanName(e.target.value.toUpperCase())}
+          />
+        </div>
+        
+        <button
+          disabled={!planName || selectedExercises.length === 0}
+          onClick={() => onSave({ planName, userName: "", userEmail: "" })}
+          className="btn-primary w-full flex items-center justify-center gap-3 py-5 text-xs font-black tracking-[0.2em] shadow-[0_8px_25px_rgba(16,185,129,0.25)] disabled:grayscale disabled:opacity-30"
+        >
+          <Save size={18} strokeWidth={3} /> SAVE ROUTINE
+        </button>
+      </div>
         </div>
       </div>
 

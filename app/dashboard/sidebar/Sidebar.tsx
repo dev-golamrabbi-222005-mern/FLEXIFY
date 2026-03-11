@@ -6,28 +6,30 @@ import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { signOut } from "next-auth/react";
 import {
-  Home,
-  Flag,
-  Utensils,
-  Calendar,
-  Trophy,
   BarChart2,
-  Settings,
+  BellDot,
   BrickWallShield,
-  UserRoundCog,
+  Calendar,
   ChartNoAxesGanttIcon,
-  UserPen,
-  Speech,
-  X,
-  LogOut,
-  NotebookText,
+  CircleDollarSign,
+  FileCog,
+  Flag,
+  Home,
   LayersPlus,
+  LogOut,
+  MessageSquareWarning,
+  NotebookText,
+  Settings,
+  Speech,
   SquareLibrary,
   TableOfContents,
-  FileCog,
+  Trophy,
+  UserPen,
+  UserRoundCog,
   UserRoundPen,
-  CircleDollarSign,
-  MessageSquareWarning,
+  Utensils,
+  Video,
+  X
 } from "lucide-react";
 
 interface SidebarProps {
@@ -39,42 +41,13 @@ const menuConfig = [
   {
     label: "MAIN MENU",
     items: [
-      {
-        name: "Dashboard",
-        href: "/dashboard",
-        icon: Home,
-        roles: ["user", "admin", "coach"],
-      },
-      {
-        name: "Exercise",
-        href: "/dashboard/workout-builder",
-        icon: ChartNoAxesGanttIcon,
-        roles: ["user"],
-      },
-      {
-        name: "My Goals",
-        href: "/dashboard/my-goals",
-        icon: Flag,
-        roles: ["user"],
-      },
-      {
-        name: "Nutrition",
-        href: "/dashboard/nutrition-tracker",
-        icon: Utensils,
-        roles: ["user"],
-      },
-      {
-        name: "Schedule",
-        href: "/dashboard/schedule",
-        icon: Calendar,
-        roles: ["user"],
-      },
-      {
-        name: "Achievements",
-        href: "/dashboard/achievements",
-        icon: Trophy,
-        roles: ["user"],
-      },
+      {name: "Dashboard", href: "/dashboard", icon: Home, roles: ["user", "admin", "coach"]},
+      {name: "Exercise", href: "/dashboard/workout-builder", icon: ChartNoAxesGanttIcon, roles: ["user"]},
+      {name: "My Goals", href: "/dashboard/my-goals",icon: Flag, roles: ["user"]},
+      {name: "Nutrition", href: "/dashboard/nutrition-tracker", icon: Utensils, roles: ["user"]},
+      {name: "Schedule",  href: "/dashboard/schedule", icon: Calendar, roles: ["user"]},
+      {name: "Achievements", href: "/dashboard/achievements", icon: Trophy, roles: ["user"]},
+      {name: "Live Sessions", href: "/dashboard/live-sessions", icon: Video, roles: ["user"]},
     ],
   },
   {
@@ -170,6 +143,7 @@ const menuConfig = [
         icon: BarChart2,
         roles: ["user", "admin", "coach"],
       },
+      {name: "Live Sessions", href: "/dashboard/live-sessions", icon: Video, roles: ["coach"]},
       {
         name: "Settings",
         href: "/dashboard/settings",
@@ -254,16 +228,16 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
 
       {/* ── Upgrade Card ── */}
       <div className="px-4 pb-4">
-        <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-[1.5rem] p-5 text-white shadow-lg relative overflow-hidden">
-          <div className="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full" />
-          <div className="bg-white/20 w-9 h-9 rounded-xl flex items-center justify-center mb-3 backdrop-blur-sm">
+        <div className="bg-gradient-to-br from-(--primary) to-(--primary-dark) rounded-[1.5rem] p-5 text-white shadow-lg relative overflow-hidden">
+          <div className="absolute w-20 h-20 rounded-full -right-4 -top-4 bg-white/10" />
+          <div className="flex items-center justify-center mb-3 bg-white/20 w-9 h-9 rounded-xl backdrop-blur-sm">
             <Trophy size={18} />
           </div>
-          <h4 className="text-sm font-bold mb-1">Upgrade to Pro</h4>
-          <p className="text-[11px] text-orange-100 mb-3 leading-relaxed">
+          <h4 className="mb-1 text-sm font-bold">Upgrade to Pro</h4>
+          <p className="text-[11px] text-emerald-100 mb-3 leading-relaxed">
             Your trial ends in 7 days. Unlock all features.
           </p>
-          <button className="w-full bg-white text-orange-600 py-2 rounded-xl text-xs font-extrabold hover:bg-orange-50 transition-all active:scale-95">
+          <button className="w-full bg-white text-(--primary-dark) py-2 rounded-xl text-xs font-extrabold hover:bg-emerald-50 transition-all active:scale-95">
             Upgrade Now
           </button>
         </div>
