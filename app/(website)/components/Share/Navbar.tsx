@@ -59,7 +59,7 @@ const Navbar = () => {
             className="relative z-10 font-semibold shadow-xl btn-primary"
             whileHover={{
               scale: 1.05,
-              boxShadow: "0 10px 40px rgba(249, 115, 22, 0.3)",
+              boxShadow: "0 10px 40px rgba(16, 185, 129, 0.3)",
             }}
             whileTap={{ scale: 0.95 }}
           >

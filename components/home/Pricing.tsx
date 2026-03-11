@@ -7,12 +7,12 @@ const Pricing = () => {
         className="pb-8 md:pb-12 bg-[var(--bg-primary)]"
         id="pricing"
       >
-        <div className="mx-auto max-w-7xl px-6 pb-12">
+        <div className="px-6 pb-12 mx-auto max-w-7xl">
           <SectionTitle
             title="Choose Your Architecture"
             subtitle="Plans designed to fit every level of logical optimization."
           />
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 mt-16">
+          <div className="grid grid-cols-1 gap-8 mt-16 lg:grid-cols-3">
             {/* Basic */}
             <div className="flex flex-col p-8 bg-(--card-bg) shadow-sm shadow- rounded-3xl hover:-translate-y-2 transition-all duration-300">
               <h3 className="text-xl font-bold">Observer</h3>
@@ -94,7 +94,7 @@ const Pricing = () => {
                   Recovery Protocol Analysis
                 </li>
               </ul>
-              <button className="px-4 py-3 mt-10 font-bold text-white shadow-lg rounded-xl bg-(--primary) shadow-(--primary)/30 hover:bg-orange-600">
+              <button className="px-4 py-3 mt-10 font-bold text-white shadow-lg rounded-xl bg-(--primary) shadow-(--primary)/30 hover:bg-(--primary-dark) duration-300">
                 Start Architecture
               </button>
             </div>

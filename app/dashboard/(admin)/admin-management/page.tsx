@@ -2,6 +2,10 @@
 
 import { CreditCard, Settings, Users } from "lucide-react";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { ObjectId } from "mongodb";
+import Swal from "sweetalert2";
 
 export default function AdminManagementSection() {
   const [users, setUsers] = useState([
@@ -10,10 +14,20 @@ export default function AdminManagementSection() {
     { id: 3, name: "Jony", plan: "Premium", status: "Suspended" },
   ]);
 
-  const [coaches, setCoaches] = useState([
-    { id: 1, name: "Coach A", status: "Pending" },
-    { id: 2, name: "Coach B", status: "Pending" },
-  ]);
+  // const [coaches, setCoaches] = useState([
+  //   { id: 1, name: "Coach A", status: "Pending" },
+  //   { id: 2, name: "Coach B", status: "Pending" },
+  // ]);
+
+  const {data: coaches = []} = useQuery({
+    queryKey: ["coaches"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach?status=pending");
+      return res.data;
+    }
+  });
+
+  console.log(coaches);
 
   const [plans, setPlans] = useState([
     { id: 1, name: "Basic", price: 10 },
@@ -27,14 +41,30 @@ export default function AdminManagementSection() {
     ));
   };
 
-  const approveCoach = (id: number) => {
-    setCoaches(coaches.map(c =>
-      c.id === id ? { ...c, status: "Approved" } : c
-    ));
+  const approveCoach = (id: ObjectId, email: string) => {
+    try{
+      axios.patch("/api/coach/approve", {
+        id, email,
+        status: "approved"
+      });
+      Swal.fire("Approved", "Coach approved by admin", "success");
+    }
+    catch(error){
+      Swal.fire("Error", error.message, "error");
+    }
   };
 
-  const rejectCoach = (id: number) => {
-    setCoaches(coaches.filter(c => c.id !== id));
+  const rejectCoach = (id: ObjectId) => {
+    try{
+      axios.patch("/api/coach/approve", {
+        id,
+        status: "rejected"
+      });
+      Swal.fire("Rejected", "Coach rejected by admin", "success");
+    }
+    catch(error){
+      Swal.fire("Error", error.message, "error");
+    }
   };
 
   return (
@@ -44,7 +74,7 @@ export default function AdminManagementSection() {
       <section className="bg-[var(--card-bg)] p-2 rounded-2xl shadow">
         <div className="flex items-center gap-3 mb-6">
             <Users />
-        <h2 className="text-xl font-bold mb-4"> User Management</h2>
+        <h2 className="mb-4 text-xl font-bold"> User Management</h2>
         </div>
 
         <table className="w-full text-left border-collapse">
@@ -73,14 +103,14 @@ export default function AdminManagementSection() {
                 <td className="space-x-2">
                   <button
                     onClick={() => suspendUser(user.id)}
-                    className="text-red-500 text-sm"
+                    className="text-sm text-red-500"
                   >
                     Ban
                   </button>
-                  <button className="text-blue-500 text-sm">
+                  <button className="text-sm text-blue-500">
                     Upgrade
                   </button>
-                  <button className="text-gray-500 text-sm">
+                  <button className="text-sm text-gray-500">
                     Reset Password
                   </button>
                 </td>
@@ -92,31 +122,32 @@ export default function AdminManagementSection() {
 
       {/* ================= COACH MANAGEMENT ================= */}
       <section className="bg-[var(--card-bg)] p-6 rounded-2xl shadow">
-        <h2 className="text-xl font-bold mb-4">🧑‍🏫 Coach Management</h2>
+        <h2 className="mb-4 text-xl font-bold">🧑‍🏫 Coach Management</h2>
 
         {coaches.map(coach => (
           <div
-            key={coach.id}
-            className="flex justify-between items-center border-b py-3"
+            key={coach._id}
+            className="flex items-center justify-between py-3 border-b"
           >
-            <span>{coach.name}</span>
+            <span>{coach.fullName}</span>
+            <span>{coach.email}</span>
 
             <div className="space-x-3">
               <button
-                onClick={() => approveCoach(coach.id)}
-                className="text-green-600 text-sm"
+                onClick={() => approveCoach(coach._id, coach.email)}
+                className="text-sm text-green-600"
               >
                 Approve
               </button>
 
               <button
-                onClick={() => rejectCoach(coach.id)}
-                className="text-red-600 text-sm"
+                onClick={() => rejectCoach(coach._id)}
+                className="text-sm text-red-600"
               >
                 Reject
               </button>
 
-              <button className="text-blue-600 text-sm">
+              <button className="text-sm text-blue-600">
                 View Performance
               </button>
             </div>
@@ -129,13 +160,13 @@ export default function AdminManagementSection() {
 
         <div className="flex items-center gap-3 mb-6">
             <CreditCard />
-        <h2 className="text-xl font-bold mb-4">Subscription Control</h2>
+        <h2 className="mb-4 text-xl font-bold">Subscription Control</h2>
         </div>
 
         {plans.map(plan => (
           <div
             key={plan.id}
-            className="flex justify-between items-center border-b py-3"
+            className="flex items-center justify-between py-3 border-b"
           >
             <div>
               <p className="font-semibold">{plan.name}</p>
@@ -143,8 +174,8 @@ export default function AdminManagementSection() {
             </div>
 
             <div className="space-x-3">
-              <button className="text-blue-600 text-sm">Edit</button>
-              <button className="text-red-600 text-sm">Delete</button>
+              <button className="text-sm text-blue-600">Edit</button>
+              <button className="text-sm text-red-600">Delete</button>
             </div>
           </div>
         ))}
@@ -154,11 +185,11 @@ export default function AdminManagementSection() {
         </button>
 
         <div className="mt-6">
-          <h3 className="font-semibold mb-2">Coupon System</h3>
+          <h3 className="mb-2 font-semibold">Coupon System</h3>
           <input
             type="text"
             placeholder="Enter Coupon Code"
-            className="border p-2 rounded-lg w-full"
+            className="w-full p-2 border rounded-lg"
           />
         </div>
       </section>
@@ -167,24 +198,24 @@ export default function AdminManagementSection() {
       <section className="bg-[var(--card-bg)] p-6 rounded-2xl shadow">
         <div className="flex items-center gap-3 mb-6">
              <Settings />
-        <h2 className="text-xl font-bold mb-4">System Settings</h2>
+        <h2 className="mb-4 text-xl font-bold">System Settings</h2>
         </div>
 
         <div className="space-y-4">
 
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block mb-1 text-sm font-medium">
               Email Configuration
             </label>
             <input
               type="email"
               placeholder="admin@flexify.com"
-              className="border p-2 rounded-lg w-full"
+              className="w-full p-2 border rounded-lg"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block mb-1 text-sm font-medium">
               Notification Control
             </label>
             <select className="border p-2 rounded-lg bg-[var(--card-bg)] w-full">
@@ -195,7 +226,7 @@ export default function AdminManagementSection() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="block mb-1 text-sm font-medium">
               Role Permission
             </label>
             <select className="border p-2 rounded-lg w-full bg-[var(--card-bg)]">
