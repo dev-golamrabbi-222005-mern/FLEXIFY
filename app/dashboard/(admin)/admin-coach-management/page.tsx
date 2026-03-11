@@ -14,7 +14,6 @@ import {
 } from "recharts";
 
 export default function CoachManagementPage() {
-
   const [coaches, setCoaches] = useState([
     {
       id: 1,
@@ -39,7 +38,7 @@ export default function CoachManagementPage() {
     },
   ]);
 
-  const warnCoach = (id: number) => {
+  const warnCoach = (id) => {
     setCoaches(
       coaches.map((coach) =>
         coach.id === id ? { ...coach, status: "Warning" } : coach
@@ -47,7 +46,7 @@ export default function CoachManagementPage() {
     );
   };
 
-  const removeCoach = (id: number) => {
+  const removeCoach = (id) => {
     setCoaches(coaches.filter((coach) => coach.id !== id));
   };
 
@@ -91,35 +90,32 @@ export default function CoachManagementPage() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 mt-10 bg-[var(--bg-primary)] space-y-10">
+    <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 mt-6 md:mt-10 bg-[var(--bg-primary)] space-y-8">
 
       {/* ================= STATS ================= */}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
 
           return (
             <div
               key={index}
-              className="bg-[var(--card-bg)] p-6 rounded-2xl shadow"
+              className="bg-[var(--card-bg)] p-4 md:p-6 rounded-2xl shadow"
             >
               <div className="flex justify-between mb-4">
-
                 <div
                   className={`p-3 rounded-xl bg-gradient-to-r ${stat.color} text-white`}
                 >
-                  <Icon size={22} />
+                  <Icon size={20} />
                 </div>
-
               </div>
 
               <h4 className="text-sm text-[var(--text-secondary)]">
                 {stat.title}
               </h4>
 
-              <p className="text-2xl font-bold mt-1">{stat.value}</p>
+              <p className="text-xl md:text-2xl font-bold mt-1">{stat.value}</p>
             </div>
           );
         })}
@@ -127,11 +123,11 @@ export default function CoachManagementPage() {
 
       {/* ================= CHARTS ================= */}
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
 
         {/* Performance Chart */}
 
-        <div className="bg-[var(--card-bg)] p-6 rounded-2xl shadow text-[var(--text-primary)]">
+        <div className="bg-[var(--card-bg)] p-4 md:p-6 rounded-2xl shadow text-[var(--text-primary)]">
 
           <h3 className="font-semibold mb-4">Coach Performance</h3>
 
@@ -148,11 +144,12 @@ export default function CoachManagementPage() {
               />
             </LineChart>
           </ResponsiveContainer>
+
         </div>
 
         {/* Client Growth */}
 
-        <div className="bg-[var(--card-bg)] p-6 rounded-2xl shadow text-[var(--text-primary)]">
+        <div className="bg-[var(--card-bg)] p-4 md:p-6 rounded-2xl shadow text-[var(--text-primary)]">
 
           <h3 className="font-semibold mb-4">Client Growth</h3>
 
@@ -164,74 +161,61 @@ export default function CoachManagementPage() {
               <Bar dataKey="clients" fill="#10b981" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
+
         </div>
+
       </div>
 
       {/* ================= COACH TABLE ================= */}
 
-      <section className="bg-[var(--card-bg)] p-6 rounded-2xl shadow">
+     <section className="space-y-6">
 
-        <h2 className="text-xl font-bold mb-6">Approved Coaches</h2>
+  <h2 className="text-xl font-bold mb-4">Approved Coaches</h2>
 
-        <table className="w-full border-collapse">
+  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {coaches.map((coach) => (
+      <div
+        key={coach.id}
+        className="bg-[var(--card-bg)] p-6 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between gap-3"
+      >
+        {/* COACH INFO */}
+        <div className="space-y-1">
+          <h3 className="text-lg font-semibold">{coach.name}</h3>
+          <p className="text-sm text-gray-500">Clients: {coach.clients}</p>
+          <p className="text-sm text-gray-500">Rating: {coach.rating}</p>
 
-          <thead>
-            <tr className="border-b text-left">
-              <th className="py-3">Name</th>
-              <th>Clients</th>
-              <th>Rating</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
+          {/* STATUS BADGE */}
+          <span
+            className={`inline-block mt-2 px-3 py-1 text-xs rounded-full ${
+              coach.status === "Active"
+                ? "bg-green-100 text-green-600"
+                : "bg-red-100 text-red-600"
+            }`}
+          >
+            {coach.status}
+          </span>
+        </div>
 
-          <tbody>
+        {/* ACTION BUTTONS */}
+        <div className="flex gap-3 mt-3 flex-wrap">
+          <button
+            onClick={() => warnCoach(coach.id)}
+            className="text-yellow-600 text-sm hover:underline transition"
+          >
+            Warn
+          </button>
 
-            {coaches.map((coach) => (
-              <tr key={coach.id} className="border-b">
-
-                <td className="py-3">{coach.name}</td>
-
-                <td>{coach.clients}</td>
-
-                <td>{coach.rating}</td>
-
-                <td>
-                  <span
-                    className={`px-2 py-1 text-xs rounded-full ${
-                      coach.status === "Active"
-                        ? "bg-green-100 text-green-600"
-                        : "bg-red-100 text-red-600"
-                    }`}
-                  >
-                    {coach.status}
-                  </span>
-                </td>
-
-                <td className="space-x-3">
-
-                  <button
-                    onClick={() => warnCoach(coach.id)}
-                    className="text-yellow-600 text-sm"
-                  >
-                    Warn
-                  </button>
-
-                  <button
-                    onClick={() => removeCoach(coach.id)}
-                    className="text-red-600 text-sm"
-                  >
-                    Remove
-                  </button>
-
-                </td>
-              </tr>
-            ))}
-
-          </tbody>
-        </table>
-
-      </section>
+          <button
+            onClick={() => removeCoach(coach.id)}
+            className="text-red-600 text-sm hover:underline transition"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
     </div>
   );
 }

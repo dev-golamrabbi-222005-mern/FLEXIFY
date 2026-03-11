@@ -66,7 +66,7 @@ const ExercisesPage = () => {
   ].filter(Boolean).length;
 
   return (
-    <div className="min-h-screen px-6 mx-auto mt-8 md:mt-12 mb-10 max-w-7xl">
+    <div className="min-h-screen px-6 mx-auto mt-8 mb-10 md:mt-12 max-w-7xl">
       <div className="mb-10 text-center">
         <h1 className="text-3xl md:text-5xl font-bold text-[var(--text-primary)] tracking-tighter">
           Workouts <span className="text-[var(--primary)]">Vault</span>

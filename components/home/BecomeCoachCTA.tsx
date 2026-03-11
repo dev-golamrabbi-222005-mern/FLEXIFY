@@ -29,14 +29,14 @@ export default function BecomeCoachCTA() {
   ];
 
   return (
-    <section className="py-8 md:py-12 px-6 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto relative z-10">
+    <section className="relative px-6 py-8 overflow-hidden md:py-12">
+      <div className="relative z-10 mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7 }}
-          className="relative rounded-3xl overflow-hidden"
+          className="relative overflow-hidden rounded-3xl"
         >
           {/* Background Image with Slow Zoom */}
           <motion.div
@@ -68,20 +68,20 @@ export default function BecomeCoachCTA() {
 
           {/* Floating Glow Elements */}
           <motion.div
-            className="absolute top-10 left-10 w-32 h-32 rounded-full bg-white/10 blur-3xl"
+            className="absolute w-32 h-32 rounded-full top-10 left-10 bg-white/10 blur-3xl"
             animate={{ y: [0, 20, 0], x: [0, 10, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           />
 
           <motion.div
-            className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-white/10 blur-3xl"
+            className="absolute w-40 h-40 rounded-full bottom-10 right-10 bg-white/10 blur-3xl"
             animate={{ y: [0, -30, 0], x: [0, -15, 0] }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           />
 
           {/* Content */}
           <div className="relative z-10 p-8 md:p-16">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="grid items-center grid-cols-1 gap-12 lg:grid-cols-2">
               {/* Left Content */}
               <div>
                 <motion.div
@@ -89,9 +89,9 @@ export default function BecomeCoachCTA() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.2 }}
-                  className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md rounded-full px-4 py-2 mb-6"
+                  className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-white/20 backdrop-blur-md"
                 >
-                  <span className="text-white text-sm font-bold">
+                  <span className="text-sm font-bold text-white">
                     🔥 We are Hiring
                   </span>
                 </motion.div>
@@ -101,14 +101,14 @@ export default function BecomeCoachCTA() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.3 }}
-                  className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight"
+                  className="mb-6 text-4xl font-extrabold leading-tight text-white md:text-5xl lg:text-6xl"
                 >
                   Join Flexify as a
                   <br />
                   <span className="relative inline-block text-[var(--primary)] ">
                     Certified Coach
                     <motion.div
-                      className="absolute -bottom-2 left-0 right-0 h-2 bg-white rounded-full"
+                      className="absolute left-0 right-0 h-2 bg-white rounded-full -bottom-2"
                       initial={{ scaleX: 0 }}
                       whileInView={{ scaleX: 1 }}
                       viewport={{ once: true }}
@@ -122,7 +122,7 @@ export default function BecomeCoachCTA() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.4 }}
-                  className="text-lg md:text-xl text-white/90 mb-8 leading-relaxed"
+                  className="mb-8 text-lg leading-relaxed md:text-xl text-white/90"
                 >
                   Transform lives, build your brand, and earn on your terms.
                   Join our community of elite fitness professionals making a
@@ -137,7 +137,7 @@ export default function BecomeCoachCTA() {
                 >
                   <Link href="/applycoach">
                     <motion.button
-                      className="group px-8 py-4 rounded-xl font-bold text-lg shadow-2xl inline-flex items-center gap-3 cursor-pointer"
+                      className="inline-flex items-center gap-3 px-8 py-4 text-lg font-bold shadow-2xl cursor-pointer group rounded-xl"
                       style={{
                         backgroundColor: "#fff",
                         color: "#10B981",
@@ -161,14 +161,14 @@ export default function BecomeCoachCTA() {
                       </motion.span>
                     </motion.button>
                   </Link>
-                  <p className="text-white/70 text-sm mt-3">
+                  <p className="mt-3 text-sm text-white/70">
                     ⚡ Quick application • 2-3 day review
                   </p>
                 </motion.div>
               </div>
 
               {/* Right Benefits */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {benefits.map((benefit, i) => (
                   <motion.div
                     key={i}
@@ -177,12 +177,12 @@ export default function BecomeCoachCTA() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.6 + i * 0.1 }}
                     whileHover={{ scale: 1.05, y: -5 }}
-                    className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20"
+                    className="p-6 border bg-white/10 backdrop-blur-md rounded-2xl border-white/20"
                   >
-                    <div className="text-3xl text-white mb-3">
+                    <div className="mb-3 text-3xl text-white">
                       {benefit.icon}
                     </div>
-                    <h3 className="text-lg font-bold text-white mb-2">
+                    <h3 className="mb-2 text-lg font-bold text-white">
                       {benefit.title}
                     </h3>
                     <p className="text-sm text-white/80">

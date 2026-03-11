@@ -6,20 +6,30 @@ import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { signOut } from "next-auth/react";
 import {
-  Home,
-  Flag,
-  Utensils,
-  Calendar,
-  Trophy,
   BarChart2,
-  Settings,
+  BellDot,
   BrickWallShield,
-  UserRoundCog,
+  Calendar,
   ChartNoAxesGanttIcon,
-  UserPen,
-  Speech,
-  X,
+  CircleDollarSign,
+  FileCog,
+  Flag,
+  Home,
+  LayersPlus,
   LogOut,
+  MessageSquareWarning,
+  NotebookText,
+  Settings,
+  Speech,
+  SquareLibrary,
+  TableOfContents,
+  Trophy,
+  UserPen,
+  UserRoundCog,
+  UserRoundPen,
+  Utensils,
+  Video,
+  X
 } from "lucide-react";
 
 interface SidebarProps {
@@ -31,42 +41,13 @@ const menuConfig = [
   {
     label: "MAIN MENU",
     items: [
-      {
-        name: "Dashboard",
-        href: "/dashboard",
-        icon: Home,
-        roles: ["user", "admin", "coach"],
-      },
-      {
-        name: "Exercise",
-        href: "/dashboard/exercise",
-        icon: ChartNoAxesGanttIcon,
-        roles: ["user"],
-      },
-      {
-        name: "My Goals",
-        href: "/dashboard/my-goals",
-        icon: Flag,
-        roles: ["user"],
-      },
-      {
-        name: "Nutrition",
-        href: "/dashboard/nutrition-tracker",
-        icon: Utensils,
-        roles: ["user"],
-      },
-      {
-        name: "Schedule",
-        href: "/dashboard/schedule",
-        icon: Calendar,
-        roles: ["user"],
-      },
-      {
-        name: "Achievements",
-        href: "/dashboard/achievements",
-        icon: Trophy,
-        roles: ["user"],
-      },
+      {name: "Dashboard", href: "/dashboard", icon: Home, roles: ["user", "admin", "coach"]},
+      {name: "Exercise", href: "/dashboard/workout-builder", icon: ChartNoAxesGanttIcon, roles: ["user"]},
+      {name: "My Goals", href: "/dashboard/my-goals",icon: Flag, roles: ["user"]},
+      {name: "Nutrition", href: "/dashboard/nutrition-tracker", icon: Utensils, roles: ["user"]},
+      {name: "Schedule",  href: "/dashboard/schedule", icon: Calendar, roles: ["user"]},
+      {name: "Achievements", href: "/dashboard/achievements", icon: Trophy, roles: ["user"]},
+      {name: "Live Sessions", href: "/dashboard/live-sessions", icon: Video, roles: ["user"]},
     ],
   },
   {
@@ -79,11 +60,61 @@ const menuConfig = [
         roles: ["admin"],
       },
       {
-        name: "User Management",
+        name: "Admin Management",
         href: "/dashboard/admin-management",
         icon: UserRoundCog,
         roles: ["admin"],
       },
+       {
+        name: "Coach Applications",
+        href: "/dashboard/admin-coach-applications ",
+        icon: NotebookText,
+        roles: ["admin"],
+      },
+       {
+        name: "Coach Management",
+        href: "/dashboard/admin-coach-management",
+        icon: LayersPlus,
+        roles: ["admin"],
+      },
+       {
+        name: "Workout Library",
+        href: "/dashboard/admin-workout-library",
+        icon: SquareLibrary,
+        roles: ["admin"],
+      },
+       {
+        name: "Content Management",
+        href: "/dashboard/admin-content-management",
+        icon: TableOfContents,
+        roles: ["admin"],
+      },
+       {
+        name: "Reports & Analytics",
+        href: "/dashboard/admin-reports-analytics",
+        icon: MessageSquareWarning,
+        roles: ["admin"],
+      },
+       {
+        name: "Payments / Subscriptions",
+        href: "/dashboard/admin-payments-subscriptions",
+        icon: CircleDollarSign,
+        roles: ["admin"],
+      },
+       {
+        name: "System Settings",
+        href: "/dashboard/admin-system-settings",
+        icon: FileCog,
+        roles: ["admin"],
+      },
+       {
+        name: "Admin Profile",
+        href: "/dashboard/admin-profile",
+        icon: UserRoundPen,
+        roles: ["admin"],
+      },
+
+
     ],
   },
   {
@@ -112,6 +143,7 @@ const menuConfig = [
         icon: BarChart2,
         roles: ["user", "admin", "coach"],
       },
+      {name: "Live Sessions", href: "/dashboard/live-sessions", icon: Video, roles: ["coach"]},
       {
         name: "Settings",
         href: "/dashboard/settings",
@@ -259,11 +291,11 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
           <div className="bg-white/20 w-9 h-9 rounded-xl flex items-center justify-center mb-3 backdrop-blur-sm">
             <Trophy size={18} />
           </div>
-          <h4 className="text-sm font-bold mb-1">Upgrade to Pro</h4>
-          <p className="text-[11px] text-orange-100 mb-3 leading-relaxed">
+          <h4 className="mb-1 text-sm font-bold">Upgrade to Pro</h4>
+          <p className="text-[11px] text-emerald-100 mb-3 leading-relaxed">
             Your trial ends in 7 days. Unlock all features.
           </p>
-          <button className="w-full bg-white text-orange-600 py-2 rounded-xl text-xs font-extrabold hover:bg-orange-50 transition-all active:scale-95">
+          <button className="w-full bg-white text-(--primary-dark) py-2 rounded-xl text-xs font-extrabold hover:bg-emerald-50 transition-all active:scale-95">
             Upgrade Now
           </button>
         </div>

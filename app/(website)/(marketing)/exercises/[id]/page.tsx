@@ -1415,6 +1415,11 @@ function DetailView({
   const tabs: Tab[] = ["Instructions", "Muscles", "Equipment", "History"];
   const lc = LEVEL_STYLE[ex.level] ?? { bg: "#f1f5f9", text: "#64748b" };
 
+  if (isError) {
+    return <div className="p-10 text-center">Failed to load exercise.</div>;
+  }
+  console.log(exercise);
+  
   return (
     <div className="max-w-7xl mx-auto px-6 my-10">
       {/* Breadcrumb */}
