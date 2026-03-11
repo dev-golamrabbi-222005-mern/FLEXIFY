@@ -141,6 +141,19 @@ export default function WorkoutBuilder() {
               </button>
             ))}
           </div>
+          {/* Equipment Filter  */}
+<div className="flex gap-3 overflow-x-auto no-scrollbar items-center py-1">
+  <span className="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-wider">Gear:</span>
+  {equipments.map(eq => (
+    <button 
+      key={eq} 
+      onClick={() => setSelectedEquipment(selectedEquipment === eq ? "" : eq)} 
+      className={`whitespace-nowrap px-4 py-2 rounded-xl text-[10px] font-bold uppercase transition-all border flex items-center gap-2 ${selectedEquipment === eq ? 'bg-[var(--primary)] text-white border-[var(--primary)] shadow-md shadow-[var(--primary)]/20' : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border-[var(--border-color)] hover:border-[var(--primary)]'}`}
+    >
+      {eq} <span className={`text-[9px] px-1.5 py-0.5 rounded-md ${selectedEquipment === eq ? 'bg-white/20' : 'bg-[var(--bg-tertiary)]'}`}>{stats[eq] || 0}</span>
+    </button>
+  ))}
+</div>
           
           {/* Muscle Filter */}
           <div className="flex gap-3 overflow-x-auto no-scrollbar items-center py-1">
