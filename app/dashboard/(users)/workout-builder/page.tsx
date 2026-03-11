@@ -6,6 +6,7 @@ import { DetailsModal } from "@/components/user/DetailsModal";
 import { SelectionDrawer } from "@/components/user/SelectionDrawer";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { FilterSection } from "@/components/user/FilterSection";
 
 const bodyParts = [
   "chest",
@@ -42,6 +43,15 @@ export default function WorkoutBuilder() {
   const [selectedExercises, setSelectedExercises] = useState<any[]>([]);
   const [planName, setPlanName] = useState("");
   const [detailExercise, setDetailExercise] = useState(null);
+  const [initialGroups, setInitialGroups] = useState<any[]>([]);
+  const [visibleCounts, setVisibleCounts] = useState<Record<string, number>>(
+    {}
+  );
+  const [allExercises, setAllExercises] = useState<any[]>([]);
+  useEffect(() => {
+    setAllExercises([]);
+    setVisibleCounts({});
+  }, [search, selectedLevel, selectedEquipment]);
   const {
     data: serverData,
     isLoading: loading,
@@ -66,19 +76,37 @@ export default function WorkoutBuilder() {
       );
       return res.data;
     },
+    placeholderData: (prev) => prev,
     staleTime: 5000,
   });
-
+  useEffect(() => {
+    if (!serverData) return;
+    if (serverData.type === "filtered") {
+      setAllExercises(serverData.exercises);
+    } else if (serverData.type === "initial") {
+      setInitialGroups(serverData.data);
+    }
+  }, [serverData]);
+  const isFilterActive = !!(search || selectedLevel || selectedEquipment);
   const initialData = serverData?.type === "initial" ? serverData.data : [];
-  const filteredData =
-    serverData?.type === "filtered" ? serverData.exercises : [];
-  const isFilterActive = !!(
-    search ||
-    selectedLevel ||
-    selectedEquipment ||
-    selectedBodyPart
-  );
 
+  const groupedFilteredData = useMemo(() => {
+    if (!isFilterActive) return [];
+    const groups: Record<string, any[]> = {};
+    allExercises.forEach((ex) => {
+      const part =
+        ex.bodyPart || (ex.primaryMuscles && ex.primaryMuscles[0]) || "Other";
+      const normalizedPart = part.toLowerCase();
+      if (!groups[normalizedPart]) {
+        groups[normalizedPart] = [];
+      }
+      groups[normalizedPart].push(ex);
+    });
+    return Object.entries(groups).map(([part, exercises]) => ({
+      part,
+      exercises,
+    }));
+  }, [allExercises, isFilterActive]);
   const toggleExercise = (ex: any) => {
     setSelectedExercises((prev) =>
       prev.find((i) => i.id === ex.id)
@@ -86,13 +114,24 @@ export default function WorkoutBuilder() {
         : [...prev, ex]
     );
   };
+  const handleLoadMore = (part: string) => {
+    const partKey = part.toLowerCase();
+    setVisibleCounts((prev) => ({
+      ...prev,
+      [partKey]: (prev[partKey] || 5) + 10,
+    }));
+  };
 
   const handleSaveRoutine = (name: string) => {
-    alert(`Routine "${name}" Saved Successfully!`);
+    if (selectedExercises.length === 0) {
+      alert("Please select at least one exercise!");
+      return;
+    }
+    alert(`Routine "${name || "My Plan"}" Saved Successfully!`);
     setSelectedExercises([]);
     setPlanName("");
   };
-
+  const displayData = isFilterActive ? groupedFilteredData : initialGroups;
 
   return (
     <div className="w-full max-w-full overflow-x-hidden  py-8 pb-48 bg-[var(--bg-primary)] min-h-screen">
@@ -133,121 +172,66 @@ export default function WorkoutBuilder() {
           )}
         </div>
 
-        <div className="space-y-4">
-          {/* Level Filter */}
-          <div className="flex gap-3 overflow-x-auto no-scrollbar items-center py-1">
-            <span className="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-wider">
-              Level:
-            </span>
-            {levels.map((l) => (
-              <button
-                key={l}
-                onClick={() => setSelectedLevel(selectedLevel === l ? "" : l)}
-                className={`whitespace-nowrap px-5 py-2 rounded-xl text-[10px] font-bold uppercase transition-all border ${
-                  selectedLevel === l
-                    ? "bg-[var(--primary)] text-white border-[var(--primary)] shadow-md shadow-[var(--primary)]/20"
-                    : "bg-[var(--bg-secondary)] text-[var(--text-secondary)] border-[var(--border-color)] hover:border-[var(--primary)]"
-                }`}
-              >
-                {l}
-              </button>
-            ))}
-          </div>
-          {/* Equipment Filter  */}
-          <div className="flex gap-3 overflow-x-auto no-scrollbar items-center py-1">
-            <span className="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-wider">
-              Gear:
-            </span>
-            {equipments.map((eq) => (
-              <button
-                key={eq}
-                onClick={() =>
-                  setSelectedEquipment(selectedEquipment === eq ? "" : eq)
-                }
-                className={`whitespace-nowrap px-4 py-2 rounded-xl text-[10px] font-bold uppercase transition-all border flex items-center gap-2 ${
-                  selectedEquipment === eq
-                    ? "bg-[var(--primary)] text-white border-[var(--primary)] shadow-md shadow-[var(--primary)]/20"
-                    : "bg-[var(--bg-secondary)] text-[var(--text-secondary)] border-[var(--border-color)] hover:border-[var(--primary)]"
-                }`}
-              >
-                {eq}
-              </button>
-            ))}
-          </div>
-
-          {/* Muscle Filter */}
-          <div className="flex gap-3 overflow-x-auto no-scrollbar items-center py-1">
-            <span className="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-wider">
-              Muscle:
-            </span>
-            {bodyParts.map((p) => {
-              const count =
-                initialData.find((g: any) => g.part === p)?.count || 0;
-              return (
-                <button
-                  key={p}
-                  onClick={() =>
-                    setSelectedBodyPart(selectedBodyPart === p ? "" : p)
-                  }
-                  className={`whitespace-nowrap px-4 py-2 rounded-xl text-[10px] font-bold uppercase transition-all border flex items-center gap-2 ${
-                    selectedBodyPart === p
-                      ? "bg-[var(--primary)] text-white border-[var(--primary)]"
-                      : "bg-[var(--bg-secondary)] text-[var(--text-secondary)] border-[var(--border-color)]"
-                  }`}
-                >
-                  {p}{" "}
-                  {!isFilterActive && (
-                    <span className="bg-black/10 px-1 rounded ml-1 text-[9px]">
-                      {count}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        <FilterSection
+          levels={levels}
+          equipments={equipments}
+          bodyParts={bodyParts}
+          selectedLevel={selectedLevel}
+          setSelectedLevel={setSelectedLevel}
+          selectedEquipment={selectedEquipment}
+          setSelectedEquipment={setSelectedEquipment}
+          selectedBodyPart={selectedBodyPart}
+          setSelectedBodyPart={setSelectedBodyPart}
+          stats={serverData?.stats}
+          initialData={initialData}
+          isFilterActive={isFilterActive}
+        />
       </div>
 
       {/* Main Content Area */}
-      <div className="mt-8">
-        {loading || isFetching ? (
-          <div className="flex justify-center py-20">
-            <Loader2 className="animate-spin" />
-          </div>
-        ) : isFilterActive ? (
-          <div>
-            <p>Results Found: {filteredData.length}</p>
-            {filteredData.map((ex: any) => (
-              <ExerciseRow
-                key={ex.id}
-                exercise={ex}
-                onSelect={toggleExercise}
-                isSelected={selectedExercises.some((s) => s.id === ex.id)}
-                onShowDetails={setDetailExercise}
-              />
-            ))}
-          </div>
-        ) : (
-          initialData.map((group: any) => (
-            <section key={group.part}>
-              <h3>
-                {group.part} ({group.count})
-              </h3>
-              {group.exercises.map((ex: any) => (
-                <ExerciseRow
-                  key={ex.id}
-                  exercise={ex}
-                  onSelect={toggleExercise}
-                  isSelected={selectedExercises.some((s) => s.id === ex.id)}
-                  onShowDetails={setDetailExercise}
-                />
-              ))}
-              <button onClick={() => setSelectedBodyPart(group.part)}>
-                View all →
+      <div className={`mt-8 ${isFetching ? "opacity-70" : ""}`}>
+        {displayData.map((group: any) => (
+          <section
+            key={group.part}
+            className="border-l-4 border-[var(--primary)] pl-4 mb-10"
+          >
+            <h3 className="text-xl font-black uppercase mb-4 text-[var(--text-primary)]">
+              {group.part}
+              <span className="ml-2 text-xs opacity-50">
+                ({isFilterActive ? group.exercises.length : group.count})
+              </span>
+            </h3>
+
+            <div className="space-y-3">
+              {group.exercises.slice(0, visibleCounts[group.part.toLowerCase()] || 5).map((ex: any, idx: number) => (
+    <ExerciseRow
+      key={`${ex.id}-${idx}`}
+      exercise={ex}
+      onSelect={toggleExercise}
+      isSelected={selectedExercises.some((s) => s.id === ex.id)}
+      onShowDetails={setDetailExercise}
+    />
+  ))}
+            </div>
+
+            {(isFilterActive ? group.exercises.length : group.count) >
+              (isFilterActive
+                ? visibleCounts[group.part] || 5
+                : group.exercises.length) && (
+              <button
+                onClick={() => handleLoadMore(group.part)}
+                className="mt-4 flex items-center gap-2 text-[var(--primary)] font-black text-[10px] uppercase"
+              >
+                {isFetching && selectedBodyPart === group.part ? (
+                  <Loader2 className="animate-spin" size={12} />
+                ) : (
+                  <RotateCcw size={12} />
+                )}
+                Load More {group.part}
               </button>
-            </section>
-          ))
-        )}
+            )}
+          </section>
+        ))}
       </div>
 
       <SelectionDrawer
