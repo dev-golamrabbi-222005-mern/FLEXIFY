@@ -1,19 +1,35 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import {Users, UserCheck, CreditCard, DollarSign, UserPlus} from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell,} from "recharts";
 
 export default function AdminStatsSection() {
+  const {data: users = []} = useQuery({
+    queryKey: ["users"],
+    queryFn: async() => {
+      const res = await axios.get("/api/user?role=user");
+      return res.data;
+    }
+  });
+  const {data: coaches = []} = useQuery({
+    queryKey: ["coaches"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach?status=approved");
+      return res.data;
+    }
+  });
   const stats = [
     {
       title: "Total Users",
-      value: "1,245",
+      value: users.length,
       icon: Users,
       color: "from-blue-500 to-indigo-500",
     },
     {
       title: "Active Coaches",
-      value: "58",
+      value: coaches.length,
       icon: UserCheck,
       color: "from-emerald-500 to-green-500",
     },
@@ -65,7 +81,7 @@ const COLORS = ["#3b82f6", "#8b5cf6", "#f97316"];
 
   return (
     <div className="mt-6 md:mt-8 bg-[var(--bg-primary)] md:px-4 py-6 rounded-2xl shadow">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
       {stats.map((stat, index) => {
         const Icon = stat.icon;
         return (
@@ -82,17 +98,17 @@ const COLORS = ["#3b82f6", "#8b5cf6", "#f97316"];
             </div>
 
             <h4 className="text-sm text-[var(--text-secondary)]">{stat.title}</h4>
-            <p className="text-2xl font-bold mt-1">{stat.value}</p>
+            <p className="mt-1 text-2xl font-bold">{stat.value}</p>
           </div>
         );
       })}
     </div>
 
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-10">
+    <div className="grid grid-cols-1 gap-8 mt-10 xl:grid-cols-2">
 
       {/* Monthly Revenue */}
       <div className="bg-[var(--card-bg)] p-2 md:p-6 rounded-2xl shadow text-[var(--text-primary)]">
-        <h3 className="font-semibold mb-4">Monthly Revenue</h3>
+        <h3 className="mb-4 font-semibold">Monthly Revenue</h3>
         <ResponsiveContainer width="100%" height={250}>
           <LineChart data={revenueData}>
             <XAxis dataKey="month" />
@@ -105,7 +121,7 @@ const COLORS = ["#3b82f6", "#8b5cf6", "#f97316"];
 
       {/* User Growth */}
       <div className="bg-[var(--card-bg)] p-2 md:p-6 rounded-2xl shadow text-[var(--text-primary)]">
-        <h3 className="font-semibold mb-4">User Growth</h3>
+        <h3 className="mb-4 font-semibold">User Growth</h3>
         <ResponsiveContainer width="100%" height={250}>
           <BarChart data={userGrowthData}>
             <XAxis dataKey="month" />
@@ -118,7 +134,7 @@ const COLORS = ["#3b82f6", "#8b5cf6", "#f97316"];
 
       {/* Subscription Pie */}
       <div className="bg-[var(--card-bg)] p-2 md:p-6 rounded-2xl shadow text-[var(--text-primary)]">
-        <h3 className="font-semibold mb-4">Subscription Distribution</h3>
+        <h3 className="mb-4 font-semibold">Subscription Distribution</h3>
         <ResponsiveContainer width="100%" height={250}>
           <PieChart>
             <Pie
@@ -139,7 +155,7 @@ const COLORS = ["#3b82f6", "#8b5cf6", "#f97316"];
 
       {/* Activity Heatmap */}
       <div className="bg-[var(--card-bg)] p-6 rounded-2xl shadow text-[var(--text-primary)]">
-        <h3 className="font-semibold mb-4">Activity Heatmap</h3>
+        <h3 className="mb-4 font-semibold">Activity Heatmap</h3>
 
         <div className="grid grid-cols-7 gap-1 md:gap-2">
           {Array.from({ length: 35 }).map((_, index) => {

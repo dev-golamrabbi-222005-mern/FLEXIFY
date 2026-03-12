@@ -45,12 +45,12 @@ export default function AdminCoachApplications() {
   // ]);
 
   const {data: applications = [], refetch} = useQuery({
-      queryKey: ["applications"],
-      queryFn: async() => {
-        const res = await axios.get("/api/coach");
-        return res.data;
-      }
-    });
+    queryKey: ["applications"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach");
+      return res.data;
+    }
+  });
 
   const approveCoach = (id: ObjectId, email: string) => {
     // setApplications((prev) =>
