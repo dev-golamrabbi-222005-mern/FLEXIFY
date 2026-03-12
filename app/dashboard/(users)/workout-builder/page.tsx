@@ -1,13 +1,13 @@
 "use client";
 import React, { useState, useMemo, useEffect } from "react";
 import { Search, RotateCcw, Dumbbell, Loader2 } from "lucide-react";
-import { ExerciseRow } from "@/components/cards/ExerciseRowCard";
-import { DetailsModal } from "@/components/user/DetailsModal";
-import { SelectionDrawer } from "@/components/user/SelectionDrawer";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { FilterSection } from "@/components/user/FilterSection";
 import { useSession } from "next-auth/react";
+import { FilterSection } from "@/components/user/FilterSection";
+import { ExerciseRow } from "@/components/cards/ExerciseRowCard";
+import { SelectionDrawer } from "@/components/user/SelectionDrawer";
+import { DetailsModal } from "@/components/user/DetailsModal";
 
 const bodyParts = [
   "chest",
@@ -47,7 +47,7 @@ export default function WorkoutBuilder() {
   const [detailExercise, setDetailExercise] = useState(null);
   const [initialGroups, setInitialGroups] = useState<any[]>([]);
   const [visibleCounts, setVisibleCounts] = useState<Record<string, number>>(
-    {}
+    {},
   );
   const [allExercises, setAllExercises] = useState<any[]>([]);
   useEffect(() => {
@@ -74,7 +74,7 @@ export default function WorkoutBuilder() {
       if (selectedBodyPart) params.append("bodyPart", selectedBodyPart);
 
       const res = await axios.get(
-        `/api/exercises/builder?${params.toString()}`
+        `/api/exercises/builder?${params.toString()}`,
       );
       return res.data;
     },
@@ -113,7 +113,7 @@ export default function WorkoutBuilder() {
     setSelectedExercises((prev) =>
       prev.find((i) => i.id === ex.id)
         ? prev.filter((i) => i.id !== ex.id)
-        : [...prev, ex]
+        : [...prev, ex],
     );
   };
   const handleLoadMore = (part: string) => {
@@ -124,31 +124,35 @@ export default function WorkoutBuilder() {
     }));
   };
 
-  const handleSaveRoutine = async (userData: { planName: string; userName: string; userEmail: string }) => {
+  const handleSaveRoutine = async (userData: {
+    planName: string;
+    userName: string;
+    userEmail: string;
+  }) => {
     if (selectedExercises.length === 0) {
       alert("Please select at least one exercise!");
       return;
     }
-   
-    try {
-    const routineData = {
-      planName: userData.planName,
-      exercises: selectedExercises,
-      createdAt: new Date(),
-    };
-    
-    const response = await axios.post("/api/routines/save", routineData);
 
-    if (response.data.success) {
-      alert(`Awesome! Your plan "${userData.planName}" is saved.`);
-      setSelectedExercises([]);
-      setPlanName("");
+    try {
+      const routineData = {
+        planName: userData.planName,
+        exercises: selectedExercises,
+        createdAt: new Date(),
+      };
+
+      const response = await axios.post("/api/routines/save", routineData);
+
+      if (response.data.success) {
+        alert(`Awesome! Your plan "${userData.planName}" is saved.`);
+        setSelectedExercises([]);
+        setPlanName("");
+      }
+    } catch (error: any) {
+      console.error("Save Error:", error);
+      alert(error.response?.data?.message || "Failed to save routine.");
     }
-  } catch (error: any) {
-    console.error("Save Error:", error);
-    alert(error.response?.data?.message || "Failed to save routine.");
-  }
-};
+  };
   const displayData = isFilterActive ? groupedFilteredData : initialGroups;
 
   return (
@@ -261,9 +265,9 @@ export default function WorkoutBuilder() {
         planName={planName}
         setPlanName={setPlanName}
         userSession={{
-        name: session?.user?.name || "",
-        email: session?.user?.email || ""
-      }}
+          name: session?.user?.name || "",
+          email: session?.user?.email || "",
+        }}
       />
 
       <DetailsModal
