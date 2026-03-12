@@ -42,7 +42,8 @@ const menuConfig = [
     label: "MAIN MENU",
     items: [
       {name: "Dashboard", href: "/dashboard", icon: Home, roles: ["user", "admin", "coach"]},
-      {name: "Exercise", href: "/dashboard/workout-builder", icon: ChartNoAxesGanttIcon, roles: ["user"]},
+      {name: "Create Workout", href: "/dashboard/create-workout", icon: ChartNoAxesGanttIcon, roles: ["user"]},
+      {name: "Your Workouts", href: "/dashboard/your-workouts", icon: ChartNoAxesGanttIcon, roles: ["user"]},
       {name: "My Goals", href: "/dashboard/my-goals",icon: Flag, roles: ["user"]},
       {name: "Nutrition", href: "/dashboard/nutrition-tracker", icon: Utensils, roles: ["user"]},
       {name: "Schedule",  href: "/dashboard/schedule", icon: Calendar, roles: ["user"]},
