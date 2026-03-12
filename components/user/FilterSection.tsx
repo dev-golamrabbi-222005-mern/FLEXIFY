@@ -1,6 +1,17 @@
 "use client";
 import React from "react";
 
+interface CountItem {
+  _id: string;
+  count: number;
+}
+
+interface Stats {
+  muscleCounts?: CountItem[];
+  equipmentCounts?: CountItem[];
+  levelCounts?: CountItem[];
+}
+
 interface FilterSectionProps {
   levels: string[];
   equipments: string[];
@@ -11,8 +22,8 @@ interface FilterSectionProps {
   setSelectedEquipment: (v: string) => void;
   selectedBodyPart: string;
   setSelectedBodyPart: (v: string) => void;
-  stats: any;
-  initialData: any[];
+  stats: Stats | undefined;
+  initialData: { part: string; count: number }[];
   isFilterActive: boolean;
 }
 
@@ -34,18 +45,18 @@ export const FilterSection = ({
       if (name === "back") {
         const backParts = ["back", "lats", "middle back", "lower back"];
         return stats?.muscleCounts
-          ?.filter((m: any) => backParts.includes(m._id))
-          ?.reduce((acc: number, curr: any) => acc + curr.count, 0) || 0;
+          ?.filter((m) => backParts.includes(m._id))
+          ?.reduce((acc, curr) => acc + curr.count, 0) || 0;
       }
-      return stats?.muscleCounts?.find((m: any) => m._id === name)?.count || 0;
+      return stats?.muscleCounts?.find((m) => m._id === name)?.count || 0;
     }
 
     if (type === "gear") {
-      return stats?.equipmentCounts?.find((e: any) => e._id === name)?.count || 0;
+      return stats?.equipmentCounts?.find((e) => e._id === name)?.count || 0;
     }
 
     if (type === "level") {
-      return stats?.levelCounts?.find((l: any) => l._id === name)?.count || 0;
+      return stats?.levelCounts?.find((l) => l._id === name)?.count || 0;
     }
 
     return 0;
