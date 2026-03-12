@@ -56,7 +56,7 @@ export default function AdminManagementSection() {
 
   const rejectCoach = (id: ObjectId) => {
     try{
-      axios.patch("/api/coach/approve", {
+      axios.patch("/api/coach/reject", {
         id,
         status: "rejected"
       });
@@ -77,11 +77,11 @@ export default function AdminManagementSection() {
           <h2 className="text-xl font-bold">User Management</h2>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {users.map(user => (
             <div key={user.id} className="bg-[var(--card-bg)] p-4 rounded-2xl shadow hover:shadow-lg transition">
               <p className="font-semibold">{user.name}</p>
-              <p className="text-gray-500 text-sm mb-2">{user.plan} Plan</p>
+              <p className="mb-2 text-sm text-gray-500">{user.plan} Plan</p>
               <span className={`px-2 py-1 text-xs rounded-full ${
                 user.status === "Active"
                   ? "bg-green-100 text-green-600"
@@ -89,15 +89,15 @@ export default function AdminManagementSection() {
               }`}>
                 {user.status}
               </span>
-              <div className="mt-3 flex gap-2 flex-wrap">
+              <div className="flex flex-wrap gap-2 mt-3">
                 <button
                   onClick={() => suspendUser(user.id)}
-                  className="text-red-500 text-sm"
+                  className="text-sm text-red-500"
                 >
                   Ban
                 </button>
-                <button className="text-blue-500 text-sm">Upgrade</button>
-                <button className="text-gray-500 text-sm">Reset Password</button>
+                <button className="text-sm text-blue-500">Upgrade</button>
+                <button className="text-sm text-gray-500">Reset Password</button>
               </div>
             </div>
           ))}
@@ -111,10 +111,10 @@ export default function AdminManagementSection() {
           <h2 className="text-xl font-bold">Coach Management</h2>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {coaches.map(coach => (
-            <div key={coach.id} className="bg-[var(--card-bg)] p-4 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between">
-              <p className="font-semibold">{coach.name}</p>
+            <div key={coach._id} className="bg-[var(--card-bg)] p-4 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between">
+              <p className="font-semibold">{coach.fullName}</p>
               <span className={`px-2 py-1 text-xs rounded-full ${
                 coach.status === "Pending"
                   ? "bg-yellow-100 text-yellow-600"
@@ -122,20 +122,20 @@ export default function AdminManagementSection() {
               }`}>
                 {coach.status}
               </span>
-              <div className="mt-3 flex gap-2 flex-wrap">
+              <div className="flex flex-wrap gap-2 mt-3">
                 <button
-                  onClick={() => approveCoach(coach.id)}
-                  className="text-green-600 text-sm"
+                  onClick={() => approveCoach(coach._id, coach.email)}
+                  className="text-sm text-green-600"
                 >
                   Approve
                 </button>
                 <button
-                  onClick={() => rejectCoach(coach.id)}
-                  className="text-red-600 text-sm"
+                  onClick={() => rejectCoach(coach._id)}
+                  className="text-sm text-red-600"
                 >
                   Reject
                 </button>
-                <button className="text-blue-600 text-sm">View Performance</button>
+                <button className="text-sm text-blue-600">View Performance</button>
               </div>
             </div>
           ))}
@@ -149,16 +149,16 @@ export default function AdminManagementSection() {
           <h2 className="text-xl font-bold">Subscription Control</h2>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {plans.map(plan => (
             <div key={plan.id} className="bg-[var(--card-bg)] p-4 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between">
               <div>
                 <p className="font-semibold">{plan.name}</p>
-                <p className="text-gray-500 text-sm">${plan.price}/month</p>
+                <p className="text-sm text-gray-500">${plan.price}/month</p>
               </div>
-              <div className="mt-3 flex gap-2 flex-wrap">
-                <button className="text-blue-600 text-sm">Edit</button>
-                <button className="text-red-600 text-sm">Delete</button>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <button className="text-sm text-blue-600">Edit</button>
+                <button className="text-sm text-red-600">Delete</button>
               </div>
             </div>
           ))}
@@ -187,7 +187,7 @@ export default function AdminManagementSection() {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Email Configuration</label>
+            <label className="block mb-1 text-sm font-medium">Email Configuration</label>
             <input
               type="email"
               placeholder="admin@flexify.com"
@@ -196,7 +196,7 @@ export default function AdminManagementSection() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Notification Control</label>
+            <label className="block mb-1 text-sm font-medium">Notification Control</label>
             <select className="border p-2 rounded-lg w-full bg-[var(--card-bg)]">
               <option>Enable All</option>
               <option>Only Important</option>
@@ -205,7 +205,7 @@ export default function AdminManagementSection() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Role Permission</label>
+            <label className="block mb-1 text-sm font-medium">Role Permission</label>
             <select className="border p-2 rounded-lg w-full bg-[var(--card-bg)]">
               <option>User</option>
               <option>Coach</option>
