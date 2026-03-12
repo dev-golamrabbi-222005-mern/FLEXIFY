@@ -12,42 +12,86 @@ import {
   LineChart,
   Line,
 } from "recharts";
+import { ObjectId } from "mongodb";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function CoachManagementPage() {
-  const [coaches, setCoaches] = useState([
-    {
-      id: 1,
-      name: "Coach Rahim",
-      clients: 45,
-      rating: 4.8,
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Coach Karim",
-      clients: 30,
-      rating: 4.2,
-      status: "Active",
-    },
-    {
-      id: 3,
-      name: "Coach Jony",
-      clients: 12,
-      rating: 3.5,
-      status: "Warning",
-    },
-  ]);
+  // const [coaches, setCoaches] = useState([
+  //   {
+  //     id: 1,
+  //     name: "Coach Rahim",
+  //     clients: 45,
+  //     rating: 4.8,
+  //     status: "Active",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Coach Karim",
+  //     clients: 30,
+  //     rating: 4.2,
+  //     status: "Active",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Coach Jony",
+  //     clients: 12,
+  //     rating: 3.5,
+  //     status: "Warning",
+  //   },
+  // ]);
 
-  const warnCoach = (id) => {
-    setCoaches(
-      coaches.map((coach) =>
-        coach.id === id ? { ...coach, status: "Warning" } : coach
-      )
-    );
+  const {data: approvedCoaches = [], refetch: approveRefetch} = useQuery({
+    queryKey: ["approvedCoaches"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach?status=approved");
+      return res.data;
+    }
+  });
+
+  const {data: warnedCoaches = [], refetch: warnRefetch} = useQuery({
+    queryKey: ["warnedCoaches"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach?status=warning");
+      return res.data;
+    }
+  });
+
+  const warnCoach = (id: ObjectId) => {
+    // setCoaches(
+    //   coaches.map((coach) =>
+    //     coach.id === id ? { ...coach, status: "Warning" } : coach
+    //   )
+    // );
+    try{
+      axios.patch("/api/coach/warn", {
+        id,
+        status: "warning"
+      });
+      approveRefetch();
+      warnRefetch();
+      Swal.fire("Warned", "Coach warned by admin", "success");
+    }
+    catch(error){
+      Swal.fire("Error", error.message, "error");
+    }
   };
 
-  const removeCoach = (id) => {
-    setCoaches(coaches.filter((coach) => coach.id !== id));
+  const removeCoach = (id: ObjectId) => {
+    // setCoaches(coaches.filter((coach) => coach.id !== id));
+    try{
+      axios.patch("/api/coach/reject", {
+        id,
+        status: "rejected"
+      });
+      approveRefetch();
+      warnRefetch();
+      Swal.fire("Removed", "Coach removed by admin", "success");
+    }
+    catch(error){
+      Swal.fire("Error", error.message, "error");
+    }
   };
 
   const performanceData = [
@@ -71,7 +115,7 @@ export default function CoachManagementPage() {
   const stats = [
     {
       title: "Approved Coaches",
-      value: coaches.length,
+      value: approvedCoaches.length,
       icon: UserCheck,
       color: "from-green-500 to-emerald-500",
     },
@@ -83,7 +127,7 @@ export default function CoachManagementPage() {
     },
     {
       title: "Warnings Issued",
-      value: coaches.filter((c) => c.status === "Warning").length,
+      value: warnedCoaches.length,
       icon: AlertTriangle,
       color: "from-red-500 to-orange-500",
     },
@@ -94,7 +138,7 @@ export default function CoachManagementPage() {
 
       {/* ================= STATS ================= */}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 md:gap-6">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
 
@@ -115,7 +159,7 @@ export default function CoachManagementPage() {
                 {stat.title}
               </h4>
 
-              <p className="text-xl md:text-2xl font-bold mt-1">{stat.value}</p>
+              <p className="mt-1 text-xl font-bold md:text-2xl">{stat.value}</p>
             </div>
           );
         })}
@@ -123,13 +167,13 @@ export default function CoachManagementPage() {
 
       {/* ================= CHARTS ================= */}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 md:gap-8">
 
         {/* Performance Chart */}
 
         <div className="bg-[var(--card-bg)] p-4 md:p-6 rounded-2xl shadow text-[var(--text-primary)]">
 
-          <h3 className="font-semibold mb-4">Coach Performance</h3>
+          <h3 className="mb-4 font-semibold">Coach Performance</h3>
 
           <ResponsiveContainer width="100%" height={250}>
             <LineChart data={performanceData}>
@@ -151,7 +195,7 @@ export default function CoachManagementPage() {
 
         <div className="bg-[var(--card-bg)] p-4 md:p-6 rounded-2xl shadow text-[var(--text-primary)]">
 
-          <h3 className="font-semibold mb-4">Client Growth</h3>
+          <h3 className="mb-4 font-semibold">Client Growth</h3>
 
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={clientGrowth}>
@@ -170,24 +214,24 @@ export default function CoachManagementPage() {
 
      <section className="space-y-6">
 
-  <h2 className="text-xl font-bold mb-4">Approved Coaches</h2>
+  <h2 className="mb-4 text-xl font-bold">Approved Coaches</h2>
 
-  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {coaches.map((coach) => (
+  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {approvedCoaches.map((coach) => (
       <div
-        key={coach.id}
+        key={coach._id}
         className="bg-[var(--card-bg)] p-6 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between gap-3"
       >
         {/* COACH INFO */}
         <div className="space-y-1">
-          <h3 className="text-lg font-semibold">{coach.name}</h3>
-          <p className="text-sm text-gray-500">Clients: {coach.clients}</p>
-          <p className="text-sm text-gray-500">Rating: {coach.rating}</p>
+          <h3 className="text-lg font-semibold">{coach.fullName}</h3>
+          <p className="text-sm text-gray-500">Clients: {coach.maxClients}</p>
+          <p className="text-sm text-gray-500">Rating: {coach.rating ?? 0}</p>
 
           {/* STATUS BADGE */}
           <span
             className={`inline-block mt-2 px-3 py-1 text-xs rounded-full ${
-              coach.status === "Active"
+              coach.status === "approved"
                 ? "bg-green-100 text-green-600"
                 : "bg-red-100 text-red-600"
             }`}
@@ -197,17 +241,17 @@ export default function CoachManagementPage() {
         </div>
 
         {/* ACTION BUTTONS */}
-        <div className="flex gap-3 mt-3 flex-wrap">
+        <div className="flex flex-wrap gap-3 mt-3">
           <button
-            onClick={() => warnCoach(coach.id)}
-            className="text-yellow-600 text-sm hover:underline transition"
+            onClick={() => warnCoach(coach._id)}
+            className="text-sm text-yellow-600 transition hover:underline"
           >
             Warn
           </button>
 
           <button
-            onClick={() => removeCoach(coach.id)}
-            className="text-red-600 text-sm hover:underline transition"
+            onClick={() => removeCoach(coach._id)}
+            className="text-sm text-red-600 transition hover:underline"
           >
             Remove
           </button>
