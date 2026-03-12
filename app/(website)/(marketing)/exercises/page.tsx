@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
-import SkeletonCard from "@/components/cards/SkeletonCard";
 import ExerciseCard from "@/components/cards/ExerciseCard";
+import SkeletonCard from "@/components/cards/SkeletonCard";
 
 const MUSCLES = [
   "Abdominals",

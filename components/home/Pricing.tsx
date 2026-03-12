@@ -1,8 +1,31 @@
+"use client";
+
+import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import SectionTitle from "@/app/(website)/components/ui/section-title";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { Loader2 } from "lucide-react";
 
-const PLANS = [
+interface PlanFeature {
+  label: string;
+  val: boolean | string;
+}
+
+interface Plan {
+  id: string;
+  name: string;
+  price: string;
+  desc: string;
+  cta: string;
+  ctaStyle: string;
+  featured: boolean;
+  features: PlanFeature[];
+}
+
+const PLANS: Plan[] = [
   {
+    id: "free",
     name: "Free",
     price: "0",
     desc: "Start your fitness journey at zero cost.",
@@ -15,7 +38,7 @@ const PLANS = [
       { label: "Dashboard Access", val: "Limited" },
       { label: "AI Workout Plan", val: false },
       { label: "Plan Customization", val: false },
-      { label: "Nutrition Tracker", val: false },
+      { label: "Nutrition Suggestions", val: false },
       { label: "Advanced Analytics", val: false },
       { label: "Personal Coach", val: false },
       { label: "Coach Messaging", val: false },
@@ -23,6 +46,7 @@ const PLANS = [
     ],
   },
   {
+    id: "pro",
     name: "Pro",
     price: "12",
     desc: "AI-powered tools for serious training.",
@@ -35,7 +59,7 @@ const PLANS = [
       { label: "Dashboard Access", val: "Full" },
       { label: "AI Workout Plan", val: true },
       { label: "Plan Customization", val: true },
-      { label: "Nutrition Tracker", val: true },
+      { label: "Nutrition Suggestions", val: true },
       { label: "Advanced Analytics", val: true },
       { label: "Personal Coach", val: false },
       { label: "Coach Messaging", val: false },
@@ -43,6 +67,7 @@ const PLANS = [
     ],
   },
   {
+    id: "elite",
     name: "Elite",
     price: "29",
     desc: "Everything Pro & your own personal coach.",
@@ -55,7 +80,7 @@ const PLANS = [
       { label: "Dashboard Access", val: "Full" },
       { label: "AI Workout Plan", val: true },
       { label: "Plan Customization", val: true },
-      { label: "Nutrition Tracker", val: true },
+      { label: "Nutrition Suggestions", val: true },
       { label: "Advanced Analytics", val: true },
       { label: "Personal Coach", val: true },
       { label: "Coach Messaging", val: true },
@@ -80,6 +105,36 @@ function FeatureValue({ val }: { val: boolean | string }) {
 }
 
 const Pricing = () => {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+  const handlePlanClick = async (planId: string) => {
+    if (planId === "free") {
+      router.push(session ? "/dashboard" : "/register");
+      return;
+    }
+    if (!session) {
+      router.push(`/login?redirect=/pricing&plan=${planId}`);
+      return;
+    }
+    try {
+      setLoadingPlan(planId);
+      const res = await fetch("/api/payment/init", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ planId }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.url) throw new Error(data.error ?? "Gateway error");
+      window.location.href = data.url;
+    } catch (err) {
+      console.error(err);
+      alert("Payment initialization failed. Please try again.");
+      setLoadingPlan(null);
+    }
+  };
+
   return (
     <section className="pb-8 md:pb-12 bg-[var(--bg-primary)]" id="pricing">
       <div className="px-6 mx-auto max-w-7xl">
@@ -89,7 +144,7 @@ const Pricing = () => {
         />
 
         <div
-          className="mt-12 rounded-3xl overflow-hidden"
+          className="mt-16 rounded-3xl overflow-hidden"
           style={{ border: "3px solid var(--border-color)" }}
         >
           {/* ── Header row ── */}
@@ -97,8 +152,7 @@ const Pricing = () => {
             className="grid grid-cols-4"
             style={{ background: "var(--bg-secondary)" }}
           >
-            {/* Feature column header */}
-            <div className="px-6 py-5 flex items-center justify-center">
+            <div className="px-6 py-5 flex items-center">
               <span
                 className="text-2xl font-extrabold uppercase tracking-widest"
                 style={{ color: "var(--text-secondary)" }}
@@ -107,10 +161,9 @@ const Pricing = () => {
               </span>
             </div>
 
-            {/* Plan headers */}
             {PLANS.map((plan) => (
               <div
-                key={plan.name}
+                key={plan.id}
                 className="relative px-6 py-5 text-center flex flex-col items-center"
                 style={{
                   background: plan.featured
@@ -161,7 +214,9 @@ const Pricing = () => {
                   {plan.desc}
                 </p>
                 <button
-                  className="btn-primary btn-primary:hover w-full"
+                  onClick={() => handlePlanClick(plan.id)}
+                  disabled={loadingPlan === plan.id}
+                  className="btn-primary w-full"
                   style={
                     plan.ctaStyle === "filled"
                       ? {
@@ -176,7 +231,14 @@ const Pricing = () => {
                         }
                   }
                 >
-                  {plan.cta}
+                  {loadingPlan === plan.id ? (
+                    <>
+                      <Loader2 size={13} className="animate-spin" />{" "}
+                      Redirecting…
+                    </>
+                  ) : (
+                    plan.cta
+                  )}
                 </button>
               </div>
             ))}
@@ -193,7 +255,6 @@ const Pricing = () => {
                   fi % 2 === 0 ? "var(--bg-primary)" : "var(--bg-secondary)",
               }}
             >
-              {/* Feature label */}
               <div className="px-6 py-4 flex items-center">
                 <span
                   className="text-sm font-semibold"
@@ -202,28 +263,32 @@ const Pricing = () => {
                   {f.label}
                 </span>
               </div>
-
-              {/* Value per plan */}
-              {PLANS.map((plan) => {
-                const feature = plan.features[fi];
-                return (
-                  <div
-                    key={plan.name}
-                    className="px-6 py-4 flex items-center justify-center"
-                    style={{
-                      borderLeft: "1px solid var(--border-color)",
-                      background: plan.featured
-                        ? "rgba(244,121,32,0.03)"
-                        : "transparent",
-                    }}
-                  >
-                    <FeatureValue val={feature.val} />
-                  </div>
-                );
-              })}
+              {PLANS.map((plan) => (
+                <div
+                  key={`${f.label}-${plan.id}`}
+                  className="px-6 py-4 flex items-center justify-center"
+                  style={{
+                    borderLeft: "1px solid var(--border-color)",
+                    background: plan.featured
+                      ? "rgba(244,121,32,0.03)"
+                      : "transparent",
+                  }}
+                >
+                  <FeatureValue val={plan.features[fi].val} />
+                </div>
+              ))}
             </div>
           ))}
         </div>
+
+        <p
+          className="text-center text-[11px] mt-6 font-semibold"
+          style={{ color: "var(--text-secondary)" }}
+        >
+          🔒 Payments secured by{" "}
+          <span style={{ color: "var(--primary)" }}>SSLCommerz</span> · Cancel
+          anytime
+        </p>
       </div>
     </section>
   );
