@@ -18,7 +18,7 @@ const ROLES = [
     verb: "TRAIN",
     description:
       "Train smarter. Track everything. Unlock AI coaching that adapts to you.",
-    color: "#f47920",
+    color: "#10B981",
     features: [
       {
         label: "Browse Packages",
@@ -377,7 +377,7 @@ function FeatureRow({
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="flex items-start gap-2.5 text-xs py-1"
+                  className="flex items-start gap-2.5 text-[15px] py-1"
                   style={{ color: "var(--text-primary)" }}
                 >
                   <span
@@ -418,7 +418,7 @@ function HighlightBlock({
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between gap-3 px-5 py-4 transition-all"
-        style={{ backgroundColor: `${color}18` }}
+        style={{ backgroundColor: `${color}40` }}
       >
         <div className="flex items-center gap-3">
           <span className="text-xl">{highlight.icon}</span>
@@ -715,6 +715,14 @@ export default function HowItWorksPage() {
   };
 
   const role = ROLES[activeRole];
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   return (
     <div
@@ -726,97 +734,55 @@ export default function HowItWorksPage() {
     >
       <SideNav active={activeRole} onChange={scrollToRole} />
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 xl:pl-20">
+      <div className="max-w-7xl mx-auto px-6 mt-8 md:mt-12 mb-10">
         {/* ── HERO ── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.7 }}
-          className="pt-10 pb-6"
-        >
-          <motion.p
-            initial={{ opacity: 0, y: 8 }}
+        <motion.div ref={ref} style={{ y, opacity }} className="text-center">
+          {/* Floating badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-[11px] font-black uppercase tracking-[0.3em] mb-4"
-            style={{ color: "var(--text-secondary)" }}
+            transition={{ duration: 0.6 }}
+            className="inline-block mb-6"
           >
-            — Platform Overview
-          </motion.p>
+            <div
+              className="px-5 py-2 rounded-full text-sm font-bold backdrop-blur-sm"
+              style={{
+                backgroundColor: "var(--card-bg)",
+                border: "2px solid var(--primary)",
+                color: "var(--primary)",
+              }}
+            >
+              — Platform Overview
+            </div>
+          </motion.div>
 
-          {/* Staggered title words */}
-          <div className="overflow-hidden mb-3">
-            {[
-              { word: "How", colorKey: false },
-              { word: "Flexify", colorKey: true },
-              { word: "Works.", colorKey: false, faded: true },
-            ].map(({ word, colorKey, faded }, i) => (
-              <motion.span
-                key={word}
-                initial={{ y: "110%" }}
-                animate={{ y: 0 }}
-                transition={{
-                  delay: 0.15 + i * 0.1,
-                  duration: 0.6,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className="inline-block mr-3 sm:mr-5 font-black tracking-tighter"
-                style={{
-                  fontSize: "clamp(38px, 8vw, 92px)",
-                  lineHeight: 1,
-                  color: colorKey
-                    ? role.color
-                    : faded
-                      ? "var(--text-secondary)"
-                      : "var(--text-primary)",
-                  opacity: faded ? 0.35 : 1,
-                  transition: colorKey ? "color 0.4s ease" : undefined,
-                }}
-              >
-                {word}
-              </motion.span>
-            ))}
-          </div>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.7 }}
+            className="text-3xl md:text-5xl font-bold mb-6 tracking-tight"
+            style={{ color: "var(--text-primary)" }}
+          >
+            How{" "}
+            <span
+              className="relative inline-block font-extrabold"
+              style={{ color: "var(--primary)" }}
+            >
+              Flexify
+            </span>{" "}
+            Works
+          </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="text-sm md:text-base max-w-lg mb-5"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.7 }}
+            className="text-lg max-w-3xl mx-auto mb-6"
             style={{ color: "var(--text-secondary)" }}
           >
             Three interfaces. One ecosystem. Built for users who train, coaches
             who guide, and admins who run it all.
           </motion.p>
-
-          {/* Role quick jumps */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="flex flex-wrap gap-4"
-          >
-            {ROLES.map((r, i) => (
-              <button
-                key={r.id}
-                onClick={() => scrollToRole(i)}
-                className="flex items-center gap-2 text-xs font-black uppercase tracking-wider transition-all"
-                style={{
-                  color: activeRole === i ? r.color : "var(--text-secondary)",
-                }}
-              >
-                <motion.span
-                  animate={{
-                    backgroundColor:
-                      activeRole === i ? r.color : "var(--border-color)",
-                    scale: activeRole === i ? 1 : 0.8,
-                  }}
-                  className="w-2 h-2 rounded-full"
-                />
-                {r.title}
-              </button>
-            ))}
-          </motion.div>
         </motion.div>
 
         {/* ── TICKER ── */}
@@ -848,7 +814,10 @@ export default function HowItWorksPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="py-16 md:py-24 text-center relative overflow-hidden"
+          className="py-12 md:py-16 text-center relative rounded-xl overflow-hidden shadow-xl"
+          style={{
+            backgroundColor: "var(--bg-secondary)",
+          }}
         >
           {/* faded BG word */}
           <div
@@ -857,7 +826,7 @@ export default function HowItWorksPage() {
               fontSize: "clamp(70px, 18vw, 200px)",
               fontWeight: 900,
               color: role.color,
-              opacity: 0.04,
+              opacity: 0.08,
               letterSpacing: "-0.05em",
               lineHeight: 1,
             }}
