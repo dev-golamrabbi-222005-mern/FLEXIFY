@@ -42,10 +42,10 @@ const Navbar = () => {
             <Link
               key={link.path}
               href={link.path}
-              className={`transition text-[var(--primary)] ${
+              className={`transition ${
                 pathname === link.path
                   ? "border-b-3 border-(--border-highlight) font-bold p-2 rounded-lg"
-                  : " hover:text-(--secondary) px-3 py-2 rounded-lg"
+                  : " hover:text-(--primary) px-3 py-2 rounded-lg"
               }`}
             >
               {link.name}
