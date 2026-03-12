@@ -42,10 +42,18 @@ export default function CoachManagementPage() {
   //   },
   // ]);
 
-  const {data: coaches = [], refetch} = useQuery({
-    queryKey: ["coaches"],
+  const {data: approvedCoaches = [], refetch: approveRefetch} = useQuery({
+    queryKey: ["approvedCoaches"],
     queryFn: async() => {
       const res = await axios.get("/api/coach?status=approved");
+      return res.data;
+    }
+  });
+
+  const {data: warnedCoaches = [], refetch: warnRefetch} = useQuery({
+    queryKey: ["warnedCoaches"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach?status=warning");
       return res.data;
     }
   });
@@ -61,7 +69,8 @@ export default function CoachManagementPage() {
         id,
         status: "warning"
       });
-      refetch();
+      approveRefetch();
+      warnRefetch();
       Swal.fire("Warned", "Coach warned by admin", "success");
     }
     catch(error){
@@ -76,7 +85,8 @@ export default function CoachManagementPage() {
         id,
         status: "rejected"
       });
-      refetch();
+      approveRefetch();
+      warnRefetch();
       Swal.fire("Removed", "Coach removed by admin", "success");
     }
     catch(error){
@@ -105,7 +115,7 @@ export default function CoachManagementPage() {
   const stats = [
     {
       title: "Approved Coaches",
-      value: coaches.length,
+      value: approvedCoaches.length,
       icon: UserCheck,
       color: "from-green-500 to-emerald-500",
     },
@@ -117,7 +127,7 @@ export default function CoachManagementPage() {
     },
     {
       title: "Warnings Issued",
-      value: coaches.filter((c) => c.status === "warning").length,
+      value: warnedCoaches.length,
       icon: AlertTriangle,
       color: "from-red-500 to-orange-500",
     },
@@ -207,7 +217,7 @@ export default function CoachManagementPage() {
   <h2 className="mb-4 text-xl font-bold">Approved Coaches</h2>
 
   <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-    {coaches.map((coach) => (
+    {approvedCoaches.map((coach) => (
       <div
         key={coach._id}
         className="bg-[var(--card-bg)] p-6 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between gap-3"
