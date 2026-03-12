@@ -1,10 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import { Save, Trash2, X, ListChecks, Dumbbell} from "lucide-react";
+import { Exercise } from "./workout";
+
 
 interface SelectionDrawerProps {
-  selectedExercises: any[];
-  onRemove: (ex: any) => void;
+  selectedExercises: Exercise[];
+  onRemove: (ex: Exercise) => void;
   onSave: (userData: { planName: string; userName: string; userEmail: string }) => void;
   planName: string;
   setPlanName: (name: string) => void;
@@ -17,7 +19,8 @@ export const SelectionDrawer = ({
   onSave, 
   planName, 
   setPlanName,
-}: Omit<SelectionDrawerProps, 'userSession'>) => {
+  userSession,
+}: SelectionDrawerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   if (selectedExercises.length === 0) return null;
 
