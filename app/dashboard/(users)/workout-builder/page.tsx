@@ -1,13 +1,13 @@
 "use client";
 import React, { useState, useMemo, useEffect } from "react";
-import { Search, RotateCcw, Dumbbell, Loader2 } from "lucide-react";
+import { Search, RotateCcw,Loader2, Dumbbell } from "lucide-react";
+import { ExerciseRow } from "@/components/cards/ExerciseRowCard";
+import { DetailsModal } from "@/components/user/DetailsModal";
+import { SelectionDrawer } from "@/components/user/SelectionDrawer";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { FilterSection } from "@/components/user/FilterSection";
-import { ExerciseRow } from "@/components/cards/ExerciseRowCard";
-import { SelectionDrawer } from "@/components/user/SelectionDrawer";
-import { DetailsModal } from "@/components/user/DetailsModal";
 
 const bodyParts = [
   "chest",
@@ -211,51 +211,72 @@ export default function WorkoutBuilder() {
       </div>
 
       {/* Main Content Area */}
-      <div className={`mt-8 ${isFetching ? "opacity-70" : ""}`}>
-        {displayData.map((group: any) => (
-          <section
-            key={group.part}
-            className="border-l-4 border-[var(--primary)] pl-4 mb-10"
-          >
-            <h3 className="text-xl font-black uppercase mb-4 text-[var(--text-primary)]">
-              {group.part}
-              <span className="ml-2 text-xs opacity-50">
-                ({isFilterActive ? group.exercises.length : group.count})
-              </span>
-            </h3>
-
-            <div className="space-y-3">
-              {group.exercises
-                .slice(0, visibleCounts[group.part.toLowerCase()] || 5)
-                .map((ex: any, idx: number) => (
-                  <ExerciseRow
-                    key={`${ex.id}-${idx}`}
-                    exercise={ex}
-                    onSelect={toggleExercise}
-                    isSelected={selectedExercises.some((s) => s.id === ex.id)}
-                    onShowDetails={setDetailExercise}
-                  />
-                ))}
-            </div>
-
-            {(isFilterActive ? group.exercises.length : group.count) >
-              (isFilterActive
-                ? visibleCounts[group.part] || 5
-                : group.exercises.length) && (
-              <button
-                onClick={() => handleLoadMore(group.part)}
-                className="mt-4 flex items-center gap-2 text-[var(--primary)] font-black text-[10px] uppercase"
+      <div className="mt-8">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-24 space-y-4">
+            <Loader2 className="w-12 h-12 animate-spin text-[var(--primary)]" />
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] animate-pulse">
+              Loading Exercises...
+            </p>
+          </div>
+        ) : displayData.length > 0 ? (
+          <div className={`${isFetching ? "opacity-50 pointer-events-none" : ""} transition-opacity duration-300`}>
+            {displayData.map((group: any) => (
+              <section
+                key={group.part}
+                className="border-l-4 border-[var(--primary)] pl-4 mb-10"
               >
-                {isFetching && selectedBodyPart === group.part ? (
-                  <Loader2 className="animate-spin" size={12} />
-                ) : (
-                  <RotateCcw size={12} />
+                <h3 className="text-xl font-black uppercase mb-4 text-[var(--text-primary)]">
+                  {group.part}
+                  <span className="ml-2 text-xs opacity-50">
+                    ({isFilterActive ? group.exercises.length : group.count})
+                  </span>
+                </h3>
+
+                <div className="space-y-3">
+                  {group.exercises
+                    .slice(0, visibleCounts[group.part.toLowerCase()] || 5)
+                    .map((ex: any, idx: number) => (
+                      <ExerciseRow
+                        key={`${ex.id}-${idx}`}
+                        exercise={ex}
+                        onSelect={toggleExercise}
+                        isSelected={selectedExercises.some((s) => s.id === ex.id)}
+                        onShowDetails={setDetailExercise}
+                      />
+                    ))}
+                </div>
+
+                {(isFilterActive ? group.exercises.length : group.count) >
+                  (visibleCounts[group.part.toLowerCase()] || 5) && (
+                  <button
+                    onClick={() => handleLoadMore(group.part)}
+                    className="mt-4 flex items-center gap-2 text-[var(--primary)] font-black text-[10px] uppercase hover:tracking-widest transition-all"
+                  >
+                    {isFetching ? (
+                      <Loader2 className="animate-spin" size={12} />
+                    ) : (
+                      <RotateCcw size={12} />
+                    )}
+                    Load More {group.part}
+                  </button>
                 )}
-                Load More {group.part}
-              </button>
-            )}
-          </section>
-        ))}
+              </section>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-24 flex flex-col items-center justify-center border-2 border-dashed border-[var(--border-color)] rounded-3xl mx-4">
+            <div className="bg-[var(--primary)]/10 p-4 rounded-full mb-4">
+              <Dumbbell className="w-10 h-10 text-[var(--primary)]" />
+            </div>
+            <p className="text-sm font-black uppercase tracking-widest text-[var(--text-primary)]">
+              No exercises found
+            </p>
+            <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase mt-2">
+              Try changing your search or filters
+            </p>
+          </div>
+        )}
       </div>
 
       <SelectionDrawer

@@ -11,7 +11,7 @@ export const DetailsModal = ({ exercise, onClose }: any) => {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
-      <div className="bg-[var(--bg-secondary)] w-full max-w-lg rounded-[2.5rem] p-1 shadow-2xl animate-in zoom-in duration-300 max-h-[95vh] overflow-hidden flex flex-col border border-[var(--border-color)]">
+      <div className="bg-[var(--bg-secondary)] w-full max-w-lg rounded-2xl p-1 shadow-2xl animate-in zoom-in duration-300 max-h-[95vh] overflow-hidden flex flex-col border border-[var(--border-color)]">
         
         {/* Top Header - Sticky style */}
         <div className="flex justify-between items-center px-8 py-6 border-b border-[var(--border-color)] bg-[var(--bg-secondary)]">
@@ -44,11 +44,11 @@ export const DetailsModal = ({ exercise, onClose }: any) => {
           
           {/* Image Gallery - Enhanced Style */}
           {exercise.images && exercise.images.length > 0 && (
-            <div className="relative w-full aspect-square bg-[var(--bg-primary)] rounded-[2rem] overflow-hidden group border border-[var(--border-color)] shadow-inner">
+            <div className="relative w-full aspect-square bg-[var(--bg-primary)] rounded-2xl overflow-hidden group border border-[var(--border-color)] shadow-inner">
               <img 
                 src={getImageUrl(exercise.images[currentImg])} 
                 alt={exercise.name}
-                className="w-full h-full object-contain p-4 transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-full object-cover p-4 transition-transform duration-700 group-hover:scale-105"
                 onError={(e: any) => { e.target.src = "https://via.placeholder.com/400x400?text=No+Preview"; }}
               />
               
@@ -80,14 +80,14 @@ export const DetailsModal = ({ exercise, onClose }: any) => {
 
           {/* Quick Info Grid */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-[var(--bg-tertiary)] p-4 rounded-3xl border border-[var(--border-color)] flex items-center gap-3">
+            <div className="bg-[var(--bg-tertiary)] p-4 rounded-2xl border border-[var(--border-color)] flex items-center gap-3">
                <Target size={20} className="text-[var(--primary)]" />
                <div>
                   <p className="text-[8px] uppercase font-black text-[var(--text-muted)] tracking-widest">Muscle</p>
                   <p className="text-[11px] font-bold uppercase text-[var(--text-primary)] truncate">{exercise.primaryMuscles.join(", ")}</p>
                </div>
             </div>
-            <div className="bg-[var(--bg-tertiary)] p-4 rounded-3xl border border-[var(--border-color)] flex items-center gap-3">
+            <div className="bg-[var(--bg-tertiary)] p-4 rounded-2xl border border-[var(--border-color)] flex items-center gap-3">
                <ShieldCheck size={20} className="text-[var(--primary)]" />
                <div>
                   <p className="text-[8px] uppercase font-black text-[var(--text-muted)] tracking-widest">Equip</p>
