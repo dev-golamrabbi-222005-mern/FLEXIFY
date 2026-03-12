@@ -791,6 +791,13 @@ function AdminDashboard({ name }: { name: string }) {
       return res.data;
     }
   });
+  const {data: coaches = []} = useQuery({
+    queryKey: ["coaches"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach");
+      return res.data;
+    }
+  });
   const {data: activeCoaches = []} = useQuery({
     queryKey: ["activeCoaches"],
     queryFn: async() => {
@@ -934,10 +941,10 @@ function AdminDashboard({ name }: { name: string }) {
               Platform Summary
             </p>
             <p className="text-lg font-black text-white">
-              1,284 Users · 38 Coaches · ৳89k Revenue
+              {users.length} Users · {coaches.length} Coaches · ৳89k Revenue
             </p>
             <p className="mt-1 text-xs text-white/70">
-              6 coach applications pending your review
+              {pendingCoaches.length} coach applications pending your review
             </p>
           </div>
           <button className="px-4 py-2 text-xs font-black text-white transition-colors shrink-0 rounded-xl bg-white/20 hover:bg-white/30">
