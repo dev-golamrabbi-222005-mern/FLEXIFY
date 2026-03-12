@@ -1,15 +1,14 @@
 "use client";
-import React, { useState, useMemo} from "react";
-import { Search, RotateCcw,Loader2, Dumbbell } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { Search, RotateCcw, Loader2, Dumbbell } from "lucide-react";
 import { ExerciseRow } from "@/components/cards/ExerciseRowCard";
 import { DetailsModal } from "@/components/user/DetailsModal";
 import { SelectionDrawer } from "@/components/user/SelectionDrawer";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { FilterSection } from "@/components/user/FilterSection";
 import { useSession } from "next-auth/react";
 import { Exercise } from "@/components/user/workout";
-
+import { FilterSection } from "@/components/user/FilterSection";
 
 interface ExerciseGroup {
   part: string;
@@ -54,16 +53,19 @@ export default function WorkoutBuilder() {
   const [planName, setPlanName] = useState("");
   const [detailExercise, setDetailExercise] = useState<Exercise | null>(null);
   const [visibleCounts, setVisibleCounts] = useState<Record<string, number>>(
-    {}
+    {},
   );
+
   const resetVisibleCounts = () => setVisibleCounts({});
- const clearFilters = () => {
-  setSearch("");
-  setSelectedLevel("");
-  setSelectedEquipment("");
-  setSelectedBodyPart("");
-  setVisibleCounts({}); 
-};
+
+  const clearFilters = () => {
+    setSearch("");
+    setSelectedLevel("");
+    setSelectedEquipment("");
+    setSelectedBodyPart("");
+    setVisibleCounts({});
+  };
+
   const {
     data: serverData,
     isLoading: loading,
@@ -82,9 +84,8 @@ export default function WorkoutBuilder() {
       if (selectedLevel) params.append("level", selectedLevel);
       if (selectedEquipment) params.append("equipment", selectedEquipment);
       if (selectedBodyPart) params.append("bodyPart", selectedBodyPart);
-
       const res = await axios.get(
-        `/api/exercises/builder?${params.toString()}`
+        `/api/exercises/builder?${params.toString()}`,
       );
       return res.data;
     },
@@ -92,10 +93,17 @@ export default function WorkoutBuilder() {
     staleTime: 5000,
   });
 
-  const isFilterActive = !!(search || selectedLevel || selectedEquipment || selectedBodyPart);
-  
-  const allExercises = serverData?.type === "filtered" ? (serverData.exercises as Exercise[]) : [];
-  const initialGroups = serverData?.type === "initial" ? (serverData.data as ExerciseGroup[]) : [];
+  const isFilterActive = !!(
+    search ||
+    selectedLevel ||
+    selectedEquipment ||
+    selectedBodyPart
+  );
+
+  const allExercises =
+    serverData?.type === "filtered" ? (serverData.exercises as Exercise[]) : [];
+  const initialGroups =
+    serverData?.type === "initial" ? (serverData.data as ExerciseGroup[]) : [];
   const initialData = serverData?.type === "initial" ? serverData.data : [];
 
   const groupedFilteredData = useMemo(() => {
@@ -105,9 +113,7 @@ export default function WorkoutBuilder() {
       const part =
         ex.bodyPart || (ex.primaryMuscles && ex.primaryMuscles[0]) || "Other";
       const normalizedPart = part.toLowerCase();
-      if (!groups[normalizedPart]) {
-        groups[normalizedPart] = [];
-      }
+      if (!groups[normalizedPart]) groups[normalizedPart] = [];
       groups[normalizedPart].push(ex);
     });
     return Object.entries(groups).map(([part, exercises]) => ({
@@ -115,13 +121,15 @@ export default function WorkoutBuilder() {
       exercises,
     }));
   }, [allExercises, isFilterActive]);
+
   const toggleExercise = (ex: Exercise) => {
     setSelectedExercises((prev) =>
       prev.find((i) => i.id === ex.id)
         ? prev.filter((i) => i.id !== ex.id)
-        : [...prev, ex]
+        : [...prev, ex],
     );
   };
+
   const handleLoadMore = (part: string) => {
     const partKey = part.toLowerCase();
     setVisibleCounts((prev) => ({
@@ -130,38 +138,47 @@ export default function WorkoutBuilder() {
     }));
   };
 
-  const handleSaveRoutine = async (userData: { planName: string; userName: string; userEmail: string }) => {
+  // ── Fixed: single try/catch, no dangling catch block ──────────────────────
+  const handleSaveRoutine = async (userData: {
+    planName: string;
+    userName: string;
+    userEmail: string;
+  }) => {
     if (selectedExercises.length === 0) {
       alert("Please select at least one exercise!");
       return;
     }
-   
-    try {
-    const routineData = {
-      planName: userData.planName,
-      exercises: selectedExercises,
-      createdAt: new Date(),
-    };
-    
-    const response = await axios.post("/api/routines/save", routineData);
 
-    if (response.data.success) {
-      alert(`Awesome! Your plan "${userData.planName}" is saved.`);
-      setSelectedExercises([]);
-      setPlanName("");
+    try {
+      const routineData = {
+        planName: userData.planName,
+        exercises: selectedExercises,
+        createdAt: new Date(),
+      };
+
+      const response = await axios.post("/api/routines/save", routineData);
+
+      if (response.data.success) {
+        alert(`Awesome! Your plan "${userData.planName}" is saved.`);
+        setSelectedExercises([]);
+        setPlanName("");
+      }
+    } catch (error: unknown) {
+      console.error("Save Error:", error);
+      if (axios.isAxiosError(error)) {
+        alert(error.response?.data?.message || "Failed to save routine.");
+      } else {
+        alert("An unexpected error occurred.");
+      }
     }
-  } catch (error: unknown) {
-    console.error("Save Error:", error);
-    if (axios.isAxiosError(error)) {
-      alert(error.response?.data?.message || "Failed to save routine.");
-    } else {
-      alert("An unexpected error occurred.");
-    }}
-};
-  const displayData = (isFilterActive ? groupedFilteredData : initialGroups) as ExerciseGroup[];
+  };
+
+  const displayData = (
+    isFilterActive ? groupedFilteredData : initialGroups
+  ) as ExerciseGroup[];
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden  py-8 pb-48 bg-[var(--bg-primary)] min-h-screen">
+    <div className="w-full max-w-full overflow-x-hidden py-8 pb-48 bg-[var(--bg-primary)] min-h-screen">
       <header className="mb-8">
         <h1 className="text-4xl font-black uppercase tracking-tighter text-[var(--text-primary)]">
           Custom <span className="text-[var(--primary)]">Routine</span>
@@ -182,9 +199,10 @@ export default function WorkoutBuilder() {
             className="input-style !pl-12 !py-4 shadow-sm"
             placeholder="Search exercises (e.g. Bench Press)..."
             value={search}
-            onChange={(e) => {setSearch(e.target.value);
-              resetVisibleCounts();}
-            }
+            onChange={(e) => {
+              setSearch(e.target.value);
+              resetVisibleCounts();
+            }}
           />
           {isFilterActive && (
             <button
@@ -201,11 +219,20 @@ export default function WorkoutBuilder() {
           equipments={equipments}
           bodyParts={bodyParts}
           selectedLevel={selectedLevel}
-          setSelectedLevel={(v) => { setSelectedLevel(v); resetVisibleCounts(); }}
+          setSelectedLevel={(v) => {
+            setSelectedLevel(v);
+            resetVisibleCounts();
+          }}
           selectedEquipment={selectedEquipment}
-         setSelectedEquipment={(v) => { setSelectedEquipment(v); resetVisibleCounts(); }}
+          setSelectedEquipment={(v) => {
+            setSelectedEquipment(v);
+            resetVisibleCounts();
+          }}
           selectedBodyPart={selectedBodyPart}
-          setSelectedBodyPart={(v) => { setSelectedBodyPart(v); resetVisibleCounts(); }}
+          setSelectedBodyPart={(v) => {
+            setSelectedBodyPart(v);
+            resetVisibleCounts();
+          }}
           stats={serverData?.stats}
           initialData={initialData}
           isFilterActive={isFilterActive}
@@ -222,7 +249,9 @@ export default function WorkoutBuilder() {
             </p>
           </div>
         ) : displayData.length > 0 ? (
-          <div className={`${isFetching ? "opacity-50 pointer-events-none" : ""} transition-opacity duration-300`}>
+          <div
+            className={`${isFetching ? "opacity-50 pointer-events-none" : ""} transition-opacity duration-300`}
+          >
             {displayData.map((group: ExerciseGroup) => (
               <section
                 key={group.part}
@@ -243,13 +272,17 @@ export default function WorkoutBuilder() {
                         key={`${ex.id}-${idx}`}
                         exercise={ex}
                         onSelect={toggleExercise}
-                        isSelected={selectedExercises.some((s) => s.id === ex.id)}
+                        isSelected={selectedExercises.some(
+                          (s) => s.id === ex.id,
+                        )}
                         onShowDetails={setDetailExercise}
                       />
                     ))}
                 </div>
 
-                {(isFilterActive ? group.exercises.length : (group.count ?? 0)) >
+                {(isFilterActive
+                  ? group.exercises.length
+                  : (group.count ?? 0)) >
                   (visibleCounts[group.part.toLowerCase()] || 5) && (
                   <button
                     onClick={() => handleLoadMore(group.part)}
@@ -288,9 +321,9 @@ export default function WorkoutBuilder() {
         planName={planName}
         setPlanName={setPlanName}
         userSession={{
-        name: (session?.user?.name as string) || "",
-    email: (session?.user?.email as string) || ""
-      }}
+          name: (session?.user?.name as string) || "",
+          email: (session?.user?.email as string) || "",
+        }}
       />
 
       <DetailsModal
@@ -299,4 +332,4 @@ export default function WorkoutBuilder() {
       />
     </div>
   );
-}
+} 
