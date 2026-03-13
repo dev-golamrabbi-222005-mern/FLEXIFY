@@ -18,10 +18,10 @@ export async function POST(req: NextRequest) {
   }
 
   const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
-  return NextResponse.redirect(`${baseUrl}/dashboard?payment=failed`);
+  return NextResponse.redirect(`${baseUrl}/payment/success?payment=failed`);
 }
 
 export async function GET(req: NextRequest) {
   const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
-  return NextResponse.redirect(`${baseUrl}/dashboard?payment=failed`);
+  return NextResponse.redirect(`${baseUrl}/payment/success?payment=failed`);
 }
