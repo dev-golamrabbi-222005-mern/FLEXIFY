@@ -77,7 +77,7 @@ export default function LiveSessionPage() {
 
           <Video size={18} />
 
-          Join Google Meet Session
+          Join Video Call
 
         </a>
 
