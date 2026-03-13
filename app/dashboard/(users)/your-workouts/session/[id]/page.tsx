@@ -1,0 +1,129 @@
+"use client";
+import React, { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { Loader2, Play, Clock, Save } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import ExerciseCard from "@/components/user/ExerciseCard";
+import RestTimer from "@/components/user/RestTimer";
+import { Exercise, WorkoutResponse } from "@/components/user/workout";
+
+export default function WorkoutSessionPage() {
+  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  
+  const [secondsElapsed, setSecondsElapsed] = useState(0);
+  const [showRestTimer, setShowRestTimer] = useState(false);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+
+  const { data: routineData, isLoading } = useQuery<WorkoutResponse>({
+    queryKey: ["session-routine", id],
+    queryFn: async () => {
+      const res = await axios.get(`/api/routines/${id}`);
+      return res.data;
+    },
+    enabled: !!id,
+  });
+
+  if (routineData?.success && exercises.length === 0) {
+    const initial = routineData.data.exercises.map((ex) => ({
+      ...ex,
+      sets: ex.sets?.length > 0 ? ex.sets : [
+        { id: crypto.randomUUID(), weight: "", reps: "", seconds: "", previous: "-", isCompleted: false }
+      ],
+    }));
+    setExercises(initial);
+  }
+
+  useEffect(() => {
+    const interval = setInterval(() => setSecondsElapsed(p => p + 1), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const formatTime = (s: number) => {
+    const mins = Math.floor(s / 60);
+    const secs = s % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const handleSetComplete = (exIdx: number, setIdx: number, capturedTime?: string) => {
+    setExercises((prev) => {
+      const newEx = [...prev];
+      const currentSet = newEx[exIdx].sets[setIdx];
+      const isBecomingComplete = !currentSet.isCompleted;
+
+      newEx[exIdx].sets[setIdx] = { 
+        ...currentSet, 
+        isCompleted: isBecomingComplete,
+        seconds: capturedTime || currentSet.seconds
+      };
+
+      if (isBecomingComplete) {
+        setShowRestTimer(false);
+        setTimeout(() => setShowRestTimer(true), 10);
+      }
+      return newEx;
+    });
+  };
+
+  if (isLoading || (routineData && exercises.length === 0)) return (
+    <div className="min-h-screen flex items-center justify-center bg-[var(--bg-primary)]">
+      <Loader2 className="animate-spin text-[var(--primary)]" size={40} />
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-[var(--bg-primary)] pb-40 text-[var(--text-primary)]">
+      {/* Integrated Header */}
+      <header className="sticky top-0 z-40 bg-[var(--bg-primary)]/80 backdrop-blur-xl border-b border-[var(--border-color)] px-4 py-4">
+        <div className="max-w-full flex justify-between items-center">
+          
+          {/* Left: Routine Info */}
+          <div className="flex items-center gap-2 overflow-hidden">
+            <div className="p-2 bg-[var(--primary)]/10 rounded-lg">
+              <Play size={16} className="text-[var(--primary)] fill-[var(--primary)]" />
+            </div>
+            <h1 className="text-sm font-black italic uppercase tracking-tighter truncate max-w-[120px] sm:max-w-none">
+              {routineData?.data?.planName}
+            </h1>
+          </div>
+
+          {/* Center: Timer (The focus point) */}
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-1.5 text-[var(--primary)] mb-0.5">
+              <Clock size={12} className="animate-pulse" />
+              <span className="text-[8px] font-black uppercase tracking-[0.2em]">Duration</span>
+            </div>
+            <span className="text-sm font-black tabular-nums tracking-widest text-[var(--text-primary)]">
+              {formatTime(secondsElapsed)}
+            </span>
+          </div>
+
+          {/* Right: Action Button */}
+          <button 
+            onClick={() => router.push('/dashboard/your-workouts')} 
+            className="bg-[var(--primary)] text-[var(--bg-primary)] px-4 py-2 rounded-xl text-[10px] font-black uppercase flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-[var(--primary)]/20"
+          >
+            <Save size={14} /> 
+            <span className="hidden sm:inline">Finish</span>
+          </button>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-full  p-4 space-y-4 mt-2">
+        {exercises.map((ex, idx) => (
+          <ExerciseCard 
+            key={ex._id} 
+            exercise={ex} 
+            exIdx={idx} 
+            setExercises={setExercises} 
+            onToggleComplete={handleSetComplete}
+          />
+        ))}
+      </main>
+
+      {showRestTimer && <RestTimer onClose={() => setShowRestTimer(false)} />}
+    </div>
+  );
+}

@@ -1,12 +1,7 @@
 "use client";
 
 import { useState, FormEvent, JSX } from "react";
-import {
-  FaEye,
-  FaEyeSlash,
-  FaEnvelope,
-  FaLock,
-} from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaEnvelope, FaLock } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Swal from "sweetalert2";

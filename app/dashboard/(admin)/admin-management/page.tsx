@@ -19,7 +19,7 @@ export default function AdminManagementSection() {
   //   { id: 2, name: "Coach B", status: "Pending" },
   // ]);
 
-  const {data: coaches = []} = useQuery({
+  const {data: coaches = [], refetch} = useQuery({
     queryKey: ["coaches"],
     queryFn: async() => {
       const res = await axios.get("/api/coach?status=pending");
@@ -47,6 +47,7 @@ export default function AdminManagementSection() {
         id, email,
         status: "approved"
       });
+      refetch();
       Swal.fire("Approved", "Coach approved by admin", "success");
     }
     catch(error){
@@ -60,6 +61,7 @@ export default function AdminManagementSection() {
         id,
         status: "rejected"
       });
+      refetch();
       Swal.fire("Rejected", "Coach rejected by admin", "success");
     }
     catch(error){

@@ -1,6 +1,14 @@
 import { Info, Plus, Check } from "lucide-react";
+import { Exercise } from "../user/workout";
 
-export const ExerciseRow = ({ exercise, onSelect, isSelected, onShowDetails }: any) => {
+
+interface ExerciseRowProps {
+  exercise: Exercise;
+  onSelect: (ex: Exercise) => void;
+  isSelected: boolean;
+  onShowDetails: (ex: Exercise) => void;
+}
+export const ExerciseRow = ({ exercise, onSelect, isSelected, onShowDetails }: ExerciseRowProps) => {
   const imageUrl = exercise.images?.[0] 
     ? `/exercises/${exercise.images[0]}` 
     : null;
