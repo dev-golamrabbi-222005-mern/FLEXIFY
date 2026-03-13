@@ -7,8 +7,9 @@ import { SelectionDrawer } from "@/components/user/SelectionDrawer";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { Exercise } from "@/components/user/workout";
 import { FilterSection } from "@/components/user/FilterSection";
+import { Exercise } from "@/components/user/workout";
+
 
 interface ExerciseGroup {
   part: string;
@@ -84,6 +85,7 @@ export default function WorkoutBuilder() {
       if (selectedLevel) params.append("level", selectedLevel);
       if (selectedEquipment) params.append("equipment", selectedEquipment);
       if (selectedBodyPart) params.append("bodyPart", selectedBodyPart);
+
       const res = await axios.get(
         `/api/exercises/builder?${params.toString()}`,
       );
@@ -249,9 +251,7 @@ export default function WorkoutBuilder() {
             </p>
           </div>
         ) : displayData.length > 0 ? (
-          <div
-            className={`${isFetching ? "opacity-50 pointer-events-none" : ""} transition-opacity duration-300`}
-          >
+          <div className={`${isFetching ? "opacity-50 pointer-events-none" : ""} transition-opacity duration-300`}>
             {displayData.map((group: ExerciseGroup) => (
               <section
                 key={group.part}
@@ -272,17 +272,13 @@ export default function WorkoutBuilder() {
                         key={`${ex.id}-${idx}`}
                         exercise={ex}
                         onSelect={toggleExercise}
-                        isSelected={selectedExercises.some(
-                          (s) => s.id === ex.id,
-                        )}
+                        isSelected={selectedExercises.some((s) => s.id === ex.id)}
                         onShowDetails={setDetailExercise}
                       />
                     ))}
                 </div>
 
-                {(isFilterActive
-                  ? group.exercises.length
-                  : (group.count ?? 0)) >
+                {(isFilterActive ? group.exercises.length : (group.count ?? 0)) >
                   (visibleCounts[group.part.toLowerCase()] || 5) && (
                   <button
                     onClick={() => handleLoadMore(group.part)}
@@ -321,9 +317,9 @@ export default function WorkoutBuilder() {
         planName={planName}
         setPlanName={setPlanName}
         userSession={{
-          name: (session?.user?.name as string) || "",
-          email: (session?.user?.email as string) || "",
-        }}
+        name: (session?.user?.name as string) || "",
+        email: (session?.user?.email as string) || ""
+      }}
       />
 
       <DetailsModal
@@ -332,4 +328,4 @@ export default function WorkoutBuilder() {
       />
     </div>
   );
-} 
+}

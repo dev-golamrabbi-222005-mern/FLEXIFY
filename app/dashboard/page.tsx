@@ -529,11 +529,23 @@ function UserDashboard({ name }: { name: string }) {
 // ─── COACH DASHBOARD ──────────────────────────────────────────────────────────
 // ══════════════════════════════════════════════════════════════════════════════
 function CoachDashboard({ name }: { name: string }) {
+  const { data: session } = useSession();
+  const { data: coaches = [] } = useQuery({
+    queryKey: ["coaches"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach");
+      return res.data;
+    }
+  });
+
+  const singleCoach = coaches.find(coach => coach.email === session.email);
+  console.log(singleCoach);
+
   const stats = [
     {
       icon: Users,
       label: "Active Clients",
-      value: "12",
+      value: singleCoach.maxClients,
       sub: "2 new this week",
       iconColor: "#4b9eff",
       iconBg: "#dbeeff",
@@ -791,6 +803,13 @@ function AdminDashboard({ name }: { name: string }) {
       return res.data;
     }
   });
+  const {data: coaches = []} = useQuery({
+    queryKey: ["coaches"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach");
+      return res.data;
+    }
+  });
   const {data: activeCoaches = []} = useQuery({
     queryKey: ["activeCoaches"],
     queryFn: async() => {
@@ -934,10 +953,10 @@ function AdminDashboard({ name }: { name: string }) {
               Platform Summary
             </p>
             <p className="text-lg font-black text-white">
-              1,284 Users · 38 Coaches · ৳89k Revenue
+              {users.length} Users · {coaches.length} Coaches · ৳89k Revenue
             </p>
             <p className="mt-1 text-xs text-white/70">
-              6 coach applications pending your review
+              {pendingCoaches.length} coach applications pending your review
             </p>
           </div>
           <button className="px-4 py-2 text-xs font-black text-white transition-colors shrink-0 rounded-xl bg-white/20 hover:bg-white/30">
@@ -1042,7 +1061,7 @@ function AdminDashboard({ name }: { name: string }) {
 export default function Dashboard() {
   const { data: session } = useSession();
   const role = (session?.role as Role) ?? "user";
-  const name = session?.user?.name?.split(" ")[0] ?? "there";
+  const name = session?.user?.name ?? "there";
 
   return (
     <div className="max-w-4xl mx-auto">

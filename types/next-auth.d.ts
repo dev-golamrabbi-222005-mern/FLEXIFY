@@ -18,6 +18,7 @@ declare module "next-auth" {
     id: string;
     role?: string;
     phone?: string;
+    email?: string;
   }
 }
 
