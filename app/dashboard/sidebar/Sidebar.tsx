@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { signOut } from "next-auth/react";
 import {
   BarChart2,
-  BellDot,
   BrickWallShield,
   Calendar,
   ChartNoAxesGanttIcon,
@@ -29,7 +28,8 @@ import {
   UserRoundPen,
   Utensils,
   Video,
-  X
+  X,
+  BookText,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -42,6 +42,7 @@ const menuConfig = [
     label: "MAIN MENU",
     items: [
       {name: "Dashboard", href: "/dashboard", icon: Home, roles: ["user", "admin", "coach"]},
+      {name: "User Form", href: "/dashboard/user-form", icon: BookText, roles: ["user"]},
       {name: "Exercise", href: "/dashboard/workout-builder", icon: ChartNoAxesGanttIcon, roles: ["user"]},
       {name: "My Goals", href: "/dashboard/my-goals",icon: Flag, roles: ["user"]},
       {name: "Nutrition", href: "/dashboard/nutrition-tracker", icon: Utensils, roles: ["user"]},
