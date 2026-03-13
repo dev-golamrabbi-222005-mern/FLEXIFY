@@ -1,5 +1,6 @@
 import BecomeCoachCTA from "@/components/home/BecomeCoachCTA";
 import BMI from "@/components/home/BMI";
+import BodyChallenge from "@/components/home/BodyChallenge";
 import FAQ from "@/components/home/FAQ";
 import FlexifyHero from "@/components/home/FlexifyHero";
 import Motivation from "@/components/home/Motivation";
@@ -24,6 +25,7 @@ export default function Home() {
       <Pricing />
       <FAQ />
       <Motivation />
+      <BodyChallenge/>
     </div>
   );
 }
