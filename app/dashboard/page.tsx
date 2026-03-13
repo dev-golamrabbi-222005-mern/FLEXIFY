@@ -529,11 +529,23 @@ function UserDashboard({ name }: { name: string }) {
 // ─── COACH DASHBOARD ──────────────────────────────────────────────────────────
 // ══════════════════════════════════════════════════════════════════════════════
 function CoachDashboard({ name }: { name: string }) {
+  const { data: session } = useSession();
+  const { data: coaches = [] } = useQuery({
+    queryKey: ["coaches"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach");
+      return res.data;
+    }
+  });
+
+  const singleCoach = coaches.find(coach => coach.email === session.email);
+  console.log(singleCoach);
+
   const stats = [
     {
       icon: Users,
       label: "Active Clients",
-      value: "12",
+      value: singleCoach.maxClients,
       sub: "2 new this week",
       iconColor: "#4b9eff",
       iconBg: "#dbeeff",
@@ -1049,7 +1061,7 @@ function AdminDashboard({ name }: { name: string }) {
 export default function Dashboard() {
   const { data: session } = useSession();
   const role = (session?.role as Role) ?? "user";
-  const name = session?.user?.name?.split(" ")[0] ?? "there";
+  const name = session?.user?.name ?? "there";
 
   return (
     <div className="max-w-4xl mx-auto">
