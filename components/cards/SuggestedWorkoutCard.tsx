@@ -28,7 +28,7 @@ export const WorkoutCard = ({ title, exercises, createdAt, type, id }: WorkoutCa
       <div>
         <div className="flex justify-between items-start mb-6">
           <div className="min-w-0">
-            <h3 className={`font-black uppercase tracking-tighter text-[var(--text-primary)] truncate ${type === 'suggested' ? 'text-2xl italic' : 'text-lg'}`}>
+            <h3 className={`font-black uppercase tracking-tighter text-[var(--text-primary)] truncate ${type === 'suggested' ? 'text-2xl' : 'text-lg'}`}>
               {title}
             </h3>
             <div className="flex items-center gap-2 mt-1">
