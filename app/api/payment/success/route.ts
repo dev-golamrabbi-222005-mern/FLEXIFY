@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
       string,
       string
     >;
+    console.log("SSL DATA:", data);
 
     const { tran_id, val_id, amount, currency, status, store_amount } = data;
 
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
 
     // ── Must be VALID or VALIDATED ─────────────────────────────────────────
     if (status !== "VALID" && status !== "VALIDATED") {
-      return NextResponse.redirect(`${baseUrl}/dashboard?payment=failed`);
+      return NextResponse.redirect(`${baseUrl}/payment/success?payment=failed`);
     }
 
     // ── Verify with SSLCommerz validation API ──────────────────────────────
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
       validateJson.status !== "VALID" &&
       validateJson.status !== "VALIDATED"
     ) {
-      return NextResponse.redirect(`${baseUrl}/dashboard?payment=failed`);
+      return NextResponse.redirect(`${baseUrl}/payment/success?payment=failed`);
     }
 
     // ── Find the pending payment ───────────────────────────────────────────
@@ -43,13 +44,13 @@ export async function POST(req: NextRequest) {
       transactionId: tran_id,
     });
     if (!payment) {
-      return NextResponse.redirect(`${baseUrl}/dashboard?payment=failed`);
+      return NextResponse.redirect(`${baseUrl}/payment/success?payment=failed`);
     }
 
     // ── Idempotency: already processed? ───────────────────────────────────
     if (payment.status === "success") {
       return NextResponse.redirect(
-        `${baseUrl}/dashboard?payment=already_success`,
+        `${baseUrl}/payment/success?payment=success`,
       );
     }
 
@@ -92,17 +93,18 @@ export async function POST(req: NextRequest) {
     );
 
     return NextResponse.redirect(
-      `${baseUrl}/dashboard?payment=success&plan=${plan.id}`,
+      // `${baseUrl}/dashboard?payment=success&plan=${plan.id}`,
+      `${baseUrl}/payment/success?payment=success&plan=${plan.id}`
     );
   } catch (err) {
     console.error("[payment/success]", err);
     const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
-    return NextResponse.redirect(`${baseUrl}/dashboard?payment=error`);
+    return NextResponse.redirect(`${baseUrl}/payment/success?payment=error`);
   }
 }
 
 // SSLCommerz may also send GET in some configurations
 export async function GET(req: NextRequest) {
   const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
-  return NextResponse.redirect(`${baseUrl}/dashboard?payment=invalid`);
+  return NextResponse.redirect(`${baseUrl}/payment/success?payment=invalid`);
 }

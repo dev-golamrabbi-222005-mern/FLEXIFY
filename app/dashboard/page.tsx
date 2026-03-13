@@ -246,13 +246,20 @@ function CoachDashboard({ name }: { name: string }) {
   });
 
   const singleCoach = coaches.find(coach => coach.email === session.email);
-  console.log(singleCoach);
+
+  const { data: monthlyEarning } = useQuery({
+    queryKey: ["monthlyEarning"],
+    queryFn: async() => {
+      const res = await axios.get("/api/monthly-earnings");
+      return res.data;
+    }
+  });
 
   const stats = [
     {
       icon: Users,
       label: "Active Clients",
-      value: singleCoach.maxClients,
+      value: singleCoach?.maxClients,
       sub: "2 new this week",
       iconColor: "#4b9eff",
       iconBg: "#dbeeff",
@@ -290,7 +297,7 @@ function CoachDashboard({ name }: { name: string }) {
     {
       icon: TrendingUp,
       label: "Monthly Earnings",
-      value: "৳18,400",
+      value: `৳${monthlyEarning?.total}`,
       sub: "this month",
       iconColor: "#27ae60",
       iconBg: "#dcfce7",
