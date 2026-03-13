@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useMemo} from "react";
-import { Search, RotateCcw,Loader2, Dumbbell } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { Search, RotateCcw, Loader2, Dumbbell } from "lucide-react";
 import { ExerciseRow } from "@/components/cards/ExerciseRowCard";
 import { DetailsModal } from "@/components/user/DetailsModal";
 import { SelectionDrawer } from "@/components/user/SelectionDrawer";
@@ -56,14 +56,17 @@ export default function WorkoutBuilder() {
   const [visibleCounts, setVisibleCounts] = useState<Record<string, number>>(
     {},
   );
+
   const resetVisibleCounts = () => setVisibleCounts({});
- const clearFilters = () => {
-  setSearch("");
-  setSelectedLevel("");
-  setSelectedEquipment("");
-  setSelectedBodyPart("");
-  setVisibleCounts({}); 
-};
+
+  const clearFilters = () => {
+    setSearch("");
+    setSelectedLevel("");
+    setSelectedEquipment("");
+    setSelectedBodyPart("");
+    setVisibleCounts({});
+  };
+
   const {
     data: serverData,
     isLoading: loading,
@@ -92,10 +95,17 @@ export default function WorkoutBuilder() {
     staleTime: 5000,
   });
 
-  const isFilterActive = !!(search || selectedLevel || selectedEquipment || selectedBodyPart);
-  
-  const allExercises = serverData?.type === "filtered" ? (serverData.exercises as Exercise[]) : [];
-  const initialGroups = serverData?.type === "initial" ? (serverData.data as ExerciseGroup[]) : [];
+  const isFilterActive = !!(
+    search ||
+    selectedLevel ||
+    selectedEquipment ||
+    selectedBodyPart
+  );
+
+  const allExercises =
+    serverData?.type === "filtered" ? (serverData.exercises as Exercise[]) : [];
+  const initialGroups =
+    serverData?.type === "initial" ? (serverData.data as ExerciseGroup[]) : [];
   const initialData = serverData?.type === "initial" ? serverData.data : [];
 
   const groupedFilteredData = useMemo(() => {
@@ -105,9 +115,7 @@ export default function WorkoutBuilder() {
       const part =
         ex.bodyPart || (ex.primaryMuscles && ex.primaryMuscles[0]) || "Other";
       const normalizedPart = part.toLowerCase();
-      if (!groups[normalizedPart]) {
-        groups[normalizedPart] = [];
-      }
+      if (!groups[normalizedPart]) groups[normalizedPart] = [];
       groups[normalizedPart].push(ex);
     });
     return Object.entries(groups).map(([part, exercises]) => ({
@@ -115,6 +123,7 @@ export default function WorkoutBuilder() {
       exercises,
     }));
   }, [allExercises, isFilterActive]);
+
   const toggleExercise = (ex: Exercise) => {
     setSelectedExercises((prev) =>
       prev.find((i) => i.id === ex.id)
@@ -122,6 +131,7 @@ export default function WorkoutBuilder() {
         : [...prev, ex],
     );
   };
+
   const handleLoadMore = (part: string) => {
     const partKey = part.toLowerCase();
     setVisibleCounts((prev) => ({
@@ -130,6 +140,7 @@ export default function WorkoutBuilder() {
     }));
   };
 
+  // ── Fixed: single try/catch, no dangling catch block ──────────────────────
   const handleSaveRoutine = async (userData: {
     planName: string;
     userName: string;
@@ -154,15 +165,22 @@ export default function WorkoutBuilder() {
         setSelectedExercises([]);
         setPlanName("");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Save Error:", error);
-      alert(error.response?.data?.message || "Failed to save routine.");
+      if (axios.isAxiosError(error)) {
+        alert(error.response?.data?.message || "Failed to save routine.");
+      } else {
+        alert("An unexpected error occurred.");
+      }
     }
   };
-  const displayData = isFilterActive ? groupedFilteredData : initialGroups;
+
+  const displayData = (
+    isFilterActive ? groupedFilteredData : initialGroups
+  ) as ExerciseGroup[];
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden  py-8 pb-48 bg-[var(--bg-primary)] min-h-screen">
+    <div className="w-full max-w-full overflow-x-hidden py-8 pb-48 bg-[var(--bg-primary)] min-h-screen">
       <header className="mb-8">
         <h1 className="text-4xl font-black uppercase tracking-tighter text-[var(--text-primary)]">
           Custom <span className="text-[var(--primary)]">Routine</span>
@@ -183,9 +201,10 @@ export default function WorkoutBuilder() {
             className="input-style !pl-12 !py-4 shadow-sm"
             placeholder="Search exercises (e.g. Bench Press)..."
             value={search}
-            onChange={(e) => {setSearch(e.target.value);
-              resetVisibleCounts();}
-            }
+            onChange={(e) => {
+              setSearch(e.target.value);
+              resetVisibleCounts();
+            }}
           />
           {isFilterActive && (
             <button
@@ -202,11 +221,20 @@ export default function WorkoutBuilder() {
           equipments={equipments}
           bodyParts={bodyParts}
           selectedLevel={selectedLevel}
-          setSelectedLevel={(v) => { setSelectedLevel(v); resetVisibleCounts(); }}
+          setSelectedLevel={(v) => {
+            setSelectedLevel(v);
+            resetVisibleCounts();
+          }}
           selectedEquipment={selectedEquipment}
-         setSelectedEquipment={(v) => { setSelectedEquipment(v); resetVisibleCounts(); }}
+          setSelectedEquipment={(v) => {
+            setSelectedEquipment(v);
+            resetVisibleCounts();
+          }}
           selectedBodyPart={selectedBodyPart}
-          setSelectedBodyPart={(v) => { setSelectedBodyPart(v); resetVisibleCounts(); }}
+          setSelectedBodyPart={(v) => {
+            setSelectedBodyPart(v);
+            resetVisibleCounts();
+          }}
           stats={serverData?.stats}
           initialData={initialData}
           isFilterActive={isFilterActive}

@@ -15,7 +15,7 @@ import { postUser } from "@/actions/server/auth";
 import { signIn } from "next-auth/react";
 import Swal from "sweetalert2";
 import { useRouter, useSearchParams } from "next/navigation";
-import SocialButtons from "@/components/auth/SocialButtons";
+import SocialButtons from "@/.next/components/auth/SocialButtons";
 
 interface RegisterFormData {
   name: string;
