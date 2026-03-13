@@ -12,6 +12,8 @@ import {
 } from "recharts";
 
 import { TrendingUp, Users, DollarSign } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 const growthData = [
   { month: "Jan", users: 120 },
@@ -39,6 +41,13 @@ const revenueData = [
 ];
 
 export default function ReportsAnalyticsPage() {
+  const {data: users = []} = useQuery({
+      queryKey: ["users"],
+      queryFn: async() => {
+        const res = await axios.get("/api/user?role=user");
+        return res.data;
+      }
+    });
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 space-y-10">
 
@@ -59,7 +68,7 @@ export default function ReportsAnalyticsPage() {
           <Users className="text-blue-600" size={28} />
           <div>
             <p className="text-sm text-gray-500">Total Users</p>
-            <p className="text-2xl font-bold">8,240</p>
+            <p className="text-2xl font-bold">{users.length}</p>
           </div>
         </div>
 

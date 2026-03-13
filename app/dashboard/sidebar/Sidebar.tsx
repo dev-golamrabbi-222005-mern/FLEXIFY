@@ -68,7 +68,7 @@ const menuConfig = [
       },
        {
         name: "Coach Applications",
-        href: "/dashboard/admin-coach-applications ",
+        href: "/dashboard/admin-coach-applications",
         icon: NotebookText,
         roles: ["admin"],
       },

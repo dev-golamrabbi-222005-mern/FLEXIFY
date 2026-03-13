@@ -37,6 +37,8 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Role = "user" | "coach" | "admin";
@@ -106,7 +108,7 @@ function StatCard({
   return (
     <motion.div
       {...fadeUp(delay)}
-      className="rounded-2xl p-5 flex flex-col gap-3 hover:-translate-y-1 transition-transform duration-200 cursor-default"
+      className="flex flex-col gap-3 p-5 transition-transform duration-200 cursor-default rounded-2xl hover:-translate-y-1"
       style={{
         background: "var(--bg-secondary)",
         border: "1px solid var(--border-color)",
@@ -114,7 +116,7 @@ function StatCard({
     >
       <div className="flex items-start justify-between">
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center"
+          className="flex items-center justify-center w-10 h-10 rounded-xl"
           style={{ backgroundColor: iconBg }}
         >
           <Icon size={20} style={{ color: iconColor }} />
@@ -144,14 +146,14 @@ function StatCard({
           {label}
         </p>
         <p
-          className="font-black text-2xl leading-none"
+          className="text-2xl font-black leading-none"
           style={{ color: "var(--text-primary)" }}
         >
           {value}
         </p>
         {sub && (
           <p
-            className="text-xs mt-1"
+            className="mt-1 text-xs"
             style={{ color: "var(--text-secondary)" }}
           >
             {sub}
@@ -167,7 +169,7 @@ function SectionHeader({ title, action }: { title: string; action?: string }) {
   return (
     <div className="flex items-center justify-between mb-4">
       <h3
-        className="font-black text-base"
+        className="text-base font-black"
         style={{ color: "var(--text-primary)" }}
       >
         {title}
@@ -197,14 +199,14 @@ function ChartCard({
   return (
     <motion.div
       {...fadeUp(delay)}
-      className="rounded-2xl p-5"
+      className="p-5 rounded-2xl"
       style={{
         background: "var(--bg-secondary)",
         border: "1px solid var(--border-color)",
       }}
     >
       <h3
-        className="font-black text-sm mb-5"
+        className="mb-5 text-sm font-black"
         style={{ color: "var(--text-primary)" }}
       >
         {title}
@@ -219,13 +221,13 @@ function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
     <div
-      className="rounded-xl px-3 py-2 text-xs shadow-lg"
+      className="px-3 py-2 text-xs shadow-lg rounded-xl"
       style={{
         background: "var(--bg-secondary)",
         border: "1px solid var(--border-color)",
       }}
     >
-      <p className="font-black mb-1" style={{ color: "var(--text-primary)" }}>
+      <p className="mb-1 font-black" style={{ color: "var(--text-primary)" }}>
         {label}
       </p>
       {payload.map((p: any) => (
@@ -337,23 +339,23 @@ function UserDashboard({ name }: { name: string }) {
       {/* Today's Goal Banner */}
       <motion.div
         {...fadeUp(0.05)}
-        className="rounded-2xl p-5 relative overflow-hidden"
+        className="relative p-5 overflow-hidden rounded-2xl"
         style={{
           background:
             "linear-gradient(135deg, var(--primary) 0%, #c45d10 100%)",
         }}
       >
-        <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10" />
-        <div className="absolute -right-4 -bottom-4 w-24 h-24 rounded-full bg-white/5" />
+        <div className="absolute w-40 h-40 rounded-full -right-8 -top-8 bg-white/10" />
+        <div className="absolute w-24 h-24 rounded-full -right-4 -bottom-4 bg-white/5" />
         <div className="relative z-10 flex items-center justify-between gap-4">
           <div>
             <p className="text-white/70 text-[11px] font-black uppercase tracking-widest mb-1">
               Today's Goal
             </p>
-            <p className="text-white font-black text-lg leading-tight">
+            <p className="text-lg font-black leading-tight text-white">
               Build Muscles — Leg Day
             </p>
-            <p className="text-white/70 text-xs mt-1">
+            <p className="mt-1 text-xs text-white/70">
               3 of 5 exercises completed
             </p>
           </div>
@@ -401,14 +403,14 @@ function UserDashboard({ name }: { name: string }) {
       </motion.div>
 
       {/* Stat Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {todayStats.map((s) => (
           <StatCard key={s.label} {...s} />
         ))}
       </div>
 
       {/* Charts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <ChartCard title="Weekly Calorie Intake" delay={0.2}>
           <ResponsiveContainer width="100%" height={180}>
             <AreaChart data={USER_WEEKLY}>
@@ -473,7 +475,7 @@ function UserDashboard({ name }: { name: string }) {
       {/* Recent Workouts */}
       <motion.div
         {...fadeUp(0.3)}
-        className="rounded-2xl p-5"
+        className="p-5 rounded-2xl"
         style={{
           background: "var(--bg-secondary)",
           border: "1px solid var(--border-color)",
@@ -489,7 +491,7 @@ function UserDashboard({ name }: { name: string }) {
             >
               <div className="flex items-center gap-3">
                 <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center"
+                  className="flex items-center justify-center w-9 h-9 rounded-xl"
                   style={{ background: "var(--primary)15" }}
                 >
                   <Dumbbell size={16} style={{ color: "var(--primary)" }} />
@@ -527,11 +529,23 @@ function UserDashboard({ name }: { name: string }) {
 // ─── COACH DASHBOARD ──────────────────────────────────────────────────────────
 // ══════════════════════════════════════════════════════════════════════════════
 function CoachDashboard({ name }: { name: string }) {
+  const { data: session } = useSession();
+  const { data: coaches = [] } = useQuery({
+    queryKey: ["coaches"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach");
+      return res.data;
+    }
+  });
+
+  const singleCoach = coaches.find(coach => coach.email === session.email);
+  console.log(singleCoach);
+
   const stats = [
     {
       icon: Users,
       label: "Active Clients",
-      value: "12",
+      value: singleCoach.maxClients,
       sub: "2 new this week",
       iconColor: "#4b9eff",
       iconBg: "#dbeeff",
@@ -651,25 +665,25 @@ function CoachDashboard({ name }: { name: string }) {
       {/* Banner */}
       <motion.div
         {...fadeUp(0.05)}
-        className="rounded-2xl p-5 relative overflow-hidden"
+        className="relative p-5 overflow-hidden rounded-2xl"
         style={{
           background: "linear-gradient(135deg, #f0a500 0%, #c17d00 100%)",
         }}
       >
-        <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10" />
+        <div className="absolute w-40 h-40 rounded-full -right-8 -top-8 bg-white/10" />
         <div className="relative z-10">
           <p className="text-white/70 text-[11px] font-black uppercase tracking-widest mb-1">
             Today's Schedule
           </p>
-          <p className="text-white font-black text-lg">4 Sessions · 6 Hours</p>
-          <p className="text-white/70 text-xs mt-1">
+          <p className="text-lg font-black text-white">4 Sessions · 6 Hours</p>
+          <p className="mt-1 text-xs text-white/70">
             Next: Ali Hassan at 3:00 PM — Hypertrophy Day 3
           </p>
         </div>
       </motion.div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {stats.map((s) => (
           <StatCard key={s.label} {...s} />
         ))}
@@ -681,7 +695,7 @@ function CoachDashboard({ name }: { name: string }) {
           {COACH_CLIENT_PROGRESS.map((c, i) => (
             <div key={i} className="flex items-center gap-3">
               <span
-                className="text-xs font-bold w-12 shrink-0"
+                className="w-12 text-xs font-bold shrink-0"
                 style={{ color: "var(--text-secondary)" }}
               >
                 {c.name}
@@ -710,7 +724,7 @@ function CoachDashboard({ name }: { name: string }) {
                 />
               </div>
               <span
-                className="text-xs font-black w-10 text-right"
+                className="w-10 text-xs font-black text-right"
                 style={{ color: "var(--text-primary)" }}
               >
                 {c.progress}%
@@ -723,7 +737,7 @@ function CoachDashboard({ name }: { name: string }) {
       {/* Client List */}
       <motion.div
         {...fadeUp(0.3)}
-        className="rounded-2xl p-5"
+        className="p-5 rounded-2xl"
         style={{
           background: "var(--bg-secondary)",
           border: "1px solid var(--border-color)",
@@ -741,7 +755,7 @@ function CoachDashboard({ name }: { name: string }) {
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className="w-9 h-9 rounded-full flex items-center justify-center font-black text-sm text-white"
+                    className="flex items-center justify-center text-sm font-black text-white rounded-full w-9 h-9"
                     style={{
                       background: "linear-gradient(135deg, #f0a500, #f47920)",
                     }}
@@ -782,11 +796,39 @@ function CoachDashboard({ name }: { name: string }) {
 // ─── ADMIN DASHBOARD ──────────────────────────────────────════════════════════
 // ══════════════════════════════════════════════════════════════════════════════
 function AdminDashboard({ name }: { name: string }) {
+  const {data: users = []} = useQuery({
+    queryKey: ["users"],
+    queryFn: async() => {
+      const res = await axios.get("/api/user?role=user");
+      return res.data;
+    }
+  });
+  const {data: coaches = []} = useQuery({
+    queryKey: ["coaches"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach");
+      return res.data;
+    }
+  });
+  const {data: activeCoaches = []} = useQuery({
+    queryKey: ["activeCoaches"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach?status=approved");
+      return res.data;
+    }
+  });
+  const {data: pendingCoaches = []} = useQuery({
+    queryKey: ["pendingCoaches"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach?status=pending");
+      return res.data;
+    }
+  });
   const stats = [
     {
       icon: Users,
       label: "Total Users",
-      value: "1,284",
+      value: users.length,
       sub: "+79 this month",
       iconColor: "#4b9eff",
       iconBg: "#dbeeff",
@@ -796,8 +838,8 @@ function AdminDashboard({ name }: { name: string }) {
     {
       icon: UserCheck,
       label: "Active Coaches",
-      value: "38",
-      sub: "6 pending approval",
+      value: activeCoaches.length,
+      sub: `${pendingCoaches.length} pending approval`,
       iconColor: "#f47920",
       iconBg: "#fff3e0",
       delay: 0.16,
@@ -899,32 +941,32 @@ function AdminDashboard({ name }: { name: string }) {
       {/* Alert Banner */}
       <motion.div
         {...fadeUp(0.05)}
-        className="rounded-2xl p-5 relative overflow-hidden"
+        className="relative p-5 overflow-hidden rounded-2xl"
         style={{
           background: "linear-gradient(135deg, #7c5cbf 0%, #5a3d99 100%)",
         }}
       >
-        <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10" />
-        <div className="relative z-10 flex items-start justify-between gap-4 flex-wrap">
+        <div className="absolute w-40 h-40 rounded-full -right-8 -top-8 bg-white/10" />
+        <div className="relative z-10 flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-white/70 text-[11px] font-black uppercase tracking-widest mb-1">
               Platform Summary
             </p>
-            <p className="text-white font-black text-lg">
-              1,284 Users · 38 Coaches · ৳89k Revenue
+            <p className="text-lg font-black text-white">
+              {users.length} Users · {coaches.length} Coaches · ৳89k Revenue
             </p>
-            <p className="text-white/70 text-xs mt-1">
-              6 coach applications pending your review
+            <p className="mt-1 text-xs text-white/70">
+              {pendingCoaches.length} coach applications pending your review
             </p>
           </div>
-          <button className="shrink-0 px-4 py-2 rounded-xl bg-white/20 text-white text-xs font-black hover:bg-white/30 transition-colors">
+          <button className="px-4 py-2 text-xs font-black text-white transition-colors shrink-0 rounded-xl bg-white/20 hover:bg-white/30">
             Review Now →
           </button>
         </div>
       </motion.div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {stats.map((s) => (
           <StatCard key={s.label} {...s} />
         ))}
@@ -964,7 +1006,7 @@ function AdminDashboard({ name }: { name: string }) {
       {/* Activity Log */}
       <motion.div
         {...fadeUp(0.3)}
-        className="rounded-2xl p-5"
+        className="p-5 rounded-2xl"
         style={{
           background: "var(--bg-secondary)",
           border: "1px solid var(--border-color)",
@@ -1019,7 +1061,7 @@ function AdminDashboard({ name }: { name: string }) {
 export default function Dashboard() {
   const { data: session } = useSession();
   const role = (session?.role as Role) ?? "user";
-  const name = session?.user?.name?.split(" ")[0] ?? "there";
+  const name = session?.user?.name ?? "there";
 
   return (
     <div className="max-w-4xl mx-auto">
