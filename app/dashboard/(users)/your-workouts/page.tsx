@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Loader2, Dumbbell, History } from "lucide-react";
 import { WorkoutCard } from "@/components/cards/SuggestedWorkoutCard";
+import { log } from "console";
 
 interface Exercise {
   id: string;
@@ -52,6 +53,7 @@ export default function YourWorkoutsPage() {
       </div>
     );
   }
+console.log(suggestedPlans, myRoutines);
 
   return (
     <div className="max-w-7xl mx-auto py-10 px-4 space-y-16 pb-32 min-h-screen">
@@ -78,6 +80,7 @@ export default function YourWorkoutsPage() {
               exercises={exercises} 
               type="suggested" 
             />
+            
           ))}
         </div>
       </section>

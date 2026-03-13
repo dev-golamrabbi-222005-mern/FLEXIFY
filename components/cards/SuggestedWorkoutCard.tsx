@@ -20,7 +20,7 @@ export const WorkoutCard = ({ title, exercises, createdAt, type, id }: WorkoutCa
   const router = useRouter();
 
   const handleStart = () => {
-    router.push(`/workout/session/${id || title.toLowerCase()}`);
+    router.push(`your-workouts/session/${id || title.toLowerCase()}`);
   };
 
   return (
