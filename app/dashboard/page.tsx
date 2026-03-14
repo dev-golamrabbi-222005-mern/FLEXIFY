@@ -31,6 +31,8 @@ import {
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import UserDashboard from "./components/user/dashboard/UserDashboard";
+import RoleSelectionModal from "../../components/auth/RoleSelectionModal";
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Role = "user" | "coach" | "admin";
@@ -773,15 +775,41 @@ function AdminDashboard({ name }: { name: string }) {
 // ─── MAIN EXPORT ──────────────────────────────────────────────────────────────
 // ══════════════════════════════════════════════════════════════════════════════
 export default function Dashboard() {
-  const { data: session } = useSession();
-  const role = (session?.role as Role) ?? "user";
-  const name = session?.user?.name ?? "there";
+const { data: session, status } = useSession();
+  
+  const { data: dbUser, isLoading } = useQuery({
+    queryKey: ["currentUser", session?.user?.email],
+    queryFn: async () => {
+      if (!session?.user?.email) return null;
+      const res = await axios.get(`/api/user/me?email=${session.user.email}`);
+      return res.data;
+    },
+    enabled: !!session?.user?.email,
+  });
 
+  if (status === "loading" || isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-orange-500"></div>
+      </div>
+    );
+  }
+
+  const name = session?.user?.name ?? "User";
+  const email = session?.user?.email ?? "";
+
+  if (!dbUser) {
+    return <RoleSelectionModal email={email} />;
+  }
+
+  if (dbUser.role === "coach" && dbUser.status === "pending") {
+    return <div className="p-10 text-center">Your coach application is pending approval.</div>;
+  }
   return (
-    <div className="max-w-4xl mx-auto">
-      {role === "user" && <UserDashboard name={name} />}
-      {role === "coach" && <CoachDashboard name={name} />}
-      {role === "admin" && <AdminDashboard name={name} />}
+    <div className="max-w-full p-0 md:px-4 mx-auto">
+      {dbUser.role === "user" && <UserDashboard name={name} />}
+      {dbUser.role === "coach" && <CoachDashboard name={name} />}
+      {dbUser.role === "admin" && <AdminDashboard name={name} />}
     </div>
   );
 }

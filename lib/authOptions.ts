@@ -16,6 +16,9 @@ interface DbUser {
   phone?: string;
   role?: string;
   password?: string;
+  status?: string;   
+  createdAt?: Date;   
+  updatedAt?: Date;
 }
 
 export const authOptions: AuthOptions = {
@@ -61,68 +64,11 @@ export const authOptions: AuthOptions = {
   ],
 
   callbacks: {
-    async signIn({ user, account }) {
-      try {
-        const collection = dbConnect<DbUser>("users");
-
-        if (!user.email) return false;
-
-        const isExist = await collection.findOne({ email: user.email });
-
-        if (!isExist) {
-          const newUser: DbUser = {
-            email: user.email,
-            name: user.name,
-            imageUrl: user.image,
-            provider: account?.provider,
-            providerId: account?.providerAccountId,
-            role: "user",
-          };
-
-          await collection.insertOne(newUser);
-        }
-
-        return true;
-      } catch (error) {
-        return false;
-      }
-    },
-
-    async session({ session, token }) {
-      if (token) {
-        session.role = token.role as string;
-        session.email = token.email as string;
-        session.phone = token.phone as string;
-        // ── Add id so API routes can use session.user.id ──
-        if (session.user) {
-          session.user.id = token.id as string;
-        }
-      }
-      return session;
-    },
-
-    async jwt({ token, user, account }) {
-      if (user) {
-        const collection = dbConnect<DbUser>("users");
-
-        if (
-          account?.provider === "google" ||
-          account?.provider === "facebook"
-        ) {
-          const dbUser = await collection.findOne({ email: user.email! });
-          token.role = dbUser?.role;
-          token.email = dbUser?.email;
-          token.phone = dbUser?.phone;
-          token.id = dbUser?._id?.toString(); // ← store db _id
-        } else {
-          token.role = user.role;
-          token.email = user.email;
-          token.phone = user.phone;
-          token.id = user.id; // ← from credentials authorize()
-        }
-      }
-
-      return token;
-    },
+  async signIn({ user, account }) {
+    if (account?.provider === "google" || account?.provider === "facebook") {
+      return true; 
+    }
+    return true;
   },
+}
 };
