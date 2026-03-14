@@ -32,6 +32,9 @@ import {
   Video,
   X,
   BookText,
+  MessageCircle,
+  Workflow,
+  EarIcon,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -136,6 +139,24 @@ const menuConfig = [
         href: "/dashboard/session-planner",
         icon: Speech,
         roles: ["coach"],
+      },
+      {
+        name:" Message",
+        href:"/dashboard/coach-messages",
+        icon: MessageCircle,
+        roles:["coach"],
+      },
+      {
+        name:" Workouts",
+        href:"/dashboard/coach-workouts",
+        icon: Workflow,
+        roles:["coach"],
+      },
+      {
+        name:" Earning",
+        href:"/dashboard/coach-earning",
+        icon: EarIcon,
+        roles:["coach"],
       },
     ],
   },
