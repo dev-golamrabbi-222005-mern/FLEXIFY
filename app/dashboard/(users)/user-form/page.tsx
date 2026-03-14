@@ -180,7 +180,7 @@ export default function FitnessProfileForm() {
         </div>
 
         {/* Diet */}
-        <div className="col-span-2">
+        <div>
           <label className="text-sm font-medium">Diet Type</label>
           <select
             name="dietType"
@@ -196,7 +196,7 @@ export default function FitnessProfileForm() {
 
         <button
           type="submit"
-          className="col-span-2 bg-blue-600 text-white p-3 rounded-lg mt-4"
+          className="col-span-2 btn-primary p-3 rounded-lg mt-4"
         >
           Save Fitness Profile
         </button>
