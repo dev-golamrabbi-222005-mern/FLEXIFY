@@ -12,11 +12,7 @@ import {
   Users,
   DollarSign,
   ShieldCheck,
- 
   TrendingUp,
-  Users,
-  DollarSign,
-  ShieldCheck,
   CalendarCheck,
   MessageSquare,
   Star,
