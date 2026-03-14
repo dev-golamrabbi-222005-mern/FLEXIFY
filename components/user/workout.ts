@@ -18,8 +18,8 @@ export interface Exercise {
   level?: string;
   primaryMuscles?: string[]; 
   image?: string;
-  images?: string[];        
-  instructions?: string[];  
+  images?: string[];         
+  instructions?: string[];   
   category?: string;
   trackingType: TrackingType;
   sets: SetData[];     
@@ -31,4 +31,52 @@ export interface WorkoutResponse {
     planName: string;
     exercises: Exercise[];
   };
+}
+
+export interface ExerciseSet {
+  reps: number;
+  weight: number;
+  time: string;
+}
+
+
+export interface LogExercise { 
+  exerciseName: string;
+  sets: ExerciseSet[];
+}
+
+export interface WorkoutLog {
+  _id: string;
+  planName: string;
+  duration: number;
+  createdAt: string;
+  exercises: LogExercise[];
+}
+
+export interface WeeklyStat {
+  day: string;
+  workout: number;
+  calories: number;
+}
+
+
+export interface UserRoutine {
+  _id: string;
+  routineName: string;
+  userEmail: string;
+  exercises: string[]; 
+  createdAt: string;
+}
+
+export interface DefaultPackagesResponse {
+  beginner: Exercise[];
+  intermediate: Exercise[];
+  advanced: Exercise[];
+}
+
+export interface TodayGoal {
+  planName: string;
+  progress: number;
+  isCompleted: boolean;
+  totalExercises: number;
 }

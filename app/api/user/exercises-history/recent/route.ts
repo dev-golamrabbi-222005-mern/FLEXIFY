@@ -8,14 +8,13 @@ export async function GET() {
     const logs = await logCol
       .find({})
       .sort({ createdAt: -1 })
-      .limit(5)
+      .limit(10)
       .toArray();
 
     return NextResponse.json({ success: true, data: logs });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed to fetch logs";
     return NextResponse.json(
-      { success: false, message }, 
+      { success: false, message: error instanceof Error ? error.message : "Failed" }, 
       { status: 500 }
     );
   }
