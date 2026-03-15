@@ -24,7 +24,7 @@ export default function RoleSelectionModal({ email }: RoleSelectionProps) {
           </button>
 
           <button 
-            onClick={() => router.push(`/apply-coach?email=${email}`)}
+            onClick={() => router.push(`/applycoach?email=${email}`)}
             className="p-6 border border-blue-500 rounded-xl hover:bg-blue-500 transition-all group"
           >
             <span className="block mb-2 text-3xl">📋</span>

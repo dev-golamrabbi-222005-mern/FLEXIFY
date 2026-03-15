@@ -1,26 +1,24 @@
 // lib/authOptions.ts
-import { AuthOptions } from "next-auth";
+import { AuthOptions, DefaultSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import { dbConnect } from "./dbConnect";
 import { loginUser } from "@/actions/server/auth";
 
-interface DbUser {
-  _id?: string;
-  provider?: string;
-  providerId?: string;
-  email: string;
-  name?: string | null;
-  imageUrl?: string | null;
-  phone?: string;
-  role?: string;
-  password?: string;
-  status?: string;   
-  createdAt?: Date;   
-  updatedAt?: Date;
-}
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      role: string;
+    } & DefaultSession["user"]
+  }
 
+  interface User {
+    id: string;
+    role?: string;
+  }
+}
 export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
@@ -64,11 +62,53 @@ export const authOptions: AuthOptions = {
   ],
 
   callbacks: {
-  async signIn({ user, account }) {
-    if (account?.provider === "google" || account?.provider === "facebook") {
-      return true; 
-    }
-    return true;
+    async signIn({ user, account }) {
+      if (account?.provider === "google" || account?.provider === "facebook") {
+        const collection = await dbConnect("users");
+        const isExist = await collection.findOne({ email: user.email });
+
+        if (!isExist) {
+          await collection.insertOne({
+            name: user.name,
+            email: user.email,
+            imageUrl: user.image,
+            role: "", 
+            status: "none",
+            provider: account.provider,
+            createdAt: new Date(),
+          });
+        }
+      }
+      return true;
+    },
+
+    async jwt({ token, user, trigger, session }) {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+      }
+      
+      if (trigger === "update" && session?.role) {
+        token.role = session.role;
+      }
+
+      if (!token.role && token.email) {
+        const collection = await dbConnect("users");
+        const dbUser = await collection.findOne({ email: token.email });
+        if (dbUser) token.role = dbUser.role;
+      }
+
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.role = (token.role as string) || ""; 
+      }
+      return session;
+    },
   },
-}
+  session: { strategy: "jwt" },
+  secret: process.env.NEXTAUTH_SECRET,
 };

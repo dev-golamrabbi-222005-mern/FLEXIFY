@@ -89,8 +89,8 @@ export const postUser = async (payload: UserPayload) => {
     phone: phone || "",
     imageUrl: imageUrl || "",
     password: hashedPassword,
-    role: (role as "user" | "coach") || "", 
-    status: role === "coach" ? "pending" : "none",
+    role: "",       
+    status: "none",
     updatedAt: new Date(),
   };
 

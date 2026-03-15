@@ -1,27 +1,34 @@
-import { DbUser } from "@/actions/server/auth";
 import { dbConnect } from "@/lib/dbConnect";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
+import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    const body = await request.json();
-    const collection = await dbConnect<DbUser>("users");
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
 
-    const coachPayload: Partial<DbUser> = {
+    const body = await req.json();
+    const collection = await dbConnect("users"); 
+
+    const coachPayload = {
       ...body,
-      role: "user", 
+      email: session.user.email, 
+      role: "", 
       status: "pending",
-      isProfileComplete: true,
       updatedAt: new Date(),
     };
 
     await collection.updateOne(
-      { email: body.email },
+      { email: session.user.email },
       { $set: coachPayload },
       { upsert: true }
     );
 
-    return Response.json({ success: true, message: "Application submitted" });
+    return NextResponse.json({ success: true, message: "Application submitted" });
   } catch (error) {
-    return Response.json({ message: "Error processing request" }, { status: 500 });
+    return NextResponse.json({ message: "Internal Error" }, { status: 500 });
   }
 }
