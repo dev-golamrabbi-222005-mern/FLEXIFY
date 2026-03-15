@@ -11,6 +11,8 @@ import { GreetingHeader, StatCard, StatCardProps, TodayGoalCard } from "./Dashbo
 import { WorkoutDetailModal } from "./WorkoutDetailModal";
 import { SetGoalModal } from "./SetGoalModal";
 import { WorkoutLog, WeeklyStat, UserRoutine, DefaultPackagesResponse, TodayGoal } from "@/components/user/workout";
+import WeeklyStreakCard from "./WeeklyStreakCard";
+import MonthlyStreakCalendar from "./MonthlyStreakCalendar";
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
@@ -22,6 +24,26 @@ export default function UserDashboard({ name }: { name: string }) {
   const [selectedWorkout, setSelectedWorkout] = useState<WorkoutLog | null>(null);
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
 
+  // weekly streak
+  const { data: streakData, isLoading: isStreakLoading } = useQuery({
+  queryKey: ["weekly-streak"],
+  queryFn: async () => {
+    const res = await axios.get("/api/user/stats/streak");
+    return res.data?.data;
+  },
+});
+
+const { data: allWorkoutLogs = [] } = useQuery<WorkoutLog[]>({
+  queryKey: ["all-workouts-calendar"],
+  queryFn: async () => {
+    const res = await axios.get("/api/user/exercises-history/all");
+    return res.data.data || [];
+  },
+});
+
+const totalStreakValue = `${streakData?.totalStreak || 0} ${streakData?.totalStreak === 1 ? 'Day' : 'Days'}`;
+const currentStreakDays = streakData?.completedDays || 0;
+const streakValue = `${currentStreakDays} ${currentStreakDays === 1 ? 'Day' : 'Days'}`;
   // Queries
   const { data: recentLogs = [], isLoading: isRecentLoading } = useQuery<WorkoutLog[]>({
     queryKey: ["recent-workouts"],
@@ -92,7 +114,15 @@ export default function UserDashboard({ name }: { name: string }) {
     { icon: Flame, label: "Burned", value: todayChartData?.calories || 0, sub: "kcal burned", iconColor: "#e74c3c", iconBg: "#fee2e2", delay: 0.22 },
     { icon: Moon, label: "Sleep", value: "8h 20m", sub: "Last night", iconColor: "#7c5cbf", iconBg: "#ede9fe", delay: 0.28 },
     { icon: Droplets, label: "Water", value: "6 / 8", sub: "glasses", iconColor: "#4b9eff", iconBg: "#dbeeff", delay: 0.34 },
-    { icon: Trophy, label: "Streak", value: "14 days", sub: "Keep it up!", iconColor: "#f0a500", iconBg: "#fef3c7", delay: 0.4 },
+    { 
+    icon: Trophy, 
+    label: "Total Streak", 
+    value: totalStreakValue, 
+    sub: streakData?.totalStreak > 0 ? "You're on fire! 🔥" : "Start today!", 
+    iconColor: "#e67e22", 
+    iconBg: "#fff3e0", 
+    delay: 0.16
+  },
   ];
 
   return (
@@ -110,6 +140,15 @@ export default function UserDashboard({ name }: { name: string }) {
       </div>
 
       <DashboardCharts data={weeklyData} isLoading={isChartLoading} />
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-stretch">
+  <div className="lg:col-span-3 min-h-[300px]">
+    <MonthlyStreakCalendar workoutLogs={allWorkoutLogs} />
+  </div>
+
+  <div className="lg:col-span-2 min-h-[300px]">
+    <WeeklyStreakCard streak={streakData} />
+  </div>
+</div>
 
       <motion.div {...fadeUp(0.3)} className="p-5 rounded-3xl border border-[var(--border-color)] bg-[var(--bg-secondary)]">
         <h3 className="text-base font-black text-[var(--text-primary)] mb-4 uppercase tracking-tighter">
