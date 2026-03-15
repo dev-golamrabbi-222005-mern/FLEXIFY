@@ -1,125 +1,252 @@
 "use client";
 
 import { useState } from "react";
-import { User, Bell, Moon, Save } from "lucide-react";
+import { User, Bell, Shield, Dumbbell, Moon, BellDot } from "lucide-react";
+import ThemeToggle from "../Share/ThemeToggle";
+import { useSession } from "next-auth/react";
 
 export default function SettingsPage() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [notifications, setNotifications] = useState(true);
+  const [activeTab, setActiveTab] = useState("profile");
+   const { data: session } = useSession();
+
+   console.log(session);
+
+  const menu = [
+    { id: "profile", label: "Profile", icon: User },
+    { id: "fitness", label: "Fitness", icon: Dumbbell },
+    { id: "notifications", label: "Notifications", icon: Bell },
+    { id: "security", label: "Security", icon: Shield },
+    { id: "appearance", label: "Appearance", icon: Moon },
+  ];
 
   return (
-    <div className="p-3 sm:p-4 md:p-6 space-y-6 md:space-y-8">
+    <div className="p-4 md:p-6 bg-[var(--bg-primary)] min-h-screen">
 
-      {/* Title */}
       <div className="flex items-center gap-3">
-        <User className="w-6 h-6 md:w-7 md:h-7 text-orange-500" />
-        <h1 className="text-xl md:text-2xl font-bold">Settings</h1>
+        <User className="w-6 h-6 md:w-7 md:h-7 text-2xl md:text-3xl font-bold mb-6" />
+        <h1 className="text-2xl md:text-3xl font-bold mb-6">Settings</h1>
       </div>
 
-      {/* Profile Settings */}
-      <div className="bg-[var(--card-bg)] p-4 sm:p-5 md:p-6 rounded-2xl shadow space-y-4">
-        <h2 className="text-base md:text-lg font-semibold">Profile Information</h2>
+      <div className="flex flex-col md:grid md:grid-cols-4 gap-6">
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-          <input
-            type="text"
-            placeholder="Full Name"
-            className="p-3 rounded-lg bg-transparent border border-gray-400/40 focus:outline-none text-sm md:text-base"
-          />
+        {/* Sidebar */}
+        <div className="bg-[var(--card-bg)] rounded-xl shadow p-3 md:p-4 md:col-span-1">
 
-          <input
-            type="email"
-            placeholder="Email Address"
-            className="p-3 rounded-lg bg-transparent border border-gray-400/40 focus:outline-none text-sm md:text-base"
-          />
-
-          <input
-            type="number"
-            placeholder="Age"
-            className="p-3 rounded-lg bg-transparent border border-gray-400/40 focus:outline-none text-sm md:text-base"
-          />
-
-          <select className="p-3 rounded-lg bg-transparent border border-gray-400/40 focus:outline-none text-sm md:text-base">
-            <option>Male</option>
-            <option>Female</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Body Info */}
-      <div className="bg-[var(--card-bg)] p-4 sm:p-5 md:p-6 rounded-2xl shadow space-y-4">
-        <h2 className="text-base md:text-lg font-semibold">Body Information</h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-          <input
-            type="number"
-            placeholder="Height (cm)"
-            className="p-3 rounded-lg bg-transparent border border-gray-400/40 focus:outline-none text-sm md:text-base"
-          />
-
-          <input
-            type="number"
-            placeholder="Weight (kg)"
-            className="p-3 rounded-lg bg-transparent border border-gray-400/40 focus:outline-none text-sm md:text-base"
-          />
-        </div>
-      </div>
-
-      {/* Preferences */}
-      <div className="bg-[var(--card-bg)] p-4 sm:p-5 md:p-6 rounded-2xl shadow space-y-6">
-        <h2 className="text-base md:text-lg font-semibold">Preferences</h2>
-
-        {/* Dark Mode */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 text-sm md:text-base">
-            <Moon className="text-orange-500 w-5 h-5" />
-            <span>Dark Mode</span>
+          {/* Mobile Tabs */}
+          <div className="flex md:hidden overflow-x-auto gap-3 pb-2">
+            {menu.map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg whitespace-nowrap
+                  ${activeTab === item.id ? "bg-[var(--primary)]" : "text-[var(--text-primary)]"}`}
+                >
+                  <Icon size={16} />
+                  {item.label}
+                </button>
+              );
+            })}
           </div>
 
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className={`w-11 h-6 flex items-center rounded-full p-1 transition ${
-              darkMode ? "bg-orange-500" : "bg-gray-400"
-            }`}
-          >
-            <div
-              className={`bg-white w-4 h-4 rounded-full shadow-md transform transition ${
-                darkMode ? "translate-x-5" : ""
-              }`}
-            />
-          </button>
+          {/* Desktop Sidebar */}
+          <ul className="hidden md:block space-y-2">
+            {menu.map((item) => {
+              const Icon = item.icon;
+              return (
+                <li
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`flex items-center gap-2 cursor-pointer p-2 rounded-lg
+                  ${activeTab === item.id ? "bg-[var(--primary)]/10 text-[var(--primary)] font-semibold" : "text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]"}`}
+                >
+                  <Icon size={18} />
+                  {item.label}
+                </li>
+              );
+            })}
+          </ul>
+
         </div>
 
-        {/* Notifications */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 text-sm md:text-base">
-            <Bell className="text-orange-500 w-5 h-5" />
-            <span>Notifications</span>
-          </div>
+        {/* Content */}
+        <div className="bg-[var(--card-bg)] rounded-xl shadow p-4 md:p-6 md:col-span-3">
 
-          <button
-            onClick={() => setNotifications(!notifications)}
-            className={`w-11 h-6 flex items-center rounded-full p-1 transition ${
-              notifications ? "bg-orange-500" : "bg-gray-400"
-            }`}
-          >
-            <div
-              className={`bg-white w-4 h-4 rounded-full shadow-md transform transition ${
-                notifications ? "translate-x-5" : ""
-              }`}
-            />
-          </button>
+          {/* Profile */}
+          {activeTab === "profile" && (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">
+                Profile Settings
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium">Full Name</label>
+                  <input
+                  placeholder="Full Name"
+                  className="border p-2 rounded-lg"
+                  defaultValue={session?.user?.name}
+                />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium">Email</label>
+                  <input
+                  placeholder="Email"
+                  className="border p-2 rounded-lg"
+                  defaultValue={session?.user?.email}
+                />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium">Phone</label>
+                  <input
+                  placeholder="Phone"
+                  className="border p-2 rounded-lg"
+                  defaultValue={session?.phone}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium">Location</label>
+                  <input
+                    placeholder="Location"
+                    className="border p-2 rounded-lg"
+                    defaultValue={session?.user?.location}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium">Photo</label>
+                  <input
+                  placeholder="Photo"
+                  className="border p-2 rounded-lg"
+                  defaultValue={session?.user?.image}
+                  />
+                </div>
+
+              </div>
+
+              <button className="mt-5 btn-primary ">
+                Save Changes
+              </button>
+            </div>
+          )}
+
+          {/* Fitness */}
+          {activeTab === "fitness" && (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">
+                Fitness Information
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <input
+                  placeholder="Height (cm)"
+                  className="border p-2 rounded-lg"
+                />
+
+                <input
+                  placeholder="Weight (kg)"
+                  className="border p-2 rounded-lg"
+                />
+
+                <select className="border p-2 rounded-lg bg-[var(--bg-secondary)] text-[var(--text-primary)]">
+                  <option>Fitness Goal</option>
+                  <option>Weight Loss</option>
+                  <option>Muscle Gain</option>
+                </select>
+
+                <select className="border p-2 rounded-lg bg-[var(--bg-secondary)] text-[var(--text-primary)]">
+                  <option>Activity Level</option>
+                  <option>Sedentary</option>
+                  <option>Moderately Active</option>
+                  <option>Very Active</option>
+                </select>
+
+              </div>
+
+              <button className="mt-5 btn-primary">
+                Update Fitness Info
+              </button>
+            </div>
+          )}
+
+          {/* Notifications */}
+          {activeTab === "notifications" && (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">
+                Notification Settings
+              </h2>
+
+              <div className="space-y-4">
+
+                <label className="flex justify-between items-center">
+                  Email Notifications
+                  <input type="checkbox" />
+                </label>
+
+                <label className="flex justify-between items-center">
+                  Workout Reminder
+                  <input type="checkbox" />
+                </label>
+
+                <label className="flex justify-between items-center">
+                  Diet Tips
+                  <input type="checkbox" />
+                </label>
+
+              </div>
+            </div>
+          )}
+
+          {/* Security */}
+          {activeTab === "security" && (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">
+                Security
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <input
+                  type="password"
+                  placeholder="Current Password"
+                  className="border p-2 rounded-lg"
+                />
+
+                <input
+                  type="password"
+                  placeholder="New Password"
+                  className="border p-2 rounded-lg"
+                />
+
+              </div>
+
+              <button className="mt-5 bg-red-500 text-white px-5 py-2 rounded-lg">
+                Change Password
+              </button>
+            </div>
+          )}
+
+          {/* Appearance */}
+          {activeTab === "appearance" && (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">
+                Appearance
+              </h2>
+                <div >
+                <ThemeToggle />                    
+                </div>
+            </div>
+          )}
+
         </div>
-      </div>
 
-      {/* Save Button */}
-      <div className="flex justify-start md:justify-end">
-        <button className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 md:px-6 md:py-3 rounded-xl font-medium transition text-sm md:text-base">
-          <Save size={18} />
-          Save Changes
-        </button>
       </div>
-
     </div>
   );
 }

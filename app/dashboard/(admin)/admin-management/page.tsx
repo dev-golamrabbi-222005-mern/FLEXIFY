@@ -43,7 +43,7 @@ export default function AdminManagementSection() {
 
   const approveCoach = (id: ObjectId, email: string) => {
     try{
-      axios.patch("/api/coach/approve", {
+      axios.patch("/api/coach/status", {
         id, email,
         status: "approved"
       });

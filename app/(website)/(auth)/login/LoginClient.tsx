@@ -35,13 +35,9 @@ export default function LoginClient(): JSX.Element {
       callbackUrl,
     });
 
-    if (!result?.ok) {
-      await Swal.fire(
-        "Error",
-        "Email or password not matched. Try Google login or register.",
-        "error",
-      );
-      return;
+    if (result?.ok) {
+     await Swal.fire("Success", "Welcome back!", "success");
+  router.push("/dashboard");
     }
 
     await Swal.fire("Success", "Login successful", "success");

@@ -1,95 +1,48 @@
 "use client";
-
-import { useState } from "react";
 import { CheckCircle, XCircle, UserCheck } from "lucide-react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { ObjectId } from "mongodb";
 import Swal from "sweetalert2";
 
-type CoachApplication = {
-  id: number;
-  name: string;
+interface CoachApplication {
+  _id: string;
+  fullName: string;
   email: string;
-  specialization: string;
-  experience: string;
-  status: "Pending" | "Approved" | "Rejected";
-};
+  specialties: string;
+  experienceYears: number;
+  status: "pending" | "approved" | "rejected";
+}
 
 export default function AdminCoachApplications() {
-  // const [applications, setApplications] = useState<CoachApplication[]>([
-  //   {
-  //     id: 1,
-  //     name: "Rahim Uddin",
-  //     email: "rahim@example.com",
-  //     specialization: "Strength Training",
-  //     experience: "5 Years",
-  //     status: "Pending",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Karim Hasan",
-  //     email: "karim@example.com",
-  //     specialization: "Yoga Instructor",
-  //     experience: "3 Years",
-  //     status: "Pending",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Karim",
-  //     email: "karim@example.com",
-  //     specialization: "Yoga Instructor",
-  //     experience: "3 Years",
-  //     status: "Pending",
-  //   },
-  // ]);
 
-  const {data: applications = [], refetch} = useQuery({
+const { data: applications = [], refetch } = useQuery<CoachApplication[]>({
     queryKey: ["applications"],
-    queryFn: async() => {
-      const res = await axios.get("/api/coach");
+    queryFn: async () => {
+      const res = await axios.get("/api/admin/coaches?status=pending");
       return res.data;
     }
   });
 
-  const approveCoach = (id: ObjectId, email: string) => {
-    // setApplications((prev) =>
-    //   prev.map((app) =>
-    //     app.id === id ? { ...app, status: "Approved" } : app
-    //   )
-    // );
-    try{
-      axios.patch("/api/coach/approve", {
-        id, email,
-        status: "approved"
-      });
-      refetch();
-      Swal.fire("Approved", "Coach approved by admin", "success");
-    }
-    catch(error){
-      Swal.fire("Error", error.message, "error");
-    }
-  };
-
-  const rejectCoach = (id: ObjectId) => {
-    // setApplications((prev) =>
-    //   prev.map((app) =>
-    //     app.id === id ? { ...app, status: "Rejected" } : app
-    //   )
-    // );
-    try{
-      axios.patch("/api/coach/reject", {
+  const handleStatusChange = async (id: string, newStatus: "approved" | "rejected") => {
+    try {
+      const response = await axios.patch("/api/admin/coaches/status", {
         id,
-        status: "rejected"
+        status: newStatus
       });
-      refetch();
-      Swal.fire("Rejected", "Coach rejected by admin", "success");
-    }
-    catch(error){
-      Swal.fire("Error", error.message, "error");
+
+      if (response.data.success) {
+        refetch(); 
+        Swal.fire(
+          newStatus === "approved" ? "Approved!" : "Rejected!",
+          `The coach application has been ${newStatus}.`,
+          "success"
+        );
+      }
+    } catch (error) {
+      console.error("Update error:", error);
+      Swal.fire("Error", "Failed to update status. Please try again.", "error");
     }
   };
-
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 space-y-8 bg-[var(--bg-primary)] min-h-screen">
 
@@ -116,7 +69,7 @@ export default function AdminCoachApplications() {
                 Specialization: <span className="font-medium">{app.specialties}</span>
               </p>
               <p className="text-sm">
-                Experience: <span className="font-medium">{app.experienceYears}</span>
+                Experience: <span className="font-medium">{app.experienceYears} Years</span>
               </p>
 
               {/* STATUS BADGE */}
@@ -137,7 +90,7 @@ export default function AdminCoachApplications() {
             {app.status === "pending" && (
               <div className="flex flex-wrap gap-3 mt-3">
                 <button
-                  onClick={() => approveCoach(app._id, app.email)}
+                  onClick={() => handleStatusChange(app._id, "approved")}
                   className="flex items-center gap-2 px-4 py-2 text-white transition bg-green-600 rounded-lg hover:bg-green-700"
                 >
                   <CheckCircle size={18} />
@@ -145,7 +98,7 @@ export default function AdminCoachApplications() {
                 </button>
 
                 <button
-                  onClick={() => rejectCoach(app._id)}
+                  onClick={() => handleStatusChange(app._id, "rejected")}
                   className="flex items-center gap-2 px-4 py-2 text-white transition bg-red-600 rounded-lg hover:bg-red-700"
                 >
                   <XCircle size={18} />

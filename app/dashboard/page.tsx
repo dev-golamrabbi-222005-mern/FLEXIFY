@@ -3,12 +3,17 @@
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import {
- 
- 
-  TrendingUp,
+import {
+  Dumbbell,
+  Salad,
+  Moon,
+  Flame,
+  Droplets,
+  Trophy,
   Users,
   DollarSign,
   ShieldCheck,
+  TrendingUp,
   CalendarCheck,
   MessageSquare,
   Star,
@@ -32,6 +37,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import CoachDashboard from "./components/coach/dashboard/CoachDashboard";
 import UserDashboard from "./components/user/dashboard/UserDashboard";
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Role = "user" | "coach" | "admin";
@@ -492,15 +498,28 @@ function AdminDashboard({ name }: { name: string }) {
 // ─── MAIN EXPORT ──────────────────────────────────────────────────────────────
 // ══════════════════════════════════════════════════════════════════════════════
 export default function Dashboard() {
-  const { data: session } = useSession();
-  const role = (session?.role as Role) ?? "user";
-  const name = session?.user?.name ?? "there";
+const { data: session } = useSession();
+  
+  const { data: dbUser, isLoading } = useQuery({
+    queryKey: ["currentUser", session?.user?.email],
+    queryFn: async () => {
+      if (!session?.user?.email) return null;
+      const res = await axios.get(`/api/user/me?email=${session.user.email}`);
+      return res.data;
+    },
+    enabled: !!session?.user?.email,
+  });
+
+  if (isLoading) return null; // লেআউট অলরেডি লোডার দেখাচ্ছে
+
+  const role = dbUser?.role;
+  const userName = dbUser?.name ?? "User";
 
   return (
-    <div className="max-w-4xl mx-auto">
-      {role === "user" && <UserDashboard name={name} />}
-      {role === "coach" && <CoachDashboard name={name} />}
-      {role === "admin" && <AdminDashboard name={name} />}
+    <div className="max-w-full p-0 md:px-4 mx-auto">
+      {role === "user" && <UserDashboard name={userName} />}
+      {role === "coach" && <CoachDashboard name={userName} />}
+      {role === "admin" && <AdminDashboard name={userName} />}
     </div>
   );
 }
