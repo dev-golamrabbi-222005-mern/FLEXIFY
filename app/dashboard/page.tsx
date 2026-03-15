@@ -3,7 +3,6 @@
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import {
-import {
   Dumbbell,
   Salad,
   Moon,
@@ -516,7 +515,7 @@ const { data: session } = useSession();
   const userName = dbUser?.name ?? "User";
 
   return (
-    <div className="max-w-full p-0 md:px-4 mx-auto">
+    <div className="max-w-full p-0 mx-auto md:px-4">
       {role === "user" && <UserDashboard name={userName} />}
       {role === "coach" && <CoachDashboard name={userName} />}
       {role === "admin" && <AdminDashboard name={userName} />}
