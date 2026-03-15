@@ -3,7 +3,6 @@
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import {
-import {
   Dumbbell,
   Salad,
   Moon,
@@ -498,22 +497,9 @@ function AdminDashboard({ name }: { name: string }) {
 // ─── MAIN EXPORT ──────────────────────────────────────────────────────────────
 // ══════════════════════════════════════════════════════════════════════════════
 export default function Dashboard() {
-const { data: session } = useSession();
-  
-  const { data: dbUser, isLoading } = useQuery({
-    queryKey: ["currentUser", session?.user?.email],
-    queryFn: async () => {
-      if (!session?.user?.email) return null;
-      const res = await axios.get(`/api/user/me?email=${session.user.email}`);
-      return res.data;
-    },
-    enabled: !!session?.user?.email,
-  });
-
-  if (isLoading) return null; // লেআউট অলরেডি লোডার দেখাচ্ছে
-
-  const role = dbUser?.role;
-  const userName = dbUser?.name ?? "User";
+  const { data: session } = useSession();
+  const role = (session?.user as any)?.role ?? "user";
+  const name = session?.user?.name ?? "there";
 
   return (
     <div className="max-w-full p-0 md:px-4 mx-auto">
