@@ -32,7 +32,12 @@ import {
   Video,
   X,
   BookText,
+  MessageCircle,
+  Workflow,
+  EarIcon,
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 interface SidebarProps {
   open: boolean;
@@ -137,6 +142,24 @@ const menuConfig = [
         icon: Speech,
         roles: ["coach"],
       },
+      {
+        name:" Message",
+        href:"/dashboard/coach-messages",
+        icon: MessageCircle,
+        roles:["coach"],
+      },
+      {
+        name:" Workouts",
+        href:"/dashboard/coach-workouts",
+        icon: Workflow,
+        roles:["coach"],
+      },
+      {
+        name:" Earning",
+        href:"/dashboard/coach-earning",
+        icon: EarIcon,
+        roles:["coach"],
+      },
     ],
   },
   {
@@ -164,9 +187,21 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession();
-  const userRole = (session?.role as string) || "user";
-  const userName = session?.user?.name || "User";
-  const userImage = session?.user?.image;
+  const { data: dbUser, isLoading } = useQuery({
+    queryKey: ["currentUser", session?.user?.email],
+    queryFn: async () => {
+      if (!session?.user?.email) return null;
+      const res = await axios.get(`/api/user/me?email=${session.user.email}`);
+      return res.data;
+    },
+    enabled: !!session?.user?.email,
+  });
+
+  if (isLoading) return null;
+  const userRole = dbUser?.role || "user";
+  const userStatus = dbUser?.status || "approved";
+  const userName = dbUser?.name || "User";
+  const userImage = dbUser?.image || session?.user?.image;
   const userInitial = userName.charAt(0).toUpperCase();
 
   return (
@@ -241,9 +276,15 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
       {/* ── Navigation ── */}
       <nav className="flex-1 px-4 py-5 space-y-7">
         {menuConfig.map((group) => {
-          const filtered = group.items.filter((i) =>
-            i.roles.includes(userRole),
-          );
+          const filtered = group.items.filter((item) => {
+            const hasRole = item.roles.includes(userRole);
+            
+            if (userRole === "coach" && userStatus === "pending") {
+              return hasRole && item.name === "Dashboard";
+            }
+            return hasRole;
+          });
+
           if (filtered.length === 0) return null;
 
           return (
@@ -259,27 +300,14 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
                       key={item.name}
                       href={item.href}
                       onClick={onClose}
-                      className={`flex items-center justify-between px-4 py-2.5 rounded-2xl transition-all group
-                        ${
-                          isActive
-                            ? "bg-[var(--primary)]/10 text-[var(--primary)] font-semibold"
-                            : "text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]"
-                        }`}
+                      className={`flex items-center justify-between px-4 py-2.5 rounded-2xl transition-all group ${
+                        isActive ? "bg-[var(--primary)]/10 text-[var(--primary)] font-semibold" : "text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]"
+                      }`}
                     >
                       <div className="flex items-center gap-3">
-                        <item.icon
-                          size={18}
-                          className={
-                            isActive
-                              ? "text-[var(--primary)]"
-                              : "text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]"
-                          }
-                        />
+                        <item.icon size={18} />
                         <span className="text-[13px]">{item.name}</span>
                       </div>
-                      {isActive && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-[var(--primary)]" />
-                      )}
                     </Link>
                   );
                 })}
@@ -290,7 +318,8 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
       </nav>
 
       {/* ── Upgrade Card ── */}
-      <div className="px-4 pb-4">
+      {userRole === "user" && userStatus === "approved" && (
+        <div className="px-4 pb-4">
         <div className="bg-gradient-to-br from-[#F59E0B] to-[#059669] rounded-[1.5rem] p-5 text-white shadow-lg relative overflow-hidden">
           <div className="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full" />
           <div className="bg-white/20 w-9 h-9 rounded-xl flex items-center justify-center mb-3 backdrop-blur-sm">
@@ -305,6 +334,8 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
           </button>
         </div>
       </div>
+      )}
+      
 
       {/* ── Logout ── */}
       <div className="px-4 pb-5">
