@@ -141,6 +141,7 @@ const CoachDashboard = ({ name }: { name: string }) => {
 
         {/* Client List */}
         <ClientList/>
+        
         </div>
     );
 };
