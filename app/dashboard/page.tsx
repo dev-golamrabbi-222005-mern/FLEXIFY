@@ -16,7 +16,6 @@ import {
   CalendarCheck,
   MessageSquare,
   Star,
-  Activity,
   ArrowUpRight,
   ArrowDownRight,
   Clock,
@@ -24,7 +23,6 @@ import {
   UserCheck,
   PackageCheck,
   CreditCard,
-  BarChart3,
 } from "lucide-react";
 import {
   AreaChart,
@@ -538,7 +536,9 @@ function CoachDashboard({ name }: { name: string }) {
     }
   });
 
-  const singleCoach = coaches.find(coach => coach.email === session.email);
+  const singleCoach = coaches.find(
+  (coach: any) => coach.email === session?.user?.email
+);
 
   const { data: monthlyEarning } = useQuery({
     queryKey: ["monthlyEarning"],
@@ -680,7 +680,7 @@ function CoachDashboard({ name }: { name: string }) {
         <div className="absolute w-40 h-40 rounded-full -right-8 -top-8 bg-white/10" />
         <div className="relative z-10">
           <p className="text-white/70 text-[11px] font-black uppercase tracking-widest mb-1">
-            Today's Schedule
+            Todays Schedule
           </p>
           <p className="text-lg font-black text-white">4 Sessions · 6 Hours</p>
           <p className="mt-1 text-xs text-white/70">
@@ -1067,7 +1067,7 @@ function AdminDashboard({ name }: { name: string }) {
 // ══════════════════════════════════════════════════════════════════════════════
 export default function Dashboard() {
   const { data: session } = useSession();
-  const role = (session?.role as Role) ?? "user";
+  const role = (session?.user as any)?.role ?? "user";
   const name = session?.user?.name ?? "there";
 
   return (
