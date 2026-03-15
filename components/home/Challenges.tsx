@@ -44,13 +44,14 @@ const CHALLENGES = [
 const Challenges = () => {
   const router = useRouter();
   return (
-    <section className="py-12 md:py-20 bg-[var(--bg-primary)] transition-colors duration-400">
+    <section className="pb-8 md:pb-12 bg-[var(--bg-primary)] transition-colors duration-400">
       <div className="max-w-7xl mx-auto px-4">
-        <SectionTitle
-          title="7x4 Challenge"
-          className="text-[var(--text-primary)]"
-        />
-
+        <div className="flex flex-col gap-3 mt-8 md:mt-12 lg:mt-16 mb-10">
+          <h1 className="text-3xl text-center font-bold tracking-tight md:text-4xl">
+            <span>7x4</span> <span className="uppercase">Home Challenges</span>
+          </h1>
+          <span className="h-1 w-14 rounded-full bg-(--primary) mx-auto" />
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-12">
           {CHALLENGES.map((c, i) => (
             <div
@@ -169,21 +170,19 @@ const Challenges = () => {
                   </p>
 
                   {/* CTA */}
-                    <button
-                      onClick={() =>
-                        router.push(`/dashboard/challenges/${c.id}`)
-                      }
-                      className="group/btn relative flex items-center gap-3 px-7 py-3.5 rounded-2xl font-black text-sm uppercase tracking-wider text-white overflow-hidden transition-all duration-300 hover:scale-[1.03] active:scale-[0.97]"
-                      style={{
-                        background: c.accent,
-                        boxShadow: `0 8px 32px rgba(${c.accentRgb}, 0.5)`,
-                      }}
-                    >
-                      <span className="relative z-10">Start Challenge</span>
-                      <span className="relative z-10 transition-transform duration-300 group-hover/btn:translate-x-1">
-                        →
-                      </span>
-                    </button>
+                  <button
+                    onClick={() => router.push(`/dashboard/challenges/${c.id}`)}
+                    className="group/btn relative flex items-center gap-3 px-7 py-3.5 rounded-2xl font-black text-sm uppercase tracking-wider text-white overflow-hidden transition-all duration-300 hover:scale-[1.03] active:scale-[0.97]"
+                    style={{
+                      background: c.accent,
+                      boxShadow: `0 8px 32px rgba(${c.accentRgb}, 0.5)`,
+                    }}
+                  >
+                    <span className="relative z-10">Start Challenge</span>
+                    <span className="relative z-10 transition-transform duration-300 group-hover/btn:translate-x-1">
+                      →
+                    </span>
+                  </button>
                 </div>
               </div>
 
