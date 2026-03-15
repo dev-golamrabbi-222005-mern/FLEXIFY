@@ -3,23 +3,9 @@
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import {
-  Dumbbell,
-  Salad,
-  Moon,
-  Flame,
-  Droplets,
-  Trophy,
   Users,
   DollarSign,
   ShieldCheck,
- 
-  TrendingUp,
-  Users,
-  DollarSign,
-  ShieldCheck,
-  CalendarCheck,
-  MessageSquare,
-  Star,
   ArrowUpRight,
   ArrowDownRight,
   Clock,
