@@ -116,7 +116,7 @@ const handleSetComplete = (exIdx: number, setIdx: number, capturedTime?: string)
       const res = await axios.post("/api/routines/finish", payload);
 
       if (res.data.success) {
-        router.push("/dashboard/history");
+        router.push("/dashboard");
       }
     } catch (error) {
       console.error("Save Error:", error);

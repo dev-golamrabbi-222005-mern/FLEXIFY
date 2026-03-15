@@ -58,7 +58,7 @@ const CoachDetails = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-transparent to-transparent" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 -mt-48 md:-mt-64 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 -mt-48 md:-mt-80 relative z-10">
         <div className="flex flex-col lg:flex-row gap-6 items-start">
           
           {/* ─── Left Sidebar: Main Profile Card ─── */}
