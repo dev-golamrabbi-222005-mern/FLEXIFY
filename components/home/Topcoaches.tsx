@@ -54,15 +54,18 @@ const TopCoaches = () => {
   return (
     <section className="py-8 md:py-12 max-w-7xl px-6 mx-auto relative overflow-hidden">
       {/* Title */}
-      <motion.h2
-        initial={{ opacity: 0, y: -20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-        className="text-3xl md:text-4xl font-bold text-center uppercase tracking-tight mb-10"
-      >
-        Top <span className="text-[var(--primary)]">Experienced Coaches</span>
-      </motion.h2>
+      <div className="flex flex-col gap-3 mb-10">
+        <motion.h2
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="text-3xl md:text-4xl font-bold text-center uppercase tracking-tight"
+        >
+          Top <span className="text-[var(--primary)]">Experienced Coaches</span>
+        </motion.h2>
+          <span className="h-1 w-14 mx-auto rounded-full bg-(--primary)" />
+      </div>
 
       {/* Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
