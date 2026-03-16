@@ -1,6 +1,8 @@
 // app/dashboard/layout.tsx
 "use client";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useState } from "react";
 import DashboardNavbar from "./Share/DashboardNavbar";
 import Sidebar from "./sidebar/Sidebar";
@@ -88,6 +90,7 @@ export default function DashboardLayout({
 
         {/* ❹ Only this scrolls — sidebar stays put */}
         <main className="flex-1 overflow-y-auto p-4 md:px-0">{children}</main>
+        <ToastContainer position="top-right" autoClose={2000} />
       </div>
     </div>
   );
