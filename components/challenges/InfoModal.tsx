@@ -151,7 +151,7 @@ export function InfoModal({ exercise, onClose }: Props) {
                         key={m}
                         className="px-2.5 py-1 rounded-lg text-xs font-semibold capitalize"
                         style={{
-                          background: "var(--primary)15",
+                          background: "var(--primary-light)",
                           color: "var(--primary)",
                         }}
                       >
