@@ -18,7 +18,7 @@ const CoachDashboard = ({ name }: { name: string }) => {
         }
     });
 
-    const singleCoach = coaches.find(coach => coach.email === session.email);
+    const singleCoach = coaches.find(coach => coach?.email === session?.user?.email);
 
     const { data: monthlyEarning } = useQuery({
         queryKey: ["monthlyEarning"],
