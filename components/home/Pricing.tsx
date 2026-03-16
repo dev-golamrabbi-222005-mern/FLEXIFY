@@ -144,7 +144,7 @@ const Pricing = () => {
         />
 
         <div
-          className="mt-16 rounded-3xl overflow-hidden"
+          className="rounded-3xl overflow-hidden"
           style={{ border: "3px solid var(--border-color)" }}
         >
           {/* ── Header row ── */}

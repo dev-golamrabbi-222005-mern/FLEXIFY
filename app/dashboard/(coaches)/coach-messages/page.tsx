@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 
 const contacts = [
-  { id: "1", name: "Arif ahamed", lastMsg: "Thanks coach! I'll follow the plan.", time: "2m ago", unread: 2, avatar: "A", online: true },
+  { id: "1", name: "Arif mollah", lastMsg: "Thanks coach! I'll follow the plan.", time: "2m ago", unread: 2, avatar: "A", online: true },
   { id: "2", name: "Nadia Akter", lastMsg: "Can we reschedule tomorrow?", time: "1h ago", unread: 1, avatar: "N", online: false },
   { id: "3", name: "Kamal Uddin", lastMsg: "Hit a new PR today! 💪", time: "3h ago", unread: 0, avatar: "K", online: true },
   { id: "4", name: "Sabrina Islam", lastMsg: "How many sets for squats?", time: "5h ago", unread: 0, avatar: "S", online: false },
