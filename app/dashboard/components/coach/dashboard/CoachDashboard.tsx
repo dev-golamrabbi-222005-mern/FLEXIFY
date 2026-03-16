@@ -24,7 +24,7 @@ const CoachDashboard = ({ name }: { name: string }) => {
         queryKey: ["monthlyEarning"],
         queryFn: async() => {
         const res = await axios.get("/api/monthly-earnings");
-        return res.data;
+        return res.data.data;
         }
     });
 
@@ -70,7 +70,7 @@ const CoachDashboard = ({ name }: { name: string }) => {
         {
             icon: TrendingUp,
             label: "Monthly Earnings",
-            value: `৳${monthlyEarning?.total}`,
+            value: `৳${monthlyEarning?.[5]?.total}`,
             sub: "this month",
             iconColor: "#27ae60",
             iconBg: "#dcfce7",

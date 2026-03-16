@@ -2,6 +2,8 @@
 
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { motion } from "framer-motion";
 import {
   DollarSign,
@@ -10,6 +12,7 @@ import {
   ArrowUpRight,
   CreditCard,
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 import {
   BarChart,
@@ -22,50 +25,76 @@ import {
   Cell,
 } from "recharts";
 
-const monthlyEarnings = [
-  { month: "Sep", amount: 32000 },
-  { month: "Oct", amount: 35000 },
-  { month: "Nov", amount: 38000 },
-  { month: "Dec", amount: 36000 },
-  { month: "Jan", amount: 42000 },
-  { month: "Feb", amount: 45000 },
-];
+// const monthlyEarnings = [
+//   { month: "Sep", amount: 32000 },
+//   { month: "Oct", amount: 35000 },
+//   { month: "Nov", amount: 38000 },
+//   { month: "Dec", amount: 36000 },
+//   { month: "Jan", amount: 42000 },
+//   { month: "Feb", amount: 45000 },
+// ];
 
-const recentPayments = [
-  { client: "Arif Hossain", amount: "৳5,000", date: "Mar 1", status: "Paid", plan: "Premium" },
-  { client: "Nadia Akter", amount: "৳3,500", date: "Mar 1", status: "Paid", plan: "Standard" },
-  { client: "Kamal Uddin", amount: "৳5,000", date: "Feb 28", status: "Paid", plan: "Premium" },
-  { client: "Rashed Khan", amount: "৳3,500", date: "Feb 28", status: "Pending", plan: "Standard" },
-  { client: "Sabrina Islam", amount: "৳2,500", date: "Feb 25", status: "Paid", plan: "Basic" },
-];
+// const recentPayments = [
+//   { client: "Arif Hossain", amount: "৳5,000", date: "Mar 1", status: "Paid", plan: "Premium" },
+//   { client: "Nadia Akter", amount: "৳3,500", date: "Mar 1", status: "Paid", plan: "Standard" },
+//   { client: "Kamal Uddin", amount: "৳5,000", date: "Feb 28", status: "Paid", plan: "Premium" },
+//   { client: "Rashed Khan", amount: "৳3,500", date: "Feb 28", status: "Pending", plan: "Standard" },
+//   { client: "Sabrina Islam", amount: "৳2,500", date: "Feb 25", status: "Paid", plan: "Basic" },
+// ];
 
 export default function CoachEarnings() {
+  const { data: session } = useSession();
+  const { data: coaches = [] } = useQuery({
+      queryKey: ["coaches"],
+      queryFn: async() => {
+      const res = await axios.get("/api/coach");
+      return res.data;
+      }
+  });
+
+  const singleCoach = coaches.find(coach => coach?.email === session?.user?.email);
+
+  const { data: monthlyEarnings } = useQuery({
+      queryKey: ["monthlyEarnings"],
+      queryFn: async() => {
+      const res = await axios.get("/api/monthly-earnings");
+      return res.data.data;
+      }
+  });
+
+  const { data: recentPayments } = useQuery({
+      queryKey: ["recentPayments"],
+      queryFn: async() => {
+      const res = await axios.get("/api/payment");
+      return res.data.slice(0, 5);
+      }
+  });
   return (
     <div
       className="min-h-screen p-4 md:p-8"
       style={{ background: "var(--bg-primary)" }}
     >
-      <div className="max-w-7xl mx-auto space-y-8">
+      <div className="mx-auto space-y-8 max-w-7xl">
 
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
             <h1
-              className="text-2xl md:text-3xl font-extrabold"
+              className="text-2xl font-extrabold md:text-3xl"
               style={{ color: "var(--text-primary)" }}
             >
               Earnings
             </h1>
 
             <p
-              className="text-sm mt-1"
+              className="mt-1 text-sm"
               style={{ color: "var(--text-muted)" }}
             >
               Overview of your financial performance and subscriptions.
             </p>
           </div>
 
-          <button className="btn-primary flex items-center gap-2">
+          <button className="flex items-center gap-2 btn-primary">
             <CreditCard size={16} />
             Withdraw Funds
           </button>
@@ -77,13 +106,13 @@ export default function CoachEarnings() {
           {[
             {
               label: "This Month",
-              value: "৳45,000",
+              value: `৳${monthlyEarnings?.[5]?.total}`,
               change: "+7%",
               icon: DollarSign,
             },
             {
               label: "Total Clients",
-              value: "24",
+              value: singleCoach?.maxClients,
               change: "+3 new",
               icon: Users,
             },
@@ -111,7 +140,7 @@ export default function CoachEarnings() {
                 </div>
 
                 <span
-                  className="text-xs flex items-center gap-1 font-semibold"
+                  className="flex items-center gap-1 text-xs font-semibold"
                   style={{ color: "var(--primary)" }}
                 >
                   <ArrowUpRight size={12} />
@@ -137,7 +166,7 @@ export default function CoachEarnings() {
         </div>
 
         {/* Chart + Payments */}
-        <div className="grid lg:grid-cols-5 gap-8">
+        <div className="grid gap-8 lg:grid-cols-5">
 
           {/* Chart */}
           <motion.div
@@ -154,7 +183,7 @@ export default function CoachEarnings() {
               </h3>
 
               <select
-                className="text-xs px-2 py-1 rounded-lg"
+                className="px-2 py-1 text-xs rounded-lg"
                 style={{
                   background: "var(--bg-secondary)",
                   color: "var(--text-secondary)",
@@ -174,17 +203,17 @@ export default function CoachEarnings() {
 
                   <Tooltip />
 
-                  <Bar dataKey="amount" radius={[6, 6, 0, 0]}>
-                    {monthlyEarnings.map((entry, index) => (
+                  <Bar dataKey="total" radius={[6, 6, 0, 0]}>
+                    {monthlyEarnings?.map((entry, index) => (
                       <Cell
                         key={index}
                         fill={
-                          index === monthlyEarnings.length - 1
+                          index === monthlyEarnings?.length - 1
                             ? "var(--primary)"
                             : "#94a3b8"
                         }
                         fillOpacity={
-                          index === monthlyEarnings.length - 1 ? 1 : 0.25
+                          index === monthlyEarnings?.length - 1 ? 1 : 0.25
                         }
                       />
                     ))}
@@ -196,12 +225,12 @@ export default function CoachEarnings() {
 
           {/* Recent Payments */}
           <motion.div
-            className="lg:col-span-2 card-glass flex flex-col"
+            className="flex flex-col lg:col-span-2 card-glass"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
           >
             <h3
-              className="font-bold mb-6"
+              className="mb-6 font-bold"
               style={{ color: "var(--text-primary)" }}
             >
               Recent Transactions
@@ -209,21 +238,21 @@ export default function CoachEarnings() {
 
             <div className="space-y-5 max-h-[300px] overflow-y-auto">
 
-              {recentPayments.map((p, i) => (
+              {recentPayments?.map((p, i) => (
                 <div
                   key={i}
-                  className="flex justify-between items-center p-2 rounded-xl hover:bg-gray-500/10 transition"
+                  className="flex items-center justify-between p-2 transition rounded-xl hover:bg-gray-500/10"
                 >
                   <div className="flex items-center gap-3">
 
                     <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold"
+                      className="flex items-center justify-center w-10 h-10 text-xs font-bold rounded-full"
                       style={{
                         background: "var(--primary-light)",
                         color: "var(--primary)",
                       }}
                     >
-                      {p.client
+                      {p?.userName
                         .split(" ")
                         .map((n) => n[0])
                         .join("")}
@@ -234,14 +263,14 @@ export default function CoachEarnings() {
                         className="text-sm font-semibold"
                         style={{ color: "var(--text-primary)" }}
                       >
-                        {p.client}
+                        {p?.userName}
                       </p>
 
                       <p
                         className="text-xs"
                         style={{ color: "var(--text-muted)" }}
                       >
-                        {p.plan} Plan
+                        {p?.planName} Plan
                       </p>
                     </div>
                   </div>
@@ -251,19 +280,18 @@ export default function CoachEarnings() {
                       className="text-sm font-bold"
                       style={{ color: "var(--text-primary)" }}
                     >
-                      {p.amount}
+                      {p?.amount}
                     </p>
 
                     <p
-                      className="text-[10px] font-bold uppercase"
-                      style={{
-                        color:
-                          p.status === "Paid"
-                            ? "var(--primary)"
-                            : "var(--warning)",
-                      }}
+                      className={`text-[10px] font-bold uppercase
+                        ${p?.status === "success"
+                        ? "text-(--success)"
+                          : p?.status === "failed"
+                          ? "text-(--danger)"
+                        : "text-(--warning)"}`}
                     >
-                      {p.status}
+                      {p?.status}
                     </p>
                   </div>
                 </div>
@@ -271,7 +299,7 @@ export default function CoachEarnings() {
             </div>
 
             <button
-              className="mt-auto pt-5 text-sm font-semibold"
+              className="pt-5 mt-auto text-sm font-semibold"
               style={{ color: "var(--primary)" }}
             >
               View All Transactions
