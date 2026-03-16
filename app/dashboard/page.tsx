@@ -509,7 +509,7 @@ const { data: session } = useSession();
     enabled: !!session?.user?.email,
   });
 
-  if (isLoading) return null; // লেআউট অলরেডি লোডার দেখাচ্ছে
+  if (isLoading) return null;
 
   const role = dbUser?.role;
   const userName = dbUser?.name ?? "User";
