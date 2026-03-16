@@ -65,7 +65,11 @@ const ADMIN_REVENUE = [
 export const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
-  transition: { delay, duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+  transition: {
+    delay,
+    duration: 0.45,
+    ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+  },
 });
 
 export function greeting() {
@@ -207,7 +211,20 @@ export function ChartCard({
 }
 
 // ─── Custom Tooltip ───────────────────────────────────────────────────────────
-function CustomTooltip({ active, payload, label }: any) {
+interface TooltipEntry {
+  dataKey: string | number;
+  name: string;
+  value: string | number;
+  color: string;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipEntry[];
+  label?: string | number;
+}
+
+function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   if (!active || !payload?.length) return null;
   return (
     <div
@@ -218,10 +235,10 @@ function CustomTooltip({ active, payload, label }: any) {
       }}
     >
       <p className="mb-1 font-black" style={{ color: "var(--text-primary)" }}>
-        {label}
+        {String(label ?? "")}
       </p>
-      {payload.map((p: any) => (
-        <p key={p.dataKey} style={{ color: p.color }}>
+      {payload.map((p, i) => (
+        <p key={i} style={{ color: p.color }}>
           {p.name}: <span className="font-bold">{p.value}</span>
         </p>
       ))}

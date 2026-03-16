@@ -7,7 +7,6 @@ import { getPlan } from "@/lib/plans";
 
 export async function POST(req: NextRequest) {
   try {
-    // ── Step 1: Check session ──────────────────────────────────────────────
     const session = await getServerSession(authOptions);
     console.log("[payment/init] session:", JSON.stringify(session, null, 2));
 
@@ -15,31 +14,47 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // ── Step 2: Parse request body ─────────────────────────────────────────
     const body = await req.json();
     console.log("[payment/init] body:", body);
-    const { planId } = body;
+
+    // ── CHANGE 1: destructure coachId and totalAmount alongside planId ──────
+    const { planId, coachId, totalAmount } = body as {
+      planId: string;
+      coachId?: string;
+      totalAmount?: number;
+    };
 
     if (!planId || planId === "free") {
       return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
     }
 
-    // ── Step 3: Get plan ───────────────────────────────────────────────────
     const plan = getPlan(planId);
     console.log("[payment/init] plan:", plan);
 
-    // ── Step 4: Insert payment record ──────────────────────────────────────
-    const payments = dbConnect("payments");
-    const transactionId = `FLX-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+    // ── CHANGE 2: use totalAmount when provided (Elite + coach combo) ────────
+    // totalAmount arrives in USD from the frontend (e.g. 29 + 30 = 59)
+    // Convert to BDT for SSLCommerz (plan.priceLocal is already in BDT)
+    const finalAmountBDT =
+      typeof totalAmount === "number"
+        ? Math.round(totalAmount * 113) // approximate USD → BDT rate
+        : plan.priceLocal; // fallback: use plan's BDT price
 
+    const payments = dbConnect("payments");
+    const transactionId = `FLX-${Date.now()}-${Math.random()
+      .toString(36)
+      .slice(2, 8)
+      .toUpperCase()}`;
+
+    // ── CHANGE 3: save coachId in the payment record ─────────────────────────
     await payments.insertOne({
       userId: session.user.id ?? session.user.email,
       userEmail: session.user.email,
       userName: session.user.name ?? "",
       planId: plan.id,
       planName: plan.name,
-      amount: plan.priceLocal,
+      amount: finalAmountBDT,
       currency: plan.currency,
+      coachId: coachId ?? null, // ← stored for success handler to link coach
       transactionId,
       status: "pending",
       sslSessionKey: null,
@@ -48,7 +63,6 @@ export async function POST(req: NextRequest) {
     });
     console.log("[payment/init] payment record inserted:", transactionId);
 
-    // ── Step 5: Call SSLCommerz ────────────────────────────────────────────
     const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
     const isSandbox = process.env.SSLCOMMERZ_SANDBOX === "true";
     console.log("[payment/init] env check:", {
@@ -56,19 +70,25 @@ export async function POST(req: NextRequest) {
       has_password: !!process.env.SSLCOMMERZ_STORE_PASSWORD,
       sandbox: isSandbox,
       baseUrl,
+      finalAmountBDT,
+      coachId,
     });
+
+    const productName = coachId
+      ? `Flexify ${plan.name} Plan + Personal Coach`
+      : `Flexify ${plan.name} Plan`;
 
     const sslData = new URLSearchParams({
       store_id: process.env.SSLCOMMERZ_STORE_ID!,
       store_passwd: process.env.SSLCOMMERZ_STORE_PASSWORD!,
-      total_amount: plan.priceLocal.toString(),
+      total_amount: finalAmountBDT.toString(), // ← uses finalAmountBDT
       currency: plan.currency,
       tran_id: transactionId,
       success_url: `${baseUrl}/api/payment/success`,
       fail_url: `${baseUrl}/api/payment/fail`,
       cancel_url: `${baseUrl}/api/payment/cancel`,
       ipn_url: `${baseUrl}/api/payment/ipn`,
-      product_name: `Flexify ${plan.name} Plan`,
+      product_name: productName,
       product_category: "Subscription",
       product_profile: "non-physical-goods",
       cus_name: session.user.name ?? "Customer",

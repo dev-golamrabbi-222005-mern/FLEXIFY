@@ -49,6 +49,7 @@ export async function POST(req: NextRequest) {
     const now = new Date();
 
     const dayRecord = {
+      level,
       day,
       week,
       tag,
@@ -62,6 +63,7 @@ export async function POST(req: NextRequest) {
     const existing = await progress.findOne({
       userEmail: session.user.email,
       type,
+      level,
     });
 
     if (!existing) {
@@ -108,6 +110,7 @@ export async function POST(req: NextRequest) {
         $push: {
           exerciseHistory: {
             type: `challenge_${type}`,
+            level,
             day,
             week,
             tag,
