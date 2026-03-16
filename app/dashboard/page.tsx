@@ -503,9 +503,9 @@ export default function Dashboard() {
 
   return (
     <div className="max-w-full p-0 md:px-4 mx-auto">
-      {role === "user" && <UserDashboard name={userName} />}
-      {role === "coach" && <CoachDashboard name={userName} />}
-      {role === "admin" && <AdminDashboard name={userName} />}
+      {role === "user" && <UserDashboard name={name} />}
+      {role === "coach" && <CoachDashboard name={name} />}
+      {role === "admin" && <AdminDashboard name={name} />}
     </div>
   );
 }
