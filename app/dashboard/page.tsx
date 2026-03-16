@@ -497,15 +497,28 @@ function AdminDashboard({ name }: { name: string }) {
 // ─── MAIN EXPORT ──────────────────────────────────────────────────────────────
 // ══════════════════════════════════════════════════════════════════════════════
 export default function Dashboard() {
-  const { data: session } = useSession();
-  const role = (session?.user as any)?.role ?? "user";
-  const name = session?.user?.name ?? "there";
+const { data: session } = useSession();
+  
+  const { data: dbUser, isLoading } = useQuery({
+    queryKey: ["currentUser", session?.user?.email],
+    queryFn: async () => {
+      if (!session?.user?.email) return null;
+      const res = await axios.get(`/api/user/me?email=${session.user.email}`);
+      return res.data;
+    },
+    enabled: !!session?.user?.email,
+  });
+
+  if (isLoading) return null;
+
+  const role = dbUser?.role;
+  const userName = dbUser?.name ?? "User";
 
   return (
-    <div className="max-w-full p-0 md:px-4 mx-auto">
-      {role === "user" && <UserDashboard name={name} />}
-      {role === "coach" && <CoachDashboard name={name} />}
-      {role === "admin" && <AdminDashboard name={name} />}
+    <div className="max-w-full p-0 mx-auto md:px-4">
+      {role === "user" && <UserDashboard name={userName} />}
+      {role === "coach" && <CoachDashboard name={userName} />}
+      {role === "admin" && <AdminDashboard name={userName} />}
     </div>
   );
 }
