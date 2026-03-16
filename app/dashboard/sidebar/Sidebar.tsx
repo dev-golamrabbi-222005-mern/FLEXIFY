@@ -35,6 +35,10 @@ import {
   MessageCircle,
   Workflow,
   EarIcon,
+  Apple,
+  Calendar1,
+  Star,
+  User,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -142,6 +146,12 @@ const menuConfig = [
         roles: ["coach"],
       },
       {
+        name: " My Trainees",
+        href: "/dashboard/coach-traines",
+        icon: User,
+        roles: ["coach"],
+      },
+      {
         name:" Message",
         href:"/dashboard/coach-messages",
         icon: MessageCircle,
@@ -157,6 +167,30 @@ const menuConfig = [
         name:" Earning",
         href:"/dashboard/coach-earning",
         icon: EarIcon,
+        roles:["coach"],
+      },
+      {
+        name:" Nutrition",
+        href:"/dashboard/coach-nutrition",
+        icon: Apple,
+        roles:["coach"],
+      },
+      {
+        name:" Schedule",
+        href:"/dashboard/coach-schedule",
+        icon: Calendar1,
+        roles:["coach"],
+      },
+      {
+        name:" Reviews",
+        href:"/dashboard/coach-reviews",
+        icon: Star,
+        roles:["coach"],
+      },
+      {
+        name:" Profile",
+        href:"/dashboard/coach-profile",
+        icon: UserRoundPen,
         roles:["coach"],
       },
     ],
