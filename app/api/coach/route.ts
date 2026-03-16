@@ -1,20 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
+import {  NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect"; 
 
-export const GET = async(req: NextRequest) => {
+export const GET = async() => {
     try{
-        const { searchParams } = new URL(req.url);
-        const query = searchParams.get("status") || "";
-        const coaches = await dbConnect("coaches")
-            .find(query ? { status: { $regex: query, $options: "i" } } : {})
-            .toArray();
-        return NextResponse.json(coaches);
-    }
-    catch(error){
-        console.error(error);
-        return NextResponse.json(
-            { error: "Failed to fetch coaches" },
-            { status: 500 },
-        );
-    }
+        const usersCollection = await dbConnect("users");
+      const coaches = await usersCollection
+      .find({ role: "coach", status: "approved" })
+      .toArray();
+
+    return NextResponse.json(coaches, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching coaches:", error);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }

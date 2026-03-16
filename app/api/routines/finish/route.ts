@@ -1,7 +1,11 @@
+import { authOptions } from "@/lib/authOptions";
 import { dbConnect } from "@/lib/dbConnect";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 interface WorkoutLog {
+  email: string;
+  userId: string;
   routineId: string;
   planName: string;
   duration: number;
@@ -20,17 +24,25 @@ interface WorkoutLog {
 
 export async function POST(request: NextRequest) {
   try {
+
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+    }
     const body = await request.json();
     const logCol = await dbConnect("workout_logs");
 
     const { routineId, planName, duration, exercises, date } = body;
 
     const newLog: WorkoutLog = {
+      email: session.user.email,
+      userId: session.user.id,
       routineId,
       planName,
       duration,
       exercises,
-      createdAt: new Date(date),
+      createdAt: new Date(date || new Date()),
     };
 
     const result = await logCol.insertOne(newLog);

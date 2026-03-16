@@ -3,12 +3,18 @@
 import React from "react";
 
 import { User, MapPin, Award, ArrowRight } from "lucide-react";
+import Link from "next/link";
+<<<<<<< HEAD
+=======
+import { Coach } from "@/types/coach";
+>>>>>>> 1c4356f41d776fe2dc14ba5bebb6695ec2a09291
 
 type CoachCardProps = {
   coach: Coach;
 };
 
 const CoachCard = ({ coach }: CoachCardProps) => {
+  console.log(coach);
   return (
     <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-sm overflow-hidden flex flex-col transition-all hover:border-[var(--primary)] group">
       <div className="relative h-56 w-full">
@@ -50,26 +56,36 @@ const CoachCard = ({ coach }: CoachCardProps) => {
           </span>
         </div>
 
-        <div className="flex flex-wrap gap-1">
-          {coach.specialties &&
-            coach.specialties
-
-              .split(",")
-
-              .slice(0, 3)
-
-              .map((s) => <span key={s}>#{s.trim()}</span>)}
-        </div>
+        <div className="flex flex-wrap gap-2 text-[10px] font-bold text-[var(--primary)]">
+  {coach.specialties ? (
+    coach.specialties
+      .split(",")
+      .slice(0, 3)
+      .map((s: string) => (
+        <span key={s} className="bg-[var(--primary)]/10 px-2 py-0.5 rounded-full">
+          #{s.trim()}
+        </span>
+      ))
+  ) : (
+    <span>#GeneralFitness</span>
+  )}
+</div>
       </div>
 
       <div className="p-5 pt-0">
-        <button className="w-full btn-primary flex items-center justify-center gap-2 font-black uppercase tracking-widest text-xs group">
+<<<<<<< HEAD
+        <Link href={`/coaches/${coach._id}`} className="w-full btn-primary flex items-center justify-center gap-2 font-black uppercase tracking-widest text-xs group">
           View Profile{" "}
           <ArrowRight
             size={14}
             className="transition-transform group-hover:translate-x-1"
           />
-        </button>
+        </Link>
+=======
+        <Link href={`/coaches/${coach._id}`} className="w-full ...">
+  View Profile <ArrowRight size={14} />
+</Link>
+>>>>>>> 1c4356f41d776fe2dc14ba5bebb6695ec2a09291
       </div>
     </div>
   );
