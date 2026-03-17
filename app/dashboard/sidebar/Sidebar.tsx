@@ -31,11 +31,14 @@ import {
   Utensils,
   Video,
   X,
+  User,
   BookText,
   MessageCircle,
   Workflow,
   EarIcon,
   Swords,
+  Apple,
+  Star,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -230,7 +233,7 @@ const menuConfig = [
       {
         name:" Schedule",
         href:"/dashboard/coach-schedule",
-        icon: Calendar1,
+        icon: Calendar,
         roles:["coach"],
       },
       {

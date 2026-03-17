@@ -18,7 +18,6 @@ const CoachesPage = () => {
       return data;
     },
   });
- console.log(coaches);
  
   if (isLoading)
     return (
