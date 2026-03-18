@@ -4,7 +4,6 @@ import React from "react";
 
 import { User, MapPin, Award, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { Coach } from "@/types/coach";
 
 type CoachCardProps = {
   coach: Coach;
@@ -70,9 +69,13 @@ const CoachCard = ({ coach }: CoachCardProps) => {
       </div>
 
       <div className="p-5 pt-0">
-        <Link href={`/coaches/${coach._id}`} className="w-full ...">
-  View Profile <ArrowRight size={14} />
-</Link>
+        <Link href={`/coaches/${coach._id}`} className="w-full btn-primary flex items-center justify-center gap-2 font-black uppercase tracking-widest text-xs group">
+          View Profile{" "}
+          <ArrowRight
+            size={14}
+            className="transition-transform group-hover:translate-x-1"
+          />
+        </Link>
       </div>
     </div>
   );

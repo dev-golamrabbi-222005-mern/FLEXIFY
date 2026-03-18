@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { UserCheck, AlertTriangle, Activity } from "lucide-react";
+import { UserCheck, AlertTriangle, Activity, XCircle, CheckCircle } from "lucide-react";
 import {
   ResponsiveContainer,
   BarChart,
@@ -42,20 +42,20 @@ export default function CoachManagementPage() {
   //   },
   // ]);
 
-  const {data: approvedCoaches = [], refetch: approveRefetch} = useQuery({
+  const { data: approvedCoaches = [], refetch: approveRefetch } = useQuery({
     queryKey: ["approvedCoaches"],
-    queryFn: async() => {
+    queryFn: async () => {
       const res = await axios.get("/api/coach?status=approved");
       return res.data;
-    }
+    },
   });
 
-  const {data: warnedCoaches = [], refetch: warnRefetch} = useQuery({
+  const { data: warnedCoaches = [], refetch: warnRefetch } = useQuery({
     queryKey: ["warnedCoaches"],
-    queryFn: async() => {
+    queryFn: async () => {
       const res = await axios.get("/api/coach?status=warning");
       return res.data;
-    }
+    },
   });
 
   const warnCoach = (id: ObjectId) => {
@@ -64,32 +64,30 @@ export default function CoachManagementPage() {
     //     coach.id === id ? { ...coach, status: "Warning" } : coach
     //   )
     // );
-    try{
+    try {
       axios.patch("/api/coach/warn", {
         id,
-        status: "warning"
+        status: "warning",
       });
       approveRefetch();
       warnRefetch();
       Swal.fire("Warned", "Coach warned by admin", "success");
-    }
-    catch(error){
+    } catch (error) {
       Swal.fire("Error", error.message, "error");
     }
   };
 
   const removeCoach = (id: ObjectId) => {
     // setCoaches(coaches.filter((coach) => coach.id !== id));
-    try{
+    try {
       axios.patch("/api/coach/reject", {
         id,
-        status: "rejected"
+        status: "rejected",
       });
       approveRefetch();
       warnRefetch();
       Swal.fire("Removed", "Coach removed by admin", "success");
-    }
-    catch(error){
+    } catch (error) {
       Swal.fire("Error", error.message, "error");
     }
   };
@@ -135,7 +133,6 @@ export default function CoachManagementPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 mt-6 md:mt-10 bg-[var(--bg-primary)] space-y-8">
-
       {/* ================= STATS ================= */}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 md:gap-6">
@@ -168,11 +165,9 @@ export default function CoachManagementPage() {
       {/* ================= CHARTS ================= */}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 md:gap-8">
-
         {/* Performance Chart */}
 
         <div className="bg-[var(--card-bg)] p-4 md:p-6 rounded-2xl shadow text-[var(--text-primary)]">
-
           <h3 className="mb-4 font-semibold">Coach Performance</h3>
 
           <ResponsiveContainer width="100%" height={250}>
@@ -188,13 +183,11 @@ export default function CoachManagementPage() {
               />
             </LineChart>
           </ResponsiveContainer>
-
         </div>
 
         {/* Client Growth */}
 
         <div className="bg-[var(--card-bg)] p-4 md:p-6 rounded-2xl shadow text-[var(--text-primary)]">
-
           <h3 className="mb-4 font-semibold">Client Growth</h3>
 
           <ResponsiveContainer width="100%" height={250}>
@@ -205,61 +198,78 @@ export default function CoachManagementPage() {
               <Bar dataKey="clients" fill="#10b981" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-
         </div>
-
       </div>
 
       {/* ================= COACH TABLE ================= */}
 
-     <section className="space-y-6">
-
+      <section className="space-y-6">
   <h2 className="mb-4 text-xl font-bold">Approved Coaches</h2>
 
-  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-    {approvedCoaches.map((coach) => (
-      <div
-        key={coach._id}
-        className="bg-[var(--card-bg)] p-6 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between gap-3"
-      >
-        {/* COACH INFO */}
-        <div className="space-y-1">
-          <h3 className="text-lg font-semibold">{coach.fullName}</h3>
-          <p className="text-sm text-gray-500">Clients: {coach.maxClients}</p>
-          <p className="text-sm text-gray-500">Rating: {coach.rating ?? 0}</p>
+  <div className="card-glass overflow-hidden">
+    {/* HEADER */}
+    <div className="grid grid-cols-5 gap-6 px-6 py-3 text-sm font-semibold border-b border-[var(--border-color)] text-[var(--text-secondary)]">
+      <div>Name</div>
+      <div>Clients</div>
+      <div>Rating</div>
+      <div>Status</div>
+      <div className="text-right">Actions</div>
+    </div>
+
+    {/* ROWS */}
+    <div className="divide-y divide-[var(--border-color)]">
+      {approvedCoaches.map((coach) => (
+        <div
+          key={coach._id}
+          className="grid grid-cols-5 gap-6 px-6 py-4 items-center text-sm hover:bg-[var(--bg-tertiary)] transition"
+        >
+          <div className="font-medium">{coach.fullName}</div>
+          <div>{coach.maxClients}</div>
+          <div>{coach.rating ?? 0}</div>
 
           {/* STATUS BADGE */}
-          <span
-            className={`inline-block mt-2 px-3 py-1 text-xs rounded-full ${
-              coach.status === "approved"
-                ? "bg-green-100 text-green-600"
-                : "bg-red-100 text-red-600"
-            }`}
-          >
-            {coach.status}
-          </span>
-        </div>
+          <div>
+            <span
+              className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                coach.status === "approved"
+                  ? "bg-green-500/20 text-green-500"
+                  : "bg-red-500/20 text-red-500"
+              }`}
+            >
+              {coach.status.toUpperCase()}
+            </span>
+          </div>
 
-        {/* ACTION BUTTONS */}
-        <div className="flex flex-wrap gap-3 mt-3">
-          <button
-            onClick={() => warnCoach(coach._id)}
-            className="text-sm text-yellow-600 transition hover:underline"
-          >
-            Warn
-          </button>
+          {/* ACTION BUTTONS */}
+          <div className="flex justify-end gap-2">
+            {coach.status !== "approved" && (
+              <button
+                onClick={() => activateCoach(coach._id)}
+                className="px-3 py-1 text-xs rounded-md bg-green-500/20 text-green-500 hover:bg-green-500/30 flex items-center gap-1"
+              >
+                <CheckCircle size={14} />
+                Active
+              </button>
+            )}
 
-          <button
-            onClick={() => removeCoach(coach._id)}
-            className="text-sm text-red-600 transition hover:underline"
-          >
-            Remove
-          </button>
+            {coach.status !== "rejected" && (
+              <button
+                onClick={() => removeCoach(coach._id)}
+                className="px-3 py-1 text-xs rounded-md bg-red-500/20 text-red-500 hover:bg-red-500/30 flex items-center gap-1"
+              >
+                <XCircle size={14} />
+                Ban
+              </button>
+            )}
+          </div>
         </div>
-      </div>
-    ))}
+      ))}
+    </div>
   </div>
 </section>
+
+
+
     </div>
   );
 }
