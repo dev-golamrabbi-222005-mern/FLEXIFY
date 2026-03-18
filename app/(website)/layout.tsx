@@ -7,7 +7,7 @@ import Footer from "./components/Share/Footer";
 import ReactQueryProvider from "./providers";
 
 export const metadata: Metadata = {
-  title: "Flexify",
+  title: "Flexify - Your Fitness Planner",
   description: "A fitness Planner Platform.",
   icons: {
     icon: '/favicon.ico',

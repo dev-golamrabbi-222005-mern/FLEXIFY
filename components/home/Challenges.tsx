@@ -36,7 +36,7 @@ const CHALLENGES = [
     ],
     image: body02,
     alt: "Lower Body Challenge",
-    accent: "#e63946",
+    accent: "var(--danger)",
     accentRgb: "230,57,70",
   },
 ];

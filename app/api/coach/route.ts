@@ -3,7 +3,7 @@ import { dbConnect } from "@/lib/dbConnect";
 
 export const GET = async() => {
     try{
-        const usersCollection = await dbConnect("users");
+      const usersCollection = await dbConnect("users");
       const coaches = await usersCollection
       .find({ role: "coach", status: "approved" })
       .toArray();

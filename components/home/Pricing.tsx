@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import SectionTitle from "@/app/(website)/components/ui/section-title";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { Loader2 } from "lucide-react";
+import { CoachSelectModal, Coach } from "@/components/pricing/CoachSelectModal";
 
 interface PlanFeature {
   label: string;
@@ -22,6 +23,8 @@ interface Plan {
   featured: boolean;
   features: PlanFeature[];
 }
+
+const ELITE_BASE_PRICE = 29;
 
 const PLANS: Plan[] = [
   {
@@ -69,7 +72,7 @@ const PLANS: Plan[] = [
   {
     id: "elite",
     name: "Elite",
-    price: "29",
+    price: `${ELITE_BASE_PRICE}+`,
     desc: "Everything Pro & your own personal coach.",
     cta: "Go Elite",
     ctaStyle: "border-primary",
@@ -108,8 +111,32 @@ const Pricing = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [showCoachModal, setShowCoachModal] = useState(false);
 
-  const handlePlanClick = async (planId: string) => {
+  const initiatePayment = async (
+    planId: string,
+    coachId?: string,
+    totalAmount?: number,
+  ) => {
+    try {
+      setLoadingPlan(planId);
+      const res = await fetch("/api/payment/init", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ planId, coachId, totalAmount }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.url) throw new Error(data.error ?? "Gateway error");
+      window.location.href = data.url;
+    } catch (err) {
+      console.error(err);
+      alert("Payment initialization failed. Please try again.");
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
+
+  const handlePlanClick = (planId: string) => {
     if (planId === "free") {
       router.push(session ? "/dashboard" : "/register");
       return;
@@ -118,21 +145,16 @@ const Pricing = () => {
       router.push(`/login?redirect=/pricing&plan=${planId}`);
       return;
     }
-    try {
-      setLoadingPlan(planId);
-      const res = await fetch("/api/payment/init", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planId }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.url) throw new Error(data.error ?? "Gateway error");
-      window.location.href = data.url;
-    } catch (err) {
-      console.error(err);
-      alert("Payment initialization failed. Please try again.");
-      setLoadingPlan(null);
+    if (planId === "elite") {
+      setShowCoachModal(true);
+      return;
     }
+    initiatePayment(planId);
+  };
+
+  const handleProceedToPayment = (coach: Coach, totalAmount: number) => {
+    setShowCoachModal(false);
+    initiatePayment("elite", coach._id, totalAmount);
   };
 
   return (
@@ -147,7 +169,7 @@ const Pricing = () => {
           className="rounded-3xl overflow-hidden"
           style={{ border: "3px solid var(--border-color)" }}
         >
-          {/* ── Header row ── */}
+          {/* Header row */}
           <div
             className="grid grid-cols-4"
             style={{ background: "var(--bg-secondary)" }}
@@ -160,7 +182,6 @@ const Pricing = () => {
                 Features
               </span>
             </div>
-
             {PLANS.map((plan) => (
               <div
                 key={plan.id}
@@ -216,7 +237,7 @@ const Pricing = () => {
                 <button
                   onClick={() => handlePlanClick(plan.id)}
                   disabled={loadingPlan === plan.id}
-                  className="btn-primary w-full"
+                  className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                   style={
                     plan.ctaStyle === "filled"
                       ? {
@@ -244,7 +265,7 @@ const Pricing = () => {
             ))}
           </div>
 
-          {/* ── Feature rows ── */}
+          {/* Feature rows */}
           {PLANS[0].features.map((f, fi) => (
             <div
               key={f.label}
@@ -290,6 +311,14 @@ const Pricing = () => {
           anytime
         </p>
       </div>
+
+      {/* Coach Select Modal — Elite only */}
+      <CoachSelectModal
+        open={showCoachModal}
+        eliteBasePrice={ELITE_BASE_PRICE}
+        onClose={() => setShowCoachModal(false)}
+        onProceedToPayment={handleProceedToPayment}
+      />
     </section>
   );
 };
