@@ -1,218 +1,231 @@
 "use client";
 
-import { CreditCard, Settings, Users } from "lucide-react";
+import { Users, CreditCard, UserCheck } from "lucide-react";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { ObjectId } from "mongodb";
 import Swal from "sweetalert2";
 
-export default function AdminManagementSection() {
+export default function AdminDashboard() {
+  /* ================= USER DATA ================= */
   const [users, setUsers] = useState([
     { id: 1, name: "Rahim", plan: "Basic", status: "Active" },
     { id: 2, name: "Karim", plan: "Pro", status: "Active" },
     { id: 3, name: "Jony", plan: "Premium", status: "Suspended" },
   ]);
 
-  // const [coaches, setCoaches] = useState([
-  //   { id: 1, name: "Coach A", status: "Pending" },
-  //   { id: 2, name: "Coach B", status: "Pending" },
-  // ]);
+  const suspendUser = (id: number) => {
+    setUsers(users.map(u => u.id === id ? { ...u, status: "Suspended" } : u));
+  };
 
-  const {data: coaches = [], refetch} = useQuery({
+  const activateUser = (id: number) => {
+    setUsers(users.map(u => u.id === id ? { ...u, status: "Active" } : u));
+  };
+
+  /* ================= COACH DATA ================= */
+  const { data: coaches = [], refetch: refetchCoaches } = useQuery({
     queryKey: ["coaches"],
-    queryFn: async() => {
+    queryFn: async () => {
       const res = await axios.get("/api/coach?status=pending");
       return res.data;
-    }
+    },
   });
 
-  console.log(coaches);
+  const approveCoach = async (id: string, email: string) => {
+    try {
+      await axios.patch("/api/coach/status", { id, email, status: "approved" });
+      refetchCoaches();
+      Swal.fire("Approved", "Coach approved successfully", "success");
+    } catch (error: any) {
+      Swal.fire("Error", error.message, "error");
+    }
+  };
 
-  const [plans, setPlans] = useState([
+  const rejectCoach = async (id: string) => {
+    try {
+      await axios.patch("/api/coach/reject", { id, status: "rejected" });
+      refetchCoaches();
+      Swal.fire("Rejected", "Coach rejected", "success");
+    } catch (error: any) {
+      Swal.fire("Error", error.message, "error");
+    }
+  };
+
+  /* ================= PLAN DATA ================= */
+  const [plans] = useState([
     { id: 1, name: "Basic", price: 10 },
     { id: 2, name: "Pro", price: 25 },
     { id: 3, name: "Premium", price: 50 },
   ]);
 
-  const suspendUser = (id: number) => {
-    setUsers(users.map(u =>
-      u.id === id ? { ...u, status: "Suspended" } : u
-    ));
-  };
-
-  const approveCoach = (id: ObjectId, email: string) => {
-    try{
-      axios.patch("/api/coach/status", {
-        id, email,
-        status: "approved"
-      });
-      refetch();
-      Swal.fire("Approved", "Coach approved by admin", "success");
-    }
-    catch(error){
-      Swal.fire("Error", error.message, "error");
-    }
-  };
-
-  const rejectCoach = (id: ObjectId) => {
-    try{
-      axios.patch("/api/coach/reject", {
-        id,
-        status: "rejected"
-      });
-      refetch();
-      Swal.fire("Rejected", "Coach rejected by admin", "success");
-    }
-    catch(error){
-      Swal.fire("Error", error.message, "error");
-    }
-  };
-
   return (
-    <div className="mx-auto px-4 space-y-8 py-6 bg-[var(--bg-primary)] min-h-screen">
+    <div className="p-6 space-y-10 min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+
+      {/* ================= HEADER ================= */}
+      <div>
+        <h1 className="text-2xl font-bold tracking-wide">Admin Dashboard</h1>
+        <p className="text-sm text-[var(--text-secondary)]">
+          Manage users, coaches & subscriptions easily
+        </p>
+      </div>
+
+      {/* ================= SUMMARY CARDS ================= */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
+          <div>
+            <p className="text-sm text-[var(--text-secondary)]">Total Users</p>
+            <h3 className="text-2xl font-bold">{users.length}</h3>
+          </div>
+          <div className="p-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white">
+            <Users size={22} />
+          </div>
+        </div>
+
+        <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
+          <div>
+            <p className="text-sm text-[var(--text-secondary)]">Pending Coaches</p>
+            <h3 className="text-2xl font-bold">{coaches.length}</h3>
+          </div>
+          <div className="p-3 rounded-xl bg-gradient-to-r from-orange-400 to-pink-500 text-white">
+            <UserCheck size={22} />
+          </div>
+        </div>
+
+        <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
+          <div>
+            <p className="text-sm text-[var(--text-secondary)]">Plans</p>
+            <h3 className="text-2xl font-bold">{plans.length}</h3>
+          </div>
+          <div className="p-3 rounded-xl bg-gradient-to-r from-green-400 to-emerald-600 text-white">
+            <CreditCard size={22} />
+          </div>
+        </div>
+
+      </div>
 
       {/* ================= USER MANAGEMENT ================= */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-3 mb-2">
-          <Users />
-          <h2 className="text-xl font-bold">User Management</h2>
+      <section>
+        <div className="flex items-center gap-2 mb-4">
+          <Users size={20} />
+          <h2 className="text-xl font-semibold">User Management</h2>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {users.map(user => (
-            <div key={user.id} className="bg-[var(--card-bg)] p-4 rounded-2xl shadow hover:shadow-lg transition">
-              <p className="font-semibold">{user.name}</p>
-              <p className="mb-2 text-sm text-gray-500">{user.plan} Plan</p>
-              <span className={`px-2 py-1 text-xs rounded-full ${
-                user.status === "Active"
-                  ? "bg-green-100 text-green-600"
-                  : "bg-red-100 text-red-600"
-              }`}>
-                {user.status}
-              </span>
-              <div className="flex flex-wrap gap-2 mt-3">
-                <button
-                  onClick={() => suspendUser(user.id)}
-                  className="text-sm text-red-500"
-                >
-                  Ban
-                </button>
-                <button className="text-sm text-blue-500">Upgrade</button>
-                <button className="text-sm text-gray-500">Reset Password</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ================= COACH MANAGEMENT ================= */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-3 mb-2">
-          <Users />
-          <h2 className="text-xl font-bold">Coach Management</h2>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {coaches.map(coach => (
-            <div key={coach._id} className="bg-[var(--card-bg)] p-4 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between">
-              <p className="font-semibold">{coach.fullName}</p>
-              <span className={`px-2 py-1 text-xs rounded-full ${
-                coach.status === "Pending"
-                  ? "bg-yellow-100 text-yellow-600"
-                  : "bg-green-100 text-green-600"
-              }`}>
-                {coach.status}
-              </span>
-              <div className="flex flex-wrap gap-2 mt-3">
-                <button
-                  onClick={() => approveCoach(coach._id, coach.email)}
-                  className="text-sm text-green-600"
-                >
-                  Approve
-                </button>
-                <button
-                  onClick={() => rejectCoach(coach._id)}
-                  className="text-sm text-red-600"
-                >
-                  Reject
-                </button>
-                <button className="text-sm text-blue-600">View Performance</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ================= SUBSCRIPTION CONTROL ================= */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-3 mb-2">
-          <CreditCard />
-          <h2 className="text-xl font-bold">Subscription Control</h2>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {plans.map(plan => (
-            <div key={plan.id} className="bg-[var(--card-bg)] p-4 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between">
-              <div>
-                <p className="font-semibold">{plan.name}</p>
-                <p className="text-sm text-gray-500">${plan.price}/month</p>
-              </div>
-              <div className="flex flex-wrap gap-2 mt-3">
-                <button className="text-sm text-blue-600">Edit</button>
-                <button className="text-sm text-red-600">Delete</button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <button className="mt-4 bg-[var(--primary)] text-white px-4 py-2 rounded-lg text-sm hover:bg-[var(--secondary)] transition">
-          + Create New Plan
-        </button>
-
-        <div className="mt-6">
-          <h3 className="mb-2 font-semibold">Coupon System</h3>
-          <input
-            type="text"
-            placeholder="Enter Coupon Code"
-            className="border p-2 rounded-lg w-full bg-[var(--card-bg)]"
-          />
-        </div>
-      </section>
-
-      {/* ================= SYSTEM SETTINGS ================= */}
-      <section className="space-y-4">
-        <div className="flex items-center gap-3 mb-2">
-          <Settings />
-          <h2 className="text-xl font-bold">System Settings</h2>
-        </div>
-
-        <div className="space-y-4">
-          <div>
-            <label className="block mb-1 text-sm font-medium">Email Configuration</label>
-            <input
-              type="email"
-              placeholder="admin@flexify.com"
-              className="border p-2 rounded-lg w-full bg-[var(--card-bg)]"
-            />
+        <div className="card-glass overflow-hidden">
+          <div className="grid grid-cols-4 gap-6 px-6 py-3 text-sm font-semibold border-b border-[var(--border-color)] text-[var(--text-secondary)]">
+            <div>Name</div>
+            <div>Plan</div>
+            <div>Status</div>
+            <div className="text-right">Action</div>
           </div>
 
-          <div>
-            <label className="block mb-1 text-sm font-medium">Notification Control</label>
-            <select className="border p-2 rounded-lg w-full bg-[var(--card-bg)]">
-              <option>Enable All</option>
-              <option>Only Important</option>
-              <option>Disable</option>
-            </select>
+          <div className="divide-y divide-[var(--border-color)]">
+            {users.map((user) => (
+              <div key={user.id} className="grid grid-cols-4 gap-6 px-6 py-4 items-center text-sm hover:bg-[var(--bg-tertiary)] transition">
+                <div className="font-medium">{user.name}</div>
+                <div>{user.plan}</div>
+                <div>
+                  <span className={`px-2 py-1 rounded-full text-xs ${user.status === "Active" ? "bg-green-500/20 text-green-500" : "bg-red-500/20 text-red-500"}`}>
+                    {user.status}
+                  </span>
+                </div>
+                <div className="text-right">
+                  {user.status === "Active" ? (
+                    <button
+                      onClick={() => suspendUser(user.id)}
+                      className="px-3 py-1 text-xs rounded-md bg-red-500/20 text-red-500 hover:bg-red-500/30"
+                    >
+                      Ban
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => activateUser(user.id)}
+                      className="px-3 py-1 text-xs rounded-md bg-green-500/20 text-green-500 hover:bg-green-500/30"
+                    >
+                      Activate
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= COACH REQUEST ================= */}
+      <section>
+        <div className="flex items-center gap-2 mb-4">
+          <UserCheck size={20} />
+          <h2 className="text-xl font-semibold">Coach Requests</h2>
+        </div>
+
+        <div className="card-glass overflow-hidden">
+          <div className="grid grid-cols-3 gap-6 px-6 py-3 text-sm font-semibold border-b border-[var(--border-color)] text-[var(--text-secondary)]">
+            <div>Email</div>
+            <div>Status</div>
+            <div className="text-right">Action</div>
           </div>
 
-          <div>
-            <label className="block mb-1 text-sm font-medium">Role Permission</label>
-            <select className="border p-2 rounded-lg w-full bg-[var(--card-bg)]">
-              <option>User</option>
-              <option>Coach</option>
-              <option>Admin</option>
-            </select>
+          <div className="divide-y divide-[var(--border-color)]">
+            {coaches.map((coach: any) => (
+              <div key={coach._id} className="grid grid-cols-3 gap-6 px-6 py-4 items-center text-sm hover:bg-[var(--bg-tertiary)] transition">
+                <div>{coach.email}</div>
+                <div className="text-yellow-500">Pending</div>
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => approveCoach(coach._id, coach.email)}
+                    className="px-3 py-1 text-xs rounded-md bg-green-500/20 text-green-500 hover:bg-green-500/30"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    onClick={() => rejectCoach(coach._id)}
+                    className="px-3 py-1 text-xs rounded-md bg-red-500/20 text-red-500 hover:bg-red-500/30"
+                  >
+                    Reject
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= SUBSCRIPTION PLAN ================= */}
+      <section>
+        <div className="flex items-center gap-2 mb-4">
+          <CreditCard size={20} />
+          <h2 className="text-xl font-semibold">Subscription Plans</h2>
+        </div>
+
+        <div className="card-glass overflow-hidden">
+          <div className="grid grid-cols-3 gap-6 px-6 py-3 text-sm font-semibold border-b border-[var(--border-color)] text-[var(--text-secondary)]">
+            <div>Plan</div>
+            <div>Price</div>
+            <div className="text-right">Actions</div>
+          </div>
+
+          <div className="divide-y divide-[var(--border-color)]">
+            {plans.map((plan) => (
+              <div key={plan.id} className="grid grid-cols-3 gap-6 px-6 py-4 items-center text-sm hover:bg-[var(--bg-tertiary)] transition">
+                <div className="font-medium">{plan.name}</div>
+                <div>${plan.price} / month</div>
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => Swal.fire("Edit Plan", `Edit ${plan.name}`, "info")}
+                    className="px-3 py-1 text-xs rounded-md bg-blue-500/20 text-blue-500 hover:bg-blue-500/30"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => Swal.fire("Deleted", `${plan.name} deleted`, "success")}
+                    className="px-3 py-1 text-xs rounded-md bg-red-500/20 text-red-500 hover:bg-red-500/30"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
