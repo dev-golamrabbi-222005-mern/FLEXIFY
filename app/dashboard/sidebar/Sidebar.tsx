@@ -42,6 +42,8 @@ import {
   Magnet,
   UserCheck2,
   Shield,
+  MessageCircleCode,
+  ShieldAlertIcon,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -65,6 +67,8 @@ const menuConfig = [
       {name: "Nutrition", href: "/dashboard/nutrition-tracker", icon: Utensils, roles: ["user"]},
       {name: "Schedule",  href: "/dashboard/schedule", icon: Calendar, roles: ["user"]},
       {name: "Achievements", href: "/dashboard/achievements", icon: Trophy, roles: ["user"]},
+      {name: "Notification", href: "/dashboard/user-notification", icon: MessageCircleCode, roles: ["user"]},
+      {name: "User Profile", href: "/dashboard/user-profile", icon: ShieldAlertIcon, roles: ["user"]},
       {name: "Live Sessions", href: "/dashboard/live-sessions", icon: Video, roles: ["user"]},
     ],
   },
