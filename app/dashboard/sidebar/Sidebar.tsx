@@ -39,6 +39,9 @@ import {
   Calendar1,
   Star,
   User,
+  Magnet,
+  UserCheck2,
+  Shield,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -55,6 +58,8 @@ const menuConfig = [
       {name: "Dashboard", href: "/dashboard", icon: Home, roles: ["user", "admin", "coach"]},
       {name: "Create Workout", href: "/dashboard/create-workout", icon: PlusCircle, roles: ["user"]},
       {name: "Your Workouts", href: "/dashboard/your-workouts", icon: Dumbbell, roles: ["user"]},
+      {name: "Assigned", href: "/dashboard/assigned-coach", icon: UserCheck2 , roles: ["user"]},
+      {name: "progress", href: "/dashboard/user-progress", icon: Shield , roles: ["user"]},
       { name: "Update Profile", href: "/dashboard/user-form", icon: UserPen, roles: ["user"] },
       {name: "My Goals", href: "/dashboard/my-goals",icon: Flag, roles: ["user"]},
       {name: "Nutrition", href: "/dashboard/nutrition-tracker", icon: Utensils, roles: ["user"]},
@@ -185,6 +190,12 @@ const menuConfig = [
         name:" Reviews",
         href:"/dashboard/coach-reviews",
         icon: Star,
+        roles:["coach"],
+      },
+      {
+        name:" forget",
+        href:"/forgotPassword",
+        icon: Magnet,
         roles:["coach"],
       },
       {
