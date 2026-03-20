@@ -39,6 +39,11 @@ import {
   Swords,
   Apple,
   Star,
+  Magnet,
+  UserCheck2,
+  Shield,
+  MessageCircleCode,
+  ShieldAlertIcon,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -52,67 +57,98 @@ const menuConfig = [
   {
     label: "MAIN MENU",
     items: [
-      {
-        name: "Dashboard",
-        href: "/dashboard",
-        icon: Home,
-        roles: ["user", "admin", "coach"],
-      },
-      {
-        name: "Create Workout",
-        href: "/dashboard/create-workout",
-        icon: PlusCircle,
-        roles: ["user"],
-      },
-      {
-        name: "Your Workouts",
-        href: "/dashboard/your-workouts",
-        icon: Dumbbell,
-        roles: ["user"],
-      },
-    
-      {
-        name: "My Goals",
-        href: "/dashboard/my-goals",
-        icon: Flag,
-        roles: ["user"],
-      },
-      {
-        name: "Nutrition",
-        href: "/dashboard/nutrition-tracker",
-        icon: Utensils,
-        roles: ["user"],
-      },
-      {
-        name: "Schedule",
-        href: "/dashboard/schedule",
-        icon: Calendar,
-        roles: ["user"],
-      },
-      {
-        name: "Achievements",
-        href: "/dashboard/achievements",
-        icon: Trophy,
-        roles: ["user"],
-      },
-      {
-        name: "Challenges",
-        href: "/dashboard/my-challenges",
-        icon: Swords,
-        roles: ["user"],
-      },
-      {
-        name: "Live Sessions",
-        href: "/dashboard/live-sessions",
-        icon: Video,
-        roles: ["user"],
-      },
-        {
-        name: "User Update Form",
-        href: "/dashboard/fitness-update-form",
-        icon: BookText,
-        roles: ["user"],
-      },
+[
+  {
+    name: "Dashboard",
+    href: "/dashboard",
+    icon: Home,
+    roles: ["user", "admin", "coach"],
+  },
+  {
+    name: "Create Workout",
+    href: "/dashboard/create-workout",
+    icon: PlusCircle,
+    roles: ["user"],
+  },
+  {
+    name: "Your Workouts",
+    href: "/dashboard/your-workouts",
+    icon: Dumbbell,
+    roles: ["user"],
+  },
+  {
+    name: "Assigned",
+    href: "/dashboard/assigned-coach",
+    icon: UserCheck2,
+    roles: ["user"],
+  },
+  {
+    name: "Progress",
+    href: "/dashboard/user-progress",
+    icon: Shield,
+    roles: ["user"],
+  },
+  {
+    name: "Update Profile",
+    href: "/dashboard/user-form",
+    icon: UserPen,
+    roles: ["user"],
+  },
+  {
+    name: "User Profile",
+    href: "/dashboard/user-profile",
+    icon: ShieldAlertIcon,
+    roles: ["user"],
+  },
+  {
+    name: "My Goals",
+    href: "/dashboard/my-goals",
+    icon: Flag,
+    roles: ["user"],
+  },
+  {
+    name: "Nutrition",
+    href: "/dashboard/nutrition-tracker",
+    icon: Utensils,
+    roles: ["user"],
+  },
+  {
+    name: "Schedule",
+    href: "/dashboard/schedule",
+    icon: Calendar,
+    roles: ["user"],
+  },
+  {
+    name: "Achievements",
+    href: "/dashboard/achievements",
+    icon: Trophy,
+    roles: ["user"],
+  },
+  {
+    name: "Challenges",
+    href: "/dashboard/my-challenges",
+    icon: Swords,
+    roles: ["user"],
+  },
+  {
+    name: "Notification",
+    href: "/dashboard/user-notification",
+    icon: MessageCircleCode,
+    roles: ["user"],
+  },
+  {
+    name: "Live Sessions",
+    href: "/dashboard/live-sessions",
+    icon: Video,
+    roles: ["user"],
+  },
+  {
+    name: "User Update Form",
+    href: "/dashboard/fitness-update-form",
+    icon: BookText,
+    roles: ["user"],
+  },
+];
     ],
   },
   {
@@ -235,6 +271,12 @@ const menuConfig = [
         name:" Reviews",
         href:"/dashboard/coach-reviews",
         icon: Star,
+        roles:["coach"],
+      },
+      {
+        name:" forget",
+        href:"/forgotPassword",
+        icon: Magnet,
         roles:["coach"],
       },
       {
