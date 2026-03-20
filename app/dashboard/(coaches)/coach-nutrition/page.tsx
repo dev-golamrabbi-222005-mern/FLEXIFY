@@ -15,28 +15,28 @@ const nutritionPlans = [
 
 export default function CoachNutrition() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
+    <div className="px-4 mx-auto space-y-8 max-w-7xl sm:px-6">
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
         <div>
           <h1
-            className="text-xl sm:text-2xl font-bold"
+            className="text-xl font-bold sm:text-2xl"
             style={{ color: "var(--text-primary)" }}
           >
             Nutrition Plans
           </h1>
 
           <p
-            className="text-sm mt-1"
+            className="mt-1 text-sm"
             style={{ color: "var(--text-muted)" }}
           >
             Custom diet and nutrition guidance for your clients
           </p>
         </div>
 
-        <button className="btn-primary flex items-center justify-center gap-2 w-full sm:w-auto">
+        <button className="flex items-center justify-center w-full gap-2 btn-primary sm:w-auto">
           <Plus size={16} />
           Create Plan
         </button>
@@ -44,7 +44,7 @@ export default function CoachNutrition() {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
         {nutritionPlans.map((plan, i) => (
 
@@ -53,15 +53,15 @@ export default function CoachNutrition() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.08 }}
-            className="card-glass p-5"
+            className="p-5 card-glass"
           >
 
             {/* Top */}
-            <div className="flex justify-between items-start mb-4">
+            <div className="flex items-start justify-between mb-4">
 
               <div>
                 <h3
-                  className="font-semibold text-base sm:text-lg"
+                  className="text-base font-semibold sm:text-lg"
                   style={{ color: "var(--text-primary)" }}
                 >
                   {plan.name}
@@ -76,7 +76,7 @@ export default function CoachNutrition() {
               </div>
 
               <span
-                className="text-xs px-2 py-1 rounded-full font-semibold"
+                className="px-2 py-1 text-xs font-semibold rounded-full"
                 style={{
                   background:
                     plan.status === "Active"
@@ -94,7 +94,7 @@ export default function CoachNutrition() {
             </div>
 
             {/* Nutrition Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+            <div className="grid grid-cols-2 gap-3 mb-5 sm:grid-cols-4">
 
               {[
                 { label: "Calories", value: plan.calories },
@@ -105,7 +105,7 @@ export default function CoachNutrition() {
 
                 <div
                   key={m.label}
-                  className="text-center p-3 rounded-xl"
+                  className="p-3 text-center rounded-xl"
                   style={{
                     background: "var(--bg-secondary)",
                     border: "1px solid var(--border-color)",
@@ -138,13 +138,13 @@ export default function CoachNutrition() {
               style={{ borderColor: "var(--border-color)" }}
             >
 
-              <button className="flex-1 btn-secondary flex items-center justify-center gap-1 text-xs">
+              <button className="flex items-center justify-center flex-1 gap-1 text-xs btn-secondary">
                 <Edit size={14} />
                 Edit
               </button>
 
               <button
-                className="p-2 rounded-xl hover:bg-red-500/10 transition"
+                className="p-2 transition rounded-xl hover:bg-red-500/10"
                 style={{ color: "var(--danger)" }}
               >
                 <Trash2 size={16} />
