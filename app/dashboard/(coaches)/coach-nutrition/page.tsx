@@ -5,15 +5,25 @@
 
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
-const nutritionPlans = [
-  { id: "1", name: "High Protein Bulk", calories: "3200 cal", protein: "180g", carbs: "350g", fat: "90g", clients: 6, status: "Active" },
-  { id: "2", name: "Lean Cut Diet", calories: "1800 cal", protein: "150g", carbs: "180g", fat: "50g", clients: 4, status: "Active" },
-  { id: "3", name: "Balanced Maintenance", calories: "2500 cal", protein: "130g", carbs: "280g", fat: "80g", clients: 5, status: "Active" },
-  { id: "4", name: "Keto Plan", calories: "2000 cal", protein: "120g", carbs: "30g", fat: "150g", clients: 3, status: "Draft" },
-];
+// const nutritionPlans = [
+//   { id: "1", name: "High Protein Bulk", calories: "3200 cal", protein: "180g", carbs: "350g", fat: "90g", clients: 6, status: "Active" },
+//   { id: "2", name: "Lean Cut Diet", calories: "1800 cal", protein: "150g", carbs: "180g", fat: "50g", clients: 4, status: "Active" },
+//   { id: "3", name: "Balanced Maintenance", calories: "2500 cal", protein: "130g", carbs: "280g", fat: "80g", clients: 5, status: "Active" },
+//   { id: "4", name: "Keto Plan", calories: "2000 cal", protein: "120g", carbs: "30g", fat: "150g", clients: 3, status: "Draft" },
+// ];
 
 export default function CoachNutrition() {
+  const {data: nutritionPlans = []} = useQuery({
+    queryKey: ["nutrition_plans"],
+    queryFn: async() => {
+      const res = await axios.get("/api/coach/nutrition-plans");
+      return res.data;
+    }
+  });
+  console.log(nutritionPlans)
   return (
     <div className="px-4 mx-auto space-y-8 max-w-7xl sm:px-6">
 
