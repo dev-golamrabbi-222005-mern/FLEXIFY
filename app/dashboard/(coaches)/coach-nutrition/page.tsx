@@ -23,7 +23,7 @@ export default function CoachNutrition() {
       return res.data;
     }
   });
-  console.log(nutritionPlans)
+  
   return (
     <div className="px-4 mx-auto space-y-8 max-w-7xl sm:px-6">
 
