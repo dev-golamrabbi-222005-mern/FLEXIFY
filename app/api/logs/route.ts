@@ -26,13 +26,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const collection = await dbConnect("daily-logs");
+    const logCollection = await dbConnect("daily-logs");
+    const goalCollection = await dbConnect("user-goals");
     
  const logId = `${userEmail}_${date}`;
     const filter = { _id: logId as unknown as ObjectId };
 
     if (type === "WATER_UPDATE") {
-      await collection.updateOne(
+      const glasses = Number(data.glasses) || 0;
+      const liters = glasses * 0.25;
+      await logCollection.updateOne(
         filter,
         {
           $set: {
@@ -44,10 +47,17 @@ export async function POST(request: NextRequest) {
         },
         { upsert: true }
       );
+      await goalCollection.updateOne(
+        { userId: userEmail, type: "WATER_INTAKE" },
+        { $set: { currentValue: liters } }
+      );
+    
     }
+    
 
     if (type === "ADD_FOOD") {
-      await collection.updateOne(
+      const calorieGain = Number(data.entry.foodItem.calories * data.entry.quantity);
+      await logCollection.updateOne(
         filter,
         {
           $set: { userEmail, date, lastUpdated: new Date() },
@@ -55,6 +65,10 @@ export async function POST(request: NextRequest) {
           $inc: { totalCalories: data.entry.foodItem.calories * data.entry.quantity }
         },
         { upsert: true }
+      );
+      await goalCollection.updateOne(
+        { userId: userEmail, type: "WEIGHT_LOSS" }, 
+        { $inc: { currentValue: calorieGain } }
       );
     }
 
