@@ -18,13 +18,13 @@ const CoachDashboard = ({ name }: { name: string }) => {
         }
     });
 
-    const singleCoach = coaches.find(coach => coach.email === session.email);
+    const singleCoach = coaches.find(coach => coach?.email === session?.user?.email);
 
     const { data: monthlyEarning } = useQuery({
         queryKey: ["monthlyEarning"],
         queryFn: async() => {
         const res = await axios.get("/api/monthly-earnings");
-        return res.data;
+        return res.data.data;
         }
     });
 
@@ -70,7 +70,7 @@ const CoachDashboard = ({ name }: { name: string }) => {
         {
             icon: TrendingUp,
             label: "Monthly Earnings",
-            value: `৳${monthlyEarning?.total}`,
+            value: `৳${monthlyEarning?.[5]?.total}`,
             sub: "this month",
             iconColor: "#27ae60",
             iconBg: "#dcfce7",

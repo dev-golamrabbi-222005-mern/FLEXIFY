@@ -10,17 +10,25 @@ import { DayPlan, fmtTime, estimateCalories } from "@/lib/challengeUtils";
 interface Props {
   dayPlan: DayPlan;
   exercises: ChallengeExercise[];
-  onComplete: (result: { durationSecs: number; caloriesBurned: number }) => void;
+  onComplete: (result: {
+    durationSecs: number;
+    caloriesBurned: number;
+  }) => void;
   onQuit: () => void;
 }
 
 type Phase = "exercise" | "rest" | "done";
 
-export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props) {
-  const [exIdx, setExIdx] = useState(0);         // current exercise index
-  const [setsDone, setSetsDone] = useState(0);   // sets completed for current exercise
+export function WorkoutSession({
+  dayPlan,
+  exercises,
+  onComplete,
+  onQuit,
+}: Props) {
+  const [exIdx, setExIdx] = useState(0); // current exercise index
+  const [setsDone, setSetsDone] = useState(0); // sets completed for current exercise
   const [phase, setPhase] = useState<Phase>("exercise");
-  const [elapsed, setElapsed] = useState(0);     // total workout time
+  const [elapsed, setElapsed] = useState(0); // total workout time
   const [restLeft, setRestLeft] = useState(0);
   const [paused, setPaused] = useState(false);
   const [quitConfirm, setQuitConfirm] = useState(false);
@@ -31,9 +39,19 @@ export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const current = exercises[exIdx];
+  // DEBUG — remove after confirming data shape
+  if (current) {
+    console.log("[WorkoutSession] current exercise:", {
+      name: current.name,
+      images: current.images,
+      warning: current.warning,
+      videos: current.videos,
+    });
+  }
   const isLastSet = setsDone + 1 >= current?.sets;
   const isLastExercise = exIdx >= exercises.length - 1;
-  const progress = (exIdx / exercises.length) + (setsDone / current?.sets / exercises.length);
+  const progress =
+    exIdx / exercises.length + setsDone / current?.sets / exercises.length;
 
   // ── Main elapsed timer ───────────────────────────────────────────────────
   useEffect(() => {
@@ -42,21 +60,23 @@ export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props
     return () => clearInterval(timerRef.current!);
   }, [paused, phase]);
 
-  // ── Rest countdown ───────────────────────────────────────────────────────
-  useEffect(() => {
-    if (phase !== "rest") return;
-    if (restLeft <= 0) {
-      advanceAfterRest();
-      return;
-    }
-    const t = setTimeout(() => setRestLeft((r) => r - 1), 1000);
-    return () => clearTimeout(t);
-  }, [phase, restLeft]);
-
+  // ── advanceAfterRest must be declared BEFORE the useEffect that calls it ──
   const advanceAfterRest = () => {
     setPhase("exercise");
     setRestLeft(0);
   };
+
+  // ── Rest countdown ─────────────────────────────────────────────────────
+  // Use setTimeout(fn, 0) so setState is never called synchronously inside effect
+  useEffect(() => {
+    if (phase !== "rest") return;
+    if (restLeft <= 0) {
+      const t = setTimeout(() => advanceAfterRest(), 0);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setRestLeft((r) => r - 1), 1000);
+    return () => clearTimeout(t);
+  }, [phase, restLeft]);
 
   const completeSet = () => {
     const cal = estimateCalories(1, current.reps, current.rest);
@@ -82,6 +102,31 @@ export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props
       setRestLeft(current.rest);
     }
   };
+
+  // ── Guard: no exercises loaded ──────────────────────────────────────────
+  if (exercises.length === 0) {
+    return (
+      <div className="w-full max-w-md mx-auto flex flex-col items-center justify-center py-32 gap-4 text-center">
+        <p className="text-5xl">🏋️</p>
+        <p
+          className="font-black text-base"
+          style={{ color: "var(--text-primary)" }}
+        >
+          No exercises found for this day
+        </p>
+        <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+          Try a different level or check back later.
+        </p>
+        <button
+          onClick={onQuit}
+          className="mt-2 px-6 py-3 rounded-2xl font-black text-sm text-white"
+          style={{ background: "var(--primary)" }}
+        >
+          Back to Plan
+        </button>
+      </div>
+    );
+  }
 
   if (!current) return null;
 
@@ -133,28 +178,52 @@ export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props
       </p>
       <h2
         className="font-black tracking-tight mb-4"
-        style={{ fontSize: "clamp(20px, 4vw, 28px)", color: "var(--text-primary)" }}
+        style={{
+          fontSize: "clamp(20px, 4vw, 28px)",
+          color: "var(--text-primary)",
+        }}
       >
         {current.name}
       </h2>
 
-      {/* Image + Info button */}
-      <div className="relative rounded-2xl overflow-hidden mb-4" style={{ aspectRatio: "16/9" }}>
-        {!imgError && current.images?.[0] ? (
-          <img
-            src={current.images[0]}
-            alt={current.name}
-            className="w-full h-full object-cover"
-            onError={() => setImgError(true)}
-          />
-        ) : (
-          <div
-            className="w-full h-full flex items-center justify-center text-5xl"
-            style={{ background: "var(--bg-secondary)" }}
-          >
-            🏋️
-          </div>
-        )}
+      {/* Image + Info button — key=exIdx remounts on exercise change, resetting imgError */}
+      <div
+        key={exIdx}
+        className="relative rounded-2xl overflow-hidden mb-4"
+        style={{ aspectRatio: "16/9" }}
+      >
+        {(() => {
+          // Normalize images — handle string, array, or missing
+          const imgSrc = !imgError
+            ? Array.isArray(current.images)
+              ? current.images[0]
+              : typeof current.images === "string"
+                ? current.images
+                : null
+            : null;
+
+          return imgSrc ? (
+            <img
+              src={imgSrc}
+              alt={current.name}
+              className="w-full h-full object-cover"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div
+              className="w-full h-full flex flex-col items-center justify-center gap-2"
+              style={{ background: "var(--bg-secondary)" }}
+            >
+              <span className="text-5xl">🏋️</span>
+              <p
+                className="text-xs font-bold"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                {current.name}
+              </p>
+            </div>
+          );
+        })()}
 
         {/* Gradient overlay at bottom */}
         <div
@@ -168,19 +237,29 @@ export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props
         <button
           onClick={() => setInfoOpen(true)}
           className="absolute top-3 right-3 w-9 h-9 rounded-xl flex items-center justify-center font-black text-white transition-all hover:scale-110"
-          style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}
+          style={{
+            background: "rgba(0,0,0,0.55)",
+            backdropFilter: "blur(4px)",
+          }}
         >
           <Info size={16} />
         </button>
 
         {/* Warning at bottom of image */}
-        {current.warning && (
+        {current.warning != null && String(current.warning).trim() !== "" && (
           <div
             className="absolute bottom-3 left-3 right-3 flex items-start gap-2 px-3 py-2 rounded-xl"
-            style={{ background: "rgba(239,68,68,0.85)", backdropFilter: "blur(4px)" }}
+            style={{
+              background: "rgba(239,68,68,0.88)",
+              backdropFilter: "blur(4px)",
+            }}
           >
-            <span className="text-white text-xs font-black shrink-0">⚠</span>
-            <p className="text-white text-xs leading-snug">{current.warning}</p>
+            <span className="text-white text-xs font-black shrink-0 mt-0.5">
+              ⚠️
+            </span>
+            <p className="text-white text-xs leading-snug font-semibold">
+              {String(current.warning)}
+            </p>
           </div>
         )}
       </div>
@@ -205,7 +284,7 @@ export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props
           />
         ))}
         <span
-          className="text-xs font-bold ml-1"
+          className="text-sm font-bold ml-1"
           style={{ color: "var(--text-secondary)" }}
         >
           Set {setsDone + 1} / {current.sets}
@@ -221,7 +300,10 @@ export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props
             border: "1px solid var(--border-color)",
           }}
         >
-          <p className="font-black text-3xl" style={{ color: "var(--primary)" }}>
+          <p
+            className="font-black text-3xl"
+            style={{ color: "var(--primary)" }}
+          >
             {current.reps}
           </p>
           <p
@@ -255,7 +337,7 @@ export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props
 
       {/* Sticky CTA */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-6 pt-3"
+        className="sticky bottom-0 z-40 px-4 pb-6 pt-3 mt-4"
         style={{
           background: "var(--bg-primary)",
           borderTop: "1px solid var(--border-color)",
@@ -277,7 +359,7 @@ export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props
             onClick={completeSet}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
-            className="flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-black text-sm text-white"
+            className="flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-black text-white"
             style={{
               background: "var(--primary)",
               boxShadow: "0 4px 20px rgba(244,121,32,0.4)",
@@ -301,7 +383,10 @@ export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)" }}
+            style={{
+              background: "rgba(0,0,0,0.75)",
+              backdropFilter: "blur(8px)",
+            }}
           >
             <motion.div
               initial={{ scale: 0.8 }}
@@ -324,16 +409,29 @@ export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props
                 className="text-sm font-semibold mb-6"
                 style={{ color: "var(--primary)" }}
               >
-                {isLastSet ? "Get ready for next exercise" : `Next: Set ${setsDone + 1} of ${current.sets}`}
+                {isLastSet
+                  ? "Get ready for next exercise"
+                  : `Next: Set ${setsDone + 1} of ${current.sets}`}
               </p>
 
               {/* SVG ring */}
               <div className="relative w-28 h-28 mx-auto mb-6">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 96 96">
-                  <circle cx="48" cy="48" r="40" fill="none" stroke="var(--border-color)" strokeWidth="6" />
+                  <circle
+                    cx="48"
+                    cy="48"
+                    r="40"
+                    fill="none"
+                    stroke="var(--border-color)"
+                    strokeWidth="6"
+                  />
                   <motion.circle
-                    cx="48" cy="48" r="40"
-                    fill="none" stroke="var(--primary)" strokeWidth="6"
+                    cx="48"
+                    cy="48"
+                    r="40"
+                    fill="none"
+                    stroke="var(--primary)"
+                    strokeWidth="6"
                     strokeLinecap="round"
                     strokeDasharray={circ}
                     animate={{ strokeDashoffset: circ * restPct }}
@@ -343,12 +441,20 @@ export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   <span
                     className="font-black text-3xl"
-                    style={{ color: restLeft === 0 ? "var(--primary)" : "var(--text-primary)" }}
+                    style={{
+                      color:
+                        restLeft === 0
+                          ? "var(--primary)"
+                          : "var(--text-primary)",
+                    }}
                   >
                     {restLeft === 0 ? "GO!" : restLeft}
                   </span>
                   {restLeft > 0 && (
-                    <span className="text-[10px] font-bold" style={{ color: "var(--text-secondary)" }}>
+                    <span
+                      className="text-[10px] font-bold"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       sec
                     </span>
                   )}
@@ -378,7 +484,10 @@ export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}
+            style={{
+              background: "rgba(0,0,0,0.6)",
+              backdropFilter: "blur(4px)",
+            }}
           >
             <motion.div
               initial={{ scale: 0.9 }}
@@ -391,10 +500,16 @@ export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props
               }}
             >
               <p className="text-3xl mb-3">⚠️</p>
-              <p className="font-black text-base mb-1" style={{ color: "var(--text-primary)" }}>
+              <p
+                className="font-black text-base mb-1"
+                style={{ color: "var(--text-primary)" }}
+              >
                 Quit workout?
               </p>
-              <p className="text-sm mb-5" style={{ color: "var(--text-secondary)" }}>
+              <p
+                className="text-sm mb-5"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 Your progress for today will be lost.
               </p>
               <div className="flex gap-2">
@@ -422,7 +537,10 @@ export function WorkoutSession({ dayPlan, exercises, onComplete, onQuit }: Props
       </AnimatePresence>
 
       {/* Info Modal */}
-      <InfoModal exercise={infoOpen ? current : null} onClose={() => setInfoOpen(false)} />
+      <InfoModal
+        exercise={infoOpen ? current : null}
+        onClose={() => setInfoOpen(false)}
+      />
     </div>
   );
 }

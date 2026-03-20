@@ -1,15 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import {
-  FileText,
-  HelpCircle,
-  Home,
-  Edit,
-  Trash2,
-  Plus,
-  Search,
-} from "lucide-react";
+import { FileText, HelpCircle, Home, Edit, Trash2, Plus, Search } from "lucide-react";
+import Swal from "sweetalert2";
 
 export default function AdminContentManagementPage() {
   const [search, setSearch] = useState("");
@@ -29,16 +22,11 @@ export default function AdminContentManagementPage() {
     blog.title.toLowerCase().includes(search.toLowerCase())
   );
 
-  const deleteBlog = (id: number) => {
-    setBlogs(blogs.filter((blog) => blog.id !== id));
-  };
-
-  const deleteFaq = (id: number) => {
-    setFaqs(faqs.filter((faq) => faq.id !== id));
-  };
+  const deleteBlog = (id: number) => setBlogs(blogs.filter((b) => b.id !== id));
+  const deleteFaq = (id: number) => setFaqs(faqs.filter((f) => f.id !== id));
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10 space-y-10 bg-[var(--bg-primary)]">
+    <div className="max-w-7xl mx-auto px-4 py-10 space-y-10 bg-[var(--bg-primary)] min-h-screen">
 
       {/* PAGE HEADER */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -59,7 +47,42 @@ export default function AdminContentManagementPage() {
         </div>
       </div>
 
-      {/* BLOG / ARTICLES */}
+      {/* SUMMARY CARDS */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
+          <div>
+            <p className="text-sm text-[var(--text-secondary)]">Total Articles</p>
+            <h2 className="text-2xl font-bold">{blogs.length}</h2>
+          </div>
+          <div className="p-3 rounded-xl bg-gradient-to-r from-blue-400 to-indigo-600 text-white">
+            <FileText size={22} />
+          </div>
+        </div>
+
+        <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
+          <div>
+            <p className="text-sm text-[var(--text-secondary)]">Total FAQs</p>
+            <h2 className="text-2xl font-bold">{faqs.length}</h2>
+          </div>
+          <div className="p-3 rounded-xl bg-gradient-to-r from-green-400 to-emerald-600 text-white">
+            <HelpCircle size={22} />
+          </div>
+        </div>
+
+        <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
+          <div>
+            <p className="text-sm text-[var(--text-secondary)]">Homepage Sections</p>
+            <h2 className="text-2xl font-bold">1</h2>
+          </div>
+          <div className="p-3 rounded-xl bg-gradient-to-r from-orange-400 to-pink-500 text-white">
+            <Home size={22} />
+          </div>
+        </div>
+
+      </div>
+
+      {/* BLOG / ARTICLES TABLE */}
       <section className="space-y-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -71,39 +94,47 @@ export default function AdminContentManagementPage() {
           </button>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredBlogs.map((blog) => (
-            <div
-              key={blog.id}
-              className="bg-[var(--card-bg)] p-6 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between gap-3"
-            >
-              <div>
-                <h3 className="font-semibold">{blog.title}</h3>
-                <span
-                  className={`text-sm ${
-                    blog.status === "Published" ? "text-green-600" : "text-gray-500"
-                  }`}
-                >
-                  {blog.status}
-                </span>
+        <div className="card-glass overflow-hidden">
+          <div className="grid grid-cols-3 gap-6 px-6 py-3 text-sm font-semibold border-b border-[var(--border-color)] text-[var(--text-secondary)]">
+            <div>Title</div>
+            <div>Status</div>
+            <div className="text-right">Actions</div>
+          </div>
+
+          <div className="divide-y divide-[var(--border-color)]">
+            {filteredBlogs.map((blog) => (
+              <div
+                key={blog.id}
+                className="grid grid-cols-3 gap-6 px-6 py-4 items-center text-sm hover:bg-[var(--bg-tertiary)] transition"
+              >
+                <div className="font-medium">{blog.title}</div>
+                <div>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs ${
+                      blog.status === "Published" ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-600"
+                    }`}
+                  >
+                    {blog.status}
+                  </span>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <button className="px-3 py-1 text-xs rounded-md bg-blue-500/20 text-blue-500 hover:bg-blue-500/30 flex items-center gap-1">
+                    <Edit size={14} /> Edit
+                  </button>
+                  <button
+                    onClick={() => deleteBlog(blog.id)}
+                    className="px-3 py-1 text-xs rounded-md bg-red-500/20 text-red-500 hover:bg-red-500/30 flex items-center gap-1"
+                  >
+                    <Trash2 size={14} /> Delete
+                  </button>
+                </div>
               </div>
-              <div className="flex gap-3 mt-3 flex-wrap">
-                <button className="text-blue-600 flex items-center gap-1 hover:underline">
-                  <Edit size={16} /> Edit
-                </button>
-                <button
-                  onClick={() => deleteBlog(blog.id)}
-                  className="text-red-600 flex items-center gap-1 hover:underline"
-                >
-                  <Trash2 size={16} /> Delete
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* FAQS */}
+      {/* FAQ TABLE */}
       <section className="space-y-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -115,29 +146,35 @@ export default function AdminContentManagementPage() {
           </button>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {faqs.map((faq) => (
-            <div
-              key={faq.id}
-              className="bg-[var(--card-bg)] p-6 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between gap-3"
-            >
-              <div>
-                <h3 className="font-semibold">{faq.question}</h3>
-                <p className="text-sm text-gray-500">{faq.answer}</p>
+        <div className="card-glass overflow-hidden">
+          <div className="grid grid-cols-3 gap-6 px-6 py-3 text-sm font-semibold border-b border-[var(--border-color)] text-[var(--text-secondary)]">
+            <div>Question</div>
+            <div>Answer</div>
+            <div className="text-right">Actions</div>
+          </div>
+
+          <div className="divide-y divide-[var(--border-color)]">
+            {faqs.map((faq) => (
+              <div
+                key={faq.id}
+                className="grid grid-cols-3 gap-6 px-6 py-4 items-center text-sm hover:bg-[var(--bg-tertiary)] transition"
+              >
+                <div className="font-medium">{faq.question}</div>
+                <div>{faq.answer}</div>
+                <div className="flex justify-end gap-2">
+                  <button className="px-3 py-1 text-xs rounded-md bg-blue-500/20 text-blue-500 hover:bg-blue-500/30 flex items-center gap-1">
+                    <Edit size={14} /> Edit
+                  </button>
+                  <button
+                    onClick={() => deleteFaq(faq.id)}
+                    className="px-3 py-1 text-xs rounded-md bg-red-500/20 text-red-500 hover:bg-red-500/30 flex items-center gap-1"
+                  >
+                    <Trash2 size={14} /> Delete
+                  </button>
+                </div>
               </div>
-              <div className="flex gap-3 mt-3 flex-wrap">
-                <button className="text-blue-600 flex items-center gap-1 hover:underline">
-                  <Edit size={16} /> Edit
-                </button>
-                <button
-                  onClick={() => deleteFaq(faq.id)}
-                  className="text-red-600 flex items-center gap-1 hover:underline"
-                >
-                  <Trash2 size={16} /> Delete
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 

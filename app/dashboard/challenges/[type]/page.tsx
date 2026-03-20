@@ -23,13 +23,13 @@ export default function ChallengePage() {
   const { type } = useParams() as { type: ChallengeType };
   const router = useRouter();
 
-  // ── UI state ──────────────────────────────────────────────────────────────
+  // ── UI state ───────────────────────────────────────────────────────────────
   const [screen, setScreen] = useState<Screen>("plan");
-  const [levelModalOpen, setLevelModalOpen] = useState(true);
+  const [levelModalOpen, setLevelModalOpen] = useState(false); // starts false — we check DB first
   const [level, setLevel] = useState<Level | null>(null);
   const [selectedDay, setSelectedDay] = useState<DayPlan | null>(null);
 
-  // ── Data ──────────────────────────────────────────────────────────────────
+  // ── Data ───────────────────────────────────────────────────────────────────
   const [plan, setPlan] = useState<DayPlan[]>([]);
   const [exercises, setExercises] = useState<ChallengeExercise[]>([]);
   const [completedDays, setCompletedDays] = useState<number[]>([]);
@@ -38,11 +38,139 @@ export default function ChallengePage() {
     caloriesBurned: number;
   } | null>(null);
 
-  // ── Loading ───────────────────────────────────────────────────────────────
+  // ── Loading ────────────────────────────────────────────────────────────────
+  const [initialising, setInitialising] = useState(true); // checking DB on mount
   const [loadingPlan, setLoadingPlan] = useState(false);
   const [loadingExs, setLoadingExs] = useState(false);
 
-  // Validate type
+  // ── On mount: check if user already has a progress record ─────────────────
+  useEffect(() => {
+    if (type !== "upper-body" && type !== "lower-body") return;
+
+    const init = async () => {
+      try {
+        // 1. Check existing progress in DB
+        const res = await fetch(`/api/challenges/progress?type=${type}`);
+        const data = await res.json();
+
+        if (data.progress?.level) {
+          // Returning user — restore level + completed days, skip modal
+          const savedLevel = data.progress.level as Level;
+          const savedDays: number[] = (data.progress.completedDays ?? []).map(
+            (d: { day: number }) => d.day,
+          );
+
+          setLevel(savedLevel);
+          setCompletedDays(savedDays);
+
+          // Fetch plan silently
+          const planRes = await fetch(`/api/challenges/plan?type=${type}`);
+          const planData = await planRes.json();
+          setPlan(planData.plan ?? []);
+        } else {
+          // Check localStorage fallback (for guests / unauthenticated)
+          const cached =
+            typeof window !== "undefined"
+              ? (localStorage.getItem(
+                  `challenge_level_${type}`,
+                ) as Level | null)
+              : null;
+
+          if (cached) {
+            setLevel(cached);
+            const planRes = await fetch(`/api/challenges/plan?type=${type}`);
+            const planData = await planRes.json();
+            setPlan(planData.plan ?? []);
+          } else {
+            // First time — show modal
+            setLevelModalOpen(true);
+          }
+        }
+      } catch (err) {
+        console.error("Init error:", err);
+        // Fallback: show modal
+        setLevelModalOpen(true);
+      } finally {
+        setInitialising(false);
+      }
+    };
+
+    init();
+  }, [type]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Level selected (first time only) ──────────────────────────────────────
+  const handleLevelSelect = async (selectedLevel: Level) => {
+    setLevel(selectedLevel);
+    setLevelModalOpen(false);
+    setLoadingPlan(true);
+
+    // Cache in localStorage for guests
+    if (typeof window !== "undefined") {
+      localStorage.setItem(`challenge_level_${type}`, selectedLevel);
+    }
+
+    try {
+      // Persist level to DB (creates empty progress record)
+      await fetch("/api/challenges/progress/init", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type, level: selectedLevel }),
+      });
+
+      // Fetch plan
+      const res = await fetch(`/api/challenges/plan?type=${type}`);
+      const data = await res.json();
+      setPlan(data.plan ?? []);
+    } catch (err) {
+      console.error("Failed to initialise challenge:", err);
+    } finally {
+      setLoadingPlan(false);
+    }
+  };
+
+  // ── Day selected ──────────────────────────────────────────────────────────
+  const handleSelectDay = async (dayPlan: DayPlan) => {
+    setSelectedDay(dayPlan);
+    setLoadingExs(true);
+    setScreen("day-preview");
+
+    try {
+      const res = await fetch(
+        `/api/challenges/exercises?type=${type}&level=${level}&day=${dayPlan.day}`,
+      );
+      const data = await res.json();
+      setExercises(data.exercises ?? []);
+    } catch (err) {
+      console.error("Failed to load exercises:", err);
+    } finally {
+      setLoadingExs(false);
+    }
+  };
+
+  // ── Session complete ───────────────────────────────────────────────────────
+  const handleSessionComplete = (result: {
+    durationSecs: number;
+    caloriesBurned: number;
+  }) => {
+    setSessionResult(result);
+    setScreen("complete");
+    if (selectedDay && !completedDays.includes(selectedDay.day)) {
+      setCompletedDays((prev) => [...prev, selectedDay.day]);
+    }
+  };
+
+  // ── Next day ──────────────────────────────────────────────────────────────
+  const handleNextDay = () => {
+    if (!selectedDay) return;
+    const nextDay = plan.find((d) => d.day === selectedDay.day + 1);
+    if (nextDay) {
+      handleSelectDay(nextDay);
+    } else {
+      router.push(`/?challenge=complete&type=${type}`);
+    }
+  };
+
+  // ── Invalid type guard ─────────────────────────────────────────────────────
   if (type !== "upper-body" && type !== "lower-body") {
     return (
       <div className="text-center py-20">
@@ -61,67 +189,7 @@ export default function ChallengePage() {
     );
   }
 
-  // ── Fetch plan when level is selected ─────────────────────────────────────
-  const handleLevelSelect = async (selectedLevel: Level) => {
-    setLevel(selectedLevel);
-    setLevelModalOpen(false);
-    setLoadingPlan(true);
-
-    try {
-      const res = await fetch(`/api/challenges/plan?type=${type}`);
-      const data = await res.json();
-      setPlan(data.plan);
-    } catch (err) {
-      console.error("Failed to load plan", err);
-    } finally {
-      setLoadingPlan(false);
-    }
-  };
-
-  // ── Fetch exercises when a day is selected ─────────────────────────────────
-  const handleSelectDay = async (dayPlan: DayPlan) => {
-    setSelectedDay(dayPlan);
-    setLoadingExs(true);
-    setScreen("day-preview");
-
-    try {
-      const res = await fetch(
-        `/api/challenges/exercises?type=${type}&level=${level}&day=${dayPlan.day}`,
-      );
-      const data = await res.json();
-      setExercises(data.exercises ?? []);
-    } catch (err) {
-      console.error("Failed to load exercises", err);
-    } finally {
-      setLoadingExs(false);
-    }
-  };
-
-  // ── Session complete ───────────────────────────────────────────────────────
-  const handleSessionComplete = (result: {
-    durationSecs: number;
-    caloriesBurned: number;
-  }) => {
-    setSessionResult(result);
-    setScreen("complete");
-    // Optimistically add to completedDays
-    if (selectedDay && !completedDays.includes(selectedDay.day)) {
-      setCompletedDays((prev) => [...prev, selectedDay.day]);
-    }
-  };
-
-  // ── Navigate to next day ──────────────────────────────────────────────────
-  const handleNextDay = () => {
-    if (!selectedDay) return;
-    const nextDayNum = selectedDay.day + 1;
-    const nextDay = plan.find((d) => d.day === nextDayNum);
-    if (nextDay) {
-      handleSelectDay(nextDay);
-    } else {
-      // Challenge complete!
-      router.push(`/?challenge=complete&type=${type}`);
-    }
-  };
+  const isLoading = initialising || loadingPlan || loadingExs;
 
   return (
     <div
@@ -131,7 +199,7 @@ export default function ChallengePage() {
         background: "var(--bg-primary)",
       }}
     >
-      {/* ── Level Select Modal ── */}
+      {/* ── Level Select Modal — only shown if no saved level found ── */}
       <LevelSelectModal
         open={levelModalOpen}
         challengeTitle={CHALLENGE_TITLES[type]}
@@ -140,7 +208,7 @@ export default function ChallengePage() {
       />
 
       {/* ── Loading ── */}
-      {(loadingPlan || loadingExs) && (
+      {isLoading && (
         <div className="flex flex-col items-center justify-center py-32 gap-4">
           <Loader2
             size={36}
@@ -151,35 +219,62 @@ export default function ChallengePage() {
             className="text-[11px] font-black uppercase tracking-widest animate-pulse"
             style={{ color: "var(--text-secondary)" }}
           >
-            {loadingPlan ? "Building your plan..." : "Loading exercises..."}
+            {initialising
+              ? "Loading your progress..."
+              : loadingPlan
+                ? "Building your plan..."
+                : "Loading exercises..."}
           </p>
         </div>
       )}
 
       {/* ── Plan Grid ── */}
-      {!loadingPlan &&
-        !loadingExs &&
-        screen === "plan" &&
-        plan.length > 0 &&
-        level && (
-          <WeekPlanGrid
-            type={type}
-            level={level}
-            plan={plan}
-            completedDays={completedDays}
-            onSelectDay={handleSelectDay}
-            onBack={() => router.back()}
-          />
-        )}
+      {!isLoading && screen === "plan" && plan.length > 0 && level && (
+        <WeekPlanGrid
+          type={type}
+          level={level}
+          plan={plan}
+          completedDays={completedDays}
+          onSelectDay={handleSelectDay}
+          onBack={() => router.back()}
+        />
+      )}
 
       {/* ── Day Exercise Preview ── */}
       {!loadingExs && screen === "day-preview" && selectedDay && (
-        <DayExerciseList
-          dayPlan={selectedDay}
-          exercises={exercises}
-          onStart={() => setScreen("session")}
-          onBack={() => setScreen("plan")}
-        />
+        <>
+          {exercises.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-32 gap-4 text-center">
+              <p className="text-5xl">😕</p>
+              <p
+                className="font-black text-base"
+                style={{ color: "var(--text-primary)" }}
+              >
+                No exercises found for Day {selectedDay.day}
+              </p>
+              <p
+                className="text-sm max-w-xs"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                The database may not have exercises matching this tag yet.
+              </p>
+              <button
+                onClick={() => setScreen("plan")}
+                className="mt-2 px-6 py-3 rounded-2xl font-black text-sm text-white"
+                style={{ background: "var(--primary)" }}
+              >
+                ← Back to Plan
+              </button>
+            </div>
+          ) : (
+            <DayExerciseList
+              dayPlan={selectedDay}
+              exercises={exercises}
+              onStart={() => setScreen("session")}
+              onBack={() => setScreen("plan")}
+            />
+          )}
+        </>
       )}
 
       {/* ── Active Session ── */}

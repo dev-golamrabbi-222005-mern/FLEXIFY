@@ -27,39 +27,29 @@ export default function AdminProfilePage() {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setProfileImage(imageUrl);
-    }
+    if (file) setProfileImage(URL.createObjectURL(file));
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10 bg-[var(--bg-primary)] space-y-10">
+    <div className="max-w-7xl mx-auto px-4 py-10 bg-[var(--bg-primary)] space-y-10">
 
       {/* ===== PROFILE HEADER ===== */}
-
-      <section className="bg-[var(--card-bg)] p-6 md:p-8 rounded-2xl shadow">
-
+      <section className="bg-[var(--card-bg)] p-6 md:p-8 rounded-2xl shadow-md hover:shadow-xl transition">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-
+          
           {/* Profile Image */}
-
           <div className="relative">
-
             <img
               src={profileImage}
               alt="admin"
               className="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover border-4 border-white shadow"
             />
-
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="absolute bottom-0 right-0 bg-[var(--primary)] text-white p-2 rounded-full shadow"
+              className="absolute bottom-0 right-0 bg-[var(--primary)] text-white p-2 rounded-full shadow hover:opacity-90 transition"
             >
               <Camera size={16} />
             </button>
-
             <input
               ref={fileInputRef}
               type="file"
@@ -67,130 +57,90 @@ export default function AdminProfilePage() {
               onChange={handleImageUpload}
               className="hidden"
             />
-
           </div>
 
           {/* Admin Info */}
-
           <div className="flex-1 text-center md:text-left">
-
-            <h1 className="text-xl md:text-2xl font-bold">
-              {profile.name}
-            </h1>
-
+            <h1 className="text-xl md:text-2xl font-bold">{profile.name}</h1>
             <p className="text-[var(--text-secondary)] flex items-center justify-center md:justify-start gap-2 mt-2">
               <Mail size={16}/> {profile.email}
             </p>
-
             <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-4">
-
-              <span className="px-3 py-1 bg-blue-100 text-blue-600 text-sm rounded-full">
-                {profile.role}
-              </span>
-
-              <span className="px-3 py-1 bg-green-100 text-green-600 text-sm rounded-full">
-                Joined {profile.joined}
-              </span>
-
+              <span className="px-3 py-1 bg-blue-100 text-blue-600 text-sm rounded-full">{profile.role}</span>
+              <span className="px-3 py-1 bg-green-100 text-green-600 text-sm rounded-full">Joined {profile.joined}</span>
             </div>
-
           </div>
 
         </div>
-
       </section>
 
-      {/* ===== EDIT PROFILE ===== */}
-
-      <section className="bg-[var(--card-bg)] p-6 md:p-8 rounded-2xl shadow">
-
-        <h2 className="text-lg md:text-xl font-bold mb-6">
-          Edit Profile
+      {/* ===== EDIT PROFILE TABLE STYLE ===== */}
+      <section className="bg-[var(--card-bg)] p-6 md:p-8 rounded-2xl shadow-md hover:shadow-xl transition">
+        <h2 className="text-lg md:text-xl font-bold mb-6 flex items-center gap-2">
+          <User size={20}/> Edit Profile
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <table className="w-full text-left border-collapse">
+          <tbody>
+            {[
+              { label: "Full Name", value: profile.name, type: "text" },
+              { label: "Email", value: profile.email, type: "email" },
+              { label: "Role", value: profile.role, type: "text", disabled: true },
+              { label: "Join Date", value: profile.joined, type: "text", disabled: true },
+            ].map((field, idx) => (
+              <tr key={idx} className="border-b last:border-none">
+                <td className="py-4 px-3 w-1/4 font-medium text-[var(--text-secondary)]">{field.label}</td>
+                <td className="py-4 px-3">
+                  <input
+                    type={field.type}
+                    defaultValue={field.value}
+                    disabled={field.disabled}
+                    className="w-full border p-3 rounded-lg bg-[var(--bg-primary)]"
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-          <div>
-            <label className="text-sm block mb-2">Full Name</label>
-            <input
-              type="text"
-              defaultValue={profile.name}
-              className="w-full border p-3 rounded-lg bg-[var(--bg-primary)]"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm block mb-2">Email</label>
-            <input
-              type="email"
-              defaultValue={profile.email}
-              className="w-full border p-3 rounded-lg bg-[var(--bg-primary)]"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm block mb-2">Role</label>
-            <input
-              type="text"
-              defaultValue={profile.role}
-              disabled
-              className="w-full border p-3 rounded-lg "
-            />
-          </div>
-
-          <div>
-            <label className="text-sm block mb-2">Join Date</label>
-            <input
-              type="text"
-              defaultValue={profile.joined}
-              disabled
-              className="w-full border p-3 rounded-lg "
-            />
-          </div>
-
-        </div>
-
-        <button className="mt-6 bg-[var(--primary)] text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:opacity-90">
+        <button className="mt-6 bg-[var(--primary)] text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:opacity-90 transition shadow-md hover:shadow-xl">
           <Save size={18}/> Save Changes
         </button>
-
       </section>
 
-      {/* ===== SECURITY SETTINGS ===== */}
-
-      <section className="bg-[var(--card-bg)] p-6 md:p-8 rounded-2xl shadow">
-
-        <h2 className="text-lg md:text-xl font-bold mb-6">
-          Security Settings
+      {/* ===== SECURITY SETTINGS TABLE STYLE ===== */}
+      <section className="bg-[var(--card-bg)] p-6 md:p-8 rounded-2xl shadow-md hover:shadow-xl transition">
+        <h2 className="text-lg md:text-xl font-bold mb-6 flex items-center gap-2">
+          <Shield size={20}/> Security Settings
         </h2>
 
-        <div className="space-y-6">
-
-          <div>
-            <label className="flex items-center gap-2 text-sm mb-2">
-              <Key size={16}/> Change Password
-            </label>
-
-            <input
-              type="password"
-              placeholder="New Password"
-              className="w-full border p-3 rounded-lg"
-            />
-          </div>
-
-          <div>
-            <label className="flex items-center gap-2 text-sm mb-2">
-              <Shield size={16}/> Two-Factor Authentication
-            </label>
-
-            <select className="w-full border p-3 rounded-lg bg-[var(--card-bg)]">
-              <option>Enabled</option>
-              <option>Disabled</option>
-            </select>
-          </div>
-
-        </div>
-
+        <table className="w-full text-left border-collapse">
+          <tbody>
+            <tr className="border-b last:border-none">
+              <td className="py-4 px-3 w-1/4 font-medium text-[var(--text-secondary)] flex items-center gap-2">
+                <Key size={16}/> Change Password
+              </td>
+              <td className="py-4 px-3">
+                <input
+                  type="password"
+                  placeholder="New Password"
+                  className="w-full border p-3 rounded-lg"
+                />
+              </td>
+            </tr>
+            <tr className="border-b last:border-none">
+              <td className="py-4 px-3 w-1/4 font-medium text-[var(--text-secondary)] flex items-center gap-2">
+                <Shield size={16}/> Two-Factor Authentication
+              </td>
+              <td className="py-4 px-3">
+                <select className="w-full border p-3 rounded-lg bg-[var(--card-bg)]">
+                  <option>Enabled</option>
+                  <option>Disabled</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
     </div>

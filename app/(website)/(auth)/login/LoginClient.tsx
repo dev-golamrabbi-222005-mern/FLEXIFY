@@ -36,12 +36,9 @@ export default function LoginClient(): JSX.Element {
     });
 
     if (result?.ok) {
-     await Swal.fire("Success", "Welcome back!", "success");
-  router.push("/dashboard");
+      await Swal.fire("Success", "Welcome back!", "success");
+      router.push("/dashboard");
     }
-
-    await Swal.fire("Success", "Login successful", "success");
-    router.push(callbackUrl);
   };
   return (
     <div
@@ -91,7 +88,7 @@ export default function LoginClient(): JSX.Element {
             <label className="text-sm text-gray-300">Password</label>{" "}
             <div className="relative mt-1">
               {" "}
-              <FaLock className="absolute left-3 top-4 text-gray-400" />{" "}
+              <FaLock className="absolute text-gray-400 left-3 top-4" />{" "}
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
@@ -101,7 +98,7 @@ export default function LoginClient(): JSX.Element {
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-4 cursor-pointer text-gray-400 hover:text-gray-200 transition"
+                className="absolute text-gray-400 transition cursor-pointer right-3 top-4 hover:text-gray-200"
               >
                 {" "}
                 {showPassword ? <FaEyeSlash /> : <FaEye />}{" "}
