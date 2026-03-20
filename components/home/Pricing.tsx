@@ -3,16 +3,17 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import SectionTitle from "@/app/(website)/components/ui/section-title";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-import { Loader2 } from "lucide-react";
+import { Loader2, CheckCircle2 } from "lucide-react";
 import { CoachSelectModal, Coach } from "@/components/pricing/CoachSelectModal";
 
 interface PlanFeature {
   label: string;
   val: boolean | string;
 }
-
 interface Plan {
   id: string;
   name: string;
@@ -25,6 +26,7 @@ interface Plan {
 }
 
 const ELITE_BASE_PRICE = 29;
+const PLAN_RANK: Record<string, number> = { free: 0, pro: 1, elite: 2 };
 
 const PLANS: Plan[] = [
   {
@@ -107,11 +109,98 @@ function FeatureValue({ val }: { val: boolean | string }) {
   );
 }
 
+// ── Dynamic CTA button per plan ───────────────────────────────────────────────
+function PlanButton({
+  plan,
+  userPlan,
+  loading,
+  onClick,
+}: {
+  plan: Plan;
+  userPlan: string;
+  loading: boolean;
+  onClick: () => void;
+}) {
+  const userRank = PLAN_RANK[userPlan] ?? 0;
+  const planRank = PLAN_RANK[plan.id] ?? 0;
+  const isCurrent = userPlan === plan.id;
+  const isLower = userRank > planRank;
+  const isDisabled = isCurrent || isLower || loading;
+
+  // ── Label ──────────────────────────────────────────────────────────────────
+  let label: React.ReactNode = plan.cta;
+  if (loading) {
+    label = (
+      <>
+        <Loader2 size={13} className="animate-spin" /> Redirecting…
+      </>
+    );
+  } else if (isCurrent) {
+    label = (
+      <span className="flex items-center justify-center gap-1.5">
+        <CheckCircle2 size={13} />
+        {plan.id === "free" ? "Current Plan" : `You are using ${plan.name}`}
+      </span>
+    );
+  }
+
+  // ── Style ──────────────────────────────────────────────────────────────────
+  let style: React.CSSProperties = {};
+  if (isCurrent) {
+    style = { background: "var(--primary)", color: "#fff", cursor: "default" };
+  } else if (isLower) {
+    style = {
+      background: "transparent",
+      border: "1.5px solid var(--border-color)",
+      color: "var(--text-secondary)",
+      cursor: "not-allowed",
+      opacity: 0.45,
+    };
+  } else if (plan.ctaStyle === "filled") {
+    style = {
+      background: "var(--primary)",
+      color: "#fff",
+      boxShadow: "0 4px 16px rgba(244,121,32,0.35)",
+    };
+  } else {
+    style = {
+      border: "1.5px solid var(--primary)",
+      color: "var(--primary)",
+      background: "transparent",
+    };
+  }
+
+  return (
+    <button
+      onClick={isDisabled ? undefined : onClick}
+      disabled={isDisabled}
+      className="btn-primary w-full flex items-center justify-center gap-2 transition-all disabled:cursor-not-allowed"
+      style={style}
+    >
+      {label}
+    </button>
+  );
+}
+
+// ── Main ─────────────────────────────────────────────────────────────────────
 const Pricing = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [showCoachModal, setShowCoachModal] = useState(false);
+
+  // Fetch user's current plan from DB
+  const { data: dbUser } = useQuery({
+    queryKey: ["currentUser", session?.user?.email],
+    queryFn: async () => {
+      if (!session?.user?.email) return null;
+      const res = await axios.get(`/api/user/me?email=${session.user.email}`);
+      return res.data;
+    },
+    enabled: !!session?.user?.email,
+  });
+
+  const userPlan: string = dbUser?.plan ?? "free";
 
   const initiatePayment = async (
     planId: string,
@@ -169,7 +258,7 @@ const Pricing = () => {
           className="rounded-3xl overflow-hidden"
           style={{ border: "3px solid var(--border-color)" }}
         >
-          {/* Header row */}
+          {/* ── Header row ── */}
           <div
             className="grid grid-cols-4"
             style={{ background: "var(--bg-secondary)" }}
@@ -182,6 +271,7 @@ const Pricing = () => {
                 Features
               </span>
             </div>
+
             {PLANS.map((plan) => (
               <div
                 key={plan.id}
@@ -196,6 +286,7 @@ const Pricing = () => {
                     : "3px solid transparent",
                 }}
               >
+                {/* Recommended badge */}
                 {plan.featured && (
                   <div
                     className="absolute -top-px left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-b-lg text-[9px] font-black uppercase tracking-widest text-white"
@@ -204,6 +295,21 @@ const Pricing = () => {
                     Recommended
                   </div>
                 )}
+
+                {/* Active plan badge */}
+                {session && userPlan === plan.id && (
+                  <div
+                    className="absolute top-2 right-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider"
+                    style={{
+                      background: "rgba(16,185,129,0.12)",
+                      border: "1px solid rgba(16,185,129,0.3)",
+                      color: "#059669",
+                    }}
+                  >
+                    ✓ Active
+                  </div>
+                )}
+
                 <p
                   className="font-black text-base mb-1"
                   style={{ color: "var(--text-primary)" }}
@@ -234,38 +340,18 @@ const Pricing = () => {
                 >
                   {plan.desc}
                 </p>
-                <button
+
+                <PlanButton
+                  plan={plan}
+                  userPlan={userPlan}
+                  loading={loadingPlan === plan.id}
                   onClick={() => handlePlanClick(plan.id)}
-                  disabled={loadingPlan === plan.id}
-                  className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
-                  style={
-                    plan.ctaStyle === "filled"
-                      ? {
-                          background: "var(--primary)",
-                          color: "#fff",
-                          boxShadow: "0 4px 16px rgba(244,121,32,0.35)",
-                        }
-                      : {
-                          border: "1.5px solid var(--primary)",
-                          color: "var(--primary)",
-                          background: "transparent",
-                        }
-                  }
-                >
-                  {loadingPlan === plan.id ? (
-                    <>
-                      <Loader2 size={13} className="animate-spin" />{" "}
-                      Redirecting…
-                    </>
-                  ) : (
-                    plan.cta
-                  )}
-                </button>
+                />
               </div>
             ))}
           </div>
 
-          {/* Feature rows */}
+          {/* ── Feature rows ── */}
           {PLANS[0].features.map((f, fi) => (
             <div
               key={f.label}
@@ -312,7 +398,6 @@ const Pricing = () => {
         </p>
       </div>
 
-      {/* Coach Select Modal — Elite only */}
       <CoachSelectModal
         open={showCoachModal}
         eliteBasePrice={ELITE_BASE_PRICE}
