@@ -15,6 +15,8 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import Swal from "sweetalert2";
+import { ObjectId } from "mongodb";
 
 // const workoutPlans = [
 //   { id: "1", name: "Push/Pull/Legs Split", clients: 8, exercises: 24, duration: "6 weeks", status: "Active" },
@@ -25,13 +27,35 @@ import { useQuery } from "@tanstack/react-query";
 // ];
 
 export default function CoachWorkouts() {
-  const {data: workoutPlans = []} = useQuery({
+  const {data: workoutPlans = [], refetch} = useQuery({
     queryKey: ["workout_plans"],
     queryFn: async() => {
       const res = await axios.get("/api/coach/workout-plans");
       return res.data;
     }
   });
+
+  const deleteWorkoutPlan = async(id: ObjectId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`/api/coach/workout-plans/${id}`);
+        refetch();
+        Swal.fire({
+          title: "Deleted!",
+          text: "Workout plan has been deleted",
+          icon: "success"
+        });
+      }
+    });
+  }
 
   return (
     <div className="min-h-screen p-4 md:p-8" style={{ background: "var(--bg-primary)" }}>
@@ -183,6 +207,7 @@ export default function CoachWorkouts() {
                 </button>
 
                 <button
+                  onClick={() => deleteWorkoutPlan(plan._id)}
                   className="p-2 transition rounded-xl hover:bg-red-500/10"
                   style={{ color: "var(--danger)" }}
                 >

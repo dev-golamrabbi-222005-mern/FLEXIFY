@@ -8,7 +8,7 @@ export const DELETE = async(req: NextRequest, { params }: { params: Promise<{ id
     const session = await getServerSession(authOptions);
     if(session){
         const {id} = await params;
-        const nutrition_plan = await dbConnect("nutrition_plans").deleteOne({_id: new ObjectId(id)});
+        const workout_plan = await dbConnect("workout_plans").deleteOne({_id: new ObjectId(id)});
         return NextResponse.json(
             { success: true },
             { status: 200 }
