@@ -59,7 +59,7 @@ export default function CoachNutrition() {
         {nutritionPlans.map((plan, i) => (
 
           <motion.div
-            key={plan.id}
+            key={plan._id}
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.08 }}
