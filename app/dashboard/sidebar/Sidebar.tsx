@@ -70,18 +70,7 @@ const menuConfig = [
         icon: Dumbbell,
         roles: ["user"],
       },
-      {
-        name: "User Form",
-        href: "/dashboard/user-form",
-        icon: BookText,
-        roles: ["user"],
-      },
-      {
-        name: "Exercise",
-        href: "/dashboard/workout-builder",
-        icon: ChartNoAxesGanttIcon,
-        roles: ["user"],
-      },
+    
       {
         name: "My Goals",
         href: "/dashboard/my-goals",
@@ -116,6 +105,12 @@ const menuConfig = [
         name: "Live Sessions",
         href: "/dashboard/live-sessions",
         icon: Video,
+        roles: ["user"],
+      },
+        {
+        name: "User Update Form",
+        href: "/dashboard/fitness-update-form",
+        icon: BookText,
         roles: ["user"],
       },
     ],
