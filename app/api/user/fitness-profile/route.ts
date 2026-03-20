@@ -2,7 +2,27 @@ import { dbConnect } from "@/lib/dbConnect";
 import { NextResponse } from "next/server";
 import { DbUser } from "@/actions/server/auth"; 
 import { authOptions } from "@/lib/authOptions";
-import { getServerSession } from "next-auth"; 
+import { getServerSession } from "next-auth";
+
+export async function GET() {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const collection = await dbConnect<DbUser>("users");
+    const user = await collection.findOne({ email: session.user.email });
+
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(user.fitnessProfile || {});
+  } catch (error) {
+    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+  }
+}
 
 export async function POST(req: Request) {
   try {

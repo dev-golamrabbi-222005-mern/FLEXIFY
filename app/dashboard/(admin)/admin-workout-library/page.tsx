@@ -147,42 +147,51 @@ export default function WorkoutLibraryPage() {
       </div>
 
       {/* ===== WORKOUT TABLE ===== */}
-
       <section className="space-y-6">
-        <h2 className="text-xl font-bold mb-4">Global Workouts</h2>
+  <h2 className="text-xl font-bold mb-4">Global Workouts</h2>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {workouts.map((workout) => (
-            <div
-              key={workout.id}
-              className="bg-[var(--card-bg)] p-6 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between gap-3"
+  <div className="card-glass overflow-hidden">
+    {/* HEADER */}
+    <div className="grid grid-cols-4 gap-6 px-6 py-3 text-sm font-semibold border-b border-[var(--border-color)] text-[var(--text-secondary)]">
+      <div>Name</div>
+      <div>Category</div>
+      <div>Level</div>
+      <div className="text-right">Actions</div>
+    </div>
+
+    {/* ROWS */}
+    <div className="divide-y divide-[var(--border-color)]">
+      {workouts.map((workout) => (
+        <div
+          key={workout.id}
+          className="grid grid-cols-4 gap-6 px-6 py-4 items-center text-sm hover:bg-[var(--bg-tertiary)] transition"
+        >
+          <div className="font-medium">{workout.name}</div>
+          <div>
+            <span className="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-600">
+              {workout.category}
+            </span>
+          </div>
+          <div>{workout.level}</div>
+
+          {/* ACTION BUTTONS */}
+          <div className="flex justify-end gap-2">
+            <button className="px-3 py-1 text-xs rounded-md bg-blue-500/20 text-blue-500 hover:bg-blue-500/30 flex items-center gap-1">
+              <Edit size={14} /> Edit
+            </button>
+
+            <button
+              onClick={() => deleteWorkout(workout.id)}
+              className="px-3 py-1 text-xs rounded-md bg-red-500/20 text-red-500 hover:bg-red-500/30 flex items-center gap-1"
             >
-              {/* WORKOUT INFO */}
-              <div className="space-y-1">
-                <h3 className="text-lg font-semibold">{workout.name}</h3>
-                <span className="inline-block px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-600">
-                  {workout.category}
-                </span>
-                <p className="text-sm text-gray-500">Level: {workout.level}</p>
-              </div>
-
-              {/* ACTION BUTTONS */}
-              <div className="flex gap-3 mt-3 flex-wrap">
-                <button className="text-blue-600 text-sm flex items-center gap-1 hover:underline transition">
-                  <Edit size={14} /> Edit
-                </button>
-
-                <button
-                  onClick={() => deleteWorkout(workout.id)}
-                  className="text-red-600 text-sm flex items-center gap-1 hover:underline transition"
-                >
-                  <Trash size={14} /> Remove
-                </button>
-              </div>
-            </div>
-          ))}
+              <Trash size={14} /> Remove
+            </button>
+          </div>
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
     </div>
   );
 }

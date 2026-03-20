@@ -9,9 +9,12 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
+  PieChart,
+  Pie,
+  Cell,
 } from "recharts";
 
-import { TrendingUp, Users, DollarSign } from "lucide-react";
+import { TrendingUp, Activity, DollarSign } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -40,135 +43,113 @@ const revenueData = [
   { month: "Jun", revenue: 5200 },
 ];
 
+const COLORS = ["#3B82F6", "#10B981", "#F97316", "#8B5CF6"];
+
 export default function ReportsAnalyticsPage() {
-  const {data: users = []} = useQuery({
-      queryKey: ["users"],
-      queryFn: async() => {
-        const res = await axios.get("/api/user?role=user");
-        return res.data;
-      }
-    });
+  const { data: users = [] } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const res = await axios.get("/api/user?role=user");
+      return res.data;
+    },
+  });
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10 space-y-10">
+    <div className="max-w-7xl mx-auto px-4 py-10 space-y-8 bg-[var(--bg-primary)] min-h-screen">
 
-      {/* PAGE HEADER */}
-
-      <div className="flex items-center gap-3">
-        <TrendingUp size={28} />
-        <h1 className="text-2xl md:text-3xl font-bold">
-          Reports & Analytics
-        </h1>
+      {/* HEADER */}
+      <div>
+        <h1 className="text-2xl font-bold tracking-wide">Analytics Dashboard</h1>
+        <p className="text-sm text-[var(--text-secondary)]">Overview of platform performance</p>
       </div>
 
-      {/* ================= SUMMARY CARDS ================= */}
-
+      {/* SUMMARY CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        <div className="bg-[var(--card-bg)] p-6 rounded-xl shadow flex items-center gap-4">
-          <Users className="text-blue-600" size={28} />
+        <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-500">Total Users</p>
-            <p className="text-2xl font-bold">{users.length}</p>
+            <p className="text-sm text-[var(--text-secondary)]">Total Users</p>
+            <h2 className="text-2xl font-bold">{users.length}</h2>
+          </div>
+          <div className="p-3 rounded-xl bg-gradient-to-r from-green-400 to-emerald-600 text-white">
+            <TrendingUp size={22} />
           </div>
         </div>
 
-        <div className="bg-[var(--card-bg)] p-6 rounded-xl shadow flex items-center gap-4">
-          <TrendingUp className="text-green-600" size={28} />
+        <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-500">Platform Growth</p>
-            <p className="text-2xl font-bold">+32%</p>
+            <p className="text-sm text-[var(--text-secondary)]">Engagement</p>
+            <h2 className="text-2xl font-bold">1.2K</h2>
+          </div>
+          <div className="p-3 rounded-xl bg-gradient-to-r from-blue-400 to-indigo-600 text-white">
+            <Activity size={22} />
           </div>
         </div>
 
-        <div className="bg-[var(--card-bg)] p-6 rounded-xl shadow flex items-center gap-4">
-          <DollarSign className="text-yellow-600" size={28} />
+        <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-500">Total Revenue</p>
-            <p className="text-2xl font-bold">$18,200</p>
+            <p className="text-sm text-[var(--text-secondary)]">Revenue</p>
+            <h2 className="text-2xl font-bold">$5,200</h2>
+          </div>
+          <div className="p-3 rounded-xl bg-gradient-to-r from-orange-400 to-pink-500 text-white">
+            <DollarSign size={22} />
           </div>
         </div>
 
       </div>
 
-      {/* ================= PLATFORM GROWTH ================= */}
+      {/* CHARTS */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-      <section className="bg-[var(--card-bg)] p-6 md:p-8 rounded-xl shadow">
-
-        <h2 className="text-xl font-semibold mb-6">
-          Platform Growth
-        </h2>
-
-        <div className="h-[300px]">
-
-          <ResponsiveContainer width="100%" height="100%">
+        {/* LINE CHART */}
+        <div className="bg-[var(--card-bg)] p-5 rounded-2xl shadow hover:shadow-xl transition">
+          <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">📈 Platform Growth</h2>
+          <ResponsiveContainer width="100%" height={220}>
             <LineChart data={growthData}>
-              <XAxis dataKey="month" />
-              <YAxis />
+              <XAxis dataKey="month" stroke="#888" />
+              <YAxis stroke="#888" />
               <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="users"
-                stroke="#10B981"
-                strokeWidth={3}
-              />
+              <Line type="monotone" dataKey="users" stroke="#10B981" strokeWidth={3} dot={{ r: 4 }} />
             </LineChart>
           </ResponsiveContainer>
-
         </div>
 
-      </section>
-
-      {/* ================= ENGAGEMENT METRICS ================= */}
-
-      <section className="bg-[var(--card-bg)] p-6 md:p-8 rounded-xl shadow">
-
-        <h2 className="text-xl font-semibold mb-6">
-          Engagement Metrics
-        </h2>
-
-        <div className="h-[300px]">
-
-          <ResponsiveContainer width="100%" height="100%">
+        {/* BAR CHART */}
+        <div className="bg-[var(--card-bg)] p-5 rounded-2xl shadow hover:shadow-xl transition">
+          <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">📊 Engagement</h2>
+          <ResponsiveContainer width="100%" height={220}>
             <BarChart data={engagementData}>
-              <XAxis dataKey="name" />
-              <YAxis />
+              <XAxis dataKey="name" stroke="#888" />
+              <YAxis stroke="#888" />
               <Tooltip />
-              <Bar dataKey="value" fill="#3B82F6" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="value" fill="#3B82F6" radius={[6,6,0,0]} />
             </BarChart>
           </ResponsiveContainer>
+        </div>
 
+        {/* PIE CHART */}
+        <div className="bg-[var(--card-bg)] p-5 rounded-2xl shadow md:col-span-2 hover:shadow-xl transition">
+          <h2 className="text-lg font-semibold mb-3 text-center">💰 Revenue Distribution</h2>
+          <div className="flex justify-center">
+            <ResponsiveContainer width={300} height={260}>
+              <PieChart>
+                <Pie
+                  data={revenueData}
+                  dataKey="revenue"
+                  nameKey="month"
+                  outerRadius={90}
+                  label
+                >
+                  {revenueData.map((entry, index) => (
+                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
       </section>
-
-      {/* ================= REVENUE REPORT ================= */}
-
-      <section className="bg-[var(--card-bg)] p-6 md:p-8 rounded-xl shadow">
-
-        <h2 className="text-xl font-semibold mb-6">
-          Revenue Report
-        </h2>
-
-        <div className="h-[300px]">
-
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={revenueData}>
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="revenue"
-                stroke="#F97316"
-                strokeWidth={3}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-
-        </div>
-
-      </section>
-
     </div>
   );
 }

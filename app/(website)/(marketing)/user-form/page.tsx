@@ -13,35 +13,45 @@ const profileSchema = z.object({
   gender: z.enum(["Male", "Female", "Other"]),
   height: z.number().min(50),
   weight: z.number().min(20),
-  goal: z.string().min(1, "Required"),
-  activityLevel: z.string().min(1, "Required"),
   workoutDays: z.string().min(1, "Required"),
   sleepHours: z.number().min(1).max(24),
   waterIntake: z.number().min(0),
+  goal: z.string().optional(),
+  activityLevel: z.string().optional(),
   injuries: z.string().optional(),
   medicalCondition: z.string().optional(),
-  dietType: z.string().min(1, "Required"),
+  dietType: z.string().optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 const FitnessProfileForm = () => {
   const router = useRouter();
+  
   const mutation = useMutation({
     mutationFn: async (data: ProfileFormValues) => {
-      const response = await axios.post("/api/user/fitness-profile", data);
+      const finalData = {
+        ...data,
+        goal: "",
+        activityLevel: "",
+        injuries: "",
+        medicalCondition: "",
+        dietType: "",
+      };
+      const response = await axios.post("/api/user/fitness-profile", finalData);
       return response.data;
     },
     onSuccess: () => {
       Swal.fire({
         title: "Success!",
-        text: "Profile saved successfully! Redirecting to dashboard...",
+        text: "Profile saved! You can complete other details from update profile later.",
         icon: "success",
-        timer: 2000, 
+        timer: 2500,
         showConfirmButton: false,
       }).then(() => {
-        router.push("/dashboard"); 
-      });},
+        router.push("/dashboard");
+      });
+    },
     onError: (err: unknown) => {
       const message = axios.isAxiosError(err) ? err.response?.data?.message : "Something went wrong";
       Swal.fire("Error", message, "error");
@@ -60,16 +70,10 @@ const FitnessProfileForm = () => {
       <div className="max-w-7xl mx-auto bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-lg overflow-hidden font-sans">
         
         <div className="bg-[var(--primary)] p-8 text-white text-center relative overflow-hidden">
-          <div
-            className="absolute inset-0 opacity-20"
-            style={{
-              backgroundImage: `radial-gradient(circle, #fff 2px, transparent 2px)`,
-              backgroundSize: "40px 40px",
-            }}
-          />
+          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `radial-gradient(circle, #fff 2px, transparent 2px)`, backgroundSize: "40px 40px" }} />
           <div className="relative z-10">
-            <h1 className="text-3xl font-bold uppercase">Fitness & Health Profile</h1>
-            <p className="mt-1 opacity-90">Provide your details for a personalized experience</p>
+            <h1 className="text-3xl font-bold uppercase">Quick Fitness Profile</h1>
+            <p className="mt-1 opacity-90">Start your journey with basic details</p>
           </div>
         </div>
 
@@ -118,29 +122,8 @@ const FitnessProfileForm = () => {
 
           <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <h2 className="col-span-full text-xl font-bold border-b border-[var(--border-color)] pb-2 text-[var(--primary)] uppercase">
-              Fitness & Lifestyle
+              Lifestyle
             </h2>
-
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-semibold">Fitness Goal</label>
-              <select {...register("goal")} className="input-style">
-                <option value="">Select Goal</option>
-                <option value="Weight Loss">Weight Loss</option>
-                <option value="Muscle Gain">Muscle Gain</option>
-                <option value="Maintain Fitness">Maintain Fitness</option>
-              </select>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-semibold">Activity Level</label>
-              <select {...register("activityLevel")} className="input-style">
-                <option value="">Select Level</option>
-                <option value="Sedentary">Sedentary</option>
-                <option value="Lightly Active">Lightly Active</option>
-                <option value="Moderately Active">Moderately Active</option>
-                <option value="Very Active">Very Active</option>
-              </select>
-            </div>
 
             <div className="flex flex-col gap-1">
               <label className="text-sm font-semibold">Workout Days / Week</label>
@@ -151,47 +134,17 @@ const FitnessProfileForm = () => {
                 <option value="5 Days">5 Days</option>
                 <option value="6 Days">6 Days</option>
               </select>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-semibold">Diet Type</label>
-              <select {...register("dietType")} className="input-style">
-                <option value="">Select Diet</option>
-                <option value="Vegetarian">Vegetarian</option>
-                <option value="Non-Vegetarian">Non-Vegetarian</option>
-                <option value="Vegan">Vegan</option>
-              </select>
-            </div>
-          </section>
-
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <h2 className="col-span-full text-xl font-bold border-b border-[var(--border-color)] pb-2 text-[var(--primary)] uppercase">
-              Health & History
-            </h2>
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-semibold">Injuries</label>
-              <input {...register("injuries")} className="input-style" placeholder="Knee pain / None" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-semibold">Medical Condition</label>
-              <input {...register("medicalCondition")} className="input-style" placeholder="Asthma / None" />
+              {errors.workoutDays && <span className="text-red-500 text-xs">{errors.workoutDays.message}</span>}
             </div>
           </section>
 
           <button
             type="submit"
             disabled={mutation.isPending}
-            className={`bg-(--primary) rounded-2xl text-white cursor-pointer w-full text-xl font-extrabold py-6 uppercase tracking-widest transition-all shadow-xl active:scale-95 relative overflow-hidden ${mutation.isPending ? "opacity-40 cursor-wait" : "hover:brightness-110"}`}
+            className={`bg-[var(--primary)] rounded-2xl text-white cursor-pointer w-full text-xl font-extrabold py-6 uppercase tracking-widest transition-all shadow-xl active:scale-95 relative overflow-hidden ${mutation.isPending ? "opacity-40 cursor-wait" : "hover:brightness-110"}`}
           >
-            <div
-              className="absolute inset-0 opacity-10 pointer-events-none"
-              style={{
-                backgroundImage: `radial-gradient(circle, #fff 2px, transparent 2px)`,
-                backgroundSize: "20px 20px",
-              }}
-            />
             <span className="relative z-10">
-              {mutation.isPending ? "Saving Profile..." : "Save Fitness Profile"}
+              {mutation.isPending ? "Starting..." : "Create Profile"}
             </span>
           </button>
         </form>
