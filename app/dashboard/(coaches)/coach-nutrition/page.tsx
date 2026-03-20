@@ -7,6 +7,8 @@ import { Plus, Edit, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import Swal from "sweetalert2";
+import { ObjectId } from "mongodb";
 
 // const nutritionPlans = [
 //   { id: "1", name: "High Protein Bulk", calories: "3200 cal", protein: "180g", carbs: "350g", fat: "90g", clients: 6, status: "Active" },
@@ -16,14 +18,36 @@ import axios from "axios";
 // ];
 
 export default function CoachNutrition() {
-  const {data: nutritionPlans = []} = useQuery({
+  const {data: nutritionPlans = [], refetch} = useQuery({
     queryKey: ["nutrition_plans"],
     queryFn: async() => {
       const res = await axios.get("/api/coach/nutrition-plans");
       return res.data;
     }
   });
-  
+
+  const deleteNutritionPlan = async(id: ObjectId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`/api/coach/nutrition-plans/${id}`);
+        refetch();
+        Swal.fire({
+          title: "Deleted!",
+          text: "Nutrition plan has been deleted",
+          icon: "success"
+        });
+      }
+    });
+  }
+
   return (
     <div className="px-4 mx-auto space-y-8 max-w-7xl sm:px-6">
 
@@ -154,6 +178,7 @@ export default function CoachNutrition() {
               </button>
 
               <button
+                onClick={() => deleteNutritionPlan(plan._id)}
                 className="p-2 transition rounded-xl hover:bg-red-500/10"
                 style={{ color: "var(--danger)" }}
               >
