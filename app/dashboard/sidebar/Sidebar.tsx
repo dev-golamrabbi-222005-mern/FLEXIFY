@@ -54,102 +54,102 @@ interface SidebarProps {
   onClose: () => void;
 }
 
+// ── Menu config — MAIN MENU items was accidentally double-wrapped in an array ──
 const menuConfig = [
   {
     label: "MAIN MENU",
     items: [
-[
-  {
-    name: "Dashboard",
-    href: "/dashboard",
-    icon: Home,
-    roles: ["user", "admin", "coach"],
-  },
-  {
-    name: "Create Workout",
-    href: "/dashboard/create-workout",
-    icon: PlusCircle,
-    roles: ["user"],
-  },
-  {
-    name: "Your Workouts",
-    href: "/dashboard/your-workouts",
-    icon: Dumbbell,
-    roles: ["user"],
-  },
-  {
-    name: "Assigned",
-    href: "/dashboard/assigned-coach",
-    icon: UserCheck2,
-    roles: ["user"],
-  },
-  {
-    name: "Progress",
-    href: "/dashboard/user-progress",
-    icon: Shield,
-    roles: ["user"],
-  },
-  {
-    name: "Update Profile",
-    href: "/dashboard/user-form",
-    icon: UserPen,
-    roles: ["user"],
-  },
-  {
-    name: "User Profile",
-    href: "/dashboard/user-profile",
-    icon: ShieldAlertIcon,
-    roles: ["user"],
-  },
-  {
-    name: "My Goals",
-    href: "/dashboard/my-goals",
-    icon: Flag,
-    roles: ["user"],
-  },
-  {
-    name: "Nutrition",
-    href: "/dashboard/nutrition-tracker",
-    icon: Utensils,
-    roles: ["user"],
-  },
-  {
-    name: "Schedule",
-    href: "/dashboard/schedule",
-    icon: Calendar,
-    roles: ["user"],
-  },
-  {
-    name: "Achievements",
-    href: "/dashboard/achievements",
-    icon: Trophy,
-    roles: ["user"],
-  },
-  {
-    name: "Challenges",
-    href: "/dashboard/my-challenges",
-    icon: Swords,
-    roles: ["user"],
-  },
-  {
-    name: "Notification",
-    href: "/dashboard/user-notification",
-    icon: MessageCircleCode,
-    roles: ["user"],
-  },
-  {
-    name: "Live Sessions",
-    href: "/dashboard/live-sessions",
-    icon: Video,
-    roles: ["user"],
-  },
-  {
-    name: "User Update Form",
-    href: "/dashboard/fitness-update-form",
-    icon: BookText,
-    roles: ["user"],
-  },
-];
+      // ✅ items are directly in this array, NOT wrapped in another array
+      {
+        name: "Dashboard",
+        href: "/dashboard",
+        icon: Home,
+        roles: ["user", "admin", "coach"],
+      },
+      {
+        name: "Create Workout",
+        href: "/dashboard/create-workout",
+        icon: PlusCircle,
+        roles: ["user"],
+      },
+      {
+        name: "Your Workouts",
+        href: "/dashboard/your-workouts",
+        icon: Dumbbell,
+        roles: ["user"],
+      },
+      {
+        name: "Assigned",
+        href: "/dashboard/assigned-coach",
+        icon: UserCheck2,
+        roles: ["user"],
+      },
+      {
+        name: "Progress",
+        href: "/dashboard/user-progress",
+        icon: Shield,
+        roles: ["user"],
+      },
+      {
+        name: "Update Profile",
+        href: "/dashboard/user-form",
+        icon: UserPen,
+        roles: ["user"],
+      },
+      {
+        name: "User Profile",
+        href: "/dashboard/user-profile",
+        icon: ShieldAlertIcon,
+        roles: ["user"],
+      },
+      {
+        name: "My Goals",
+        href: "/dashboard/my-goals",
+        icon: Flag,
+        roles: ["user"],
+      },
+      {
+        name: "Nutrition",
+        href: "/dashboard/nutrition-tracker",
+        icon: Utensils,
+        roles: ["user"],
+      },
+      {
+        name: "Schedule",
+        href: "/dashboard/schedule",
+        icon: Calendar,
+        roles: ["user"],
+      },
+      {
+        name: "Achievements",
+        href: "/dashboard/achievements",
+        icon: Trophy,
+        roles: ["user"],
+      },
+      {
+        name: "Challenges",
+        href: "/dashboard/my-challenges",
+        icon: Swords,
+        roles: ["user"],
+      },
+      {
+        name: "Notification",
+        href: "/dashboard/user-notification",
+        icon: MessageCircleCode,
+        roles: ["user"],
+      },
+      {
+        name: "Live Sessions",
+        href: "/dashboard/live-sessions",
+        icon: Video,
+        roles: ["user"],
+      },
+      {
+        name: "User Update Form",
+        href: "/dashboard/fitness-update-form",
+        icon: BookText,
+        roles: ["user"],
+      },
     ],
   },
   {
@@ -233,14 +233,14 @@ const menuConfig = [
         roles: ["coach"],
       },
       {
-        name: " My Trainees",
+        name: "My Trainees",
         href: "/dashboard/coach-traines",
         icon: User,
         roles: ["coach"],
       },
       {
-        name:" Message",
-        href:"/dashboard/coach-messages",
+        name: "Message",
+        href: "/dashboard/coach-messages",
         icon: MessageCircle,
         roles: ["coach"],
       },
@@ -257,34 +257,28 @@ const menuConfig = [
         roles: ["coach"],
       },
       {
-        name:" Nutrition",
-        href:"/dashboard/coach-nutrition",
+        name: "Nutrition",
+        href: "/dashboard/coach-nutrition",
         icon: Apple,
-        roles:["coach"],
+        roles: ["coach"],
       },
       {
-        name:" Schedule",
-        href:"/dashboard/coach-schedule",
+        name: "Schedule",
+        href: "/dashboard/coach-schedule",
         icon: Calendar,
-        roles:["coach"],
+        roles: ["coach"],
       },
       {
-        name:" Reviews",
-        href:"/dashboard/coach-reviews",
+        name: "Reviews",
+        href: "/dashboard/coach-reviews",
         icon: Star,
-        roles:["coach"],
+        roles: ["coach"],
       },
       {
-        name:" forget",
-        href:"/forgotPassword",
-        icon: Magnet,
-        roles:["coach"],
-      },
-      {
-        name:" Profile",
-        href:"/dashboard/coach-profile",
+        name: "Profile",
+        href: "/dashboard/coach-profile",
         icon: UserRoundPen,
-        roles:["coach"],
+        roles: ["coach"],
       },
     ],
   },
@@ -335,6 +329,7 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
   const userName = dbUser?.name || "User";
   const userImage = dbUser?.image || session?.user?.image;
   const userInitial = userName.charAt(0).toUpperCase();
+  const userPlan = dbUser?.plan ?? "free";
 
   return (
     <div className="flex flex-col h-full overflow-y-auto custom-scrollbar">
@@ -456,8 +451,6 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
       {userRole === "user" &&
         userStatus === "approved" &&
         (() => {
-          const userPlan = dbUser?.plan ?? "free"; // "free" | "pro" | "elite"
-
           if (userPlan === "elite") {
             return (
               <div className="px-4 pb-4">
@@ -480,7 +473,6 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
               </div>
             );
           }
-
           if (userPlan === "pro") {
             return (
               <div className="px-4 pb-4">
@@ -504,8 +496,6 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
               </div>
             );
           }
-
-          // free (default)
           return (
             <div className="px-4 pb-4">
               <div className="bg-gradient-to-br from-[#F59E0B] to-[#059669] rounded-[1.5rem] p-5 text-white shadow-lg relative overflow-hidden">
