@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -13,6 +13,9 @@ import { SetGoalModal } from "./SetGoalModal";
 import { WorkoutLog, WeeklyStat, UserRoutine, DefaultPackagesResponse, TodayGoal } from "@/components/user/workout";
 import WeeklyStreakCard from "./WeeklyStreakCard";
 import MonthlyStreakCalendar from "./MonthlyStreakCalendar";
+import { UserProfileResponse } from "@/types/user";
+import { useSession } from "next-auth/react";
+import { FoodEntry, MealSection } from "@/types/food";
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
@@ -21,9 +24,50 @@ const fadeUp = (delay = 0) => ({
 });
 
 export default function UserDashboard({ name }: { name: string }) {
+  const { data: session } = useSession();
   const [selectedWorkout, setSelectedWorkout] = useState<WorkoutLog | null>(null);
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
 
+const apiDate = new Date().toISOString().split('T')[0];
+
+  const readableToday = new Date().toDateString();
+// Queries
+  const { data: nutritionData } = useQuery({
+    queryKey: ["dailyLogs", apiDate],
+    queryFn: async () => {
+      const { data } = await axios.get(`/api/logs?date=${apiDate}`);
+      return data;
+    },
+    enabled: !!session?.user,
+  });
+
+  const { data: userData } = useQuery<UserProfileResponse>({
+    queryKey: ["userProfile"],
+    queryFn: async () => {
+      const { data } = await axios.get("/api/user/fitness-profile");
+      return data;
+    },
+    enabled: !!session?.user,
+  });
+
+  // Calculations
+ const totalEatenCalories = useMemo(() => {
+  if (!nutritionData?.meals) return 0;
+
+  const mealSections = Object.values(nutritionData.meals) as MealSection[];
+
+  return mealSections.reduce((total: number, section: MealSection) => {
+    const sectionSum = section.entries?.reduce((sum: number, entry: FoodEntry) => {
+      return sum + (entry.foodItem.calories * entry.quantity);
+    }, 0) || 0;
+    
+    return total + sectionSum;
+  }, 0);
+}, [nutritionData]);
+
+  const currentWater = nutritionData?.waterIntake || 0;
+  const waterGoal = userData?.calculatedGoals?.waterGoal || 8;
+  const sleepValue = userData?.fitness_profile?.sleepHours ? `${userData.fitness_profile.sleepHours}h` : "8h";
   // weekly streak
   const { data: streakData, isLoading: isStreakLoading } = useQuery({
   queryKey: ["weekly-streak"],
@@ -96,8 +140,8 @@ const streakValue = `${currentStreakDays} ${currentStreakDays === 1 ? 'Day' : 'D
   };
 
   // Calculations
-  const todayStr = new Date().toDateString();
-  const todayLogs = recentLogs.filter(log => new Date(log.createdAt).toDateString() === todayStr);
+  
+  const todayLogs = recentLogs.filter(log => new Date(log.createdAt).toDateString() === readableToday);
   const totalExercisesCount = todayLogs.reduce((acc, curr) => acc + (curr.exercises?.length || 0), 0);
   const totalMinutes = todayLogs.reduce((acc, curr) => acc + (curr.duration || 0), 0) / 60;
   
@@ -108,12 +152,13 @@ const streakValue = `${currentStreakDays} ${currentStreakDays === 1 ? 'Day' : 'D
   const todayName = new Date().toLocaleDateString("en-US", { weekday: "short" });
   const todayChartData = weeklyData.find((d) => d.day === todayName);
 
+
   const stats: StatCardProps[] = [
     { icon: Dumbbell, label: "Exercises", value: totalExercisesCount, sub: durationText, iconColor: "#f47920", iconBg: "#fff3e0", delay: 0.1 },
-    { icon: Salad, label: "Calories", value: "1,600", sub: "kcal eaten", iconColor: "#27ae60", iconBg: "#dcfce7", delay: 0.16 },
+    { icon: Salad, label: "Calories", value: Math.round(totalEatenCalories).toLocaleString(), sub: "kcal eaten", iconColor: "#27ae60", iconBg: "#dcfce7", delay: 0.16 },
     { icon: Flame, label: "Burned", value: todayChartData?.calories || 0, sub: "kcal burned", iconColor: "#e74c3c", iconBg: "#fee2e2", delay: 0.22 },
-    { icon: Moon, label: "Sleep", value: "8h 20m", sub: "Last night", iconColor: "#7c5cbf", iconBg: "#ede9fe", delay: 0.28 },
-    { icon: Droplets, label: "Water", value: "6 / 8", sub: "glasses", iconColor: "#4b9eff", iconBg: "#dbeeff", delay: 0.34 },
+    { icon: Moon, label: "Sleep", value: sleepValue, sub: "Every night", iconColor: "#7c5cbf", iconBg: "#ede9fe", delay: 0.28 },
+    { icon: Droplets, label: "Water", value: `${currentWater} / ${waterGoal}`, sub: "glasses", iconColor: "#4b9eff", iconBg: "#dbeeff", delay: 0.34 },
     { 
     icon: Trophy, 
     label: "Total Streak", 
