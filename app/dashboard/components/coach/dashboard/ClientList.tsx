@@ -1,7 +1,9 @@
 import { fadeUp, SectionHeader } from '@/app/dashboard/page';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import { motion } from "framer-motion";
 
-const clients = [
+/* const clients = [
     {
         name: "Ali Hassan",
         plan: "Hypertrophy",
@@ -26,7 +28,7 @@ const clients = [
         nextSession: "Thu 8 AM",
         status: "on-track",
     },
-];
+]; */
 
 const statusStyle: Record<
     string,
@@ -42,6 +44,13 @@ const statusStyle: Record<
 };
 
 const ClientList = () => {
+    const {data: clients = []} = useQuery({
+        queryKey: ["clients"],
+        queryFn: async() => {
+        const res = await axios.get(`/api/coach/trainees`);
+        return res.data;
+        }
+    });
     return (
         <motion.div
             {...fadeUp(0.3)}
@@ -53,8 +62,8 @@ const ClientList = () => {
         >
             <SectionHeader title="Your Clients" action="View All" />
             <div className="space-y-2">
-                {clients.map((c, i) => {
-                    const s = statusStyle[c.status];
+                {clients?.map((c, i) => {
+                    const s = statusStyle[c?.status];
                     return (
                         <div
                             key={i}
@@ -68,28 +77,28 @@ const ClientList = () => {
                                     background: "linear-gradient(135deg, #f0a500, #f47920)",
                                     }}
                                 >
-                                    {c.name[0]}
+                                    {c?.name[0]}
                                 </div>
                                 <div>
                                     <p
                                     className="text-sm font-bold"
                                     style={{ color: "var(--text-primary)" }}
                                     >
-                                        {c.name}
+                                        {c?.name}
                                     </p>
                                     <p
                                     className="text-[11px]"
                                     style={{ color: "var(--text-secondary)" }}
                                     >
-                                        {c.plan} · {c.nextSession}
+                                        {c?.plan} · {c?.nextSession}
                                     </p>
                                 </div>
                             </div>
                             <span
                             className="text-[10px] font-black px-2.5 py-1 rounded-full"
-                            style={{ background: s.bg, color: s.color }}
+                            style={{ background: s?.bg, color: s?.color }}
                             >
-                                {s.label}
+                                {s?.label}
                             </span>
                         </div>
                     );
