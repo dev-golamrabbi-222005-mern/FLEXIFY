@@ -16,14 +16,6 @@ interface Exercise {
   image?: string;
 }
 
-// 2. Define the Routine Interface using the Exercise interface
-interface Routine {
-  _id: string;
-  planName: string;
-  name?: string;
-  exercises: Exercise[]; // Strict typing here
-}
-
 interface SetGoalModalProps {
   isOpen: boolean;
   onClose: () => void;

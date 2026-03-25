@@ -43,6 +43,23 @@ interface RoutineWithPlanName extends UserRoutine {
   planName: string;
 }
 
+
+interface Exercise {
+  _id?: string;
+  name: string;
+  sets?: number;
+  reps?: number;
+  duration?: string;
+  image?: string;
+}
+
+interface Routine {
+  _id: string;
+  planName: string;
+  name?: string;
+  exercises: Exercise[]; // Strict typing here
+}
+
 const fadeUp = (delay = 0): HTMLMotionProps<"div"> => ({
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
@@ -315,7 +332,7 @@ export default function UserDashboard({ name }: { name: string }) {
         isOpen={isGoalModalOpen}
         onClose={() => setIsGoalModalOpen(false)}
         onSelect={handleSetGoal}
-        routines={formattedRoutines}
+        routines={formattedRoutines as unknown as Routine[]}
         defaultPackages={defaultPackages}
       />
     </div>
