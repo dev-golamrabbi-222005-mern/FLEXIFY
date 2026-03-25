@@ -63,23 +63,64 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="p-6 space-y-10 min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <header>
-        <h1 className="text-2xl font-bold tracking-tight">Admin Dashboard</h1>
-        <p className="text-sm text-[var(--text-secondary)]">Platform management</p>
-      </header>
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard title="Total Users" value={users.length} icon={Users} color="from-blue-500 to-indigo-600" />
-        <StatCard title="Pending Coaches" value={coaches.length} icon={UserCheck} color="from-orange-400 to-rose-500" />
-        <StatCard title="Active Plans" value={plans.length} icon={CreditCard} color="from-emerald-400 to-teal-600" />
+      {/* ================= HEADER ================= */}
+      <div className="mb-4">
+        <h1 className="text-2xl font-bold tracking-wide">Admin Dashboard</h1>
+        <p className="text-sm text-[var(--text-secondary)]">
+          Manage users, coaches & subscriptions easily
+        </p>
       </div>
 
-      <section className="space-y-4">
-        <div className="flex items-center gap-2"><Users size={18}/><h2 className="font-semibold">User Management</h2></div>
-        <div className="card-glass overflow-hidden rounded-xl border border-[var(--border-color)]">
-          <div className="grid grid-cols-4 px-6 py-3 text-xs font-bold bg-[var(--bg-secondary)] border-b border-[var(--border-color)] uppercase text-[var(--text-secondary)]">
-            <div>Name</div><div>Plan</div><div>Status</div><div className="text-right">Action</div>
+      {/* ================= SUMMARY CARDS ================= */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+
+        <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
+          <div>
+            <p className="text-sm text-[var(--text-secondary)]">Total Users</p>
+            <h3 className="text-2xl font-bold">{users.length}</h3>
+          </div>
+          <div className="p-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white">
+            <Users size={22} />
+          </div>
+        </div>
+
+        <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
+          <div>
+            <p className="text-sm text-[var(--text-secondary)]">Pending Coaches</p>
+            <h3 className="text-2xl font-bold">{coaches.length}</h3>
+          </div>
+          <div className="p-3 rounded-xl bg-gradient-to-r from-orange-400 to-pink-500 text-white">
+            <UserCheck size={22} />
+          </div>
+        </div>
+
+        <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
+          <div>
+            <p className="text-sm text-[var(--text-secondary)]">Plans</p>
+            <h3 className="text-2xl font-bold">{plans.length}</h3>
+          </div>
+          <div className="p-3 rounded-xl bg-gradient-to-r from-green-400 to-emerald-600 text-white">
+            <CreditCard size={22} />
+          </div>
+        </div>
+
+      </div>
+
+      {/* ================= USER MANAGEMENT ================= */}
+      <section className="my-8">
+        <div className="flex items-center gap-2 mb-4">
+          <Users size={20} />
+          <h2 className="text-xl font-semibold">User Management</h2>
+        </div>
+
+        <div className="card-glass overflow-hidden">
+          <div className="grid grid-cols-4 gap-6 px-6 py-3 text-sm font-semibold border-b border-[var(--border-color)] text-[var(--text-secondary)]">
+            <div>Name</div>
+            <div>Plan</div>
+            <div>Status</div>
+            <div className="text-right">Action</div>
           </div>
           <div className="divide-y divide-[var(--border-color)]">
             {users.map((user) => (
@@ -88,9 +129,57 @@ export default function AdminDashboard() {
                 <div className="capitalize">{user.plan || "Free"}</div>
                 <div><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${user.status === "Suspended" ? "bg-red-500/10 text-red-500" : "bg-green-500/10 text-green-500"}`}>{user.status || "Active"}</span></div>
                 <div className="text-right">
-                  <button 
-                    onClick={() => userStatusMutation.mutate({ id: user._id, status: user.status === "Suspended" ? "Active" : "Suspended" })} 
-                    className={`px-3 py-1 text-xs rounded-lg font-medium transition ${user.status === "Suspended" ? "text-green-500 hover:bg-green-500/10" : "text-red-500 hover:bg-red-500/10"}`}
+                  {user.status === "Active" ? (
+                    <button
+                      onClick={() => suspendUser(user.id)}
+                      className="px-3 py-1 text-xs rounded-md bg-red-500/20 text-red-500 hover:bg-red-500/30"
+                    >
+                      Ban
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => activateUser(user.id)}
+                      className="px-3 py-1 text-xs rounded-md bg-green-500/20 text-green-500 hover:bg-green-500/30"
+                    >
+                      Activate
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= COACH REQUEST ================= */}
+      <section className="my-8">
+        <div className="flex items-center gap-2 mb-4">
+          <UserCheck size={20} />
+          <h2 className="text-xl font-semibold">Coach Requests</h2>
+        </div>
+
+        <div className="card-glass overflow-hidden">
+          <div className="grid grid-cols-3 gap-6 px-6 py-3 text-sm font-semibold border-b border-[var(--border-color)] text-[var(--text-secondary)]">
+            <div>Email</div>
+            <div>Status</div>
+            <div className="text-right">Action</div>
+          </div>
+
+          <div className="divide-y divide-[var(--border-color)]">
+            {coaches.map((coach: any) => (
+              <div key={coach._id} className="grid grid-cols-3 gap-6 px-6 py-4 items-center text-sm hover:bg-[var(--bg-tertiary)] transition">
+                <div>{coach.email}</div>
+                <div className="text-yellow-500">Pending</div>
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => approveCoach(coach._id, coach.email)}
+                    className="px-3 py-1 text-xs rounded-md bg-green-500/20 text-green-500 hover:bg-green-500/30"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    onClick={() => rejectCoach(coach._id)}
+                    className="px-3 py-1 text-xs rounded-md bg-red-500/20 text-red-500 hover:bg-red-500/30"
                   >
                     {user.status === "Suspended" ? "Unban" : "Ban"}
                   </button>

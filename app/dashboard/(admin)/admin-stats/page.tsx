@@ -83,14 +83,21 @@ export default function AdminStatsSection() {
   });
 
   return (
-    <div className="mt-6 space-y-8 bg-[var(--bg-primary)] py-6 rounded-2xl">
-      
-      {/* 1. TOP STATS CARDS */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        {stats.map((stat, idx) => (
-          <div key={idx} className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--border-color)] hover:shadow-lg transition">
-            <div className={`w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-r ${stat.color} text-white mb-4 shadow-sm`}>
-              <stat.icon size={20} />
+    <div className="bg-[var(--bg-primary)] rounded-2xl">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+      {stats.map((stat, index) => {
+        const Icon = stat.icon;
+        return (
+          <div
+            key={index}
+            className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div
+                className={`p-3 rounded-xl bg-gradient-to-r ${stat.color} text-white`}
+              >
+                <Icon size={22} />
+              </div>
             </div>
             <h4 className="text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-widest">{stat.title}</h4>
             <p className="mt-1 text-2xl font-black">{stat.value}</p>

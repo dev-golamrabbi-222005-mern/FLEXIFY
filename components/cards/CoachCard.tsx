@@ -15,13 +15,16 @@ const CoachCard = ({ coach }: CoachCardProps) => {
     <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-sm overflow-hidden flex flex-col transition-all hover:border-[var(--primary)] group">
       <div className="relative h-56 w-full">
         <img
-          src={coach.profileImage}
-          alt={coach.fullName}
+          src={coach.profileImage ?? coach.imageUrl ?? "/placeholder-coach.png"}
+          alt={coach.fullName ?? "Coach"}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = "/placeholder-coach.png";
+          }}
         />
 
         <div className="absolute bottom-3 left-3 bg-[var(--primary)] text-white px-3 py-1 rounded-lg text-sm font-black shadow-lg">
-          ${coach.pricing.monthly}/MO
+          {coach.pricing?.monthly ? `$${coach.pricing.monthly}/MO` : "Contact"}
         </div>
       </div>
 
@@ -53,23 +56,29 @@ const CoachCard = ({ coach }: CoachCardProps) => {
         </div>
 
         <div className="flex flex-wrap gap-2 text-[10px] font-bold text-[var(--primary)]">
-  {coach.specialties ? (
-    coach.specialties
-      .split(",")
-      .slice(0, 3)
-      .map((s: string) => (
-        <span key={s} className="bg-[var(--primary)]/10 px-2 py-0.5 rounded-full">
-          #{s.trim()}
-        </span>
-      ))
-  ) : (
-    <span>#GeneralFitness</span>
-  )}
-</div>
+          {coach.specialties ? (
+            coach.specialties
+              .split(",")
+              .slice(0, 3)
+              .map((s: string) => (
+                <span
+                  key={s}
+                  className="bg-[var(--primary)]/10 px-2 py-0.5 rounded-full"
+                >
+                  #{s.trim()}
+                </span>
+              ))
+          ) : (
+            <span>#GeneralFitness</span>
+          )}
+        </div>
       </div>
 
       <div className="p-5 pt-0">
-        <Link href={`/coaches/${coach._id}`} className="w-full btn-primary flex items-center justify-center gap-2 font-black uppercase tracking-widest text-xs group">
+        <Link
+          href={`/coaches/${coach._id}`}
+          className="w-full btn-primary flex items-center justify-center gap-2 font-black uppercase tracking-widest text-xs group"
+        >
           View Profile{" "}
           <ArrowRight
             size={14}

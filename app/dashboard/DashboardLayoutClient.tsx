@@ -90,7 +90,7 @@ export default function DashboardLayoutClient({
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
         {/* ❹ Only this scrolls — sidebar stays put */}
-        <main className="flex-1 overflow-y-auto p-4 md:px-0">{children}</main>
+        <main className="flex-1 overflow-y-auto p-4 md:pr-1 md:py-8">{children}</main>
       </div>
     </div>
   );
