@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Mail, Shield, Key, Camera, Save, User, Loader2, Phone } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
@@ -32,12 +32,17 @@ export default function AdminProfilePage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedImage, setSelectedImage] = useState<string>("");
 
+  // ১. ব্রাউজার ট্যাব টাইটেল সেট করা
+  useEffect(() => {
+    document.title = "Flexify | Admin | Profile";
+  }, []);
+
   const { data: admin, isLoading } = useQuery<AdminData>({
     queryKey: ["admin-profile"],
     queryFn: async () => (await axios.get("/api/admin/profile")).data,
   });
 
-  const { register, handleSubmit } = useForm<ProfileFormInputs>({
+  const { register, handleSubmit, reset } = useForm<ProfileFormInputs>({
     values: admin ? {
       fullName: admin.fullName,
       email: admin.email,
@@ -70,16 +75,17 @@ export default function AdminProfilePage() {
     }
   });
 
+  // ২. onSubmit ফাংশন যা আপনার কোডে মিসিং ছিল
+  const onSubmit: SubmitHandler<ProfileFormInputs> = (data) => {
+    updateMutation.mutate(data);
+  };
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setSelectedImage(imageUrl);
     }
-  };
-
-  const onSubmit: SubmitHandler<ProfileFormInputs> = (data) => {
-    updateMutation.mutate(data);
   };
 
   if (isLoading) return (
@@ -92,7 +98,7 @@ export default function AdminProfilePage() {
     <div className="max-w-7xl mx-auto px-4 py-10 space-y-10 bg-[var(--bg-primary)] min-h-screen text-[var(--text-primary)]">
       
       {/* ===== PROFILE HEADER ===== */}
-      <section className="card-glass p-8 rounded-3xl border border-[var(--border-color)]">
+      <section className="card-glass p-8 rounded-3xl border border-[var(--border-color)] shadow-sm">
         <div className="flex flex-col md:flex-row items-center gap-8">
           <div className="relative group">
             <img
@@ -110,6 +116,7 @@ export default function AdminProfilePage() {
             <input 
               ref={fileInputRef} 
               type="file" 
+              name="profileImage"
               accept="image/*" 
               onChange={handleImageUpload} 
               className="hidden" 
@@ -120,7 +127,7 @@ export default function AdminProfilePage() {
             <h1 className="text-3xl font-black tracking-tight">{admin?.fullName}</h1>
             <div className="flex flex-wrap justify-center md:justify-start gap-4 text-[var(--text-secondary)]">
               <p className="flex items-center gap-2 font-medium"><Mail size={16}/> {admin?.email}</p>
-              <p className="flex items-center gap-2 font-medium"><Phone size={16}/> {admin?.phone}</p>
+              <p className="flex items-center gap-2 font-medium"><Phone size={16}/> {admin?.phone || "N/A"}</p>
             </div>
             <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-2">
               <span className="px-4 py-1 bg-[var(--primary)] text-white text-xs font-bold uppercase rounded-full shadow-lg">
