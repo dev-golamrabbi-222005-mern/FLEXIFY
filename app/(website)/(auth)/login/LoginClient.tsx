@@ -40,6 +40,22 @@ export default function LoginClient(): JSX.Element {
       router.push("/dashboard");
     }
   };
+
+  const handleMockLogin = async (email: string, pass: string) => {
+    const result = await signIn("credentials", {
+      email,
+      password: pass,
+      redirect: false,
+      callbackUrl: "/dashboard",
+    });
+
+    if (result?.ok) {
+      Swal.fire("Success", "Mock Login Successful!", "success");
+      router.push("/dashboard");
+    } else {
+      Swal.fire("Error", "Mock user not found in DB", "error");
+    }
+  };
   return (
     <div
       className="relative flex items-center justify-center min-h-screen px-4 bg-center bg-cover"
@@ -59,12 +75,80 @@ export default function LoginClient(): JSX.Element {
             {" "}
             Login to <span className="text-(--primary)">Flexify</span>{" "}
           </h1>{" "}
-          <p className="mt-2 text-gray-400">
-            {" "}
-            Continue your fitness journey{" "}
-          </p>{" "}
+          <p className="mt-2 text-gray-400"> Continue your fitness journey </p>{" "}
         </div>{" "}
         {/* Form */}{" "}
+        <div className="grid grid-cols-3 gap-3 mt-6 mb-4">
+          {/* User Mock  */}
+          <button
+            type="button"
+            onClick={() => handleMockLogin("user@flexify.com", "User@Flexify")}
+            className="px-2 py-2 text-[11px] font-bold uppercase tracking-wider rounded-xl transition-all duration-300"
+            style={{
+              backgroundColor: "rgba(16, 185, 129, 0.1)",
+              color: "var(--primary)",
+              border: "1px solid var(--primary)",
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = "var(--primary)";
+              e.currentTarget.style.color = "white";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = "rgba(16, 185, 129, 0.1)";
+              e.currentTarget.style.color = "var(--primary)";
+            }}
+          >
+            User Login
+          </button>
+
+          {/* Coach Mock  */}
+          <button
+            type="button"
+            onClick={() =>
+              handleMockLogin("coach@flexify.com", "Coach@Flexify1")
+            }
+            className="px-2 py-2 text-[11px] font-bold uppercase tracking-wider rounded-xl transition-all duration-300"
+            style={{
+              backgroundColor: "rgba(139, 92, 246, 0.1)",
+              color: "var(--secondary)",
+              border: "1px solid var(--secondary)",
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = "var(--secondary)";
+              e.currentTarget.style.color = "white";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = "rgba(139, 92, 246, 0.1)";
+              e.currentTarget.style.color = "var(--secondary)";
+            }}
+          >
+            Coach Login
+          </button>
+
+          {/* Admin Mock  */}
+          <button
+            type="button"
+            onClick={() =>
+              handleMockLogin("admin@flexify.com", "Admin@Flexify")
+            }
+            className="px-2 py-2 text-[11px] font-bold uppercase tracking-wider rounded-xl transition-all duration-300"
+            style={{
+              backgroundColor: "rgba(239, 68, 68, 0.1)",
+              color: "var(--danger)",
+              border: "1px solid var(--danger)",
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = "var(--danger)";
+              e.currentTarget.style.color = "white";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = "rgba(239, 68, 68, 0.1)";
+              e.currentTarget.style.color = "var(--danger)";
+            }}
+          >
+            Admin Login
+          </button>
+        </div>
         <form className="space-y-5" onSubmit={handleSubmit}>
           {" "}
           {/* Email */}{" "}
@@ -105,6 +189,15 @@ export default function LoginClient(): JSX.Element {
               </button>{" "}
             </div>{" "}
           </div>{" "}
+          <div className="flex justify-end mt-2 mr-1">
+            <Link
+              href="/forgotPassword"
+              title="Forgot Password"
+              className="text-xs text-gray-400 hover:text-(--primary)"
+            >
+              Forgot Password?
+            </Link>
+          </div>
           {/* Submit */}{" "}
           <button
             type="submit"

@@ -3,19 +3,48 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import axios from "axios";
+import Swal from "sweetalert2";
 
+interface ApiErrorResponse {
+  message: string;
+}
 export default function ForgotPassword() {
 
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+   e.preventDefault();
 
-    // এখানে API call যাবে
-    console.log("Reset link sent to:", email);
+    try {
+      const response = await axios.post("/api/auth/forgot-password", { email });
 
-    setSent(true);
+      if (response.status === 200) {
+        setSent(true);
+        await Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Reset link sent to your email!",
+          confirmButtonColor: "var(--primary)",
+        });
+      }
+    } catch (err) {
+      const axiosError = err as { response?: { data: ApiErrorResponse } };
+      
+      console.error("Error sending reset link:", axiosError);
+
+      const errorMessage = 
+        axiosError.response?.data?.message || 
+        "Something went wrong!";
+
+      await Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: errorMessage,
+        confirmButtonColor: "#ef4444",
+      });
+    }
   };
 
   return (
