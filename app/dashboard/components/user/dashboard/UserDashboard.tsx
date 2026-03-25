@@ -1,244 +1,158 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { Dumbbell, Salad, Moon, Flame, Droplets, Trophy, Loader2 } from "lucide-react";
+import React from "react";
+import { motion, AnimatePresence, HTMLMotionProps } from "framer-motion";
+import { X, ChevronRight, Zap, ListChecks } from "lucide-react";
+// Import the base types from your existing workout file
+import {
+  UserRoutine,
+  DefaultPackagesResponse,
+} from "@/components/user/workout";
 
-import { DashboardCharts } from "./DashboardCharts";
-import { GreetingHeader, StatCard, StatCardProps, TodayGoalCard } from "./DashboardCards";
-import { WorkoutDetailModal } from "./WorkoutDetailModal";
-import { SetGoalModal } from "./SetGoalModal";
-import { WorkoutLog, WeeklyStat, UserRoutine, DefaultPackagesResponse, TodayGoal } from "@/components/user/workout";
-import WeeklyStreakCard from "./WeeklyStreakCard";
-import MonthlyStreakCalendar from "./MonthlyStreakCalendar";
-import { UserProfileResponse } from "@/types/user";
-import { useSession } from "next-auth/react";
-import { FoodEntry, MealSection } from "@/types/food";
+/**
+ * 1. Define a local interface that EXTENDS UserRoutine.
+ * This ensures that 'planName' is recognized even if it's missing
+ * in the base UserRoutine definition.
+ */
+interface Routine extends UserRoutine {
+  planName: string;
+}
 
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 20 },
+interface SetGoalModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSelect: (planName: string, totalExercises: number) => void;
+  // Use the extended interface here
+  routines: Routine[];
+  defaultPackages: DefaultPackagesResponse | null;
+}
+
+const fadeUpModal: HTMLMotionProps<"div"> = {
+  initial: { opacity: 0, y: 100 },
   animate: { opacity: 1, y: 0 },
-  transition: { delay, duration: 0.45, ease: [0.22, 1, 0.36, 1] },
-});
+  exit: { opacity: 0, y: 100 },
+};
 
-export default function UserDashboard({ name }: { name: string }) {
-  const { data: session } = useSession();
-  const [selectedWorkout, setSelectedWorkout] = useState<WorkoutLog | null>(null);
-  const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
-
-const apiDate = new Date().toISOString().split('T')[0];
-
-  const readableToday = new Date().toDateString();
-// Queries
-  const { data: nutritionData } = useQuery({
-    queryKey: ["dailyLogs", apiDate],
-    queryFn: async () => {
-      const { data } = await axios.get(`/api/logs?date=${apiDate}`);
-      return data;
-    },
-    enabled: !!session?.user,
-  });
-
-  const { data: userData } = useQuery<UserProfileResponse>({
-    queryKey: ["userProfile"],
-    queryFn: async () => {
-      const { data } = await axios.get("/api/user/fitness-profile");
-      return data;
-    },
-    enabled: !!session?.user,
-  });
-
-  // Calculations
- const totalEatenCalories = useMemo(() => {
-  if (!nutritionData?.meals) return 0;
-
-  const mealSections = Object.values(nutritionData.meals) as MealSection[];
-
-  return mealSections.reduce((total: number, section: MealSection) => {
-    const sectionSum = section.entries?.reduce((sum: number, entry: FoodEntry) => {
-      return sum + (entry.foodItem.calories * entry.quantity);
-    }, 0) || 0;
-    
-    return total + sectionSum;
-  }, 0);
-}, [nutritionData]);
-
-  const currentWater = nutritionData?.waterIntake || 0;
-  const waterGoal = userData?.calculatedGoals?.waterGoal || 8;
-  const sleepValue = userData?.fitness_profile?.sleepHours ? `${userData.fitness_profile.sleepHours}h` : "8h";
-  // weekly streak
-  const { data: streakData, isLoading: isStreakLoading } = useQuery({
-  queryKey: ["weekly-streak"],
-  queryFn: async () => {
-    const res = await axios.get("/api/user/stats/streak");
-    return res.data?.data;
-  },
-});
-
-const { data: allWorkoutLogs = [] } = useQuery<WorkoutLog[]>({
-  queryKey: ["all-workouts-calendar"],
-  queryFn: async () => {
-    const res = await axios.get("/api/user/exercises-history/all");
-    return res.data.data || [];
-  },
-});
-
-const totalStreakValue = `${streakData?.totalStreak || 0} ${streakData?.totalStreak === 1 ? 'Day' : 'Days'}`;
-const currentStreakDays = streakData?.completedDays || 0;
-const streakValue = `${currentStreakDays} ${currentStreakDays === 1 ? 'Day' : 'Days'}`;
-  // Queries
-  const { data: recentLogs = [], isLoading: isRecentLoading } = useQuery<WorkoutLog[]>({
-    queryKey: ["recent-workouts"],
-    queryFn: async () => {
-      const res = await axios.get("/api/user/exercises-history/recent");
-      return res.data.data || [];
-    },
-  });
-
-  const { data: weeklyData = [], isLoading: isChartLoading } = useQuery<WeeklyStat[]>({
-    queryKey: ["weekly-stats"],
-    queryFn: async () => {
-      const res = await axios.get("/api/user/stats/weekly");
-      return res.data?.data || [];
-    }
-  });
-
-  const { data: todayGoal, refetch: refetchGoal } = useQuery<TodayGoal | null>({
-    queryKey: ["today-goal"],
-    queryFn: async () => {
-      const res = await axios.get("/api/user/stats/today-goal");
-      return res.data.data;
-    }
-  });
-
-  const { data: routines = [] } = useQuery<UserRoutine[]>({
-    queryKey: ["user-routines"],
-    queryFn: async () => {
-      const res = await axios.get("/api/routines/show");
-      return res.data.data || [];
-    }
-  });
-
-  const { data: defaultPackages = null } = useQuery<DefaultPackagesResponse | null>({
-    queryKey: ["default-packages"],
-    queryFn: async () => {
-      const res = await axios.get("/api/routines/suggested");
-      return res.data;
-    }
-  });
-
-  const handleSetGoal = async (planName: string, totalExercises: number) => {
-    try {
-      await axios.post("/api/user/stats/today-goal", { planName, totalExercises });
-      setIsGoalModalOpen(false);
-      refetchGoal();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  // Calculations
-  
-  const todayLogs = recentLogs.filter(log => new Date(log.createdAt).toDateString() === readableToday);
-  const totalExercisesCount = todayLogs.reduce((acc, curr) => acc + (curr.exercises?.length || 0), 0);
-  const totalMinutes = todayLogs.reduce((acc, curr) => acc + (curr.duration || 0), 0) / 60;
-  
-  const durationText = totalMinutes >= 60 
-    ? `${Math.floor(totalMinutes / 60)}h ${Math.round(totalMinutes % 60)}m` 
-    : `${Math.round(totalMinutes)}m`;
-
-  const todayName = new Date().toLocaleDateString("en-US", { weekday: "short" });
-  const todayChartData = weeklyData.find((d) => d.day === todayName);
-
-
-  const stats: StatCardProps[] = [
-    { icon: Dumbbell, label: "Exercises", value: totalExercisesCount, sub: durationText, iconColor: "#f47920", iconBg: "#fff3e0", delay: 0.1 },
-    { icon: Salad, label: "Calories", value: Math.round(totalEatenCalories).toLocaleString(), sub: "kcal eaten", iconColor: "#27ae60", iconBg: "#dcfce7", delay: 0.16 },
-    { icon: Flame, label: "Burned", value: todayChartData?.calories || 0, sub: "kcal burned", iconColor: "#e74c3c", iconBg: "#fee2e2", delay: 0.22 },
-    { icon: Moon, label: "Sleep", value: sleepValue, sub: "Every night", iconColor: "#7c5cbf", iconBg: "#ede9fe", delay: 0.28 },
-    { icon: Droplets, label: "Water", value: `${currentWater} / ${waterGoal}`, sub: "glasses", iconColor: "#4b9eff", iconBg: "#dbeeff", delay: 0.34 },
-    { 
-    icon: Trophy, 
-    label: "Total Streak", 
-    value: totalStreakValue, 
-    sub: streakData?.totalStreak > 0 ? "You're on fire! 🔥" : "Start today!", 
-    iconColor: "#e67e22", 
-    iconBg: "#fff3e0", 
-    delay: 0.16
-  },
-  ];
+export const SetGoalModal = ({
+  isOpen,
+  onClose,
+  onSelect,
+  routines,
+  defaultPackages,
+}: SetGoalModalProps) => {
+  const levels = ["beginner", "intermediate", "advanced"] as const;
 
   return (
-    <div className="space-y-6 pb-10">
-      <GreetingHeader name={name} />
-      
-      <TodayGoalCard 
-        planName={todayGoal?.planName} 
-        progress={todayGoal?.progress || 0} 
-        onSetGoal={() => setIsGoalModalOpen(true)} 
-      />
-      
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {stats.map((s) => <StatCard key={s.label} {...s} />)}
-      </div>
-
-      <DashboardCharts data={weeklyData} isLoading={isChartLoading} />
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-stretch">
-  <div className="lg:col-span-3 min-h-[300px]">
-    <MonthlyStreakCalendar workoutLogs={allWorkoutLogs} />
-  </div>
-
-  <div className="lg:col-span-2 min-h-[300px]">
-    <WeeklyStreakCard streak={streakData} />
-  </div>
-</div>
-
-      <motion.div {...fadeUp(0.3)} className="p-5 rounded-3xl border border-[var(--border-color)] bg-[var(--bg-secondary)]">
-        <h3 className="text-base font-black text-[var(--text-primary)] mb-4 uppercase tracking-tighter">
-          Recent Workout Packages
-        </h3>
-        <div className="space-y-3">
-          {isRecentLoading ? (
-            <div className="flex justify-center py-6"><Loader2 className="animate-spin text-[var(--primary)]" /></div>
-          ) : (
-            recentLogs.map((w) => (
-              <div 
-                key={w._id} 
-                onClick={() => setSelectedWorkout(w)} 
-                className="flex items-center justify-between p-3 rounded-2xl border border-[var(--border-color)] hover:border-[var(--primary)] cursor-pointer group bg-[var(--bg-primary)]/40 transition-all"
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <motion.div
+            {...fadeUpModal}
+            className="w-full max-w-md bg-[var(--bg-secondary)] rounded-3xl border border-[var(--border-color)] overflow-hidden shadow-2xl"
+          >
+            <div className="p-5 border-b border-[var(--border-color)] flex items-center justify-between">
+              <h2 className="text-lg font-black text-[var(--text-primary)]">
+                Set Today's Goal
+              </h2>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-[var(--bg-primary)] rounded-full text-[var(--text-secondary)]"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[var(--primary)] text-white flex items-center justify-center group-hover:rotate-6 transition-transform">
-                    <Dumbbell size={18} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold">{w.planName}</p>
-                    <p className="text-[10px] text-[var(--text-secondary)]">
-                      {new Date(w.createdAt).toLocaleDateString()} · {Math.floor(w.duration / 60)} mins
-                    </p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs font-black text-[var(--primary)]">{Math.floor((w.duration / 60) * 6)} kcal</p>
-                  <p className="text-[10px] font-bold uppercase">{w.exercises?.length || 0} Exercises</p>
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="p-5 max-h-[70vh] overflow-y-auto space-y-6">
+              {/* Custom Routines Section */}
+              <div>
+                <p className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest mb-3">
+                  Your Custom Routines
+                </p>
+                <div className="grid gap-2">
+                  {routines && routines.length > 0 ? (
+                    routines.map((r) => {
+                      // Safety check: Fallback if planName is somehow undefined at runtime
+                      const displayName = r.planName || "Untitled Routine";
+                      const count = r.exercises?.length || 0;
+
+                      return (
+                        <button
+                          key={r._id}
+                          onClick={() => onSelect(displayName, count)}
+                          className="flex items-center justify-between p-4 rounded-2xl bg-[var(--bg-primary)] border border-[var(--border-color)] hover:border-[var(--primary)] transition-all group"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500">
+                              <ListChecks size={16} />
+                            </div>
+                            <div className="text-left">
+                              <p className="text-sm font-bold text-[var(--text-primary)]">
+                                {displayName}
+                              </p>
+                              <p className="text-[10px] text-[var(--text-secondary)]">
+                                {count} Exercises
+                              </p>
+                            </div>
+                          </div>
+                          <ChevronRight
+                            size={16}
+                            className="text-[var(--text-secondary)]"
+                          />
+                        </button>
+                      );
+                    })
+                  ) : (
+                    <div className="text-center py-4 border border-dashed border-[var(--border-color)] rounded-2xl">
+                      <p className="text-[10px] text-[var(--text-secondary)] italic opacity-60">
+                        No custom routines found.
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
-            ))
-          )}
-        </div>
-      </motion.div>
 
-      <WorkoutDetailModal workout={selectedWorkout} onClose={() => setSelectedWorkout(null)} />
-      
-      <SetGoalModal 
-        isOpen={isGoalModalOpen} 
-        onClose={() => setIsGoalModalOpen(false)} 
-        onSelect={handleSetGoal} 
-        routines={routines} 
-        defaultPackages={defaultPackages} 
-      />
-    </div>
+              {/* Suggested Packages Section */}
+              <div>
+                <p className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest mb-3">
+                  Suggested Plans
+                </p>
+                <div className="grid gap-2">
+                  {levels.map((level) => {
+                    const pkg = defaultPackages?.[level] || [];
+                    const label = `${level.charAt(0).toUpperCase() + level.slice(1)} Plan`;
+
+                    return (
+                      <button
+                        key={level}
+                        onClick={() => onSelect(label, pkg.length)}
+                        className="flex items-center justify-between p-4 rounded-2xl bg-[var(--bg-primary)] border border-[var(--border-color)] hover:border-[var(--primary)] transition-all group"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 rounded-lg bg-[var(--primary)]/10 text-[var(--primary)]">
+                            <Zap size={16} />
+                          </div>
+                          <div className="text-left">
+                            <p className="text-sm font-bold text-[var(--text-primary)] capitalize">
+                              {level} Plan
+                            </p>
+                            <p className="text-[10px] text-[var(--text-secondary)]">
+                              {pkg.length} Exercises
+                            </p>
+                          </div>
+                        </div>
+                        <ChevronRight
+                          size={16}
+                          className="text-[var(--text-secondary)]"
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
-}
+};
