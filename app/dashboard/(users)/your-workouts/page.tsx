@@ -46,6 +46,7 @@ export default function YourWorkoutsPage() {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+        
         <Loader2 className="animate-spin text-[var(--primary)]" size={40} />
         <p className="text-xs font-black uppercase tracking-widest opacity-50 text-[var(--text-muted)]">
           Loading Your Workouts...
@@ -57,6 +58,7 @@ console.log(suggestedPlans, myRoutines);
 
   return (
     <div className="max-w-7xl mx-auto py-10 px-4 space-y-16 pb-32 min-h-screen">
+        <title>Your Workutes | Dashboard - Flexify</title>
       <header>
         <h1 className="text-4xl font-black uppercase tracking-tighter text-[var(--text-primary)]">
           Your <span className="text-[var(--primary)]">Workouts</span>

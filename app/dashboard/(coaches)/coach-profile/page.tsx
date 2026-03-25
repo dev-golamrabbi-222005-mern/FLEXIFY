@@ -83,6 +83,8 @@ export default function CoachProfilePage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 bg-[var(--bg-primary)] space-y-10">
+        <title>Profile | Dashboard - Flexify</title>
+
       {/* ===== PROFILE HEADER ===== */}
       <section className="bg-[var(--card-bg)] p-6 md:p-8 rounded-2xl shadow">
         <div className="flex flex-col items-center gap-8 md:flex-row md:items-start">

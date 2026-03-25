@@ -136,6 +136,7 @@ const handleSetComplete = (exIdx: number, setIdx: number, capturedTime?: string)
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] pb-40 text-[var(--text-primary)]">
+        <title>Your Session | Dashboard - Flexify</title>
       {/* Integrated Header */}
       <header className="sticky top-0 z-40 bg-[var(--bg-primary)]/80 backdrop-blur-xl border-b border-[var(--border-color)] px-4 py-4">
         <div className="max-w-full flex justify-between items-center">
