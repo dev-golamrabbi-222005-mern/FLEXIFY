@@ -36,6 +36,7 @@ export default function CoachTrainees() {
 <>
 
       <div className="px-4 mx-auto space-y-8 max-w-7xl">
+         <title>Traines | Dashboard - Flexify</title>
 
         {/* Header */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

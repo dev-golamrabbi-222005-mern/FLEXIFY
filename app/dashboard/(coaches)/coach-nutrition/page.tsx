@@ -50,6 +50,7 @@ export default function CoachNutrition() {
 
   return (
     <div className="px-4 mx-auto space-y-8 max-w-7xl sm:px-6">
+        <title>Nutrition | Dashboard - Flexify</title>
 
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
