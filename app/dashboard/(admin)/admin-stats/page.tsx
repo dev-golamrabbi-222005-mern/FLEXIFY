@@ -102,7 +102,7 @@ export default function AdminStatsSection() {
             <h4 className="text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-widest">{stat.title}</h4>
             <p className="mt-1 text-2xl font-black">{stat.value}</p>
           </div>
-        ))}
+      )})}
       </div>
 
       <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">

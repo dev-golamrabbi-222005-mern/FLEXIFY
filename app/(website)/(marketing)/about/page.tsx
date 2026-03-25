@@ -65,6 +65,7 @@ const About = () => {
 
   return (
     <div className="bg-[var(--bg-primary)]">
+          <title>About - Flexify</title>
       <section className="px-4 mx-auto mt-8 md:mt-12 mb-10 max-w-7xl">
         {/* About Section */}
         <div className="grid items-center grid-cols-1 gap-10 md:grid-cols-2">

@@ -34,6 +34,8 @@ const CoachesPage = () => {
 
   return (
     <div className="min-h-screen px-6 mx-auto mt-8 md:mt-12 mb-10 max-w-7xl">
+          <title>Coaches - Flexify</title>
+      
       <h1 className="text-3xl mb-10 md:text-5xl font-bold text-[var(--text-primary)] text-center tracking-tighter">
         Our Expert <span className="text-[var(--primary)]">Coaches</span>
       </h1>
