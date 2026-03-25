@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -12,55 +11,62 @@ import {
   MoreVertical,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
-import { ObjectId } from "mongodb";
 
-// const workoutPlans = [
-//   { id: "1", name: "Push/Pull/Legs Split", clients: 8, exercises: 24, duration: "6 weeks", status: "Active" },
-//   { id: "2", name: "Full Body Beginner", clients: 5, exercises: 18, duration: "4 weeks", status: "Active" },
-//   { id: "3", name: "Cardio HIIT Program", clients: 4, exercises: 15, duration: "8 weeks", status: "Active" },
-//   { id: "4", name: "Strength Foundation", clients: 3, exercises: 20, duration: "12 weeks", status: "Draft" },
-//   { id: "5", name: "Yoga & Mobility", clients: 2, exercises: 12, duration: "Ongoing", status: "Active" },
-// ];
+// 1. Define the interface for a Workout Plan
+interface WorkoutPlan {
+  _id: string;
+  name: string;
+  clients: number;
+  exercises: number;
+  duration: string;
+  status: "Active" | "Draft" | "Archived";
+}
 
 export default function CoachWorkouts() {
-  const {data: workoutPlans = [], refetch} = useQuery({
+  // 2. Apply the interface to useQuery
+  const { data: workoutPlans = [], refetch } = useQuery<WorkoutPlan[]>({
     queryKey: ["workout_plans"],
-    queryFn: async() => {
+    queryFn: async () => {
       const res = await axios.get("/api/coach/workout-plans");
       return res.data;
-    }
+    },
   });
 
-  const deleteWorkoutPlan = async(id: ObjectId) => {
-    Swal.fire({
+  const deleteWorkoutPlan = async (id: string) => {
+    const result = await Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axios.delete(`/api/coach/workout-plans/${id}`);
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`/api/coach/workout-plans/${id}`);
         refetch();
         Swal.fire({
           title: "Deleted!",
           text: "Workout plan has been deleted",
-          icon: "success"
+          icon: "success",
         });
+      } catch (error) {
+        Swal.fire("Error", "Failed to delete the plan", "error");
       }
-    });
-  }
+    }
+  };
 
   return (
-    <div className="min-h-screen p-4 md:p-8" style={{ background: "var(--bg-primary)" }}>
+    <div
+      className="min-h-screen p-4 md:p-8"
+      style={{ background: "var(--bg-primary)" }}
+    >
       <div className="mx-auto space-y-8 max-w-7xl">
-
         {/* Header */}
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
@@ -70,10 +76,7 @@ export default function CoachWorkouts() {
             >
               Workout Programs
             </h1>
-            <p
-              className="mt-1 text-sm"
-              style={{ color: "var(--text-muted)" }}
-            >
+            <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
               Design, track, and scale your coaching impact.
             </p>
           </div>
@@ -86,7 +89,7 @@ export default function CoachWorkouts() {
 
         {/* Cards Grid */}
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {workoutPlans.map((plan, i) => (
+          {workoutPlans.map((plan: WorkoutPlan, i: number) => (
             <motion.div
               key={plan._id}
               initial={{ opacity: 0, y: 20 }}
@@ -94,7 +97,7 @@ export default function CoachWorkouts() {
               transition={{ delay: i * 0.08 }}
               className="card-glass group flex flex-col justify-between hover:scale-[1.02] transition"
             >
-              {/* Top */}
+              {/* Top Section */}
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3
@@ -129,7 +132,7 @@ export default function CoachWorkouts() {
                 </button>
               </div>
 
-              {/* Stats */}
+              {/* Stats Section */}
               <div className="grid grid-cols-2 gap-3 mb-5">
                 <div
                   className="p-3 border rounded-xl"
@@ -145,7 +148,6 @@ export default function CoachWorkouts() {
                     <Users size={14} />
                     Clients
                   </div>
-
                   <p
                     className="mt-1 text-lg font-bold"
                     style={{ color: "var(--text-primary)" }}
@@ -168,7 +170,6 @@ export default function CoachWorkouts() {
                     <Dumbbell size={14} />
                     Exercises
                   </div>
-
                   <p
                     className="mt-1 text-lg font-bold"
                     style={{ color: "var(--text-primary)" }}
@@ -178,7 +179,7 @@ export default function CoachWorkouts() {
                 </div>
               </div>
 
-              {/* Duration */}
+              {/* Duration Section */}
               <div
                 className="flex items-center gap-2 mb-5 text-sm"
                 style={{ color: "var(--text-secondary)" }}
@@ -193,7 +194,7 @@ export default function CoachWorkouts() {
                 </span>
               </div>
 
-              {/* Actions */}
+              {/* Actions Section */}
               <div
                 className="flex gap-2 pt-4 border-t"
                 style={{ borderColor: "var(--border-color)" }}
