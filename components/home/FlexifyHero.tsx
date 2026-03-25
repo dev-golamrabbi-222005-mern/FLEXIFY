@@ -130,7 +130,7 @@ export default function FlexifyHero() {
                   scale: 1,
                 }}
                 exit={{ opacity: 0, filter: "blur(10px)", scale: 1.05 }}
-                transition={{ duration: 5.0
+                transition={{ duration: 1.5
                   , ease: [0.4, 0, 0.2, 1] }}
                 className="absolute inset-0 w-full h-full"
               >
