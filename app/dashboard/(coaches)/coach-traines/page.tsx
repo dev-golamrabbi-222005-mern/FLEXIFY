@@ -6,31 +6,39 @@ import { Search, Filter, MoreVertical } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 
-const trainees = [
-  { id: "1", name: "Arif Hossain", email: "arif@email.com", plan: "Muscle Building", status: "Active", progress: 85, joined: "Jan 2025", avatar: "A" },
-  { id: "2", name: "Nadia Akter", email: "nadia@email.com", plan: "Weight Loss", status: "Active", progress: 72, joined: "Feb 2025", avatar: "N" },
-  { id: "3", name: "Kamal Uddin", email: "kamal@email.com", plan: "Strength Training", status: "Active", progress: 90, joined: "Dec 2024", avatar: "K" },
-  { id: "4", name: "Sabrina Islam", email: "sabrina@email.com", plan: "Yoga & Flexibility", status: "Paused", progress: 65, joined: "Mar 2025", avatar: "S" },
-  { id: "5", name: "Rashed Khan", email: "rashed@email.com", plan: "Cardio Fitness", status: "Active", progress: 78, joined: "Jan 2025", avatar: "R" },
-  { id: "6", name: "Fatima Begum", email: "fatima@email.com", plan: "Post-natal Fitness", status: "Active", progress: 55, joined: "Feb 2025", avatar: "F" },
-];
+// const trainees = [
+//   { id: "1", name: "Arif Hossain", email: "arif@email.com", plan: "Muscle Building", status: "Active", progress: 85, joined: "Jan 2025", avatar: "A" },
+//   { id: "2", name: "Nadia Akter", email: "nadia@email.com", plan: "Weight Loss", status: "Active", progress: 72, joined: "Feb 2025", avatar: "N" },
+//   { id: "3", name: "Kamal Uddin", email: "kamal@email.com", plan: "Strength Training", status: "Active", progress: 90, joined: "Dec 2024", avatar: "K" },
+//   { id: "4", name: "Sabrina Islam", email: "sabrina@email.com", plan: "Yoga & Flexibility", status: "Paused", progress: 65, joined: "Mar 2025", avatar: "S" },
+//   { id: "5", name: "Rashed Khan", email: "rashed@email.com", plan: "Cardio Fitness", status: "Active", progress: 78, joined: "Jan 2025", avatar: "R" },
+//   { id: "6", name: "Fatima Begum", email: "fatima@email.com", plan: "Post-natal Fitness", status: "Active", progress: 55, joined: "Feb 2025", avatar: "F" },
+// ];
 
 export default function CoachTrainees() {
   const [search, setSearch] = useState("");
 
-  const filtered = trainees.filter((t) =>
+  const {data: trainees = []} = useQuery({
+    queryKey: ["trainees", search],
+    queryFn: async() => {
+      const res = await axios.get(`/api/coach/trainees?name=${search}`);
+      return res.data;
+    }
+  });
+  const filtered = trainees?.filter((t) =>
     t.name.toLowerCase().includes(search.toLowerCase())
   );
-
   return (
 <>
 
-      <div className="max-w-7xl mx-auto px-4 space-y-8">
+      <div className="px-4 mx-auto space-y-8 max-w-7xl">
 
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
           <div>
             <h1
@@ -41,10 +49,10 @@ export default function CoachTrainees() {
             </h1>
 
             <p
-              className="text-sm mt-1"
+              className="mt-1 text-sm"
               style={{ color: "var(--text-muted)" }}
             >
-              {trainees.length} total clients
+              {trainees?.length} total clients
             </p>
           </div>
 
@@ -53,11 +61,11 @@ export default function CoachTrainees() {
         {/* Search */}
         <div className="flex gap-3">
 
-          <div className="flex-1 relative">
+          <div className="relative flex-1">
 
             <Search
               size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2"
+              className="absolute -translate-y-1/2 left-3 top-1/2"
               style={{ color: "var(--text-muted)" }}
             />
 
@@ -88,12 +96,12 @@ export default function CoachTrainees() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
 
-          {filtered.map((t, i) => (
+          {trainees.map((t, i) => (
 
             <motion.div
-              key={t.id}
+              key={t._id}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
@@ -101,7 +109,7 @@ export default function CoachTrainees() {
 
               <div
                 
-                className="block card-glass p-5 group"
+                className="block p-5 card-glass group"
               >
 
                 {/* Top */}
@@ -110,7 +118,7 @@ export default function CoachTrainees() {
                   <div className="flex items-center gap-3">
 
                     <div
-                      className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold"
+                      className="flex items-center justify-center text-sm font-bold rounded-full w-11 h-11"
                       style={{
                         background: "var(--primary)",
                         color: "white",
@@ -151,7 +159,7 @@ export default function CoachTrainees() {
                 <div className="flex flex-wrap gap-2 mb-4">
 
                   <span
-                    className="text-xs px-2 py-1 rounded-full"
+                    className="px-2 py-1 text-xs rounded-full"
                     style={{
                       background: "var(--primary-light)",
                       color: "var(--primary)",
@@ -161,7 +169,7 @@ export default function CoachTrainees() {
                   </span>
 
                   <span
-                    className="text-xs px-2 py-1 rounded-full"
+                    className="px-2 py-1 text-xs rounded-full"
                     style={{
                       background:
                         t.status === "Active"
@@ -206,7 +214,7 @@ export default function CoachTrainees() {
                 </div>
 
                 <p
-                  className="text-xs mt-3"
+                  className="mt-3 text-xs"
                   style={{ color: "var(--text-muted)" }}
                 >
                   Joined {t.joined}
