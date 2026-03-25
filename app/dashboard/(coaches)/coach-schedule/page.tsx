@@ -49,7 +49,7 @@ export default function CoachSchedule() {
     <>
 
       <div className="max-w-7xl mx-auto space-y-8">
-         <title>Coach-Schedule | Dashboard - Flexify</title>
+         <title>Schedule | Dashboard - Flexify</title>
 
         {/* Header */}
         <div>

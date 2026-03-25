@@ -75,7 +75,7 @@ export default function CoachEarnings() {
       style={{ background: "var(--bg-primary)" }}
     >
       <div className="mx-auto space-y-8 max-w-7xl">
-          <title>Coach-Earning | Dashboard - Flexify</title>
+          <title>Earning | Dashboard - Flexify</title>
 
         {/* Header */}
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">

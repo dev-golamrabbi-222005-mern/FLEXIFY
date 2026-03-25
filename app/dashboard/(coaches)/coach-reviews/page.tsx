@@ -74,7 +74,7 @@ export default function CoachReviews() {
   return (
     <>
       <div className="max-w-6xl px-4 mx-auto space-y-8">
-          <title>Coach-Reviews | Dashboard - Flexify</title>
+          <title>Reviews | Dashboard - Flexify</title>
 
         {/* Header */}
         <div>

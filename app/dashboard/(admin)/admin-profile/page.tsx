@@ -96,7 +96,7 @@ export default function AdminProfilePage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 space-y-10 bg-[var(--bg-primary)] min-h-screen text-[var(--text-primary)]">
-      <title>Admin Profile | Dashboard - Flexify</title>
+      <title>Profile | Dashboard - Flexify</title>
       
       {/* ===== PROFILE HEADER ===== */}
       <section className="card-glass p-8 rounded-3xl border border-[var(--border-color)] shadow-sm">

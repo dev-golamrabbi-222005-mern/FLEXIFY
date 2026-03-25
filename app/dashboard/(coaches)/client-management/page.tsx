@@ -29,7 +29,7 @@ export default function ClientManagementTable() {
 
   return (
     <div className="mt-10 max-w-7xl mx-auto bg-[var(--bg-primary)] px-4 rounded-2xl shadow overflow-x-auto">
-        <title>Client-Management | Dashboard - Flexify</title>
+        <title>Management | Dashboard - Flexify</title>
       <h2 className="text-xl font-bold mb-6 text-[var(--text-primary)]">Client Management</h2>
 
       <table className="w-full text-left border-collapse">

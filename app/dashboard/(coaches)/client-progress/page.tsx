@@ -8,7 +8,7 @@ import WorkoutCompletion from "../../components/coach/client-progress/WorkoutCom
 export default function ClientProgressSection() {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-10 bg-[var(--bg-primary)] px-4">
-        <title>Client-Progress | Dashboard - Flexify</title>
+        <title>Progress | Dashboard - Flexify</title>
 
       {/* Weight Tracking */}
       <WeightTracking/>

@@ -91,12 +91,6 @@ const menuConfig = [
     roles: ["user"],
   },
   {
-    name: "Update Profile",
-    href: "/dashboard/user-form",
-    icon: UserPen,
-    roles: ["user"],
-  },
-  {
     name: "User Profile",
     href: "/dashboard/user-profile",
     icon: ShieldAlertIcon,

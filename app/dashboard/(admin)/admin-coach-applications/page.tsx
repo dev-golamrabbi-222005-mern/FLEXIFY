@@ -57,7 +57,7 @@ export default function AdminCoachApplications() {
   return (
     
     <div className=" space-y-8 min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-       <title>Admin Coach-Applications | Dashboard - Flexify</title>
+       <title>Coach-Applications | Dashboard - Flexify</title>
       
       {/* HEADER */}
       <header>
