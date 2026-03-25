@@ -205,8 +205,8 @@ const menuConfig = [
         roles: ["admin"],
       },
       {
-        name: "System Settings",
-        href: "/dashboard/admin-system-settings",
+        name: "Wants to connect",
+        href: "/dashboard/admin-users-connect",
         icon: FileCog,
         roles: ["admin"],
       },
@@ -286,12 +286,6 @@ const menuConfig = [
   {
     label: "ACCOUNT",
     items: [
-      {
-        name: "Statistics",
-        href: "/dashboard/statistics",
-        icon: BarChart2,
-        roles: ["user", "admin", "coach"],
-      },
       {
         name: "Live Sessions",
         href: "/dashboard/live-sessions",

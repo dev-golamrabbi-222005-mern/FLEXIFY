@@ -33,8 +33,8 @@
    Light Mode – Fresh, clean, energetic daytime feel
 ─────────────────────────────────────────────── */
 .light {
-  --bg-primary:      #ebf6f0;     /* Very light gray-white – clean bg */
-  --bg-nav-footer:   #e3f9e9;               /* Very pale turquoise-green */
+  --bg-primary:      #F6FCF9;     /* Very light gray-white – clean bg */
+  --bg-nav-footer:   #ebfbf0;               /* Very pale turquoise-green */
   --bg-secondary:    #ffffff;               /* Pure white cards/modals */
   --bg-tertiary:     var(--neutral-100);    /* Subtle sections */
 
