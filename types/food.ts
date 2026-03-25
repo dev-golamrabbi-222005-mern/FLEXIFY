@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface FoodItem {
   id: string;
   name: string;
@@ -8,16 +10,23 @@ export interface FoodItem {
   fats: number;
 }
 
-export interface MealEntry {
+export interface FoodEntry {
   id: string;
   foodItem: FoodItem;
   quantity: number;
 }
 
+export type MealEntry = FoodEntry;
+
 export interface MealSection {
   id: string;
   name: string;
-  icon: string;
-  iconColor: string;
-  entries: MealEntry[];
+  icon: ReactNode;
+  iconColor?: string; 
+  entries: FoodEntry[];
+}
+export interface NutritionData {
+  meals?: Record<string, MealSection>; 
+  waterIntake?: number;
+  totalCalories?: number;
 }

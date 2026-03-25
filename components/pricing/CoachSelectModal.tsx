@@ -1,5 +1,9 @@
 "use client";
 
+// components/pricing/CoachSelectModal.tsx
+// Opens when user clicks "Go Elite"
+// Flow: Coach List → (optional) Coach Detail → Order Confirm → onProceedToPayment()
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -23,36 +27,36 @@ export interface Coach {
   charge: number;
   bio?: string;
   certifications?: string[];
-  imageUrl?: string;
-  image?: string;
   specialties?: string[];
+  imageUrl?: string;
   rating?: number;
   clients?: number;
+  status?: string;
 }
 
 interface Props {
   open: boolean;
-  eliteBasePrice: number;
+  eliteBasePrice: number; // 29
   onClose: () => void;
   onProceedToPayment: (coach: Coach, totalAmount: number) => void;
 }
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
-// ── Coach Avatar ──────────────────────────────────────────────────────────────
+// ── Reusable avatar ───────────────────────────────────────────────────────────
 function CoachAvatar({ coach, size = 44 }: { coach: Coach; size?: number }) {
-  const [err, setErr] = useState(false);
-  const src = coach.imageUrl ?? coach.image;
-  const initial = coach.name?.charAt(0).toUpperCase() ?? "C";
+  const [imgErr, setImgErr] = useState(false);
+  const src = coach.imageUrl;
+  const letter = (coach.name ?? "C").charAt(0).toUpperCase();
 
-  if (src && !err) {
+  if (src && !imgErr) {
     return (
       <img
         src={src}
         alt={coach.name}
         className="rounded-full object-cover shrink-0"
         style={{ width: size, height: size }}
-        onError={() => setErr(true)}
+        onError={() => setImgErr(true)}
       />
     );
   }
@@ -63,33 +67,17 @@ function CoachAvatar({ coach, size = 44 }: { coach: Coach; size?: number }) {
         width: size,
         height: size,
         background: "var(--primary)",
-        fontSize: size * 0.38,
+        fontSize: Math.round(size * 0.38),
       }}
     >
-      {initial}
+      {letter}
     </div>
   );
 }
 
-// ── Chip ──────────────────────────────────────────────────────────────────────
-function Chip({ children }: { children: React.ReactNode }) {
-  return (
-    <span
-      className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold"
-      style={{
-        background: "var(--bg-secondary)",
-        border: "1px solid var(--border-color)",
-        color: "var(--text-secondary)",
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-
-// ── Price Breakdown ───────────────────────────────────────────────────────────
+// ── Price breakdown card ──────────────────────────────────────────────────────
 function PriceBreakdown({ base, coach }: { base: number; coach: Coach }) {
-  const total = base + coach.charge;
+  const total = base + (coach.charge ?? 0);
   return (
     <div
       className="rounded-2xl p-4 space-y-2.5"
@@ -104,24 +92,30 @@ function PriceBreakdown({ base, coach }: { base: number; coach: Coach }) {
       >
         Price Breakdown
       </p>
-      {[
-        { label: "Elite Plan", val: `$${base}/mo` },
-        { label: `Coach: ${coach.name}`, val: `$${coach.charge}/mo` },
-      ].map((row) => (
-        <div key={row.label} className="flex items-center justify-between">
-          <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
-            {row.label}
-          </span>
-          <span
-            className="text-sm font-bold"
-            style={{ color: "var(--text-primary)" }}
-          >
-            {row.val}
-          </span>
-        </div>
-      ))}
+      <div className="flex justify-between">
+        <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
+          Elite Plan
+        </span>
+        <span
+          className="text-sm font-bold"
+          style={{ color: "var(--text-primary)" }}
+        >
+          ${base}/mo
+        </span>
+      </div>
+      <div className="flex justify-between">
+        <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
+          Coach: {coach.name}
+        </span>
+        <span
+          className="text-sm font-bold"
+          style={{ color: "var(--text-primary)" }}
+        >
+          ${coach.charge}/mo
+        </span>
+      </div>
       <div
-        className="flex items-center justify-between pt-2 border-t"
+        className="flex justify-between pt-2.5 border-t"
         style={{ borderColor: "rgba(16,185,129,0.2)" }}
       >
         <span
@@ -141,7 +135,7 @@ function PriceBreakdown({ base, coach }: { base: number; coach: Coach }) {
   );
 }
 
-// ── Coach Detail View ─────────────────────────────────────────────────────────
+// ── Coach detail view ─────────────────────────────────────────────────────────
 function DetailView({
   coach,
   base,
@@ -162,7 +156,6 @@ function DetailView({
       transition={{ duration: 0.28, ease }}
       className="flex flex-col h-full"
     >
-      {/* Header */}
       <div
         className="flex items-center gap-3 px-5 py-4 border-b shrink-0"
         style={{ borderColor: "var(--border-color)" }}
@@ -182,7 +175,6 @@ function DetailView({
         </h3>
       </div>
 
-      {/* Body */}
       <div className="flex-1 overflow-y-auto p-5 space-y-5">
         {/* Hero */}
         <div className="flex items-start gap-4">
@@ -267,7 +259,6 @@ function DetailView({
           ))}
         </div>
 
-        {/* Bio */}
         {coach.bio && (
           <div>
             <p
@@ -285,7 +276,6 @@ function DetailView({
           </div>
         )}
 
-        {/* Certifications */}
         {coach.certifications && coach.certifications.length > 0 && (
           <div>
             <p
@@ -313,7 +303,6 @@ function DetailView({
           </div>
         )}
 
-        {/* Specialties */}
         {coach.specialties && coach.specialties.length > 0 && (
           <div>
             <p
@@ -343,7 +332,6 @@ function DetailView({
         <PriceBreakdown base={base} coach={coach} />
       </div>
 
-      {/* Footer */}
       <div
         className="px-5 py-4 border-t shrink-0 flex gap-2"
         style={{ borderColor: "var(--border-color)" }}
@@ -373,7 +361,7 @@ function DetailView({
   );
 }
 
-// ── Confirm / Order Summary View ──────────────────────────────────────────────
+// ── Order confirm view ────────────────────────────────────────────────────────
 function ConfirmView({
   coach,
   base,
@@ -415,7 +403,6 @@ function ConfirmView({
       </div>
 
       <div className="flex-1 p-5 space-y-4 overflow-y-auto">
-        {/* Selected coach */}
         <div
           className="flex items-center gap-4 p-4 rounded-2xl"
           style={{
@@ -448,7 +435,6 @@ function ConfirmView({
 
         <PriceBreakdown base={base} coach={coach} />
 
-        {/* Included features */}
         <div
           className="rounded-2xl p-4"
           style={{
@@ -486,7 +472,6 @@ function ConfirmView({
         </div>
       </div>
 
-      {/* Footer */}
       <div
         className="px-5 py-4 border-t shrink-0 flex gap-2"
         style={{ borderColor: "var(--border-color)" }}
@@ -516,7 +501,7 @@ function ConfirmView({
   );
 }
 
-// ── Main Export ───────────────────────────────────────────────────────────────
+// ── Main export ───────────────────────────────────────────────────────────────
 export function CoachSelectModal({
   open,
   eliteBasePrice,
@@ -525,39 +510,54 @@ export function CoachSelectModal({
 }: Props) {
   const [coaches, setCoaches] = useState<Coach[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [detailCoach, setDetailCoach] = useState<Coach | null>(null);
   const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
 
-  // Reset state when closed — setTimeout defers setState out of effect body
+  // Reset on close
   useEffect(() => {
     if (!open) {
       const t = setTimeout(() => {
         setDetailCoach(null);
         setSelectedCoach(null);
+        setError(null);
       }, 0);
       return () => clearTimeout(t);
     }
   }, [open]);
 
-  // Fetch coaches when opened — async fn keeps setState out of effect body
+  // Fetch coaches
   useEffect(() => {
     if (!open) return;
     let cancelled = false;
+
     const load = async () => {
       setTimeout(() => {
         if (!cancelled) setLoading(true);
       }, 0);
       try {
-        const r = await fetch("/api/coach?status=approved");
-        const data = await r.json();
-        if (!cancelled)
-          setCoaches(Array.isArray(data) ? data : (data.coaches ?? []));
+        // ── Try /api/coach first, fallback to /api/coaches ─────────────────
+        // Coaches are users with role:"coach" — no status filter needed
+        const res = await fetch("/api/coach");
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+
+        const data = await res.json();
+        console.log("[CoachSelectModal] raw data sample:", data[0]); // check field names
+
+        const raw: Coach[] = Array.isArray(data)
+          ? data
+          : (data.coaches ?? data.data ?? []);
+
+        if (!cancelled) setCoaches(raw);
       } catch (err) {
-        console.error(err);
+        console.error("[CoachSelectModal] fetch error:", err);
+        if (!cancelled) setError("Failed to load coaches. Please try again.");
       } finally {
         if (!cancelled) setLoading(false);
       }
     };
+
     load();
     return () => {
       cancelled = true;
@@ -590,6 +590,7 @@ export function CoachSelectModal({
             style={{
               background: "var(--bg-secondary)",
               border: "1px solid var(--border-color)",
+              height: "88vh", // ← explicit height so h-full works on children
               maxHeight: "88vh",
             }}
           >
@@ -672,13 +673,13 @@ export function CoachSelectModal({
                       <strong style={{ color: "var(--text-primary)" }}>
                         ${eliteBasePrice}/mo
                       </strong>{" "}
-                      + coach charge = your total.
+                      + coach charge = your total monthly cost.
                     </p>
                   </div>
 
-                  {/* List */}
+                  {/* List body */}
                   <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                    {loading ? (
+                    {loading && (
                       <div className="flex items-center justify-center py-16 gap-3">
                         <Loader2
                           size={24}
@@ -692,7 +693,27 @@ export function CoachSelectModal({
                           Loading coaches...
                         </span>
                       </div>
-                    ) : coaches.length === 0 ? (
+                    )}
+
+                    {error && (
+                      <div className="text-center py-12">
+                        <p className="text-3xl mb-3">⚠️</p>
+                        <p
+                          className="font-black text-sm mb-1"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          Could not load coaches
+                        </p>
+                        <p
+                          className="text-xs"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          {error}
+                        </p>
+                      </div>
+                    )}
+
+                    {!loading && !error && coaches.length === 0 && (
                       <div className="text-center py-16">
                         <p className="text-4xl mb-3">🏋️</p>
                         <p
@@ -708,7 +729,10 @@ export function CoachSelectModal({
                           Check back soon
                         </p>
                       </div>
-                    ) : (
+                    )}
+
+                    {!loading &&
+                      !error &&
                       coaches.map((coach, i) => (
                         <motion.div
                           key={coach._id}
@@ -721,7 +745,7 @@ export function CoachSelectModal({
                             border: "1px solid var(--border-color)",
                           }}
                         >
-                          {/* Top row */}
+                          {/* Coach row */}
                           <div className="flex items-center gap-3 mb-3">
                             <CoachAvatar coach={coach} size={44} />
                             <div className="flex-1 min-w-0">
@@ -729,21 +753,22 @@ export function CoachSelectModal({
                                 className="font-black text-sm leading-tight"
                                 style={{ color: "var(--text-primary)" }}
                               >
-                                {coach.name}
+                                {coach.name || "Coach"}
                               </p>
                               <p
                                 className="text-xs font-semibold capitalize mt-0.5"
                                 style={{ color: "var(--primary)" }}
                               >
-                                {coach.expertise}
+                                {coach.expertise || "Fitness Expert"}
                               </p>
                             </div>
+                            {/* Total price */}
                             <div className="text-right shrink-0">
                               <p
                                 className="font-black text-base leading-none"
                                 style={{ color: "var(--text-primary)" }}
                               >
-                                ${eliteBasePrice + coach.charge}
+                                ${eliteBasePrice + (coach.charge ?? 0)}
                               </p>
                               <p
                                 className="text-[9px] font-black uppercase tracking-wider mt-0.5"
@@ -754,15 +779,29 @@ export function CoachSelectModal({
                             </div>
                           </div>
 
-                          {/* Chips */}
+                          {/* Info chips */}
                           <div className="flex items-center gap-2 mb-3 flex-wrap">
-                            <Chip>
+                            <span
+                              className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold"
+                              style={{
+                                background: "var(--bg-secondary)",
+                                border: "1px solid var(--border-color)",
+                                color: "var(--text-secondary)",
+                              }}
+                            >
                               <Clock size={10} />
-                              {coach.experience} yrs exp
-                            </Chip>
-                            <Chip>
-                              <DollarSign size={10} />${coach.charge}/mo
-                            </Chip>
+                              {coach.experience ?? 0} yrs exp
+                            </span>
+                            <span
+                              className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold"
+                              style={{
+                                background: "var(--bg-secondary)",
+                                border: "1px solid var(--border-color)",
+                                color: "var(--text-secondary)",
+                              }}
+                            >
+                              <DollarSign size={10} />${coach.charge ?? 0}/mo
+                            </span>
                             {coach.rating && (
                               <span
                                 className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold"
@@ -778,7 +817,7 @@ export function CoachSelectModal({
                             )}
                           </div>
 
-                          {/* Actions */}
+                          {/* Action buttons */}
                           <div className="flex gap-2">
                             <button
                               onClick={() => setDetailCoach(coach)}
@@ -802,8 +841,7 @@ export function CoachSelectModal({
                             </button>
                           </div>
                         </motion.div>
-                      ))
-                    )}
+                      ))}
                   </div>
                 </motion.div>
               )}

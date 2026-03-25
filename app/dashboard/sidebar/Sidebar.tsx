@@ -38,6 +38,7 @@ import {
   EarIcon,
   Swords,
   Apple,
+  Calendar1,
   Star,
   Magnet,
   UserCheck2,
@@ -53,6 +54,7 @@ interface SidebarProps {
   onClose: () => void;
 }
 
+// ── Menu config — MAIN MENU items was accidentally double-wrapped in an array ──
 const menuConfig = [
   {
     label: "MAIN MENU",
@@ -232,14 +234,14 @@ const menuConfig = [
         roles: ["coach"],
       },
       {
-        name: " My Trainees",
+        name: "My Trainees",
         href: "/dashboard/coach-traines",
         icon: User,
         roles: ["coach"],
       },
       {
-        name:" Message",
-        href:"/dashboard/coach-messages",
+        name: "Message",
+        href: "/dashboard/coach-messages",
         icon: MessageCircle,
         roles: ["coach"],
       },
@@ -256,34 +258,28 @@ const menuConfig = [
         roles: ["coach"],
       },
       {
-        name:" Nutrition",
-        href:"/dashboard/coach-nutrition",
+        name: "Nutrition",
+        href: "/dashboard/coach-nutrition",
         icon: Apple,
-        roles:["coach"],
+        roles: ["coach"],
       },
       {
-        name:" Schedule",
-        href:"/dashboard/coach-schedule",
+        name: "Schedule",
+        href: "/dashboard/coach-schedule",
         icon: Calendar,
-        roles:["coach"],
+        roles: ["coach"],
       },
       {
-        name:" Reviews",
-        href:"/dashboard/coach-reviews",
+        name: "Reviews",
+        href: "/dashboard/coach-reviews",
         icon: Star,
-        roles:["coach"],
+        roles: ["coach"],
       },
       {
-        name:" forget",
-        href:"/forgotPassword",
-        icon: Magnet,
-        roles:["coach"],
-      },
-      {
-        name:" Profile",
-        href:"/dashboard/coach-profile",
+        name: "Profile",
+        href: "/dashboard/coach-profile",
         icon: UserRoundPen,
-        roles:["coach"],
+        roles: ["coach"],
       },
     ],
   },
@@ -334,6 +330,7 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
   const userName = dbUser?.name || "User";
   const userImage = dbUser?.image || session?.user?.image;
   const userInitial = userName.charAt(0).toUpperCase();
+  const userPlan = dbUser?.plan ?? "free";
 
   return (
     <div className="flex flex-col h-full overflow-y-auto custom-scrollbar">
@@ -451,27 +448,78 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
         })}
       </nav>
 
-      {/* Upgrade card */}
-      {userRole === "user" && userStatus === "approved" && (
-        <div className="px-4 pb-4">
-          <div className="bg-gradient-to-br from-[#F59E0B] to-[#059669] rounded-[1.5rem] p-5 text-white shadow-lg relative overflow-hidden">
-            <div className="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full" />
-            <div className="bg-white/20 w-9 h-9 rounded-xl flex items-center justify-center mb-3 backdrop-blur-sm">
-              <Trophy size={18} />
+      {/* Upgrade card — dynamic based on plan */}
+      {userRole === "user" &&
+        userStatus === "approved" &&
+        (() => {
+          if (userPlan === "elite") {
+            return (
+              <div className="px-4 pb-4">
+                <div className="bg-gradient-to-br from-[#7c3aed] to-[#059669] rounded-[1.5rem] p-5 text-white shadow-lg relative overflow-hidden">
+                  <div className="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full" />
+                  <div className="bg-white/20 w-9 h-9 rounded-xl flex items-center justify-center mb-3 backdrop-blur-sm text-lg">
+                    🏆
+                  </div>
+                  <h4 className="mb-1 text-sm font-bold">
+                    You&apos;re on Elite!
+                  </h4>
+                  <p className="text-[11px] text-purple-100 mb-1 leading-relaxed">
+                    You have full access — AI coaching, personal coach, and
+                    everything in between.
+                  </p>
+                  <p className="text-[10px] text-white/50 font-semibold uppercase tracking-wider">
+                    Maximum level unlocked 🎉
+                  </p>
+                </div>
+              </div>
+            );
+          }
+          if (userPlan === "pro") {
+            return (
+              <div className="px-4 pb-4">
+                <div className="bg-gradient-to-br from-[#f47920] to-[#dc2626] rounded-[1.5rem] p-5 text-white shadow-lg relative overflow-hidden">
+                  <div className="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full" />
+                  <div className="bg-white/20 w-9 h-9 rounded-xl flex items-center justify-center mb-3 backdrop-blur-sm">
+                    <Trophy size={18} />
+                  </div>
+                  <h4 className="mb-1 text-sm font-bold">Upgrade to Elite</h4>
+                  <p className="text-[11px] text-orange-100 mb-3 leading-relaxed">
+                    Get a personal coach, custom plans, and direct messaging.
+                  </p>
+                  <button
+                    onClick={() => (window.location.href = "/#pricing")}
+                    className="w-full bg-white py-2 rounded-xl text-xs font-extrabold hover:bg-orange-50 transition-all active:scale-95"
+                    style={{ color: "#f47920" }}
+                  >
+                    Go Elite →
+                  </button>
+                </div>
+              </div>
+            );
+          }
+          return (
+            <div className="px-4 pb-4">
+              <div className="bg-gradient-to-br from-[#F59E0B] to-[#059669] rounded-[1.5rem] p-5 text-white shadow-lg relative overflow-hidden">
+                <div className="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full" />
+                <div className="bg-white/20 w-9 h-9 rounded-xl flex items-center justify-center mb-3 backdrop-blur-sm">
+                  <Trophy size={18} />
+                </div>
+                <h4 className="mb-1 text-sm font-bold">Upgrade to Pro</h4>
+                <p className="text-[11px] text-emerald-100 mb-3 leading-relaxed">
+                  Unlock AI coaching, full workout library, and advanced
+                  analytics.
+                </p>
+                <button
+                  onClick={() => (window.location.href = "/#pricing")}
+                  className="w-full bg-white py-2 rounded-xl text-xs font-extrabold hover:bg-emerald-50 transition-all active:scale-95"
+                  style={{ color: "var(--primary)" }}
+                >
+                  Upgrade Now
+                </button>
+              </div>
             </div>
-            <h4 className="mb-1 text-sm font-bold">Upgrade to Pro</h4>
-            <p className="text-[11px] text-emerald-100 mb-3 leading-relaxed">
-              Your trial ends in 7 days. Unlock all features.
-            </p>
-            <button
-              className="w-full bg-white py-2 rounded-xl text-xs font-extrabold hover:bg-emerald-50 transition-all active:scale-95"
-              style={{ color: "var(--primary)" }}
-            >
-              Upgrade Now
-            </button>
-          </div>
-        </div>
-      )}
+          );
+        })()}
 
       {/* Logout */}
       <div className="px-4 pb-5">

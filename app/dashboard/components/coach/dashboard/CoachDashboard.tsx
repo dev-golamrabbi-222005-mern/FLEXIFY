@@ -28,11 +28,37 @@ const CoachDashboard = ({ name }: { name: string }) => {
         }
     });
 
+    const {data: reviews = []} = useQuery({
+        queryKey: ["reviews"],
+        queryFn: async() => {
+        const res = await axios.get("/api/coach/reviews");
+        return res.data;
+        }
+    });
+    
+    const avgRating = (
+        reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+    ).toFixed(1);
+
+    const {data: trainees = []} = useQuery({
+        queryKey: ["trainees"],
+        queryFn: async() => {
+        const res = await axios.get(`/api/coach/trainees`);
+        return res.data;
+        }
+    });
+
+    const avgCompletionRate = Math.round(
+        trainees?.reduce(
+            (sum, t) => sum + t.progress, 0
+        ) / trainees?.length
+    );
+
     const stats = [
         {
             icon: Users,
             label: "Active Clients",
-            value: singleCoach?.maxClients,
+            value: singleCoach?.clients,
             sub: "2 new this week",
             iconColor: "#4b9eff",
             iconBg: "#dbeeff",
@@ -60,8 +86,8 @@ const CoachDashboard = ({ name }: { name: string }) => {
         {
             icon: Star,
             label: "Avg Rating",
-            value: "4.9",
-            sub: "from 38 reviews",
+            value: avgRating,
+            sub: `from ${reviews?.length} reviews`,
             iconColor: "#f0a500",
             iconBg: "#fef3c7",
             trend: { val: 2 },
@@ -80,7 +106,7 @@ const CoachDashboard = ({ name }: { name: string }) => {
         {
             icon: Zap,
             label: "Completion Rate",
-            value: "94%",
+            value: `${avgCompletionRate}%`,
             sub: "avg across clients",
             iconColor: "#7c5cbf",
             iconBg: "#ede9fe",
