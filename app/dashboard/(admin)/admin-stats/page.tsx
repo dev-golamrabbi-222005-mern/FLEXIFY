@@ -80,7 +80,7 @@ const subscriptionData = [
 const COLORS = ["#3b82f6", "#8b5cf6", "#f97316"];
 
   return (
-    <div className="mt-6 md:mt-8 bg-[var(--bg-primary)] md:px-4 py-6 rounded-2xl shadow">
+    <div className="bg-[var(--bg-primary)] rounded-2xl">
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
       {stats.map((stat, index) => {
         const Icon = stat.icon;

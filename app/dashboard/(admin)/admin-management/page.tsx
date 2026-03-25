@@ -59,10 +59,10 @@ export default function AdminDashboard() {
   ]);
 
   return (
-    <div className="p-6 space-y-10 min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
 
       {/* ================= HEADER ================= */}
-      <div>
+      <div className="mb-4">
         <h1 className="text-2xl font-bold tracking-wide">Admin Dashboard</h1>
         <p className="text-sm text-[var(--text-secondary)]">
           Manage users, coaches & subscriptions easily
@@ -70,7 +70,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* ================= SUMMARY CARDS ================= */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
 
         <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
           <div>
@@ -105,7 +105,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* ================= USER MANAGEMENT ================= */}
-      <section>
+      <section className="my-8">
         <div className="flex items-center gap-2 mb-4">
           <Users size={20} />
           <h2 className="text-xl font-semibold">User Management</h2>
@@ -153,7 +153,7 @@ export default function AdminDashboard() {
       </section>
 
       {/* ================= COACH REQUEST ================= */}
-      <section>
+      <section className="my-8">
         <div className="flex items-center gap-2 mb-4">
           <UserCheck size={20} />
           <h2 className="text-xl font-semibold">Coach Requests</h2>
