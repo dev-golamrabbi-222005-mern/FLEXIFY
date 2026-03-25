@@ -94,7 +94,8 @@ export default function PaymentsSubscriptionsPage() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10 space-y-10 bg-[var(--bg-primary)] min-h-screen text-[var(--text-primary)]">
+    <div className="space-y-10 bg-[var(--bg-primary)] min-h-screen text-[var(--text-primary)]">
+      <title>Flexify | Admin | Payments-Subscriptions</title>
       
       {/* HEADER */}
       <div>

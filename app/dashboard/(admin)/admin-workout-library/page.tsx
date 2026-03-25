@@ -57,7 +57,8 @@ export default function WorkoutLibraryPage() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 mt-10 bg-[var(--bg-primary)] space-y-10 pb-20">
+    <div className=" bg-[var(--bg-primary)] space-y-10 pb-5">
+      <title>Flexify | Admin | Workout-Library</title>
       
       {/* ===== STATS CARDS ===== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

@@ -48,7 +48,8 @@ export default function CoachManagementPage() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 space-y-8 bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <div className=" gap-2 space-y-4 bg-[var(--bg-primary)] text-[var(--text-primary)]">
+      <title>Flexify | Admin | Coach-Management</title>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {stats.map((stat, i) => (
