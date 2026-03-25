@@ -38,8 +38,8 @@ export const DetailsModal = ({ exercise, onClose }: DetailsModalProps) => {
                   exercise.level === "beginner"
                     ? "text-emerald-500 border-emerald-500/20 bg-emerald-500/5"
                     : exercise.level === "intermediate"
-                    ? "text-amber-500 border-amber-500/20 bg-amber-500/5"
-                    : "text-rose-500 border-rose-500/20 bg-rose-500/5"
+                      ? "text-amber-500 border-amber-500/20 bg-amber-500/5"
+                      : "text-rose-500 border-rose-500/20 bg-rose-500/5"
                 }`}
               >
                 {exercise.level}
@@ -66,7 +66,7 @@ export const DetailsModal = ({ exercise, onClose }: DetailsModalProps) => {
                 src={getImageUrl(exercise.images[currentImg])}
                 alt={exercise.name}
                 className="w-full h-full object-cover p-4 transition-transform duration-700 group-hover:scale-105"
-                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                onError={(e) => {
                   e.currentTarget.src =
                     "https://via.placeholder.com/400x400?text=No+Preview";
                 }}
@@ -76,28 +76,31 @@ export const DetailsModal = ({ exercise, onClose }: DetailsModalProps) => {
                 <>
                   <div className="absolute inset-0 flex items-center justify-between px-4 pointer-events-none">
                     <button
-                      onClick={() =>
+                      onClick={() => {
+                        const images = exercise.images!;
                         setCurrentImg((prev) =>
-                          prev === 0 ? exercise.images.length - 1 : prev - 1
-                        )
-                      }
+                          prev === 0 ? images.length - 1 : prev - 1,
+                        );
+                      }}
                       className="pointer-events-auto bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-xl text-black hover:bg-[var(--primary)] hover:text-white transition-all active:scale-90"
                     >
                       <ChevronLeft size={20} strokeWidth={3} />
                     </button>
                     <button
-                      onClick={() =>
+                      onClick={() => {
+                        const images = exercise.images!;
                         setCurrentImg((prev) =>
-                          prev === exercise.images.length - 1 ? 0 : prev + 1
-                        )
-                      }
+                          prev === images.length - 1 ? 0 : prev + 1,
+                        );
+                      }}
                       className="pointer-events-auto bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-xl text-black hover:bg-[var(--primary)] hover:text-white transition-all active:scale-90"
                     >
                       <ChevronRight size={20} strokeWidth={3} />
                     </button>
                   </div>
+
                   <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full">
-                    {exercise.images.map((_, i: number) => (
+                    {exercise.images.map((_, i) => (
                       <div
                         key={i}
                         className={`h-1.5 rounded-full transition-all duration-300 ${
