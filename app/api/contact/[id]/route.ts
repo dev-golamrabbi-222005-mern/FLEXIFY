@@ -4,9 +4,10 @@ import { ObjectId } from "mongodb";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: { id: string } }, // 1. Removed Promise wrapper
 ) {
-  const { id } = await params; // ← await the promise
+  // 2. Removed 'await' because params is a plain object in Next.js 14
+  const { id } = params;
 
   const collection = dbConnect("contacts");
 
