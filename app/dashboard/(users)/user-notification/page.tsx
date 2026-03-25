@@ -6,7 +6,7 @@ import { Bell, MessageCircle, AlertTriangle } from "lucide-react";
 export default function Notifications() {
   return (
     <div className="space-y-8">
-       <title>User-Notification | Dashboard - Flexify</title>
+       <title>Notification | Dashboard - Flexify</title>
       {/* Header */}
       <div className="flex items-center gap-3">
         <Bell className="text-[var(--primary)]" />

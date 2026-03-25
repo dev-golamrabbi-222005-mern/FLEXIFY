@@ -211,7 +211,7 @@ export default function LiveSessionPage() {
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] p-3 md:p-6">
-       <title>Live-Sessions | Dashboard - Flexify</title>
+       <title>Live Sessions | Dashboard - Flexify</title>
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-4">
 
         {/* LEFT: CHAT */}

@@ -153,7 +153,7 @@ function StreakSection({ records }: { records: ChallengeRecord[] }) {
       )}
 
       <div className="relative z-10">
-         <title>My-Challenges | Dashboard - Flexify</title>
+         <title>My Challenges | Dashboard - Flexify</title>
         {/* Top row */}
         <div className="flex items-start justify-between mb-5">
           <div>

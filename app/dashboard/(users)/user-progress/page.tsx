@@ -17,7 +17,7 @@ export default function ProgressTracker() {
 
   return (
     <div className="space-y-6">
-       <title>User-Progress | Dashboard - Flexify</title>
+       <title>Progress | Dashboard - Flexify</title>
       {/* Header */}
       <div className="flex items-center gap-3">
         <LineChart className="text-[var(--primary)]" />
