@@ -1,155 +1,141 @@
 "use client";
 
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
+  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  BarChart, Bar, PieChart, Pie, Cell, CartesianGrid, PieLabelRenderProps
 } from "recharts";
-
-import { TrendingUp, Activity, DollarSign } from "lucide-react";
+import { TrendingUp, Activity, DollarSign, Loader2, PieChart as PieIcon, BarChart3, LineChart as GrowthIcon, LucideIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const growthData = [
-  { month: "Jan", users: 120 },
-  { month: "Feb", users: 200 },
-  { month: "Mar", users: 350 },
-  { month: "Apr", users: 500 },
-  { month: "May", users: 650 },
-  { month: "Jun", users: 820 },
-];
+interface AnalyticsData {
+  summary: { totalUsers: number; totalRevenue: number; engagement: string };
+  userGrowth: { month: string; users: number }[];
+  revenueStats: { month: string; revenue: number }[];
+  engagementData: { name: string; value: number }[];
+}
 
-const engagementData = [
-  { name: "Workouts", value: 400 },
-  { name: "Programs", value: 300 },
-  { name: "Challenges", value: 200 },
-  { name: "Coaching", value: 150 },
-];
 
-const revenueData = [
-  { month: "Jan", revenue: 1200 },
-  { month: "Feb", revenue: 1800 },
-  { month: "Mar", revenue: 2500 },
-  { month: "Apr", revenue: 3200 },
-  { month: "May", revenue: 4100 },
-  { month: "Jun", revenue: 5200 },
-];
+interface StatCardProps {
+  title: string;
+  value: number | string;
+  Icon: LucideIcon;
+  color: string;
+}
 
-const COLORS = ["#3B82F6", "#10B981", "#F97316", "#8B5CF6"];
+const COLORS = ["#10B981", "#3B82F6", "#F97316", "#8B5CF6"];
+
+const renderCustomizedLabel = (props: PieLabelRenderProps) => {
+  const { month } = props.payload as { month: string };
+  const percent = props.percent ? (Number(props.percent) * 100).toFixed(0) : 0;
+  return `${month} ${percent}%`;
+};
 
 export default function ReportsAnalyticsPage() {
-  const { data: users = [] } = useQuery({
-    queryKey: ["users"],
-    queryFn: async () => {
-      const res = await axios.get("/api/user?role=user");
-      return res.data;
-    },
+  const { data, isLoading } = useQuery<AnalyticsData>({
+    queryKey: ["admin-analytics"],
+    queryFn: async () => (await axios.get("/api/admin/analytics")).data,
   });
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 py-10 space-y-8 bg-[var(--bg-primary)] min-h-screen">
+  if (isLoading) return (
+    <div className="flex h-screen items-center justify-center bg-[var(--bg-primary)]">
+      <Loader2 className="animate-spin text-[var(--primary)]" size={40} />
+    </div>
+  );
 
-      {/* HEADER */}
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-10 space-y-10 bg-[var(--bg-primary)] min-h-screen text-[var(--text-primary)]">
+      
       <div>
-        <h1 className="text-2xl font-bold tracking-wide">Analytics Dashboard</h1>
-        <p className="text-sm text-[var(--text-secondary)]">Overview of platform performance</p>
+        <h1 className="text-3xl font-black tracking-tight">Analytics Dashboard</h1>
+        <p className="text-[var(--text-secondary)]">Platform performance based on real-time data</p>
       </div>
 
       {/* SUMMARY CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
-          <div>
-            <p className="text-sm text-[var(--text-secondary)]">Total Users</p>
-            <h2 className="text-2xl font-bold">{users.length}</h2>
-          </div>
-          <div className="p-3 rounded-xl bg-gradient-to-r from-green-400 to-emerald-600 text-white">
-            <TrendingUp size={22} />
-          </div>
-        </div>
-
-        <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
-          <div>
-            <p className="text-sm text-[var(--text-secondary)]">Engagement</p>
-            <h2 className="text-2xl font-bold">1.2K</h2>
-          </div>
-          <div className="p-3 rounded-xl bg-gradient-to-r from-blue-400 to-indigo-600 text-white">
-            <Activity size={22} />
-          </div>
-        </div>
-
-        <div className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition flex items-center justify-between">
-          <div>
-            <p className="text-sm text-[var(--text-secondary)]">Revenue</p>
-            <h2 className="text-2xl font-bold">$5,200</h2>
-          </div>
-          <div className="p-3 rounded-xl bg-gradient-to-r from-orange-400 to-pink-500 text-white">
-            <DollarSign size={22} />
-          </div>
-        </div>
-
+        <StatCard title="Total Users" value={data?.summary.totalUsers || 0} Icon={TrendingUp} color="from-emerald-400 to-emerald-600" />
+        <StatCard title="Engagement" value={data?.summary.engagement || "0"} Icon={Activity} color="from-blue-400 to-indigo-600" />
+        <StatCard title="Total Revenue" value={`৳${data?.summary.totalRevenue.toLocaleString()}`} Icon={DollarSign} color="from-orange-400 to-pink-500" />
       </div>
 
-      {/* CHARTS */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-        {/* LINE CHART */}
-        <div className="bg-[var(--card-bg)] p-5 rounded-2xl shadow hover:shadow-xl transition">
-          <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">📈 Platform Growth</h2>
-          <ResponsiveContainer width="100%" height={220}>
-            <LineChart data={growthData}>
-              <XAxis dataKey="month" stroke="#888" />
-              <YAxis stroke="#888" />
-              <Tooltip />
-              <Line type="monotone" dataKey="users" stroke="#10B981" strokeWidth={3} dot={{ r: 4 }} />
+      {/* CHARTS SECTION */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+        
+        {/* User Growth Line Chart */}
+        <div className="card-glass p-6">
+          <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-[var(--primary)]">
+            <GrowthIcon size={20} /> Platform Growth
+          </h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={data?.userGrowth}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" opacity={0.3} />
+              <XAxis dataKey="month" axisLine={false} tickLine={false} fontSize={12} stroke="var(--text-secondary)" />
+              <YAxis allowDecimals={false} axisLine={false} tickLine={false} fontSize={12} stroke="var(--text-secondary)" />
+              <Tooltip contentStyle={{ background: "var(--bg-secondary)", border: "1px solid var(--border-color)", borderRadius: "12px" }} />
+              <Line type="monotone" dataKey="users" stroke="var(--primary)" strokeWidth={4} dot={{ r: 6, fill: "var(--primary)" }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
-        {/* BAR CHART */}
-        <div className="bg-[var(--card-bg)] p-5 rounded-2xl shadow hover:shadow-xl transition">
-          <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">📊 Engagement</h2>
-          <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={engagementData}>
-              <XAxis dataKey="name" stroke="#888" />
-              <YAxis stroke="#888" />
-              <Tooltip />
-              <Bar dataKey="value" fill="#3B82F6" radius={[6,6,0,0]} />
+        {/* Engagement Bar Chart */}
+        <div className="card-glass p-6">
+          <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-[var(--secondary)]">
+            <BarChart3 size={20} /> Content Engagement
+          </h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={data?.engagementData}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" opacity={0.3} />
+              <XAxis dataKey="name" axisLine={false} tickLine={false} fontSize={12} stroke="var(--text-secondary)" />
+              <YAxis axisLine={false} tickLine={false} fontSize={12} stroke="var(--text-secondary)" />
+              <Tooltip cursor={{fill: 'var(--bg-tertiary)', opacity: 0.2}} contentStyle={{ background: "var(--bg-secondary)", border: "1px solid var(--border-color)", borderRadius: "12px" }} />
+              <Bar dataKey="value" fill="var(--secondary)" radius={[8, 8, 0, 0]} barSize={40} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        {/* PIE CHART */}
-        <div className="bg-[var(--card-bg)] p-5 rounded-2xl shadow md:col-span-2 hover:shadow-xl transition">
-          <h2 className="text-lg font-semibold mb-3 text-center">💰 Revenue Distribution</h2>
-          <div className="flex justify-center">
-            <ResponsiveContainer width={300} height={260}>
+        {/* Revenue Pie Chart */}
+        <div className="card-glass p-6 xl:col-span-2">
+          <h2 className="text-lg font-bold mb-6 flex items-center justify-center gap-2 text-orange-500">
+            <PieIcon size={20} /> Monthly Revenue Distribution
+          </h2>
+          <div className="flex justify-center items-center h-[350px]">
+            <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={revenueData}
+                  data={data?.revenueStats}
                   dataKey="revenue"
                   nameKey="month"
-                  outerRadius={90}
-                  label
+                  innerRadius={80}
+                  outerRadius={120}
+                  paddingAngle={8}
+                  label={renderCustomizedLabel} 
                 >
-                  {revenueData.map((entry, index) => (
-                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                  {data?.revenueStats?.map((_, index) => (
+                    <Cell key={index} fill={COLORS[index % COLORS.length]} stroke="none" />
                   ))}
                 </Pie>
+                <Tooltip contentStyle={{ background: "var(--bg-secondary)", border: "1px solid var(--border-color)", borderRadius: "12px" }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-      </section>
+      </div>
+    </div>
+  );
+}
+
+// StatCard Component with proper typing
+function StatCard({ title, value, Icon, color }: StatCardProps) {
+  return (
+    <div className="card-glass flex items-center justify-between group hover:border-[var(--primary)] transition-all duration-300">
+      <div>
+        <p className="text-xs text-[var(--text-secondary)] font-bold uppercase tracking-widest">{title}</p>
+        <h2 className="text-3xl font-black mt-1">{value}</h2>
+      </div>
+      <div className={`p-4 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg transform group-hover:scale-110 transition-transform`}>
+        <Icon size={26} />
+      </div>
     </div>
   );
 }
