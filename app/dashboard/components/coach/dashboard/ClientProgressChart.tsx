@@ -1,6 +1,8 @@
 import { ChartCard } from '@/app/dashboard/page';
 import React from 'react';
 import { motion } from "framer-motion";
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
 
 const COACH_CLIENT_PROGRESS = [
     { name: "Ali", progress: 82 },
@@ -11,13 +13,20 @@ const COACH_CLIENT_PROGRESS = [
 ];
 
 const ClientProgressChart = () => {
+    const {data: clients = []} = useQuery({
+        queryKey: ["clients"],
+        queryFn: async() => {
+        const res = await axios.get(`/api/coach/trainees`);
+        return res.data;
+        }
+    });
     return (
         <ChartCard title="Client Progress Overview" delay={0.2}>
             <div className="space-y-3">
-            {COACH_CLIENT_PROGRESS.map((c, i) => (
+            {clients?.map((c, i) => (
                 <div key={i} className="flex items-center gap-3">
                 <span
-                    className="w-12 text-xs font-bold shrink-0"
+                    className="w-16 text-xs font-bold shrink-0"
                     style={{ color: "var(--text-secondary)" }}
                 >
                     {c.name}
@@ -38,10 +47,12 @@ const ClientProgressChart = () => {
                     style={{
                         background:
                         c.progress > 80
-                            ? "#27ae60"
-                            : c.progress > 60
-                            ? "#f47920"
-                            : "#f0a500",
+                        ? "#10b981"
+                        : c.progress > 60
+                        ? "#f0a500"
+                        : c.progress > 40
+                        ? "#f47920"
+                        : "#ef4444",
                     }}
                     />
                 </div>
