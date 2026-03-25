@@ -56,7 +56,7 @@ interface SidebarProps {
 const menuConfig = [
   {
     label: "MAIN MENU",
-    items: [
+    items: 
 [
   {
     name: "Dashboard",
@@ -148,8 +148,8 @@ const menuConfig = [
     icon: BookText,
     roles: ["user"],
   },
-];
-    ],
+],
+  
   },
   {
     label: "ADMIN",
