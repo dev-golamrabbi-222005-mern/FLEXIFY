@@ -64,7 +64,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-10 min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <title>Flexify | Admin | Management</title>
+      <title>Management | Dashboard - Flexify</title>
       <header>
         <h1 className="text-2xl font-bold tracking-tight">Admin Dashboard</h1>
         <p className="text-sm text-[var(--text-secondary)]">Platform management</p>

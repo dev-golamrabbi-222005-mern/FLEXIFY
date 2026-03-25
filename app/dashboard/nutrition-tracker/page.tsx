@@ -176,6 +176,7 @@ const addFood = (item: FoodItem, qty: number) => {
 }
   return (
     <div className="py-2.5 px-0 max-w-7xl mx-auto">
+        <title>Nutrition Tracker | Dashboard - Flexify</title>
       {/* Header Section */}
       <div className="flex items-center justify-between mb-6">
         <div>

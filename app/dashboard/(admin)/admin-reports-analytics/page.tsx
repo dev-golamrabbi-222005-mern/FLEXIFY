@@ -45,7 +45,7 @@ export default function ReportsAnalyticsPage() {
 
   return (
     <div className="space-y-10 bg-[var(--bg-primary)] min-h-screen text-[var(--text-primary)]">
-      <title>Flexify | Admin | Reports-Analytics</title>
+      <title>Reports Analytics | Dashboard - Flexify</title>
       
       <div>
         <h1 className="text-3xl font-black tracking-tight">Analytics Dashboard</h1>

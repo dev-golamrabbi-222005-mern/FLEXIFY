@@ -28,6 +28,7 @@ export default function MyGoals() {
 
   return (
     <div className="mt-10 max-w-7xl mx-auto bg-[var(--bg-primary)] px-4 pb-20">
+       <title>My Goals | Dashboard - Flexify</title>
       {/* Header with Add Button */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>

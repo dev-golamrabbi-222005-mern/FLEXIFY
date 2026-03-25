@@ -59,6 +59,7 @@ export default function AchievementsPage() {
 
   return (
     <div className="mt-10 max-w-full mx-auto px-4 pb-20 font-sans">
+      <title>Achievements | Dashboard - Flexify</title>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6 bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)] shadow-sm">
         <div className="flex items-center gap-5">
           <div className="p-4 bg-orange-500/10 rounded-2xl text-orange-500">

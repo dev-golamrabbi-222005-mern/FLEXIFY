@@ -84,8 +84,8 @@ export default function AdminStatsSection() {
 
   return (
     <div className="space-y-8 bg-[var(--bg-primary)] rounded-2xl">
-      <title>Admin Stats | Dashboard - Flexify</title>
-
+      <title>Stats | Dashboard - Flexify</title>
+      
       {/* 1. TOP STATS CARDS */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {stats.map(
