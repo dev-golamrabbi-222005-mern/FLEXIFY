@@ -6,6 +6,7 @@ import { User, Settings, Moon, Shield, Lock } from "lucide-react";
 export default function Profile() {
   return (
     <div className="space-y-8">
+       <title>User-Profile | Dashboard - Flexify</title>
       {/* Header */}
       <div className="flex items-center gap-3">
         <User className="text-[var(--primary)]" />

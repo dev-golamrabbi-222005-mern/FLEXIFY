@@ -95,7 +95,7 @@ export default function PaymentsSubscriptionsPage() {
 
   return (
     <div className="space-y-10 bg-[var(--bg-primary)] min-h-screen text-[var(--text-primary)]">
-      <title>Flexify | Admin | Payments-Subscriptions</title>
+      <title>Admin Payments-Subscriptions | Dashboard - Flexify</title>
       
       {/* HEADER */}
       <div>

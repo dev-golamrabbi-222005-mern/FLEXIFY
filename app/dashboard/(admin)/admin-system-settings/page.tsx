@@ -29,7 +29,7 @@ export default function SystemSettingsPage() {
 
   return (
     <div className="space-y-10 bg-[var(--bg-primary)]">
-      <title>Flexify | Admin | System-Settings</title>
+      <title>Admin System-Settings | Dashboard - Flexify</title>
 
       {/* ================= PAGE HEADER ================= */}
       <div className="flex items-center gap-3">

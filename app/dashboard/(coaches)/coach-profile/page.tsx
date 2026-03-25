@@ -62,6 +62,7 @@ export default function CoachProfilePage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 bg-[var(--bg-primary)] space-y-10">
+        <title>Coach-Profile | Dashboard - Flexify</title>
 
       {/* ===== PROFILE HEADER ===== */}
 

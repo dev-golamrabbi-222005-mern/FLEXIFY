@@ -18,6 +18,7 @@ export default function SessionPlanner() {
 
   return (
     <div className="mt-10 max-w-7xl mx-auto bg-[var(--bg-primary)] px-4 rounded-2xl shadow p-6">
+       <title>Session-Planner | Dashboard - Flexify</title>
 
       <h2 className="text-xl font-bold mb-6 text-[var(--text-primary)]">Session Planner</h2>
 

@@ -77,6 +77,7 @@ const FitnessProfileUpdateForm = () => {
 
   return (
     <div className="min-h-screen py-10 px-4">
+       <title>Fitness-Update-Form | Dashboard - Flexify</title>
       <div className="max-w-7xl mx-auto bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-lg overflow-hidden">
         
         <div className="bg-[var(--primary)] p-8 text-white text-center">

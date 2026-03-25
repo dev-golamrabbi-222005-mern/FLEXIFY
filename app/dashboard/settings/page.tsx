@@ -84,6 +84,7 @@ export default function SettingsPage() {
 
   return (
     <div className="p-4 md:p-6 bg-[var(--bg-primary)] min-h-screen">
+        <title>Settings | Dashboard - Flexify</title>
       <div className="flex items-center gap-3">
         <User className="w-6 h-6 md:w-7 md:h-7" />
         <h1 className="text-2xl md:text-3xl font-bold mb-6">Settings</h1>

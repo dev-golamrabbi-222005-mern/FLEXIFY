@@ -49,7 +49,7 @@ export default function CoachManagementPage() {
 
   return (
     <div className=" gap-2 space-y-4 bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <title>Flexify | Admin | Coach-Management</title>
+       <title>Admin Coach-Management | Dashboard - Flexify</title>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {stats.map((stat, i) => (

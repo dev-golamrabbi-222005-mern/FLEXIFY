@@ -88,6 +88,7 @@ export default function SchedulePage() {
 
   return (
     <div className="mt-10 max-w-full mx-auto px-4 pb-20 font-sans relative">
+       <title>Schedule | Dashboard - Flexify</title>
       
       {/* Custom Manual Entry Modal */}
       {isModalOpen && (

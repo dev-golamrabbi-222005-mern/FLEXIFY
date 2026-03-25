@@ -36,7 +36,7 @@ export default function ContactRequests() {
 
   return (
     <div className="p-6">
-      <title>Flexify | Admin | Users-Connect</title>
+      <title>Admin Users-Connect | Dashboard - Flexify</title>
       <h1 className="text-3xl font-bold mb-6">Wants to Connect</h1>
 
       <div className="space-y-4">
