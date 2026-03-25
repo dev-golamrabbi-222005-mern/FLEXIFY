@@ -24,7 +24,7 @@ export interface Coach {
   profileImage: string;   
   password?: string;      
   role: "coach";          
-  status: "approved" | "pending" | "rejected";
+  status: "approved" | "pending" | "rejected"| "warning";
   gender: "male" | "female" | "other";
   
   bio: string;
@@ -45,4 +45,21 @@ export interface Coach {
   
   createdAt?: Date | string;
   updatedAt?: Date | string;
+}
+
+export interface AnalyticsData {
+  stats: {
+    approvedCount: number;
+    warningCount: number;
+  };
+  performanceData: {
+    month: string;
+    sessions: number;
+    clients: number;
+  }[];
+}
+
+export interface UpdateStatusParams {
+  id: string | ObjectId;
+  status: "approved" | "warning" | "rejected";
 }
