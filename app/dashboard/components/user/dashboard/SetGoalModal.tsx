@@ -28,7 +28,10 @@ interface SetGoalModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelect: (planName: string, totalExercises: number) => void;
-  routines: Routine[];
+  routines: Array<{
+    planName: string;
+    exercises: Exercise[];
+  }>;
   defaultPackages: DefaultPackagesResponse | null;
 }
 
@@ -76,14 +79,13 @@ export const SetGoalModal = ({
                 </p>
                 <div className="grid gap-2">
                   {routines && routines.length > 0 ? (
-                    routines.map((r: Routine) => {
-                      const displayName =
-                        r.planName || r.name || "Untitled Routine";
+                    routines.map((r, index) => {
+                      const displayName = r.planName || "Untitled Routine";
                       const count = r.exercises?.length || 0;
 
                       return (
                         <button
-                          key={r._id}
+                          key={index}
                           onClick={() => onSelect(displayName, count)}
                           className="flex items-center justify-between p-4 rounded-2xl bg-[var(--bg-primary)] border border-[var(--border-color)] hover:border-[var(--primary)] transition-all group"
                         >
