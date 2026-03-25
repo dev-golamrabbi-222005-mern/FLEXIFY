@@ -4,7 +4,20 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { motion } from "framer-motion";
-import CoachCard from "../cards/CoachCard/CoachCard";
+import CoachCard from "../cards/CoachCard/CoachCard"; 
+
+type Coach = {
+  _id: string;
+  fullName: string;
+  profileImage?: string;
+  location?: string;
+  experienceYears?: number;
+  trainingTypes?: string[];
+  specialties?: string;
+  pricing?: {
+  monthly?: number;
+  };
+};
 
 const TopCoaches = () => {
   const {
@@ -19,17 +32,17 @@ const TopCoaches = () => {
     },
   });
 
-  // Sort a copy of the data to avoid mutating the original state
-  const topCoaches = coaches
-    ? [...coaches]
-        .sort((a, b) => b.experienceYears - a.experienceYears)
-        .slice(0, 3)
-    : [];
+const topCoaches = coaches
+  ? [...coaches]
+      .filter((c) => c.experienceYears !== undefined)
+      .sort((a, b) => b.experienceYears! - a.experienceYears!)
+      .slice(0, 3)
+  : [];
 
   const rankStyles = [
-    "bg-yellow-400 text-black border-2 border-yellow-500", // 🥇 1st
-    "bg-gray-300 text-black border-2 border-gray-400", // 🥈 2nd
-    "bg-amber-700 text-white border-2 border-amber-800", // 🥉 3rd
+    "bg-yellow-400 text-black border-2 border-yellow-500", // 🥇
+    "bg-gray-300 text-black border-2 border-gray-400", // 🥈
+    "bg-amber-700 text-white border-2 border-amber-800", // 🥉
   ];
 
   if (isLoading)
@@ -64,29 +77,23 @@ const TopCoaches = () => {
         >
           Top <span className="text-[var(--primary)]">Experienced Coaches</span>
         </motion.h2>
-          <span className="h-1 w-14 mx-auto rounded-full bg-(--primary)" />
+        <span className="h-1 w-14 mx-auto rounded-full bg-(--primary)" />
       </div>
 
       {/* Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
         {topCoaches.map((coach, index) => (
           <motion.div
-            key={coach._id}
+            key={coach._id} // now safe
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             viewport={{ once: true }}
-            whileHover={{ y: -10 }} // Subtle lift on hover instead of just scale
+            whileHover={{ y: -10 }}
             className="relative"
           >
-            {/* 🏆 Rank Badge - Made responsive with dynamic positioning and size */}
             <div
-              className={`absolute -top-4 -right-2 z-10 
-                w-12 h-12 md:w-16 md:h-16 
-                flex items-center justify-center 
-                text-2xl md:text-4xl 
-                rounded-full shadow-xl transform
-                ${rankStyles[index]}`}
+              className={`absolute -top-4 -right-2 z-10 w-12 h-12 md:w-16 md:h-16 flex items-center justify-center text-2xl md:text-4xl rounded-full shadow-xl transform ${rankStyles[index]}`}
             >
               {index === 0 && "🥇"}
               {index === 1 && "🥈"}

@@ -1,9 +1,23 @@
 "use client";
 
 import React from "react";
-
 import { User, MapPin, Award, ArrowRight } from "lucide-react";
 import Link from "next/link";
+
+// Define the Coach type
+type Coach = {
+  _id: string;
+  fullName: string;
+  profileImage?: string;
+  imageUrl?: string;
+  location?: string;
+  experienceYears?: number;
+  trainingTypes?: string[];
+  specialties?: string;
+  pricing?: {
+    monthly?: number;
+  };
+};
 
 type CoachCardProps = {
   coach: Coach;
@@ -11,6 +25,7 @@ type CoachCardProps = {
 
 const CoachCard = ({ coach }: CoachCardProps) => {
   console.log(coach);
+
   return (
     <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-sm overflow-hidden flex flex-col transition-all hover:border-[var(--primary)] group">
       <div className="relative h-56 w-full">

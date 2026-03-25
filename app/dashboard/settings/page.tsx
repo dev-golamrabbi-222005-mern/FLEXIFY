@@ -6,36 +6,39 @@ import ThemeToggle from "../Share/ThemeToggle";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 
+type Profile = {
+  name: string;
+  email: string;
+  phone: string;
+  location: string;
+  photo: string;
+};
+
+type Fitness = {
+  height: string;
+  weight: string;
+  goal: string;
+  activity: string;
+};
+
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
   const { data: session } = useSession();
 
-  const [profile, setProfile] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    location: "",
-    photo: "",
-  });
+const [profile, setProfile] = useState<Profile>(() => ({
+  name: session?.user?.name || "",
+  email: session?.user?.email || "",
+  phone: (session?.user as { phone?: string })?.phone || "",
+  location: "",
+  photo: session?.user?.image || "",
+}));
 
-  const [fitness, setFitness] = useState({
+  const [fitness, setFitness] = useState<Fitness>({
     height: "",
     weight: "",
     goal: "",
     activity: "",
   });
-
-  useEffect(() => {
-    if (session?.user) {
-      setProfile({
-        name: session.user.name || "",
-        email: session.user.email || "",
-        phone: session.phone || "",
-        location: "",
-        photo: session.user.image || "",
-      });
-    }
-  }, [session]);
 
   const menu = [
     { id: "profile", label: "Profile", icon: User },
@@ -45,18 +48,26 @@ export default function SettingsPage() {
     { id: "appearance", label: "Appearance", icon: Moon },
   ];
 
-  const handleProfileChange = (e) => {
-    setProfile({
-      ...profile,
-      [e.target.name]: e.target.value,
-    });
+  // ✅ FIXED: Proper typing
+  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setProfile((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleFitnessChange = (e) => {
-    setFitness({
-      ...fitness,
-      [e.target.name]: e.target.value,
-    });
+  // ✅ FIXED: Supports input + select
+  const handleFitnessChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+
+    setFitness((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleProfileSave = () => {
@@ -117,7 +128,6 @@ export default function SettingsPage() {
 
         {/* Content */}
         <div className="bg-[var(--card-bg)] rounded-xl shadow p-4 md:p-6 md:col-span-3">
-          
           {/* Profile */}
           {activeTab === "profile" && (
             <div>
@@ -131,7 +141,6 @@ export default function SettingsPage() {
                   placeholder="Full Name"
                   className="border p-2 rounded-lg"
                 />
-
                 <input
                   name="email"
                   value={profile.email}
@@ -139,7 +148,6 @@ export default function SettingsPage() {
                   placeholder="Email"
                   className="border p-2 rounded-lg"
                 />
-
                 <input
                   name="phone"
                   value={profile.phone}
@@ -147,7 +155,6 @@ export default function SettingsPage() {
                   placeholder="Phone"
                   className="border p-2 rounded-lg"
                 />
-
                 <input
                   name="location"
                   value={profile.location}
@@ -155,7 +162,6 @@ export default function SettingsPage() {
                   placeholder="Location"
                   className="border p-2 rounded-lg"
                 />
-
                 <input
                   name="photo"
                   value={profile.photo}
@@ -165,10 +171,7 @@ export default function SettingsPage() {
                 />
               </div>
 
-              <button
-                onClick={handleProfileSave}
-                className="mt-5 btn-primary"
-              >
+              <button onClick={handleProfileSave} className="mt-5 btn-primary">
                 Save Changes
               </button>
             </div>
@@ -189,7 +192,6 @@ export default function SettingsPage() {
                   placeholder="Height (cm)"
                   className="border p-2 rounded-lg"
                 />
-
                 <input
                   name="weight"
                   value={fitness.weight}
@@ -222,10 +224,7 @@ export default function SettingsPage() {
                 </select>
               </div>
 
-              <button
-                onClick={handleFitnessSave}
-                className="mt-5 btn-primary"
-              >
+              <button onClick={handleFitnessSave} className="mt-5 btn-primary">
                 Update Fitness Info
               </button>
             </div>
@@ -268,7 +267,6 @@ export default function SettingsPage() {
                   placeholder="Current Password"
                   className="border p-2 rounded-lg"
                 />
-
                 <input
                   type="password"
                   placeholder="New Password"
