@@ -31,7 +31,8 @@ export default function AdminProfilePage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10 bg-[var(--bg-primary)] space-y-10">
+    <div className="bg-[var(--bg-primary)] space-y-10">
+      <title>Flexify | Admin | Profile</title>
 
       {/* ===== PROFILE HEADER ===== */}
       <section className="bg-[var(--card-bg)] p-6 md:p-8 rounded-2xl shadow-md hover:shadow-xl transition">

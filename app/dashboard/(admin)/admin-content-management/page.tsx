@@ -109,7 +109,8 @@ export default function AdminContentManagementPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10 space-y-10">
+    <div className="space-y-10">
+      <title>Flexify | Admin | Content-Management</title>
       
       {/* Search Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
