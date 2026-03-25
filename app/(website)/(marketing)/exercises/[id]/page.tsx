@@ -80,21 +80,39 @@ function fmt(s: number) {
 
 // ─── Animated counter ─────────────────────────────────────────────────────────
 function AnimNum({ to, duration = 900 }: { to: number; duration?: number }) {
-  const [val, setVal] = useState(0);
+  const [val, setVal] = useState<number>(0);
   const t0 = useRef<number | null>(null);
+
   useEffect(() => {
-    setVal(0);
+    // 1. We NO LONGER call setVal(0) here.
     t0.current = null;
     let raf: number;
+
     const tick = (ts: number) => {
-      if (!t0.current) t0.current = ts;
-      const p = Math.min((ts - t0.current) / duration, 1);
-      setVal(Math.round((1 - Math.pow(1 - p, 3)) * to));
-      if (p < 1) raf = requestAnimationFrame(tick);
+      if (!t0.current) {
+        t0.current = ts;
+        // 2. We reset to 0 only when the animation actually starts
+        setVal(0);
+      }
+
+      const elapsed = ts - t0.current;
+      const p = Math.min(elapsed / duration, 1);
+
+      // Cubic ease-out calculation
+      const progressValue = Math.round((1 - Math.pow(1 - p, 3)) * to);
+
+      // 3. Only update if the value actually changed to save performance
+      setVal(progressValue);
+
+      if (p < 1) {
+        raf = requestAnimationFrame(tick);
+      }
     };
+
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [to, duration]);
+
   return <>{val.toLocaleString()}</>;
 }
 
@@ -877,7 +895,7 @@ function EquipmentTab({ equipment }: { equipment: string | null }) {
               checked.length === related.length && related.length > 0
                 ? "#16a34a"
                 : "var(--border-color)",
-            shrink: 0,
+            flexShrink: 0, // Correct property name
           }}
         />
         <p
@@ -1942,7 +1960,7 @@ function SessionView({
           </li>
           <li className="text-sm flex items-start gap-2 text-white/75">
             <span className="shrink-0 mt-0.5 text-amber-400">⚠</span>
-            Drive through your full foot — don't rise on your toes.
+            Drive through your full foot — do not rise on your toes.
           </li>
         </ul>
       </div>

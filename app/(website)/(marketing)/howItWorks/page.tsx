@@ -732,6 +732,8 @@ export default function HowItWorksPage() {
         fontFamily: "'Sora', sans-serif",
       }}
     >
+      <title>How it works - Flexify</title>
+      
       <SideNav active={activeRole} onChange={scrollToRole} />
 
       <div className="max-w-7xl mx-auto px-6 mt-8 md:mt-12 mb-10">

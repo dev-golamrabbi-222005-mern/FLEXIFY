@@ -10,17 +10,17 @@ import Swal from "sweetalert2";
 const Contact = () => {
   const [loading, setLoading] = useState(false);
 
-const handleSubmit = async (e: any) => {
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   setLoading(true);
 
-  const form = e.target;
+  const form = e.target as HTMLFormElement;
 
-  const data = {
-    name: form.name.value,
-    email: form.email.value,
-    message: form.message.value,
-  };
+const data = {
+  name: (form.elements.namedItem("name") as HTMLInputElement).value,
+  email: (form.elements.namedItem("email") as HTMLInputElement).value,
+  message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
+};
 
   try {
     await axios.post("/api/contact", data);
@@ -36,6 +36,7 @@ const handleSubmit = async (e: any) => {
 
   return (
     <div>
+          <title>Contact - Flexify</title>
       <section className="px-6 mt-8 md:mt-12 mb-10">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
           {/* Left: Contact Info */}

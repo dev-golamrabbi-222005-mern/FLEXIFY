@@ -420,6 +420,7 @@ export default function FeaturesPage() {
       className="min-h-screen overflow-hidden"
       style={{ backgroundColor: "var(--bg-primary)" }}
     >
+          <title>Features - Flexify</title>
       <div className="max-w-7xl mx-auto px-6">
         {/* Hero */}
         <HeroSection />
