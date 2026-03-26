@@ -13,7 +13,7 @@ type Coach = {
   location?: string;
   experience?: number;
   trainingTypes?: string[];
-  specialties?: string;
+  expertise?: string;
   charge?: number;
 };
 
@@ -69,8 +69,8 @@ const CoachCard = ({ coach }: CoachCardProps) => {
         </div>
 
         <div className="flex flex-wrap gap-2 text-[10px] font-bold text-[var(--primary)]">
-          {coach.specialties ? (
-            coach.specialties
+          {coach.expertise ? (
+            coach.expertise
               .split(",")
               .slice(0, 3)
               .map((s: string) => (

@@ -51,50 +51,50 @@ const CoachDetails = () => {
       {/* ─── Hero / Header Section ─── */}
       <div className="relative h-[250px] md:h-[400px] w-full overflow-hidden">
         <img 
-          src={coach.profileImage || coach.imageUrl} 
-          className="w-full h-full object-cover blur-md scale-110 opacity-20" 
+          src={coach?.profileImage || coach?.imageUrl} 
+          className="object-cover w-full h-full scale-110 blur-md opacity-20" 
           alt="background"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-transparent to-transparent" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 -mt-48 md:-mt-80 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-6 items-start">
+      <div className="relative z-10 px-4 mx-auto -mt-48 max-w-7xl md:-mt-80">
+        <div className="flex flex-col items-start gap-6 lg:flex-row">
           
           {/* ─── Left Sidebar: Main Profile Card ─── */}
           <aside className="w-full lg:w-[380px] lg:sticky lg:top-24">
             <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl overflow-hidden shadow-2xl shadow-black/10">
               <div className="aspect-[4/5] overflow-hidden">
                 <img 
-                  src={coach.profileImage || coach.imageUrl} 
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" 
-                  alt={coach.fullName} 
+                  src={coach?.profileImage || coach?.imageUrl} 
+                  className="object-cover w-full h-full transition-transform duration-700 hover:scale-105" 
+                  alt={coach?.name} 
                 />
               </div>
               
               <div className="p-8 space-y-6">
                 <div className="space-y-2">
-                  <h1 className="text-3xl font-black text-[var(--text-primary)] leading-tight">{coach.fullName}</h1>
+                  <h1 className="text-3xl font-black text-[var(--text-primary)] leading-tight">{coach?.name}</h1>
                   <p className="text-[var(--primary)] font-semibold flex items-center gap-2">
-                    <MapPin size={18} /> {coach.location}
+                    <MapPin size={18} /> {coach?.location}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-[var(--bg-primary)] p-4 rounded-2xl border border-[var(--border-color)] text-center">
                     <p className="text-[10px] text-[var(--text-muted)] uppercase font-black tracking-widest mb-1">Exp.</p>
-                    <p className="text-xl font-black text-[var(--text-primary)]">{coach.experienceYears}Y</p>
+                    <p className="text-xl font-black text-[var(--text-primary)]">{coach?.experienceYears}Y</p>
                   </div>
                   <div className="bg-[var(--bg-primary)] p-4 rounded-2xl border border-[var(--border-color)] text-center">
                     <p className="text-[10px] text-[var(--text-muted)] uppercase font-black tracking-widest mb-1">Slots</p>
-                    <p className="text-xl font-black text-[var(--text-primary)]">{coach.maxClients}</p>
+                    <p className="text-xl font-black text-[var(--text-primary)]">{coach?.maxClients}</p>
                   </div>
                 </div>
 
                 <div className="space-y-4 pt-4 border-t border-[var(--border-color)]">
-                  <div className="flex justify-between items-center">
+                  <div className="flex items-center justify-between">
                     <span className="text-[var(--text-secondary)] font-bold">Monthly Plan</span>
-                    <span className="text-2xl font-black text-[var(--primary)]">${coach.pricing.monthly}</span>
+                    <span className="text-2xl font-black text-[var(--primary)]">${coach?.pricing?.monthly}</span>
                   </div>
                   <button className="w-full py-4 bg-[var(--primary)] text-white rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-[var(--primary)]/20">
                     Hire Coach Now
@@ -105,7 +105,7 @@ const CoachDetails = () => {
           </aside>
 
           {/* ─── Right Content Area ─── */}
-          <main className="flex-1 space-y-8 w-full">
+          <main className="flex-1 w-full space-y-8">
             
             {/* Bio Section */}
             <section className="bg-[var(--bg-secondary)] p-8 md:p-10 rounded-2xl border border-[var(--border-color)] shadow-sm">
@@ -113,18 +113,18 @@ const CoachDetails = () => {
                 <User className="text-[var(--primary)]" /> BIOGRAPHY
               </h2>
               <p className="text-[var(--text-secondary)] leading-relaxed text-lg font-medium opacity-90">
-                {coach.bio}
+                {coach?.bio}
               </p>
             </section>
 
             {/* Expertise Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <section className="bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)]">
-                <h3 className="text-lg font-black mb-5 flex items-center gap-3">
+                <h3 className="flex items-center gap-3 mb-5 text-lg font-black">
                   <Award className="text-[var(--primary)]" /> SPECIALTIES
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {coach.specialties.split(",").map((s) => (
+                  {coach?.specialties?.split(",").map((s) => (
                     <span key={s} className="px-4 py-2 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">
                       #{s.trim()}
                     </span>
@@ -133,11 +133,11 @@ const CoachDetails = () => {
               </section>
 
               <section className="bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)]">
-                <h3 className="text-lg font-black mb-5 flex items-center gap-3">
+                <h3 className="flex items-center gap-3 mb-5 text-lg font-black">
                   <Briefcase className="text-[var(--primary)]" /> TRAINING MODES
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {coach.trainingTypes.map((type) => (
+                  {coach?.trainingTypes?.map((type) => (
                     <span key={type} className="px-4 py-2 bg-[var(--primary)]/10 text-[var(--primary)] rounded-xl text-xs font-black uppercase tracking-wider border border-[var(--primary)]/20">
                       {type}
                     </span>
@@ -148,22 +148,22 @@ const CoachDetails = () => {
 
             {/* Academic & Professional */}
             <section className="bg-[var(--bg-secondary)] p-8 md:p-10 rounded-2xl border border-[var(--border-color)]">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
                 <div className="space-y-5">
-                  <h3 className="text-lg font-black flex items-center gap-3">
+                  <h3 className="flex items-center gap-3 text-lg font-black">
                     <GraduationCap className="text-[var(--primary)]" /> EDUCATION
                   </h3>
                   <div className="p-5 bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-color)]">
-                    <p className="text-[var(--text-primary)] font-bold text-lg">{coach.education}</p>
+                    <p className="text-[var(--text-primary)] font-bold text-lg">{coach?.education}</p>
                   </div>
                 </div>
 
                 <div className="space-y-5">
-                  <h3 className="text-lg font-black flex items-center gap-3">
+                  <h3 className="flex items-center gap-3 text-lg font-black">
                     <CheckCircle2 className="text-[var(--primary)]" /> CERTIFICATIONS
                   </h3>
                   <div className="space-y-4">
-                    {coach.certifications.map((cert: Certification, idx: number) => (
+                    {coach?.certifications?.map((cert: Certification, idx: number) => (
                       <div key={idx} className="flex gap-4 items-start p-4 bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-color)]">
                         <div className="w-2 h-2 rounded-full bg-[var(--primary)] mt-2 shrink-0" />
                         <div>
@@ -181,12 +181,12 @@ const CoachDetails = () => {
 
             {/* Schedule Section */}
             <section className="bg-[var(--bg-secondary)] p-8 md:p-10 rounded-2xl border border-[var(--border-color)]">
-              <h3 className="text-lg font-black mb-6 flex items-center gap-3">
+              <h3 className="flex items-center gap-3 mb-6 text-lg font-black">
                 <Calendar className="text-[var(--primary)]" /> AVAILABILITY
               </h3>
               <div className="flex flex-wrap gap-3">
-                {coach.availableDays.map((day) => (
-                  <div key={day} className="group relative">
+                {coach?.availableDays?.map((day) => (
+                  <div key={day} className="relative group">
                     <div className="w-14 h-14 flex items-center justify-center rounded-2xl bg-[var(--bg-primary)] border border-[var(--border-color)] group-hover:border-[var(--primary)] group-hover:bg-[var(--primary)] group-hover:text-white transition-all duration-300 font-black text-sm">
                       {day}
                     </div>

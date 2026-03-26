@@ -8,7 +8,7 @@ import { ObjectId } from "mongodb";
 
 export type Coach = {
   _id: string; // frontend always uses string
-  fullName: string;
+  name: string;
   profileImage?: string;
   imageUrl?: string;
   location?: string;
