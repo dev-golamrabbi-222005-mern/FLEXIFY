@@ -26,7 +26,7 @@ import {
 // 1. Define Interfaces for your data
 interface Coach {
   email: string;
-  maxClients: number;
+  clients: number;
   userName?: string;
 }
 
@@ -115,7 +115,7 @@ export default function CoachEarnings() {
             },
             {
               label: "Total Clients",
-              value: singleCoach?.maxClients,
+              value: singleCoach?.clients,
               change: "+3 new",
               icon: Users,
             },
