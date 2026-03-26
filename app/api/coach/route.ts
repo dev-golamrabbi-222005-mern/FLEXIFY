@@ -45,6 +45,7 @@ export const GET = async (req: NextRequest) => {
       status: c.status ?? "approved",
       availableDays: c.availableDays ?? [],
       trainingTypes: c.trainingTypes ?? [],
+      specialties: c.specialties ?? "",
       location: c.location ?? "",
     }));
 
