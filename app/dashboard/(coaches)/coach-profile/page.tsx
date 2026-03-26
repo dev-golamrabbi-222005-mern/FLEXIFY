@@ -10,10 +10,10 @@ import Swal from "sweetalert2";
 
 // 1. Define Interfaces for Type Safety
 interface Coach {
-  fullName: string;
+  name: string;
   email: string;
   role: string;
-  profileImage?: string;
+  imageUrl?: string;
 }
 
 interface ProfileFormData {
@@ -37,6 +37,8 @@ export default function CoachProfilePage() {
     (coach) => coach?.email === session?.user?.email,
   );
 
+  console.log(loggedInCoach);
+
   // 3. Image Logic: Use State ONLY for the new preview
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -47,7 +49,7 @@ export default function CoachProfilePage() {
    * No useEffect needed, so no "cascading render" error.
    */
   const displayImage =
-    previewImage || loggedInCoach?.profileImage || "/default-avatar.png";
+    previewImage || loggedInCoach?.imageUrl || "/default-avatar.png";
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -65,7 +67,7 @@ export default function CoachProfilePage() {
       const payload = {
         ...data,
         // Send the new preview if it exists, otherwise keep the old one
-        profileImage: previewImage || loggedInCoach?.profileImage,
+        imageUrl: previewImage || loggedInCoach?.imageUrl,
       };
 
       const res = await axios.patch("/api/coach/update-profile", payload);
@@ -114,7 +116,7 @@ export default function CoachProfilePage() {
           {/* Coach Info Display */}
           <div className="flex-1 text-center md:text-left">
             <h1 className="text-xl font-bold md:text-2xl">
-              {loggedInCoach?.fullName || "Loading..."}
+              {loggedInCoach?.name || "Loading..."}
             </h1>
             <p className="text-[var(--text-secondary)] flex items-center justify-center md:justify-start gap-2 mt-2">
               <Mail size={16} /> {loggedInCoach?.email}
@@ -143,8 +145,8 @@ export default function CoachProfilePage() {
             <label className="block mb-2 text-sm font-medium">Full Name</label>
             <input
               type="text"
-              key={loggedInCoach?.fullName} // Helps re-sync defaultValue when data loads
-              defaultValue={loggedInCoach?.fullName}
+              key={loggedInCoach?.name} // Helps re-sync defaultValue when data loads
+              defaultValue={loggedInCoach?.name}
               {...register("fullName")}
               className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
             />
@@ -158,7 +160,7 @@ export default function CoachProfilePage() {
               type="email"
               value={loggedInCoach?.email || ""}
               disabled
-              className="w-full border p-3 rounded-lg bg-gray-100 cursor-not-allowed opacity-70"
+              className="w-full p-3 bg-gray-100 border rounded-lg cursor-not-allowed opacity-70"
             />
           </div>
 
@@ -176,7 +178,7 @@ export default function CoachProfilePage() {
       {/* ===== SECURITY SETTINGS ===== */}
       <section className="bg-[var(--card-bg)] p-6 md:p-8 rounded-2xl shadow">
         <h2 className="mb-6 text-lg font-bold md:text-xl">Security Settings</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
             <label className="flex items-center gap-2 mb-2 text-sm font-medium">
               <Key size={16} /> Change Password
