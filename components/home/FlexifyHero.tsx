@@ -64,7 +64,7 @@ export default function FlexifyHero() {
           >
             <img
               src={slides[index].img}
-              className="w-full h-full object-cover grayscale"
+              className="object-cover w-full h-full grayscale"
               alt="Background"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-primary)] via-transparent to-[var(--bg-primary)]" />
@@ -72,7 +72,7 @@ export default function FlexifyHero() {
         </AnimatePresence>
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl mb-8 md:mb-12 px-6 mx-auto  flex flex-col md:flex-row gap-12 md:gap-16 items-center justify-center">
+      <div className="relative z-10 flex flex-col items-center justify-center w-full gap-12 px-6 mx-auto mb-8 max-w-7xl md:mb-12 md:flex-row md:gap-16">
         <div className="w-full md:w-1/2">
           <AnimatePresence mode="wait">
             <motion.div
@@ -102,8 +102,8 @@ export default function FlexifyHero() {
                 {slides[index].desc}
               </p>
 
-              <div className="flex flex-col lg:flex-row  gap-6">
-                <button onClick={() => window.location.href = slides[index].joinLink} className="bg-[var(--primary)] text-white font-black px-8 py-4 md:py-6 w-full rounded-2xl flex items-center justify-center gap-4 transition-all hover:scale-105 shadow-2xl shadow-orange-500/20 uppercase text-lg ">
+              <div className="flex flex-col gap-6 lg:flex-row">
+                <button onClick={() => window.location.href = slides[index].joinLink} className="bg-[var(--primary)] text-white font-black px-8 py-4 md:py-6 w-full rounded-2xl flex items-center justify-center gap-4 transition-all hover:scale-105 shadow-2xl shadow-(--primary) uppercase text-lg">
                   Join Now <ArrowRight size={24} />
                 </button>
                 <button onClick={() => window.location.href = slides[index].learnMoreLink} className="px-8 py-4 md:py-6 rounded-2xl border-2 w-full border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all bg-transparent backdrop-blur-sm flex items-center justify-center gap-3 font-bold uppercase tracking-tight text-center">
@@ -114,7 +114,7 @@ export default function FlexifyHero() {
           </AnimatePresence>
         </div>
 
-        <div className="relative w-full md:w-1/2 flex justify-center md:justify-end items-center h-full">
+        <div className="relative flex items-center justify-center w-full h-full md:w-1/2 md:justify-end">
           <div className="relative w-full aspect-[9/9]  rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] shadow-[0_10px_40px_-5px_rgba(0,0,0,0.2)]">
             <AnimatePresence initial={false} mode="popLayout">
               <motion.div
@@ -130,19 +130,19 @@ export default function FlexifyHero() {
                   scale: 1,
                 }}
                 exit={{ opacity: 0, filter: "blur(10px)", scale: 1.05 }}
-                transition={{ duration: 5.0
+                transition={{ duration: 1.5
                   , ease: [0.4, 0, 0.2, 1] }}
                 className="absolute inset-0 w-full h-full"
               >
                 <img
                   src={slides[index].img}
-                  className="w-full h-full object-cover"
+                  className="object-cover w-full h-full"
                   alt="Fitness Performance"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
 
-                <div className="absolute bottom-12 left-10 right-10 flex justify-between items-end z-20">
+                <div className="absolute z-20 flex items-end justify-between bottom-12 left-10 right-10">
                   <div className="space-y-4">
                     <div className="flex gap-2">
                       {slides.map((_, i) => (
@@ -152,12 +152,12 @@ export default function FlexifyHero() {
                         />
                       ))}
                     </div>
-                    <p className="text-white font-black text-4xl md:text-5xl uppercase tracking-tighter drop-shadow-2xl">
+                    <p className="text-4xl font-black tracking-tighter text-white uppercase md:text-5xl drop-shadow-2xl">
                       {slides[index].highlight}
                     </p>
                   </div>
                   <div className="p-5 bg-[var(--primary)] rounded-2xl shadow-xl">
-                    <Zap className="text-white w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10" fill="white"  />
+                    <Zap className="w-6 h-6 text-white md:w-8 md:h-8 lg:w-10 lg:h-10" fill="white"  />
                   </div>
                 </div>
               </motion.div>

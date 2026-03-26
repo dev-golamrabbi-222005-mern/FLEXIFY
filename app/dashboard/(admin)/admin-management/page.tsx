@@ -1,213 +1,142 @@
 "use client";
 
-import { CreditCard, Settings, Users } from "lucide-react";
+import { Users, CreditCard, UserCheck, Loader2, X, LucideIcon } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { Coach } from "@/types/coach";
 
-export default function AdminManagementSection() {
-  const [users, setUsers] = useState([
-    { id: 1, name: "Rahim", plan: "Basic", status: "Active" },
-    { id: 2, name: "Karim", plan: "Pro", status: "Active" },
-    { id: 3, name: "Jony", plan: "Premium", status: "Suspended" },
-  ]);
+interface Plan {
+  _id: string;
+  name: string;
+  price: number;
+  description: string;
+  features: string[];
+}
 
-  const [coaches, setCoaches] = useState([
-    { id: 1, name: "Coach A", status: "Pending" },
-    { id: 2, name: "Coach B", status: "Pending" },
-  ]);
+interface AdminUser {
+  _id: string;
+  name?: string;
+  fullName?: string;
+  email: string;
+  plan?: string;
+  status: "Active" | "Suspended";
+}
 
-  const [plans, setPlans] = useState([
-    { id: 1, name: "Basic", price: 10 },
-    { id: 2, name: "Pro", price: 25 },
-    { id: 3, name: "Premium", price: 50 },
-  ]);
+export default function AdminDashboard() {
+  const queryClient = useQueryClient();
+  const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
 
-  const suspendUser = (id: number) => {
-    setUsers(users.map(u =>
-      u.id === id ? { ...u, status: "Suspended" } : u
-    ));
-  };
+  const { data: users = [], isLoading: usersLoading } = useQuery<AdminUser[]>({
+    queryKey: ["admin-users"],
+    queryFn: async () => (await axios.get("/api/admin/users")).data,
+  });
 
-  const approveCoach = (id: number) => {
-    setCoaches(coaches.map(c =>
-      c.id === id ? { ...c, status: "Approved" } : c
-    ));
-  };
+  const { data: coaches = [], isLoading: coachesLoading } = useQuery<Coach[]>({
+    queryKey: ["coaches-pending"],
+    queryFn: async () => (await axios.get("/api/admin/coaches/status?status=pending")).data,
+  });
 
-  const rejectCoach = (id: number) => {
-    setCoaches(coaches.filter(c => c.id !== id));
-  };
+  const { data: plans = [], isLoading: plansLoading } = useQuery<Plan[]>({
+    queryKey: ["admin-plans"],
+    queryFn: async () => (await axios.get("/api/admin/plans")).data,
+  });
+
+  const updatePlanMutation = useMutation({
+    mutationFn: async (updatedData: Plan) => await axios.patch("/api/admin/plans", updatedData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-plans"] });
+      setEditingPlan(null);
+      Swal.fire("Success", "Plan updated successfully", "success");
+    },
+  });
+
+  const userStatusMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: string }) => 
+      await axios.patch("/api/admin/users", { id, status }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-users"] }),
+  });
+
+  if (usersLoading || coachesLoading || plansLoading) {
+    return <div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin text-blue-500" size={40} /></div>;
+  }
 
   return (
-    <div className="max-w-7xl mx-auto bg-[var(--bg-primary)] px-4 space-y-12 mt-12">
+    <div className="space-y-10 min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+      <title>Management | Dashboard - Flexify</title>
+      <header>
+        <h1 className="text-2xl font-bold tracking-tight">Admin Dashboard</h1>
+        <p className="text-sm text-[var(--text-secondary)]">Platform management</p>
+      </header>
 
-      {/* ================= USER MANAGEMENT ================= */}
-      <section className="bg-[var(--card-bg)] p-6 rounded-2xl shadow">
-        <div className="flex items-center gap-3 mb-6">
-            <Users />
-        <h2 className="text-xl font-bold mb-4"> User Management</h2>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StatCard title="Total Users" value={users.length} icon={Users} color="from-blue-500 to-indigo-600" />
+        <StatCard title="Pending Coaches" value={coaches.length} icon={UserCheck} color="from-orange-400 to-rose-500" />
+        <StatCard title="Active Plans" value={plans.length} icon={CreditCard} color="from-emerald-400 to-teal-600" />
+      </div>
 
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b">
-              <th className="py-2">Name</th>
-              <th>Plan</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map(user => (
-              <tr key={user.id} className="border-b">
-                <td className="py-3">{user.name}</td>
-                <td>{user.plan}</td>
-                <td>
-                  <span className={`px-2 py-1 text-xs rounded-full ${
-                    user.status === "Active"
-                      ? "bg-green-100 text-green-600"
-                      : "bg-red-100 text-red-600"
-                  }`}>
-                    {user.status}
-                  </span>
-                </td>
-                <td className="space-x-2">
-                  <button
-                    onClick={() => suspendUser(user.id)}
-                    className="text-red-500 text-sm"
+      <section className="space-y-4">
+        <div className="flex items-center gap-2"><Users size={18}/><h2 className="font-semibold">User Management</h2></div>
+        <div className="card-glass overflow-hidden rounded-xl border border-[var(--border-color)]">
+          <div className="grid grid-cols-4 px-6 py-3 text-xs font-bold bg-[var(--bg-secondary)] border-b border-[var(--border-color)] uppercase text-[var(--text-secondary)]">
+            <div>Name</div><div>Plan</div><div>Status</div><div className="text-right">Action</div>
+          </div>
+          <div className="divide-y divide-[var(--border-color)]">
+            {users.map((user) => (
+              <div key={user._id} className="grid grid-cols-4 px-6 py-4 items-center text-sm hover:bg-[var(--bg-tertiary)] transition">
+                <div className="font-medium truncate pr-2">{user.name || user.fullName}</div>
+                <div className="capitalize">{user.plan || "Free"}</div>
+                <div><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${user.status === "Suspended" ? "bg-red-500/10 text-red-500" : "bg-green-500/10 text-green-500"}`}>{user.status || "Active"}</span></div>
+                <div className="text-right">
+                  <button 
+                    onClick={() => userStatusMutation.mutate({ id: user._id, status: user.status === "Suspended" ? "Active" : "Suspended" })} 
+                    className={`px-3 py-1 text-xs rounded-lg font-medium transition ${user.status === "Suspended" ? "text-green-500 hover:bg-green-500/10" : "text-red-500 hover:bg-red-500/10"}`}
                   >
-                    Ban
+                    {user.status === "Suspended" ? "Unban" : "Ban"}
                   </button>
-                  <button className="text-blue-500 text-sm">
-                    Upgrade
-                  </button>
-                  <button className="text-gray-500 text-sm">
-                    Reset Password
-                  </button>
-                </td>
-              </tr>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </div>
       </section>
 
-      {/* ================= COACH MANAGEMENT ================= */}
-      <section className="bg-[var(--card-bg)] p-6 rounded-2xl shadow">
-        <h2 className="text-xl font-bold mb-4">🧑‍🏫 Coach Management</h2>
-
-        {coaches.map(coach => (
-          <div
-            key={coach.id}
-            className="flex justify-between items-center border-b py-3"
-          >
-            <span>{coach.name}</span>
-
-            <div className="space-x-3">
-              <button
-                onClick={() => approveCoach(coach.id)}
-                className="text-green-600 text-sm"
-              >
-                Approve
-              </button>
-
-              <button
-                onClick={() => rejectCoach(coach.id)}
-                className="text-red-600 text-sm"
-              >
-                Reject
-              </button>
-
-              <button className="text-blue-600 text-sm">
-                View Performance
-              </button>
+      {editingPlan && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-[var(--card-bg)] w-full max-w-md rounded-2xl p-6 border border-[var(--border-color)] shadow-2xl animate-in zoom-in duration-200">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold">Edit Plan</h2>
+              <button onClick={() => setEditingPlan(null)} className="text-[var(--text-secondary)] hover:text-white"><X size={20}/></button>
             </div>
+            <form onSubmit={(e) => { e.preventDefault(); updatePlanMutation.mutate(editingPlan); }} className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-xs text-[var(--text-secondary)]">Plan Name</label>
+                <input type="text" value={editingPlan.name} onChange={(e) => setEditingPlan({...editingPlan, name: e.target.value})} className="w-full bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-blue-500 transition" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs text-[var(--text-secondary)]">Monthly Price (৳)</label>
+                <input type="number" value={editingPlan.price} onChange={(e) => setEditingPlan({...editingPlan, price: Number(e.target.value)})} className="w-full bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-blue-500 transition" />
+              </div>
+              <button type="submit" disabled={updatePlanMutation.isPending} className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition flex justify-center items-center">
+                {updatePlanMutation.isPending ? <Loader2 className="animate-spin" size={20} /> : "Update Plan"}
+              </button>
+            </form>
           </div>
-        ))}
-      </section>
-
-      {/* ================= SUBSCRIPTION CONTROL ================= */}
-      <section className="bg-[var(--card-bg)] p-6 rounded-2xl shadow">
-
-        <div className="flex items-center gap-3 mb-6">
-            <CreditCard />
-        <h2 className="text-xl font-bold mb-4">Subscription Control</h2>
         </div>
+      )}
+    </div>
+  );
+}
 
-        {plans.map(plan => (
-          <div
-            key={plan.id}
-            className="flex justify-between items-center border-b py-3"
-          >
-            <div>
-              <p className="font-semibold">{plan.name}</p>
-              <p className="text-sm text-gray-500">${plan.price}/month</p>
-            </div>
-
-            <div className="space-x-3">
-              <button className="text-blue-600 text-sm">Edit</button>
-              <button className="text-red-600 text-sm">Delete</button>
-            </div>
-          </div>
-        ))}
-
-        <button className="mt-4 bg-[var(--primary)] text-white px-4 py-2 rounded-lg text-sm">
-          + Create New Plan
-        </button>
-
-        <div className="mt-6">
-          <h3 className="font-semibold mb-2">Coupon System</h3>
-          <input
-            type="text"
-            placeholder="Enter Coupon Code"
-            className="border p-2 rounded-lg w-full"
-          />
-        </div>
-      </section>
-
-      {/* ================= SYSTEM SETTINGS ================= */}
-      <section className="bg-[var(--card-bg)] p-6 rounded-2xl shadow">
-        <div className="flex items-center gap-3 mb-6">
-             <Settings />
-        <h2 className="text-xl font-bold mb-4">System Settings</h2>
-        </div>
-
-        <div className="space-y-4">
-
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Email Configuration
-            </label>
-            <input
-              type="email"
-              placeholder="admin@flexify.com"
-              className="border p-2 rounded-lg w-full"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Notification Control
-            </label>
-            <select className="border p-2 rounded-lg bg-[var(--card-bg)] w-full">
-              <option>Enable All</option>
-              <option>Only Important</option>
-              <option>Disable</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Role Permission
-            </label>
-            <select className="border p-2 rounded-lg w-full bg-[var(--card-bg)]">
-              <option>User</option>
-              <option>Coach</option>
-              <option>Admin</option>
-            </select>
-          </div>
-
-        </div>
-      </section>
-
+function StatCard({ title, value, icon: Icon, color }: { title: string; value: number | string; icon: LucideIcon; color: string }) {
+  return (
+    <div className="bg-[var(--card-bg)] rounded-2xl p-5 flex items-center justify-between border border-[var(--border-color)] shadow-sm hover:shadow-md transition cursor-default">
+      <div>
+        <p className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">{title}</p>
+        <h3 className="text-3xl font-black mt-1 leading-none">{value}</h3>
+      </div>
+      <div className={`p-3 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg shadow-black/10`}><Icon size={22} /></div>
     </div>
   );
 }

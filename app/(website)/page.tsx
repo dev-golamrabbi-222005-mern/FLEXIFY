@@ -1,29 +1,31 @@
+import BecomeCoachCTA from "@/components/home/BecomeCoachCTA";
+import BMI from "@/components/home/BMI";
+import BodyChallenges from "@/components/home/Challenges";
+import FAQ from "@/components/home/FAQ";
 import FlexifyHero from "@/components/home/FlexifyHero";
+import Motivation from "@/components/home/Motivation";
+import PopularWorkouts from "@/components/home/PopularWorkouts";
 import Precision from "@/components/home/Precision";
 import Pricing from "@/components/home/Pricing";
-import SuccessStory from "@/components/home/SuccessStories";
 import StatsSection from "@/components/home/StatsSection";
-import BMI from "@/components/home/BMI";
-import Motivation from "@/components/home/Motivation";
-import BecomeCoachCTA from "@/components/home/BecomeCoachCTA";
-import PopularWorkouts from "@/components/home/PopularWorkouts";
+import SuccessStory from "@/components/home/SuccessStories";
 import TopCoaches from "@/components/home/Topcoaches";
-import FAQ from "@/components/home/FAQ";
 
 export default function Home() {
   return (
     <div>
-      <FlexifyHero/>
-      <StatsSection/>
-      <Precision/>
-      <BMI/>
-      <PopularWorkouts/>
-      <SuccessStory/>
-      <TopCoaches/>
-      <BecomeCoachCTA/>
-      <Pricing/>
-      <Motivation/>
-      <FAQ/>
+      <FlexifyHero />
+      <StatsSection />
+      <Precision />
+      <BMI />
+      <PopularWorkouts />
+      <SuccessStory />
+      <BodyChallenges/>
+      <TopCoaches />
+      <BecomeCoachCTA />
+      <Pricing />
+      <FAQ />
+      <Motivation />
     </div>
   );
 }

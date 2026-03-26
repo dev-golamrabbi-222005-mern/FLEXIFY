@@ -6,18 +6,19 @@ export default function SessionPlanner() {
       client: "Rahim",
       time: "10:00 AM",
       type: "Workout Session",
-      meeting: "https://meet.google.com/abc-defg",
+      meeting: "https://meet.google.com/pwh-fetr-kfx",
     },
     {
       client: "Karim",
       time: "02:00 PM",
       type: "Nutrition Consultation",
-      meeting: "https://meet.google.com/xyz-hijk",
+      meeting: "https://meet.google.com/pwh-fetr-kfx",
     },
   ];
 
   return (
     <div className="mt-10 max-w-7xl mx-auto bg-[var(--bg-primary)] px-4 rounded-2xl shadow p-6">
+       <title>Planner | Dashboard - Flexify</title>
 
       <h2 className="text-xl font-bold mb-6 text-[var(--text-primary)]">Session Planner</h2>
 
