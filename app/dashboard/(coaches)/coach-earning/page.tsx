@@ -26,7 +26,7 @@ import {
 // 1. Define Interfaces for your data
 interface Coach {
   email: string;
-  maxClients: number;
+  clients: number;
   userName?: string;
 }
 
@@ -115,7 +115,7 @@ export default function CoachEarnings() {
             },
             {
               label: "Total Clients",
-              value: singleCoach?.maxClients,
+              value: singleCoach?.clients,
               change: "+3 new",
               icon: Users,
             },
@@ -165,47 +165,46 @@ export default function CoachEarnings() {
         </div>
 
         {/* Chart + Payments */}
-        <div className="grid gap-8 lg:grid-cols-5">
           {/* Chart */}
-         <div className="grid gap-8 lg:grid-cols-5">
-          {/* Chart Section */}
-          <div className="lg:col-span-3">
-             <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={monthlyEarnings}>
-                  <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="total" radius={[6, 6, 0, 0]}>
-                    {/* Fix 1 & 2: Use _ for unused param and explicit types for index */}
-                    {monthlyEarnings.map((_, index: number) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={index === monthlyEarnings.length - 1 ? "var(--primary)" : "#94a3b8"}
-                        fillOpacity={index === monthlyEarnings.length - 1 ? 1 : 0.25}
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-          </div>
-          
-{/* Recent Payments Section */}
-          <div className="lg:col-span-2">
-            {recentPayments.map((p: Payment, i: number) => ( // Fix 4 & 5: Explicit types
-              <div key={i} className="flex items-center justify-between p-2">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--primary-light)] text-[var(--primary)] text-xs font-bold">
-                    {p.userName
-                      .split(" ")
-                      .map((n: string) => n[0]) // Fix 6: Explicit string type
-                      .join("")}
+          <div className="grid gap-8 lg:grid-cols-5">
+            {/* Chart Section */}
+            <div className="lg:col-span-3">
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={monthlyEarnings}>
+                    <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="total" radius={[6, 6, 0, 0]}>
+                      {/* Fix 1 & 2: Use _ for unused param and explicit types for index */}
+                      {monthlyEarnings.map((_, index: number) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={index === monthlyEarnings.length - 1 ? "var(--primary)" : "#94a3b8"}
+                          fillOpacity={index === monthlyEarnings.length - 1 ? 1 : 0.25}
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+            </div>
+
+            {/* Recent Payments Section */}
+            <div className="lg:col-span-2">
+              {recentPayments.map((p: Payment, i: number) => ( // Fix 4 & 5: Explicit types
+                <div key={i} className="flex items-center justify-between p-2">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--primary-light)] text-[var(--primary)] text-xs font-bold">
+                      {p.userName
+                        .split(" ")
+                        .map((n: string) => n[0]) // Fix 6: Explicit string type
+                        .join("")}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold">{p.userName}</p>
+                      <p className="text-xs text-[var(--text-muted)]">{p.planName} Plan</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold">{p.userName}</p>
-                    <p className="text-xs text-[var(--text-muted)]">{p.planName} Plan</p>
-                  </div>
-                </div>
 
                   <div className="text-right">
                     <p
@@ -239,7 +238,6 @@ export default function CoachEarnings() {
               View All Transactions
             </button>
           </div>
-        </div>
       </div>
     </div>
   );

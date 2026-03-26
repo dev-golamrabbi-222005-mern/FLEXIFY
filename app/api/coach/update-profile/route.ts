@@ -14,8 +14,8 @@ export const PATCH = async(req: NextRequest) => {
             {
                 $set: {
                     fullName: body.fullName,
-                    name: body.name,
-                    profileImage: body.profileImage,
+                    name: body.fullName,
+                    imageUrl: body.imageUrl,
                 }
             }
         );

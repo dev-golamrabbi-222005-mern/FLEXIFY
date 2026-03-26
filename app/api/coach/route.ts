@@ -30,6 +30,7 @@ export const GET = async (req: NextRequest) => {
       // your DB field is pricing.monthly
       charge: c.pricing?.monthly ?? c.charge ?? c.fee ?? 0,
       bio: c.bio ?? "",
+      education: c.education ?? "",
       // certifications is array of objects — convert to strings for display
       certifications: (c.certifications ?? []).map(
         (cert: Record<string, string | number>) =>
