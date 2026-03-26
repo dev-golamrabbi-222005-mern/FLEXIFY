@@ -9,6 +9,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { FilterSection } from "@/components/user/FilterSection";
 import { Exercise } from "@/components/user/workout";
+import { toast } from "react-toastify";
 
 
 interface ExerciseGroup {
@@ -147,7 +148,7 @@ export default function WorkoutBuilder() {
     userEmail: string;
   }) => {
     if (selectedExercises.length === 0) {
-      alert("Please select at least one exercise!");
+      toast("Please select at least one exercise!");
       return;
     }
 
@@ -161,16 +162,16 @@ export default function WorkoutBuilder() {
       const response = await axios.post("/api/routines/save", routineData);
 
       if (response.data.success) {
-        alert(`Awesome! Your plan "${userData.planName}" is saved.`);
+        toast(`Awesome! Your plan "${userData.planName}" is saved.`);
         setSelectedExercises([]);
         setPlanName("");
       }
     } catch (error: unknown) {
       console.error("Save Error:", error);
       if (axios.isAxiosError(error)) {
-        alert(error.response?.data?.message || "Failed to save routine.");
+        toast(error.response?.data?.message || "Failed to save routine.");
       } else {
-        alert("An unexpected error occurred.");
+        toast("An unexpected error occurred.");
       }
     }
   };

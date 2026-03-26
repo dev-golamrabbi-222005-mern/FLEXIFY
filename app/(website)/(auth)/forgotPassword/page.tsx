@@ -139,7 +139,7 @@ export default function ForgotPassword() {
               className="text-sm text-center"
               style={{ color: "var(--text-muted)" }}
             >
-              Remember your password?{" "}
+              Remembered your password?{" "}
               <Link
                 href="/login"
                 style={{ color: "var(--primary)" }}
