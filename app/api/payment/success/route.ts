@@ -92,6 +92,47 @@ export async function POST(req: NextRequest) {
       },
     );
 
+    // ── Only for ELITE plan + coach ─────────────────────────────
+    if (payment.planId === "elite" && payment.coachId) {
+      const coachUsers = dbConnect("coach_users");
+
+      const existing = await coachUsers.findOne({
+        coachId: payment.coachId,
+        userEmail: payment.userEmail,
+      });
+
+      const paymentData = {
+        amount: parseFloat(amount ?? "0"),
+        paidAt: now,
+        transactionId: tran_id,
+      };
+
+      if (existing) {
+        // 🔁 Existing user → update টাকা
+        await coachUsers.updateOne(
+          { _id: existing._id },
+          {
+            $inc: { totalPaid: paymentData.amount },
+            $push: { payments: paymentData },
+            $set: { updatedAt: now },
+          }
+        );
+      } else {
+        // 🆕 New user → coach এর অধীনে add
+        await coachUsers.insertOne({
+          coachId: payment.coachId,
+          userId: payment.userId ?? null,
+          userEmail: payment.userEmail,
+
+          totalPaid: paymentData.amount,
+          payments: [paymentData],
+
+          createdAt: now,
+          updatedAt: now,
+        });
+      }
+    }
+
     return NextResponse.redirect(
       // `${baseUrl}/dashboard?payment=success&plan=${plan.id}`,
       `${baseUrl}/payment/success?payment=success&plan=${plan.id}`
