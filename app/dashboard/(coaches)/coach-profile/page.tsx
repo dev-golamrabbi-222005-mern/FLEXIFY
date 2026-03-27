@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 // 1. Define Interfaces for Type Safety
 interface Coach {
@@ -75,11 +76,11 @@ export default function CoachProfilePage() {
       if (res?.data?.modifiedCount || res?.data?.acknowledged) {
         await refetch();
         setPreviewImage(null); // Clear preview since it's now saved in DB
-        await Swal.fire("Success", "Profile updated successfully", "success");
+        await toast.success("Profile updated successfully");
       }
     } catch (error) {
       console.error("Update Error:", error);
-      Swal.fire("Error", "Failed to update profile", "error");
+      toast.error("Failed to update profile");
     }
   };
 

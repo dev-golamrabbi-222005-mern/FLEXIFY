@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 // 1. Define the interface for your plan
 interface NutritionPlan {
@@ -44,9 +45,9 @@ export default function CoachNutrition() {
       try {
         await axios.delete(`/api/coach/nutrition-plans/${id}`);
         await refetch(); // Await refetch to ensure UI updates after deletion
-        Swal.fire("Deleted!", "Nutrition plan has been deleted", "success");
+        toast.success("Nutrition plan has been deleted");
       } catch (error) {
-        Swal.fire("Error", "Failed to delete the plan", "error");
+        toast.error("Failed to delete the plan");
       }
     }
   };

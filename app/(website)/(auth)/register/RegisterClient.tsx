@@ -16,6 +16,7 @@ import { signIn } from "next-auth/react";
 import Swal from "sweetalert2";
 import { useRouter, useSearchParams } from "next/navigation";
 import SocialButtons from "@/components/auth/SocialButtons";
+import { toast } from "react-toastify";
 
 interface RegisterFormData {
   name: string;
@@ -62,48 +63,28 @@ export default function RegisterPage(): JSX.Element {
       !formData.password ||
       !formData.role
     ) {
-      await Swal.fire("Error", "Please fill up all fields", "error");
+      await toast.error("Please fill up all fields");
       return;
     } else if (!emailPattern.test(formData.email)) {
-      await Swal.fire("Error", "Invalid email", "error");
+      await toast.error("Invalid email");
       return;
     } else if (!imageUrlPattern.test(formData.imageUrl)) {
-      await Swal.fire("Error", "Invalid image URL", "error");
+      await toast.error("Invalid image URL");
       return;
     } else if (!min8Pattern.test(formData.password)) {
-      await Swal.fire(
-        "Error",
-        "Password must be at least 8 characters long",
-        "error",
-      );
+      await toast.error("Password must be at least 8 characters long");
       return;
     } else if (!noSpacePattern.test(formData.password)) {
-      await Swal.fire(
-        "Error",
-        "Password must not contain any whitespaces",
-        "error",
-      );
+      await toast.error("Password must not contain any whitespaces");
       return;
     } else if (!casePattern.test(formData.password)) {
-      await Swal.fire(
-        "Error",
-        "Password must contain at least one uppercase and one lowercase letter",
-        "error",
-      );
+      await toast.error("Password must contain at least one uppercase and one lowercase letter");
       return;
     } else if (!numberPattern.test(formData.password)) {
-      await Swal.fire(
-        "Error",
-        "Password must contain at least one number",
-        "error",
-      );
+      await toast.error("Password must contain at least one number",);
       return;
     } else if (!specialCharPattern.test(formData.password)) {
-      await Swal.fire(
-        "Error",
-        "Password must contain at least one special character",
-        "error",
-      );
+      await toast.error("Password must contain at least one special character",);
       return;
     }
 
@@ -118,11 +99,11 @@ export default function RegisterPage(): JSX.Element {
       });
 
       if (signInResult?.ok) {
-        await Swal.fire("Success", result.message, "success");
+        await toast.success(result.message);
         router.push(callbackUrl);
       }
     } else {
-      await Swal.fire("Error", result.message, "error");
+      await toast.error(result.message);
     }
   };
 

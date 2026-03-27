@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Swal from "sweetalert2";
 import { signIn } from "next-auth/react";
 import SocialButtons from "@/components/auth/SocialButtons";
+import { toast } from "react-toastify";
 
 export default function LoginClient(): JSX.Element {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,7 +25,7 @@ export default function LoginClient(): JSX.Element {
       .value;
 
     if (!email || !password) {
-      await Swal.fire("Error", "Email and password are required", "error");
+      await toast.error("Email and password are required");
       return;
     }
 
@@ -36,7 +37,7 @@ export default function LoginClient(): JSX.Element {
     });
 
     if (result?.ok) {
-      await Swal.fire("Success", "Welcome back!", "success");
+      await toast.success("Welcome back!");
       router.push("/dashboard");
     }
   };
@@ -50,10 +51,10 @@ export default function LoginClient(): JSX.Element {
     });
 
     if (result?.ok) {
-      Swal.fire("Success", "Mock Login Successful!", "success");
+      toast.success("Mock Login Successful!");
       router.push("/dashboard");
     } else {
-      Swal.fire("Error", "Mock user not found in DB", "error");
+      toast.error("Mock user not found in DB");
     }
   };
   return (
