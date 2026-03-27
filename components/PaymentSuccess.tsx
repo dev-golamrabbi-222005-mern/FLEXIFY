@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 export default function PaymentSuccessContent() {
   const searchParams = useSearchParams();
@@ -14,10 +15,10 @@ export default function PaymentSuccessContent() {
 
   useEffect(() => {
     if (status === "success") {
-      Swal.fire("Success", "Payment successful", "success");
+      toast.success("Payment successful");
       router.replace("/dashboard");
     } else {
-      Swal.fire("Error", "Payment failed", "error");
+      toast.error("Payment failed");
     }
   }, [status, router]);
 

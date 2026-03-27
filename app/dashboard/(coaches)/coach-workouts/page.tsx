@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 // 1. Define the interface for a Workout Plan
 interface WorkoutPlan {
@@ -50,13 +51,9 @@ export default function CoachWorkouts() {
       try {
         await axios.delete(`/api/coach/workout-plans/${id}`);
         refetch();
-        Swal.fire({
-          title: "Deleted!",
-          text: "Workout plan has been deleted",
-          icon: "success",
-        });
+        toast.success("Workout plan has been deleted");
       } catch (error) {
-        Swal.fire("Error", "Failed to delete the plan", "error");
+        toast.error("Failed to delete the plan");
       }
     }
   };

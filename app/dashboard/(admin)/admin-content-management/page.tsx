@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { Article, FAQ, HomeContent, MutationPayload, ContentType } from "@/types/content";
+import { toast } from "react-toastify";
 
 interface StatCardProps {
   title: string;
@@ -42,12 +43,7 @@ export default function AdminContentManagementPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries();
-      Swal.fire({
-        title: "Success",
-        text: "Operation Completed",
-        icon: "success",
-        confirmButtonColor: "var(--primary)",
-      });
+      toast.success("Operation Completed");
     },
   });
 
@@ -113,21 +109,21 @@ export default function AdminContentManagementPage() {
       <title>Content Management | Dashboard - Flexify</title>
       
       {/* Search Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
         <h1 className="text-3xl font-black text-[var(--text-primary)]">Content Manager</h1>
         <div className="relative w-full md:w-72">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" size={18} />
           <input 
             type="text" 
             placeholder="Search articles..." 
-            className="input-style pl-10"
+            className="pl-10 input-style"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         <StatCard title="Articles" value={blogs.length} Icon={FileText} colorClass="from-emerald-400 to-emerald-600" />
         <StatCard title="FAQs" value={faqs.length} Icon={HelpCircle} colorClass="from-violet-400 to-violet-600" />
         <StatCard title="Sections" value="3" Icon={Home} colorClass="from-orange-400 to-pink-500" />
@@ -135,13 +131,13 @@ export default function AdminContentManagementPage() {
 
       {/* Articles */}
       <section className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold flex items-center gap-2"><FileText className="text-[var(--primary)]" /> Articles</h2>
-          <button onClick={handleAddArticle} className="btn-primary flex items-center gap-2">
+        <div className="flex items-center justify-between">
+          <h2 className="flex items-center gap-2 text-xl font-bold"><FileText className="text-[var(--primary)]" /> Articles</h2>
+          <button onClick={handleAddArticle} className="flex items-center gap-2 btn-primary">
             <Plus size={18} /> Add Article
           </button>
         </div>
-        <div className="card-glass p-0 overflow-hidden">
+        <div className="p-0 overflow-hidden card-glass">
           {filteredBlogs.length > 0 ? filteredBlogs.map((blog) => (
             <div key={blog._id} className="flex justify-between p-5 border-b border-[var(--border-color)] items-center hover:bg-[var(--bg-tertiary)] transition-colors">
               <div>
@@ -163,13 +159,13 @@ export default function AdminContentManagementPage() {
 
       {/* FAQs */}
       <section className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold flex items-center gap-2"><HelpCircle className="text-[var(--secondary)]" /> FAQs</h2>
-          <button onClick={handleAddFAQ} className="btn-secondary flex items-center gap-2">
+        <div className="flex items-center justify-between">
+          <h2 className="flex items-center gap-2 text-xl font-bold"><HelpCircle className="text-[var(--secondary)]" /> FAQs</h2>
+          <button onClick={handleAddFAQ} className="flex items-center gap-2 btn-secondary">
             <Plus size={18} /> Add FAQ
           </button>
         </div>
-        <div className="card-glass p-0 overflow-hidden">
+        <div className="p-0 overflow-hidden card-glass">
           {faqs.map((faq) => (
             <div key={faq._id} className="flex justify-between p-5 border-b border-[var(--border-color)] items-center hover:bg-[var(--bg-tertiary)] transition-colors">
               <div>
@@ -188,9 +184,9 @@ export default function AdminContentManagementPage() {
       </section>
 
       {/* Home Settings */}
-      <section className="card-glass space-y-6">
-         <h2 className="text-xl font-bold flex items-center gap-2"><Home className="text-[var(--warning)]" /> Homepage Settings</h2>
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section className="space-y-6 card-glass">
+         <h2 className="flex items-center gap-2 text-xl font-bold"><Home className="text-[var(--warning)]" /> Homepage Settings</h2>
+         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="space-y-2">
               <label>Hero Title</label>
               <input id="h-title" defaultValue={home?.[0]?.heroTitle} className="input-style" placeholder="e.g. Transform Your Life" />
@@ -199,7 +195,7 @@ export default function AdminContentManagementPage() {
               <label>Hero Subtitle</label>
               <input id="h-sub" defaultValue={home?.[0]?.heroSubtitle} className="input-style" placeholder="e.g. Best Fitness App" />
             </div>
-            <div className="md:col-span-2 space-y-2">
+            <div className="space-y-2 md:col-span-2">
               <label>Hero Description</label>
               <textarea id="h-desc" defaultValue={home?.[0]?.heroDescription} className="input-style" placeholder="Description..." rows={3} />
             </div>
@@ -212,7 +208,7 @@ export default function AdminContentManagementPage() {
              heroSubtitle: (document.getElementById('h-sub') as HTMLInputElement).value,
              heroDescription: (document.getElementById('h-desc') as HTMLTextAreaElement).value
            })} 
-           className="btn-primary w-full md:w-auto">Save Changes</button>
+           className="w-full btn-primary md:w-auto">Save Changes</button>
       </section>
     </div>
   );

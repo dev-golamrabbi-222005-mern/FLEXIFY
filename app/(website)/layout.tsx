@@ -5,6 +5,7 @@ import "../../styles/globals.css"
 import Navbar from "./components/Share/Navbar";
 import Footer from "./components/Share/Footer";
 import ReactQueryProvider from "./providers";
+import { ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
   title: "Flexify - Your Fitness Planner",
@@ -20,11 +21,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-        <ReactQueryProvider>
-          <Navbar/>
-          {children}
-          <Footer />
-        </ReactQueryProvider>
+    <ReactQueryProvider>
+      <Navbar/>
+      {children}
+      <Footer />
+      <ToastContainer />
+    </ReactQueryProvider>
   );
 }
 

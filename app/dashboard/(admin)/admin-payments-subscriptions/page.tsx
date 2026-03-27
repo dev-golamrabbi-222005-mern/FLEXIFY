@@ -5,6 +5,7 @@ import { Users, CreditCard, DollarSign, Clock, RefreshCcw, Search, Loader2, Edit
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 // টাইপ ডিফিনিশন
 interface Plan {
@@ -49,18 +50,10 @@ export default function PaymentsSubscriptionsPage() {
     mutationFn: async (id: string) => axios.patch("/api/admin/payments", { id, status: "refunded" }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-payments"] });
-      Swal.fire({
-        title: "Refunded!",
-        text: "The payment has been marked as refunded.",
-        icon: "success",
-        timer: 2000,
-        showConfirmButton: false,
-        background: "var(--bg-secondary)",
-        color: "var(--text-primary)"
-      });
+      toast.success("The payment has been marked as refunded.");
     },
     onError: () => {
-      Swal.fire("Error", "Something went wrong while processing the refund.", "error");
+      toast.error("Something went wrong while processing the refund.");
     }
   });
 
@@ -104,7 +97,7 @@ export default function PaymentsSubscriptionsPage() {
       </div>
 
       {/* SUMMARY CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
         <StatCard title="Total Users" value={paymentData?.summary.totalUsers} Icon={Users} color="from-blue-500 to-indigo-600" />
         <StatCard title="Paid" value={paymentData?.summary.paidCount} Icon={DollarSign} color="from-emerald-400 to-green-600" />
         <StatCard title="Pending" value={paymentData?.summary.pendingCount} Icon={Clock} color="from-yellow-400 to-orange-500" />
@@ -113,14 +106,14 @@ export default function PaymentsSubscriptionsPage() {
 
       {/* SUBSCRIPTION PLANS */}
       <section>
-        <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+        <h2 className="flex items-center gap-2 mb-6 text-xl font-bold">
           <CreditCard className="text-[var(--primary)]" /> Subscription Plans
         </h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {plans?.map((plan) => (
             <div key={plan._id} className="card-glass p-6 flex flex-col gap-4 border border-[var(--border-color)] group hover:border-[var(--primary)] transition-all">
-              <div className="flex justify-between items-start">
-                <h3 className="text-lg font-bold uppercase tracking-wider">{plan.name}</h3>
+              <div className="flex items-start justify-between">
+                <h3 className="text-lg font-bold tracking-wider uppercase">{plan.name}</h3>
                 <span className="text-xs font-bold px-2 py-1 bg-[var(--primary)] text-white rounded">{plan.duration}</span>
               </div>
               <p className="text-4xl font-black">৳{plan.price}</p>
@@ -128,7 +121,7 @@ export default function PaymentsSubscriptionsPage() {
                 <button className="flex-1 flex items-center justify-center gap-2 bg-[var(--bg-tertiary)] py-2 rounded-lg hover:bg-[var(--primary)] hover:text-white transition duration-300">
                   <Edit size={16} /> Edit
                 </button>
-                <button className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition">
+                <button className="p-2 text-red-500 transition rounded-lg hover:bg-red-500/10">
                   <Trash2 size={20} />
                 </button>
               </div>
@@ -139,12 +132,12 @@ export default function PaymentsSubscriptionsPage() {
 
       {/* TRANSACTIONS TABLE */}
       <section>
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-          <h2 className="text-xl font-bold flex items-center gap-2">
+        <div className="flex flex-col items-start justify-between gap-4 mb-6 md:flex-row md:items-center">
+          <h2 className="flex items-center gap-2 text-xl font-bold">
             <DollarSign className="text-green-500" /> Recent Transactions
           </h2>
           <div className="relative w-full md:w-72">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <Search className="absolute text-gray-400 -translate-y-1/2 left-3 top-1/2" size={18} />
             <input
               type="text"
               placeholder="Search by name or TxID..."
@@ -169,7 +162,7 @@ export default function PaymentsSubscriptionsPage() {
               </div>
 
               <div className="text-right md:text-left min-w-[100px]">
-                <p className="font-black text-lg">৳{t.amount}</p>
+                <p className="text-lg font-black">৳{t.amount}</p>
                 <p className="text-xs text-[var(--text-secondary)]">{new Date(t.createdAt).toLocaleDateString('en-GB')}</p>
               </div>
 
@@ -211,7 +204,7 @@ function StatCard({ title, value, Icon, color }: StatCardProps) {
     <div className="card-glass p-5 flex items-center justify-between group transition-all duration-300 border border-[var(--border-color)]">
       <div>
         <p className="text-xs text-[var(--text-secondary)] font-bold uppercase tracking-widest">{title}</p>
-        <h2 className="text-3xl font-black mt-1">{value || 0}</h2>
+        <h2 className="mt-1 text-3xl font-black">{value || 0}</h2>
       </div>
       <div className={`p-4 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg transform group-hover:rotate-12 transition-transform`}>
         <Icon size={24} />

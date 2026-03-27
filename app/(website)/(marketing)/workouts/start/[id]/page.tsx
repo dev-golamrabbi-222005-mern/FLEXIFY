@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 export default function WorkoutSessionPage() {
   const params = useParams();
@@ -28,7 +29,7 @@ export default function WorkoutSessionPage() {
   const handleError = (error: unknown, title: string) => {
     const message =
       error instanceof Error ? error.message : "An unexpected error occurred";
-    Swal.fire(title, message, "error");
+    toast.error(message);
   };
 
   const { data: exercise, isLoading } = useQuery({
