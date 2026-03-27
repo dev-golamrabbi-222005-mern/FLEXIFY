@@ -4,19 +4,17 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { motion } from "framer-motion";
-import CoachCard from "../cards/CoachCard/CoachCard"; 
+import CoachCard from "../cards/CoachCard"; 
 
 type Coach = {
   _id: string;
-  fullName: string;
-  profileImage?: string;
+  name: string;
+  imageUrl?: string;
   location?: string;
-  experienceYears?: number;
+  experience?: number;
   trainingTypes?: string[];
-  specialties?: string;
-  pricing?: {
-  monthly?: number;
-  };
+  expertise?: string;
+  charge?: number;
 };
 
 const TopCoaches = () => {
@@ -27,15 +25,15 @@ const TopCoaches = () => {
   } = useQuery<Coach[]>({
     queryKey: ["top-coaches"],
     queryFn: async () => {
-      const { data } = await axios.get<Coach[]>("/data.json");
+      const { data } = await axios.get<Coach[]>("/api/coach");
       return data;
     },
   });
 
 const topCoaches = coaches
   ? [...coaches]
-      .filter((c) => c.experienceYears !== undefined)
-      .sort((a, b) => b.experienceYears! - a.experienceYears!)
+      .filter((c) => c.experience !== undefined)
+      .sort((a, b) => b.experience! - a.experience!)
       .slice(0, 3)
   : [];
 
@@ -59,13 +57,13 @@ const topCoaches = coaches
 
   if (isError)
     return (
-      <div className="text-center py-16 text-red-500 font-bold">
+      <div className="py-16 font-bold text-center text-red-500">
         Failed to load Top Coaches.
       </div>
     );
 
   return (
-    <section className="py-8 md:py-12 max-w-7xl px-6 mx-auto relative overflow-hidden">
+    <section className="relative px-6 py-8 mx-auto overflow-hidden md:py-12 max-w-7xl">
       {/* Title */}
       <div className="flex flex-col gap-3 mb-10">
         <motion.h2
@@ -73,7 +71,7 @@ const topCoaches = coaches
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-3xl md:text-4xl font-bold text-center uppercase tracking-tight"
+          className="text-3xl font-bold tracking-tight text-center uppercase md:text-4xl"
         >
           Top <span className="text-[var(--primary)]">Experienced Coaches</span>
         </motion.h2>
@@ -81,8 +79,8 @@ const topCoaches = coaches
       </div>
 
       {/* Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-        {topCoaches.map((coach, index) => (
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 md:gap-10">
+        {topCoaches.map((coach: Coach, index: number) => (
           <motion.div
             key={coach._id} // now safe
             initial={{ opacity: 0, y: 40 }}

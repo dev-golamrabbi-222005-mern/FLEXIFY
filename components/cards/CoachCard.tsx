@@ -22,8 +22,6 @@ type CoachCardProps = {
 };
 
 const CoachCard = ({ coach }: CoachCardProps) => {
-  console.log(coach);
-
   return (
     <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-sm overflow-hidden flex flex-col transition-all hover:border-[var(--primary)] group">
       <div className="relative w-full h-56">
