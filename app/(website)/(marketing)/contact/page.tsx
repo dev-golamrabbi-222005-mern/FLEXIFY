@@ -26,7 +26,7 @@ const data = {
   try {
     await axios.post("/api/contact", data);
 
-    toast.sucess("Message sent successfully!");
+    toast.success("Message sent successfully!");
     form.reset();
   } catch (err) {
     toast.error("Something went wrong");
