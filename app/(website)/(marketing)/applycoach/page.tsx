@@ -165,10 +165,17 @@ const ApplyCoachPage = () => {
           <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <h2 className="col-span-full text-lg font-bold text-[var(--primary)] border-b border-[var(--border-color)] pb-2">EXPERTISE</h2>
             <div className="space-y-1">
-              <label className="text-sm font-semibold">Specialties</label>
-              <input {...register("specialties")} placeholder="Yoga, Gym" className="input-style" />
-              {errors.specialties && <p className="text-xs text-red-500">{errors.specialties.message}</p>}
-            </div>
+  <label className="text-sm font-semibold">Specialty</label>
+  <select {...register("specialties")} className="input-style">
+    <option value="">Select Specialty</option>
+    <option value="Gymnishiam">Gymnishiam</option>
+    <option value="Yoga">Yoga</option>
+    <option value="Cardio">Cardio</option>
+    <option value="CrossFit">CrossFit</option>
+    <option value="Bodybuilding">Bodybuilding</option>
+  </select>
+  {errors.specialties && <p className="text-xs text-red-500">{errors.specialties.message}</p>}
+</div>
             <div className="space-y-1">
               <label className="text-sm font-semibold">Experience (Years)</label>
               <input type="number" {...register("experienceYears", { valueAsNumber: true })} className="input-style" />

@@ -1,60 +1,53 @@
-// app/api/coach/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
+import { ObjectId, Filter, Document } from "mongodb";
 
 export const GET = async (req: NextRequest) => {
   try {
     const { searchParams } = new URL(req.url);
-    const status = searchParams.get("status") || "";
+    const search = searchParams.get("search") || "";
+    const specialty = searchParams.get("specialty") || "";
+    const experience = searchParams.get("experience") || "";
+    const trainingType = searchParams.get("trainingType") || "";
 
-    // ── Coaches live in the USERS collection with role: "coach" ──────────────
-    const query: Record<string, unknown> = { role: "coach" };
-    if (status) {
-      query.status = { $regex: status, $options: "i" };
+    const usersColl = await dbConnect("users");
+
+    const filter: Filter<Document> = {
+      role: "coach",
+      status: "approved",
+    };
+
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { fullName: { $regex: search, $options: "i" } },
+        { location: { $regex: search, $options: "i" } },
+      ];
     }
 
-    const coaches = await dbConnect("users").find(query).toArray();
+    if (specialty) {
+      filter.specialties = specialty;
+    }
 
-    // ── Normalise to a consistent shape ───────────────────────────────────────
-    const normalised = coaches.map((c) => ({
-      _id: c._id?.toString(),
-      name: c.name ?? c.fullName ?? "Coach",
-      email: c.email ?? "",
-      // your DB field is experienceYears
-      experience: c.experienceYears ?? c.experience ?? 0,
-      // your DB field is specialties (string)
-      expertise:
-        typeof c.specialties === "string"
-          ? c.specialties
-          : (c.specialties?.[0] ?? c.expertise ?? c.category ?? ""),
-      // your DB field is pricing.monthly
-      charge: c.pricing?.monthly ?? c.charge ?? c.fee ?? 0,
-      bio: c.bio ?? "",
-      education: c.education ?? "",
-      // certifications is array of objects — convert to strings for display
-      certifications: (c.certifications ?? []).map(
-        (cert: Record<string, string | number>) =>
-          typeof cert === "string"
-            ? cert
-            : [cert.title, cert.issuedBy, cert.year]
-                .filter(Boolean)
-                .join(" · "),
-      ),
-      imageUrl: c.imageUrl ?? c.profileImage ?? c.image ?? null,
-      rating: c.rating ?? null,
-      clients: c.maxClients ?? c.clients ?? null,
-      status: c.status ?? "approved",
-      availableDays: c.availableDays ?? [],
-      trainingTypes: c.trainingTypes ?? [],
-      location: c.location ?? "",
-    }));
+    // ৫+ বছর এবং অন্যান্য এক্সপেরিয়েন্স ফিক্স
+    if (experience) {
+      if (experience === "0-2 Years") {
+        filter.experienceYears = { $lte: 2 };
+      } else if (experience === "3-5 Years") {
+        filter.experienceYears = { $gte: 3, $lte: 5 };
+      } else if (experience === "5+ Years") {
+        filter.experienceYears = { $gt: 5 };
+      }
+    }
 
-    return NextResponse.json(normalised);
+    if (trainingType) {
+      filter.trainingTypes = { $in: [trainingType] };
+    }
+
+    const coaches = await usersColl.find(filter).toArray();
+
+    return NextResponse.json(coaches);
   } catch (error) {
-    console.error("[api/coach GET]", error);
-    return NextResponse.json(
-      { error: "Failed to fetch coaches" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to fetch" }, { status: 500 });
   }
 };
