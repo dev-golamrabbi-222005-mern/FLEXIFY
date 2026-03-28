@@ -9,14 +9,17 @@ import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import Swal from "sweetalert2";
+import { DaySchedule } from "@/types/user";
+
+type WeeklySchedule = Record<string, DaySchedule>;
 
 interface RoutineOption { id: string; name: string; }
+
 interface ScheduleData {
   workoutDays: string;
   routines: RoutineOption[];
-  currentSchedule: Record<string, string>;
+  currentSchedule: WeeklySchedule;
 }
-
 const DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 export default function SchedulePage() {
@@ -24,10 +27,11 @@ export default function SchedulePage() {
   
   // States
   const [isEditMode, setIsEditMode] = useState(false);
-  const [editedSchedule, setEditedSchedule] = useState<Record<string, string>>({});
+  const [editedSchedule, setEditedSchedule] = useState<WeeklySchedule>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeDay, setActiveDay] = useState<string | null>(null);
   const [tempTask, setTempTask] = useState("");
+  const [tempTime, setTempTime] = useState("06:00");
 
   const { data, isLoading } = useQuery<ScheduleData>({
     queryKey: ["user-schedule-data"],
@@ -37,12 +41,14 @@ export default function SchedulePage() {
     }
   });
 
-  const getDisplayValue = (day: string) => {
-    return editedSchedule[day] ?? data?.currentSchedule?.[day] ?? "Rest Day";
+  const getDisplayValue = (day: string):DaySchedule => {
+   const val = editedSchedule[day] ?? data?.currentSchedule?.[day];
+  if (typeof val === "string") return { routine: val, time: "06:00" };
+  return val ?? { routine: "Rest Day", time: "06:00" };
   };
 
   const mutation = useMutation({
-    mutationFn: (newSchedule: Record<string, string>) => 
+    mutationFn: (newSchedule: WeeklySchedule) => 
       axios.post("/api/user/schedule", { days: newSchedule }),
     onSuccess: () => {
       Swal.fire({
@@ -62,15 +68,19 @@ export default function SchedulePage() {
   });
 
   const openManualModal = (day: string) => {
-    const currentValue = getDisplayValue(day);
+    const current = getDisplayValue(day);
     setActiveDay(day);
-    setTempTask(currentValue === "Rest Day" ? "" : currentValue);
+    setTempTask(current.routine === "Rest Day" ? "" : current.routine);
+    setTempTime(current.time);
     setIsModalOpen(true);
   };
 
   const saveManualTask = () => {
     if (activeDay) {
-      setEditedSchedule(prev => ({ ...prev, [activeDay]: tempTask || "Rest Day" }));
+     setEditedSchedule(prev => ({ 
+        ...prev, 
+        [activeDay]: { routine: tempTask || "Rest Day", time: tempTime } 
+      }));
     }
     setIsModalOpen(false);
   };
@@ -103,14 +113,27 @@ export default function SchedulePage() {
               </button>
             </div>
             
-            <input 
-              autoFocus
-              value={tempTask}
-              onChange={(e) => setTempTask(e.target.value)}
-              placeholder="e.g. Swimming, 5km Run"
-              className="input-style w-full mb-6 h-14 rounded-2xl text-lg"
-              onKeyDown={(e) => e.key === 'Enter' && saveManualTask()}
-            />
+<div className="space-y-4 mb-6">
+  <input 
+    autoFocus
+    value={tempTask}
+    onChange={(e) => setTempTask(e.target.value)}
+    onKeyDown={(e) => e.key === 'Enter' && saveManualTask()}
+    placeholder="e.g. Swimming"
+    className="input-style w-full h-14 rounded-2xl text-lg"
+  />
+  
+  {/* ADDED: Time Input Field */}
+  <div className="flex items-center gap-3 bg-[var(--bg-primary)] p-3 rounded-2xl border border-[var(--border-color)]">
+    <Clock size={20} className="text-[var(--primary)]" />
+    <input 
+      type="time"
+      value={tempTime}
+      onChange={(e) => setTempTime(e.target.value)}
+      className="bg-transparent text-[var(--text-primary)] outline-none w-full font-bold"
+    />
+  </div>
+</div>
             <button onClick={saveManualTask} className="btn-primary w-full py-4 rounded-2xl font-bold">Set Custom Task</button>
           </div>
         </div>
@@ -170,7 +193,7 @@ export default function SchedulePage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
         {DAYS_OF_WEEK.map((day) => {
           const scheduleValue = getDisplayValue(day);
-          const isRestDay = scheduleValue === "Rest Day";
+          const isRestDay = scheduleValue.routine === "Rest Day";
           
           return (
             <div 
@@ -190,7 +213,7 @@ export default function SchedulePage() {
                 {!isEditMode ? (
                   <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                     <h3 className={`text-xl font-black leading-tight ${isRestDay ? "text-[var(--text-muted)]" : "text-[var(--text-primary)]"}`}>
-                      {scheduleValue}
+                      {scheduleValue.routine}
                     </h3>
                     <p className="text-[10px] uppercase tracking-widest text-[var(--text-secondary)] mt-2 font-bold">
                       {isRestDay ? "Recovery Day" : "Training Day"}
@@ -199,13 +222,16 @@ export default function SchedulePage() {
                 ) : (
                   <div className="space-y-3 animate-in zoom-in-95 duration-200">
                     <select 
-                      value={data?.routines?.some(r => r.name === scheduleValue) ? scheduleValue : (isRestDay ? "Rest Day" : "Custom")}
-                      onChange={(e) => {
-                        if(e.target.value === "Custom") openManualModal(day);
-                        else setEditedSchedule(prev => ({ ...prev, [day]: e.target.value }));
-                      }}
-                      className="input-style cursor-pointer text-xs  rounded-2xl w-full"
-                    >
+  value={data?.routines?.some(r => r.name === scheduleValue.routine) ? scheduleValue.routine : (isRestDay ? "Rest Day" : "Custom")}
+  onChange={(e) => {
+    if(e.target.value === "Custom") openManualModal(day);
+    else setEditedSchedule(prev => ({ 
+      ...prev, 
+      [day]: { routine: e.target.value, time: scheduleValue.time } 
+    }));
+  }}
+  className="input-style cursor-pointer text-xs rounded-2xl w-full"
+>
                       <option value="Rest Day">Rest Day</option>
                       {data?.routines?.map((r) => <option key={r.id} value={r.name}>{r.name}</option>)}
                       <option value="Custom">Manual Entry...</option>
@@ -224,8 +250,8 @@ export default function SchedulePage() {
                    {isRestDay ? "Free Time" : "Session Active"}
                  </span>
                  <div className="flex items-center gap-1 text-[10px] text-[var(--text-muted)] font-bold">
-                   <Clock size={12} /> 06:00 AM
-                 </div>
+  <Clock size={12} /> {scheduleValue.time}
+</div>
               </div>
             </div>
           );
