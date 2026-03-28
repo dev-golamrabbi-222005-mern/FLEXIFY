@@ -76,13 +76,19 @@ export async function GET() {
     checkAndPush("early_bird", allLogs.some(l => new Date(l.createdAt).getHours() <= 9));
 
     if (newUnlocked.length > 0) {
+    const updatedAchievements = [...currentBadges, ...newUnlocked];
+
       await achievementsColl.updateOne(
         { userEmail: email },
-        { $push: { achievements: { $each: newUnlocked } } },
+        { 
+          $set: { 
+            achievements: updatedAchievements 
+          } 
+        },
         { upsert: true }
       );
-      const updated = await achievementsColl.findOne<UserAchievementDoc>({ userEmail: email });
-      return NextResponse.json(updated?.achievements || []);
+
+      return NextResponse.json(updatedAchievements);
     }
 
     return NextResponse.json(currentBadges);
