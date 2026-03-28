@@ -3,7 +3,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Clock, Target, Weight } from "lucide-react";
-import { WorkoutLog } from "@/types/workout";
+import { WorkoutLog } from "@/components/user/workout";
 
 interface Props {
   workout: WorkoutLog | null;
