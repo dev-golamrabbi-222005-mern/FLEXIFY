@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const profileSchema = z.object({
   age: z.number().min(10).max(100),
@@ -42,19 +43,12 @@ const FitnessProfileForm = () => {
       return response.data;
     },
     onSuccess: () => {
-      Swal.fire({
-        title: "Success!",
-        text: "Profile saved! You can complete other details from update profile later.",
-        icon: "success",
-        timer: 2500,
-        showConfirmButton: false,
-      }).then(() => {
-        router.push("/dashboard");
-      });
+      toast.success("Profile saved! You can complete other details from update profile later.");
+      router.push("/dashboard");
     },
     onError: (err: unknown) => {
       const message = axios.isAxiosError(err) ? err.response?.data?.message : "Something went wrong";
-      Swal.fire("Error", message, "error");
+      toast.error(message);
     },
   });
 
@@ -66,7 +60,7 @@ const FitnessProfileForm = () => {
   const onSubmit = (data: ProfileFormValues) => mutation.mutate(data);
 
   return (
-    <div className="min-h-screen py-10 px-4">
+    <div className="min-h-screen px-4 py-10">
       <div className="max-w-7xl mx-auto bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-lg overflow-hidden font-sans">
         
         <div className="bg-[var(--primary)] p-8 text-white text-center relative overflow-hidden">
@@ -77,9 +71,9 @@ const FitnessProfileForm = () => {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-12 space-y-10">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-10 md:p-12">
           
-          <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <section className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <h2 className="col-span-full text-xl font-bold border-b border-[var(--border-color)] pb-2 text-[var(--primary)] uppercase">
               Physical Stats
             </h2>
@@ -87,7 +81,7 @@ const FitnessProfileForm = () => {
             <div className="flex flex-col gap-1">
               <label className="text-sm font-semibold">Age</label>
               <input type="number" {...register("age", { valueAsNumber: true })} className="input-style" placeholder="25" />
-              {errors.age && <span className="text-red-500 text-xs">{errors.age.message}</span>}
+              {errors.age && <span className="text-xs text-red-500">{errors.age.message}</span>}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -120,7 +114,7 @@ const FitnessProfileForm = () => {
             </div>
           </section>
 
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <h2 className="col-span-full text-xl font-bold border-b border-[var(--border-color)] pb-2 text-[var(--primary)] uppercase">
               Lifestyle
             </h2>
@@ -134,7 +128,7 @@ const FitnessProfileForm = () => {
                 <option value="5 Days">5 Days</option>
                 <option value="6 Days">6 Days</option>
               </select>
-              {errors.workoutDays && <span className="text-red-500 text-xs">{errors.workoutDays.message}</span>}
+              {errors.workoutDays && <span className="text-xs text-red-500">{errors.workoutDays.message}</span>}
             </div>
           </section>
 

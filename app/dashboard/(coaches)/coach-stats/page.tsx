@@ -45,6 +45,7 @@ export default function CoachStatsSection() {
             key={index}
             className="bg-[var(--card-bg)] rounded-2xl shadow-md p-5 hover:shadow-xl transition"
           >
+             <title>Stats | Dashboard - Flexify</title>
             <div className="flex items-center justify-between mb-4">
 
               <div

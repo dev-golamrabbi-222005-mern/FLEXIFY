@@ -58,99 +58,94 @@ interface SidebarProps {
 const menuConfig = [
   {
     label: "MAIN MENU",
-    items: [
-      // ✅ items are directly in this array, NOT wrapped in another array
-      {
-        name: "Dashboard",
-        href: "/dashboard",
-        icon: Home,
-        roles: ["user", "admin", "coach"],
-      },
-      {
-        name: "Create Workout",
-        href: "/dashboard/create-workout",
-        icon: PlusCircle,
-        roles: ["user"],
-      },
-      {
-        name: "Your Workouts",
-        href: "/dashboard/your-workouts",
-        icon: Dumbbell,
-        roles: ["user"],
-      },
-      {
-        name: "Assigned",
-        href: "/dashboard/assigned-coach",
-        icon: UserCheck2,
-        roles: ["user"],
-      },
-      {
-        name: "Progress",
-        href: "/dashboard/user-progress",
-        icon: Shield,
-        roles: ["user"],
-      },
-      {
-        name: "Update Profile",
-        href: "/dashboard/user-form",
-        icon: UserPen,
-        roles: ["user"],
-      },
-      {
-        name: "User Profile",
-        href: "/dashboard/user-profile",
-        icon: ShieldAlertIcon,
-        roles: ["user"],
-      },
-      {
-        name: "My Goals",
-        href: "/dashboard/my-goals",
-        icon: Flag,
-        roles: ["user"],
-      },
-      {
-        name: "Nutrition",
-        href: "/dashboard/nutrition-tracker",
-        icon: Utensils,
-        roles: ["user"],
-      },
-      {
-        name: "Schedule",
-        href: "/dashboard/schedule",
-        icon: Calendar,
-        roles: ["user"],
-      },
-      {
-        name: "Achievements",
-        href: "/dashboard/achievements",
-        icon: Trophy,
-        roles: ["user"],
-      },
-      {
-        name: "Challenges",
-        href: "/dashboard/my-challenges",
-        icon: Swords,
-        roles: ["user"],
-      },
-      {
-        name: "Notification",
-        href: "/dashboard/user-notification",
-        icon: MessageCircleCode,
-        roles: ["user"],
-      },
-      {
-        name: "Live Sessions",
-        href: "/dashboard/live-sessions",
-        icon: Video,
-        roles: ["user"],
-      },
-      {
-        name: "User Update Form",
-        href: "/dashboard/fitness-update-form",
-        icon: BookText,
-        roles: ["user"],
-      },
-    ],
+    items: 
+[
+  {
+    name: "Dashboard",
+    href: "/dashboard",
+    icon: Home,
+    roles: ["user", "admin", "coach"],
+  },
+  {
+    name: "Create Workout",
+    href: "/dashboard/create-workout",
+    icon: PlusCircle,
+    roles: ["user"],
+  },
+  {
+    name: "Your Workouts",
+    href: "/dashboard/your-workouts",
+    icon: Dumbbell,
+    roles: ["user"],
+  },
+  {
+    name: "Assigned",
+    href: "/dashboard/assigned-coach",
+    icon: UserCheck2,
+    roles: ["user"],
+  },
+  {
+    name: "Progress",
+    href: "/dashboard/user-progress",
+    icon: Shield,
+    roles: ["user"],
+  },
+  {
+    name: "User Profile",
+    href: "/dashboard/user-profile",
+    icon: ShieldAlertIcon,
+    roles: ["user"],
+  },
+  {
+    name: "My Goals",
+    href: "/dashboard/my-goals",
+    icon: Flag,
+    roles: ["user"],
+  },
+  {
+    name: "Nutrition",
+    href: "/dashboard/nutrition-tracker",
+    icon: Utensils,
+    roles: ["user"],
+  },
+  {
+    name: "Schedule",
+    href: "/dashboard/schedule",
+    icon: Calendar,
+    roles: ["user"],
+  },
+  {
+    name: "Achievements",
+    href: "/dashboard/achievements",
+    icon: Trophy,
+    roles: ["user"],
+  },
+  {
+    name: "Challenges",
+    href: "/dashboard/my-challenges",
+    icon: Swords,
+    roles: ["user"],
+  },
+  {
+    name: "Notification",
+    href: "/dashboard/user-notification",
+    icon: MessageCircleCode,
+    roles: ["user"],
+  },
+  {
+    name: "Live Sessions",
+    href: "/dashboard/live-sessions",
+    icon: Video,
+    roles: ["user"],
+  },
+  {
+    name: "User Update Form",
+    href: "/dashboard/fitness-update-form",
+    icon: BookText,
+    roles: ["user"],
+  },
+],
+  
   },
   {
     label: "ADMIN",
@@ -204,8 +199,8 @@ const menuConfig = [
         roles: ["admin"],
       },
       {
-        name: "System Settings",
-        href: "/dashboard/admin-system-settings",
+        name: "Wants to connect",
+        href: "/dashboard/admin-users-connect",
         icon: FileCog,
         roles: ["admin"],
       },
@@ -285,12 +280,6 @@ const menuConfig = [
   {
     label: "ACCOUNT",
     items: [
-      {
-        name: "Statistics",
-        href: "/dashboard/statistics",
-        icon: BarChart2,
-        roles: ["user", "admin", "coach"],
-      },
       {
         name: "Live Sessions",
         href: "/dashboard/live-sessions",

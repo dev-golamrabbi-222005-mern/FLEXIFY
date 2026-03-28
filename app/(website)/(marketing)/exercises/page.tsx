@@ -5,6 +5,7 @@ import axios from "axios";
 import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
 import ExerciseCard from "@/components/cards/ExerciseCard";
 import SkeletonCard from "@/components/cards/SkeletonCard";
+import { title } from "process";
 
 const MUSCLES = [
   "Abdominals",
@@ -32,7 +33,7 @@ const ExercisesPage = () => {
     level: "",
     equipment: "",
   });
-
+  
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
       queryKey: ["exercises", filters],
@@ -55,18 +56,19 @@ const ExercisesPage = () => {
   ) => {
     setFilters((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-
+  
   const resetFilters = () =>
     setFilters({ search: "", muscle: "", level: "", equipment: "" });
-
+  
   const activeFilterCount = [
     filters.muscle,
     filters.level,
     filters.equipment,
   ].filter(Boolean).length;
-
+  
   return (
     <div className="min-h-screen px-6 mx-auto mt-8 mb-10 md:mt-12 max-w-7xl">
+    <title>Exercises - Flexify</title>
       <div className="mb-10 text-center">
         <h1 className="text-3xl md:text-5xl font-bold text-[var(--text-primary)] tracking-tighter">
           Workouts <span className="text-[var(--primary)]">Vault</span>

@@ -2,6 +2,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPlan, computeExpiry } from "@/lib/plans";
 import { dbConnect } from "@/lib/dbConnect";
+import { ObjectId } from "mongodb";
+
+type CoachUser = {
+  _id?: ObjectId;
+  coachId: string;
+  userId: string | null;
+  userEmail: string;
+  totalPaid: number;
+  payments: {
+    amount: number;
+    paidAt: Date;
+    method?: string;
+  }[];
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 export async function POST(req: NextRequest) {
   try {
@@ -91,6 +107,47 @@ export async function POST(req: NextRequest) {
         },
       },
     );
+
+    // ── Only for ELITE plan + coach ─────────────────────────────
+    if (payment.planId === "elite" && payment.coachId) {
+      const coachUsers = dbConnect<CoachUser>("coach_users");
+
+      const existing = await coachUsers.findOne({
+        coachId: payment.coachId,
+        userEmail: payment.userEmail,
+      });
+
+      const paymentData = {
+        amount: parseFloat(amount ?? "0"),
+        paidAt: now,
+        transactionId: tran_id,
+      };
+
+      if (existing) {
+        // 🔁 Existing user → update টাকা
+        await coachUsers.updateOne(
+          { _id: existing._id },
+          {
+            $inc: { totalPaid: paymentData.amount },
+            $push: { payments: paymentData },
+            $set: { updatedAt: now },
+          }
+        );
+      } else {
+        // 🆕 New user → coach এর অধীনে add
+        await coachUsers.insertOne({
+          coachId: payment.coachId,
+          userId: payment.userId ?? null,
+          userEmail: payment.userEmail,
+
+          totalPaid: paymentData.amount,
+          payments: [paymentData],
+
+          createdAt: now,
+          updatedAt: now,
+        });
+      }
+    }
 
     return NextResponse.redirect(
       // `${baseUrl}/dashboard?payment=success&plan=${plan.id}`,

@@ -1,45 +1,47 @@
-
 "use client";
-
 
 import { Search, Filter, MoreVertical } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-
-// const trainees = [
-//   { id: "1", name: "Arif Hossain", email: "arif@email.com", plan: "Muscle Building", status: "Active", progress: 85, joined: "Jan 2025", avatar: "A" },
-//   { id: "2", name: "Nadia Akter", email: "nadia@email.com", plan: "Weight Loss", status: "Active", progress: 72, joined: "Feb 2025", avatar: "N" },
-//   { id: "3", name: "Kamal Uddin", email: "kamal@email.com", plan: "Strength Training", status: "Active", progress: 90, joined: "Dec 2024", avatar: "K" },
-//   { id: "4", name: "Sabrina Islam", email: "sabrina@email.com", plan: "Yoga & Flexibility", status: "Paused", progress: 65, joined: "Mar 2025", avatar: "S" },
-//   { id: "5", name: "Rashed Khan", email: "rashed@email.com", plan: "Cardio Fitness", status: "Active", progress: 78, joined: "Jan 2025", avatar: "R" },
-//   { id: "6", name: "Fatima Begum", email: "fatima@email.com", plan: "Post-natal Fitness", status: "Active", progress: 55, joined: "Feb 2025", avatar: "F" },
-// ];
+// 1. Define the Trainee interface
+interface Trainee {
+  _id: string;
+  name: string;
+  email: string;
+  plan: string;
+  status: string;
+  progress: number;
+  joined: string;
+  avatar: string;
+}
 
 export default function CoachTrainees() {
   const [search, setSearch] = useState("");
 
-  const {data: trainees = []} = useQuery({
+  // 2. Add <Trainee[]> to useQuery
+  const { data: trainees = [] } = useQuery<Trainee[]>({
     queryKey: ["trainees", search],
-    queryFn: async() => {
+    queryFn: async () => {
       const res = await axios.get(`/api/coach/trainees?name=${search}`);
       return res.data;
-    }
+    },
   });
-  const filtered = trainees?.filter((t) =>
-    t.name.toLowerCase().includes(search.toLowerCase())
-  );
-  return (
-<>
 
+  // 3. Fix: Add type 'Trainee' to the filter parameter
+  const filtered = trainees?.filter((t: Trainee) =>
+    t.name.toLowerCase().includes(search.toLowerCase()),
+  );
+
+  return (
+    <>
       <div className="px-4 mx-auto space-y-8 max-w-7xl">
+         <title>Traines | Dashboard - Flexify</title>
 
         {/* Header */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-
           <div>
             <h1
               className="text-2xl font-bold"
@@ -47,28 +49,20 @@ export default function CoachTrainees() {
             >
               My Trainees
             </h1>
-
-            <p
-              className="mt-1 text-sm"
-              style={{ color: "var(--text-muted)" }}
-            >
+            <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
               {trainees?.length} total clients
             </p>
           </div>
-
         </div>
 
         {/* Search */}
         <div className="flex gap-3">
-
           <div className="relative flex-1">
-
             <Search
               size={16}
               className="absolute -translate-y-1/2 left-3 top-1/2"
               style={{ color: "var(--text-muted)" }}
             />
-
             <input
               placeholder="Search trainees..."
               value={search}
@@ -80,9 +74,7 @@ export default function CoachTrainees() {
                 color: "var(--text-primary)",
               }}
             />
-
           </div>
-
           <button
             className="p-2.5 rounded-xl"
             style={{
@@ -92,31 +84,21 @@ export default function CoachTrainees() {
           >
             <Filter size={16} />
           </button>
-
         </div>
 
-        {/* Grid */}
+        {/* Grid - Using 'filtered' instead of 'trainees' to support search logic */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-
-          {trainees.map((t, i) => (
-
+          {filtered.map((t: Trainee, i: number) => (
             <motion.div
               key={t._id}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
             >
-
-              <div
-                
-                className="block p-5 card-glass group"
-              >
-
+              <div className="block p-5 card-glass group">
                 {/* Top */}
                 <div className="flex justify-between mb-4">
-
                   <div className="flex items-center gap-3">
-
                     <div
                       className="flex items-center justify-center text-sm font-bold rounded-full w-11 h-11"
                       style={{
@@ -124,50 +106,39 @@ export default function CoachTrainees() {
                         color: "white",
                       }}
                     >
-                      {t.avatar}
+                      {t.avatar || t.name.charAt(0)}
                     </div>
-
                     <div>
-
                       <h3
                         className="text-sm font-semibold group-hover:underline"
                         style={{ color: "var(--text-primary)" }}
                       >
                         {t.name}
                       </h3>
-
                       <p
                         className="text-xs"
                         style={{ color: "var(--text-muted)" }}
                       >
                         {t.email}
                       </p>
-
                     </div>
-
                   </div>
-
-                  <button
-                    className="p-1 rounded-lg hover:bg-gray-500/10"
-                  >
+                  <button className="p-1 rounded-lg hover:bg-gray-500/10">
                     <MoreVertical size={16} />
                   </button>
-
                 </div>
 
                 {/* Plan + Status */}
                 <div className="flex flex-wrap gap-2 mb-4">
-
                   <span
                     className="px-2 py-1 text-xs rounded-full"
                     style={{
-                      background: "var(--primary-light)",
+                      background: "rgba(var(--primary-rgb), 0.1)", // Assuming a CSS variable for the RGB values exists
                       color: "var(--primary)",
                     }}
                   >
                     {t.plan}
                   </span>
-
                   <span
                     className="px-2 py-1 text-xs rounded-full"
                     style={{
@@ -175,42 +146,33 @@ export default function CoachTrainees() {
                         t.status === "Active"
                           ? "rgba(16,185,129,0.15)"
                           : "rgba(245,158,11,0.15)",
-                      color:
-                        t.status === "Active"
-                          ? "#10b981"
-                          : "#f59e0b",
+                      color: t.status === "Active" ? "#10b981" : "#f59e0b",
                     }}
                   >
                     {t.status}
                   </span>
-
                 </div>
 
                 {/* Progress */}
                 <div className="flex items-center gap-2">
-
                   <div
                     className="flex-1 h-1.5 rounded-full"
                     style={{ background: "var(--bg-secondary)" }}
                   >
-
                     <div
-                      className="h-full rounded-full"
+                      className="h-full rounded-full transition-all duration-300"
                       style={{
                         width: `${t.progress}%`,
                         background: "var(--primary)",
                       }}
                     />
-
                   </div>
-
                   <span
                     className="text-xs font-semibold"
                     style={{ color: "var(--text-primary)" }}
                   >
                     {t.progress}%
                   </span>
-
                 </div>
 
                 <p
@@ -219,17 +181,11 @@ export default function CoachTrainees() {
                 >
                   Joined {t.joined}
                 </p>
-
               </div>
-
             </motion.div>
-
           ))}
-
         </div>
-
       </div>
-
     </>
   );
 }

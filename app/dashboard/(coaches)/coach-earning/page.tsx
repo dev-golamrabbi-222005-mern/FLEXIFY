@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
@@ -25,56 +23,65 @@ import {
   Cell,
 } from "recharts";
 
-// const monthlyEarnings = [
-//   { month: "Sep", amount: 32000 },
-//   { month: "Oct", amount: 35000 },
-//   { month: "Nov", amount: 38000 },
-//   { month: "Dec", amount: 36000 },
-//   { month: "Jan", amount: 42000 },
-//   { month: "Feb", amount: 45000 },
-// ];
+// 1. Define Interfaces for your data
+interface Coach {
+  email: string;
+  clients: number;
+  userName?: string;
+}
 
-// const recentPayments = [
-//   { client: "Arif Hossain", amount: "৳5,000", date: "Mar 1", status: "Paid", plan: "Premium" },
-//   { client: "Nadia Akter", amount: "৳3,500", date: "Mar 1", status: "Paid", plan: "Standard" },
-//   { client: "Kamal Uddin", amount: "৳5,000", date: "Feb 28", status: "Paid", plan: "Premium" },
-//   { client: "Rashed Khan", amount: "৳3,500", date: "Feb 28", status: "Pending", plan: "Standard" },
-//   { client: "Sabrina Islam", amount: "৳2,500", date: "Feb 25", status: "Paid", plan: "Basic" },
-// ];
+interface MonthlyEarning {
+  month: string;
+  total: number;
+}
+
+interface Payment {
+  userName: string;
+  planName: string;
+  amount: string;
+  status: "success" | "failed" | "pending";
+}
 
 export default function CoachEarnings() {
   const { data: session } = useSession();
-  const { data: coaches = [] } = useQuery({
-      queryKey: ["coaches"],
-      queryFn: async() => {
+
+  // 2. Apply interfaces to useQuery
+  const { data: coaches = [] } = useQuery<Coach[]>({
+    queryKey: ["coaches"],
+    queryFn: async () => {
       const res = await axios.get("/api/coach");
       return res.data;
-      }
+    },
   });
 
-  const singleCoach = coaches.find(coach => coach?.email === session?.user?.email);
+  // coach is now automatically typed as Coach
+  const singleCoach = coaches.find(
+    (coach) => coach?.email === session?.user?.email,
+  );
 
-  const { data: monthlyEarnings } = useQuery({
-      queryKey: ["monthlyEarnings"],
-      queryFn: async() => {
+  const { data: monthlyEarnings = [] } = useQuery<MonthlyEarning[]>({
+    queryKey: ["monthlyEarnings"],
+    queryFn: async () => {
       const res = await axios.get("/api/monthly-earnings");
       return res.data.data;
-      }
+    },
   });
 
-  const { data: recentPayments } = useQuery({
-      queryKey: ["recentPayments"],
-      queryFn: async() => {
+  const { data: recentPayments = [] } = useQuery<Payment[]>({
+    queryKey: ["recentPayments"],
+    queryFn: async () => {
       const res = await axios.get("/api/payment");
       return res.data.slice(0, 5);
-      }
+    },
   });
+
   return (
     <div
       className="min-h-screen p-4 md:p-8"
       style={{ background: "var(--bg-primary)" }}
     >
       <div className="mx-auto space-y-8 max-w-7xl">
+          <title>Earning | Dashboard - Flexify</title>
 
         {/* Header */}
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
@@ -86,10 +93,7 @@ export default function CoachEarnings() {
               Earnings
             </h1>
 
-            <p
-              className="mt-1 text-sm"
-              style={{ color: "var(--text-muted)" }}
-            >
+            <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
               Overview of your financial performance and subscriptions.
             </p>
           </div>
@@ -102,7 +106,6 @@ export default function CoachEarnings() {
 
         {/* Stats */}
         <div className="grid gap-6 md:grid-cols-3">
-
           {[
             {
               label: "This Month",
@@ -112,7 +115,7 @@ export default function CoachEarnings() {
             },
             {
               label: "Total Clients",
-              value: singleCoach?.maxClients,
+              value: singleCoach?.clients,
               change: "+3 new",
               icon: Users,
             },
@@ -131,7 +134,6 @@ export default function CoachEarnings() {
               transition={{ delay: i * 0.1 }}
             >
               <div className="flex items-center justify-between mb-3">
-
                 <div
                   className="p-2 rounded-lg"
                   style={{ background: "var(--primary-light)" }}
@@ -148,10 +150,7 @@ export default function CoachEarnings() {
                 </span>
               </div>
 
-              <p
-                className="text-sm"
-                style={{ color: "var(--text-muted)" }}
-              >
+              <p className="text-sm" style={{ color: "var(--text-muted)" }}>
                 {s.label}
               </p>
 
@@ -166,112 +165,44 @@ export default function CoachEarnings() {
         </div>
 
         {/* Chart + Payments */}
-        <div className="grid gap-8 lg:grid-cols-5">
-
           {/* Chart */}
-          <motion.div
-            className="lg:col-span-3 card-glass"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-          >
-            <div className="flex justify-between mb-6">
-              <h3
-                className="font-bold"
-                style={{ color: "var(--text-primary)" }}
-              >
-                Revenue Analytics
-              </h3>
-
-              <select
-                className="px-2 py-1 text-xs rounded-lg"
-                style={{
-                  background: "var(--bg-secondary)",
-                  color: "var(--text-secondary)",
-                }}
-              >
-                <option>Last 6 Months</option>
-                <option>Last Year</option>
-              </select>
+          <div className="grid gap-8 lg:grid-cols-5">
+            {/* Chart Section */}
+            <div className="lg:col-span-3">
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={monthlyEarnings}>
+                    <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="total" radius={[6, 6, 0, 0]}>
+                      {/* Fix 1 & 2: Use _ for unused param and explicit types for index */}
+                      {monthlyEarnings.map((_, index: number) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={index === monthlyEarnings.length - 1 ? "var(--primary)" : "#94a3b8"}
+                          fillOpacity={index === monthlyEarnings.length - 1 ? 1 : 0.25}
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
             </div>
 
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={monthlyEarnings}>
-                  <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
-                  <XAxis dataKey="month" axisLine={false} tickLine={false} />
-                  <YAxis axisLine={false} tickLine={false} />
-
-                  <Tooltip />
-
-                  <Bar dataKey="total" radius={[6, 6, 0, 0]}>
-                    {monthlyEarnings?.map((entry, index) => (
-                      <Cell
-                        key={index}
-                        fill={
-                          index === monthlyEarnings?.length - 1
-                            ? "var(--primary)"
-                            : "#94a3b8"
-                        }
-                        fillOpacity={
-                          index === monthlyEarnings?.length - 1 ? 1 : 0.25
-                        }
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
-
-          {/* Recent Payments */}
-          <motion.div
-            className="flex flex-col lg:col-span-2 card-glass"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-          >
-            <h3
-              className="mb-6 font-bold"
-              style={{ color: "var(--text-primary)" }}
-            >
-              Recent Transactions
-            </h3>
-
-            <div className="space-y-5 max-h-[300px] overflow-y-auto">
-
-              {recentPayments?.map((p, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between p-2 transition rounded-xl hover:bg-gray-500/10"
-                >
+            {/* Recent Payments Section */}
+            <div className="lg:col-span-2">
+              {recentPayments.map((p: Payment, i: number) => ( // Fix 4 & 5: Explicit types
+                <div key={i} className="flex items-center justify-between p-2">
                   <div className="flex items-center gap-3">
-
-                    <div
-                      className="flex items-center justify-center w-10 h-10 text-xs font-bold rounded-full"
-                      style={{
-                        background: "var(--primary-light)",
-                        color: "var(--primary)",
-                      }}
-                    >
-                      {p?.userName
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--primary-light)] text-[var(--primary)] text-xs font-bold">
+                      {p.userName
                         .split(" ")
-                        .map((n) => n[0])
+                        .map((n: string) => n[0]) // Fix 6: Explicit string type
                         .join("")}
                     </div>
-
                     <div>
-                      <p
-                        className="text-sm font-semibold"
-                        style={{ color: "var(--text-primary)" }}
-                      >
-                        {p?.userName}
-                      </p>
-
-                      <p
-                        className="text-xs"
-                        style={{ color: "var(--text-muted)" }}
-                      >
-                        {p?.planName} Plan
-                      </p>
+                      <p className="text-sm font-semibold">{p.userName}</p>
+                      <p className="text-xs text-[var(--text-muted)]">{p.planName} Plan</p>
                     </div>
                   </div>
 
@@ -285,11 +216,13 @@ export default function CoachEarnings() {
 
                     <p
                       className={`text-[10px] font-bold uppercase
-                        ${p?.status === "success"
-                        ? "text-(--success)"
-                          : p?.status === "failed"
-                          ? "text-(--danger)"
-                        : "text-(--warning)"}`}
+                        ${
+                          p?.status === "success"
+                            ? "text-(--success)"
+                            : p?.status === "failed"
+                              ? "text-(--danger)"
+                              : "text-(--warning)"
+                        }`}
                     >
                       {p?.status}
                     </p>
@@ -304,8 +237,7 @@ export default function CoachEarnings() {
             >
               View All Transactions
             </button>
-          </motion.div>
-        </div>
+          </div>
       </div>
     </div>
   );

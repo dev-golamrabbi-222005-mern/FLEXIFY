@@ -47,13 +47,6 @@ export default function CalorieTracker() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["dailyLogs"] }),
   });
 
-  const [meals, setMeals] = useState<MealSection[]>([
-    { id: "breakfast", name: "Breakfast", icon: <Coffee size={18} className="text-orange-500" />, iconColor: "#f97316", entries: [] },
-    { id: "lunch", name: "Lunch", icon: <Sun size={18} className="text-yellow-500" />, iconColor: "#eab308", entries: [] },
-    { id: "dinner", name: "Dinner", icon: <Moon size={18} className="text-indigo-500" />, iconColor: "#6366f1", entries: [] },
-    { id: "snacks", name: "Snacks", icon: <Utensils size={18} className="text-green-500" />, iconColor: "#22c55e", entries: [] },
-  ]);
-
   const { data: userData } = useQuery<UserProfileResponse>({
     queryKey: ["userProfile"],
     queryFn: async () => {
@@ -74,18 +67,48 @@ export default function CalorieTracker() {
     };
   }, [userData]);
 
-  const [glasses, setGlasses] = useState(0);
+const glasses = dbData?.waterIntake || 0;
   const [insightDismissed, setInsightDismissed] = useState(false);
   const [modal, setModal] = useState({ open: false, mealId: "", mealName: "" });
 
-  useEffect(() => {
-    if (dbData) {
-      setGlasses(dbData.waterIntake || 0);
-      setMeals(prev => prev.map(m => ({
-        ...m,
-        entries: dbData.meals?.[m.id]?.entries || []
-      })));
-    }
+  const meals = useMemo<MealSection[]>(() => {
+    const baseMeals: MealSection[] = [
+      {
+        id: "breakfast",
+        name: "Breakfast",
+        icon: <Coffee size={18} className="text-orange-500" />,
+        iconColor: "#f97316",
+        entries: [],
+      },
+      {
+        id: "lunch",
+        name: "Lunch",
+        icon: <Sun size={18} className="text-yellow-500" />,
+        iconColor: "#eab308",
+        entries: [],
+      },
+      {
+        id: "dinner",
+        name: "Dinner",
+        icon: <Moon size={18} className="text-indigo-500" />,
+        iconColor: "#6366f1",
+        entries: [],
+      },
+      {
+        id: "snacks",
+        name: "Snacks",
+        icon: <Utensils size={18} className="text-green-500" />,
+        iconColor: "#22c55e",
+        entries: [],
+      },
+    ];
+
+    if (!dbData) return baseMeals;
+
+    return baseMeals.map((m) => ({
+      ...m,
+      entries: dbData.meals?.[m.id]?.entries || [],
+    }));
   }, [dbData]);
 
   const totals = useMemo(() => {
@@ -104,20 +127,17 @@ const remaining = GOALS.calories - totals.calories;
   const calPct = Math.min(totals.calories / GOALS.calories, 1);
 const handleWaterUpdate = (val: number | ((prev: number) => number)) => {
   const nextValue = typeof val === "function" ? val(glasses) : val;
-  
-  setGlasses(nextValue);
-  mutation.mutate({ 
-    date: todayDate, 
-    type: "WATER_UPDATE", 
-    data: { glasses: nextValue } 
+
+  mutation.mutate({
+    date: todayDate,
+    type: "WATER_UPDATE",
+    data: { glasses: nextValue },
   });
 };
 
 const addFood = (item: FoodItem, qty: number) => {
    
-    const randomId = typeof window !== 'undefined' 
-      ? window.crypto.randomUUID() 
-      : Date.now().toString(); 
+   const randomId = crypto.randomUUID();
 
     const entry: FoodEntry = { 
       id: `${modal.mealId}-${randomId}`, 
@@ -156,6 +176,7 @@ const addFood = (item: FoodItem, qty: number) => {
 }
   return (
     <div className="py-2.5 px-0 max-w-7xl mx-auto">
+        <title>Nutrition Tracker | Dashboard - Flexify</title>
       {/* Header Section */}
       <div className="flex items-center justify-between mb-6">
         <div>

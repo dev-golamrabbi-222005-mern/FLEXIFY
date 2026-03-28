@@ -28,7 +28,8 @@ export default function SystemSettingsPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10 space-y-10 bg-[var(--bg-primary)]">
+    <div className="space-y-10 bg-[var(--bg-primary)]">
+      <title>System Settings | Dashboard - Flexify</title>
 
       {/* ================= PAGE HEADER ================= */}
       <div className="flex items-center gap-3">

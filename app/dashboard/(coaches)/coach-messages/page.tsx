@@ -50,7 +50,7 @@ export default function CoachMessages() {
         }`}
         style={{ borderColor: "var(--border-color)" }}
       >
-
+     <title>Messages | Dashboard - Flexify</title>
         {/* Header */}
         <div className="p-4 border-b" style={{ borderColor: "var(--border-color)" }}>
           <h1

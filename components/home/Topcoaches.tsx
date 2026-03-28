@@ -4,7 +4,18 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { motion } from "framer-motion";
-import CoachCard from "../cards/CoachCard/CoachCard";
+import CoachCard from "../cards/CoachCard"; 
+
+type Coach = {
+  _id: string;
+  name: string;
+  imageUrl?: string;
+  location?: string;
+  experience?: number;
+  trainingTypes?: string[];
+  expertise?: string;
+  charge?: number;
+};
 
 const TopCoaches = () => {
   const {
@@ -14,22 +25,22 @@ const TopCoaches = () => {
   } = useQuery<Coach[]>({
     queryKey: ["top-coaches"],
     queryFn: async () => {
-      const { data } = await axios.get<Coach[]>("/data.json");
+      const { data } = await axios.get<Coach[]>("/api/coach");
       return data;
     },
   });
 
-  // Sort a copy of the data to avoid mutating the original state
-  const topCoaches = coaches
-    ? [...coaches]
-        .sort((a, b) => b.experienceYears - a.experienceYears)
-        .slice(0, 3)
-    : [];
+const topCoaches = coaches
+  ? [...coaches]
+      .filter((c) => c.experience !== undefined)
+      .sort((a, b) => b.experience! - a.experience!)
+      .slice(0, 3)
+  : [];
 
   const rankStyles = [
-    "bg-yellow-400 text-black border-2 border-yellow-500", // 🥇 1st
-    "bg-gray-300 text-black border-2 border-gray-400", // 🥈 2nd
-    "bg-amber-700 text-white border-2 border-amber-800", // 🥉 3rd
+    "bg-yellow-400 text-black border-2 border-yellow-500", // 🥇
+    "bg-gray-300 text-black border-2 border-gray-400", // 🥈
+    "bg-amber-700 text-white border-2 border-amber-800", // 🥉
   ];
 
   if (isLoading)
@@ -46,13 +57,13 @@ const TopCoaches = () => {
 
   if (isError)
     return (
-      <div className="text-center py-16 text-red-500 font-bold">
+      <div className="py-16 font-bold text-center text-red-500">
         Failed to load Top Coaches.
       </div>
     );
 
   return (
-    <section className="py-8 md:py-12 max-w-7xl px-6 mx-auto relative overflow-hidden">
+    <section className="relative px-6 py-8 mx-auto overflow-hidden md:py-12 max-w-7xl">
       {/* Title */}
       <div className="flex flex-col gap-3 mb-10">
         <motion.h2
@@ -60,33 +71,27 @@ const TopCoaches = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-3xl md:text-4xl font-bold text-center uppercase tracking-tight"
+          className="text-3xl font-bold tracking-tight text-center uppercase md:text-4xl"
         >
           Top <span className="text-[var(--primary)]">Experienced Coaches</span>
         </motion.h2>
-          <span className="h-1 w-14 mx-auto rounded-full bg-(--primary)" />
+        <span className="h-1 w-14 mx-auto rounded-full bg-(--primary)" />
       </div>
 
       {/* Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-        {topCoaches.map((coach, index) => (
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 md:gap-10">
+        {topCoaches.map((coach: Coach, index: number) => (
           <motion.div
-            key={coach._id}
+            key={coach._id} // now safe
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             viewport={{ once: true }}
-            whileHover={{ y: -10 }} // Subtle lift on hover instead of just scale
+            whileHover={{ y: -10 }}
             className="relative"
           >
-            {/* 🏆 Rank Badge - Made responsive with dynamic positioning and size */}
             <div
-              className={`absolute -top-4 -right-2 z-10 
-                w-12 h-12 md:w-16 md:h-16 
-                flex items-center justify-center 
-                text-2xl md:text-4xl 
-                rounded-full shadow-xl transform
-                ${rankStyles[index]}`}
+              className={`absolute -top-4 -right-2 z-10 w-12 h-12 md:w-16 md:h-16 flex items-center justify-center text-2xl md:text-4xl rounded-full shadow-xl transform ${rankStyles[index]}`}
             >
               {index === 0 && "🥇"}
               {index === 1 && "🥈"}

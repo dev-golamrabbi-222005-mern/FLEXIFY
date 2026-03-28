@@ -126,8 +126,8 @@ export default function SchedulePage() {
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)] w-full max-w-md rounded-2xl p-8 shadow-2xl">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold flex items-center gap-2">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="flex items-center gap-2 text-xl font-bold">
                 <Edit3 size={20} className="text-[var(--primary)]" />
                 Custom Task: {activeDay}
               </h3>
@@ -202,7 +202,7 @@ export default function SchedulePage() {
               </Link>
               <button
                 onClick={() => setIsEditMode(true)}
-                className="btn-primary flex-1 md:flex-none flex items-center justify-center gap-2 rounded-2xl py-3 px-6 text-sm font-bold shadow-lg shadow-emerald-500/10"
+                className="flex items-center justify-center flex-1 gap-2 px-6 py-3 text-sm font-bold shadow-lg btn-primary md:flex-none rounded-2xl shadow-emerald-500/10"
               >
                 <Settings2 size={18} /> Edit Plan
               </button>
@@ -221,7 +221,7 @@ export default function SchedulePage() {
               <button
                 onClick={handleSave}
                 disabled={mutation.isPending}
-                className="btn-primary flex-1 md:flex-none flex items-center justify-center gap-2 rounded-2xl py-3 px-8 text-sm font-bold shadow-lg shadow-emerald-500/10"
+                className="flex items-center justify-center flex-1 gap-2 px-8 py-3 text-sm font-bold shadow-lg btn-primary md:flex-none rounded-2xl shadow-emerald-500/10"
               >
                 {mutation.isPending ? (
                   <Loader2 className="animate-spin" size={18} />
@@ -236,7 +236,7 @@ export default function SchedulePage() {
       </div>
 
       {/* Schedule Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-6">
         {DAYS_OF_WEEK.map((day) => {
           const scheduleValue = getDisplayValue(day);
           const isRestDay = scheduleValue.routine === "Rest Day";
@@ -354,7 +354,7 @@ export default function SchedulePage() {
           </p>
           <button
             onClick={() => setIsEditMode(true)}
-            className="btn-primary px-10 py-4 rounded-2xl font-bold inline-flex items-center gap-2 shadow-xl shadow-emerald-500/20"
+            className="inline-flex items-center gap-2 px-10 py-4 font-bold shadow-xl btn-primary rounded-2xl shadow-emerald-500/20"
           >
             <Settings2 size={20} /> Update Weekly Plan
           </button>

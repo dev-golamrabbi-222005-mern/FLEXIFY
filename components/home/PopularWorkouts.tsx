@@ -3,43 +3,35 @@
 import { motion } from "framer-motion";
 import { FaFire, FaClock } from "react-icons/fa";
 import SectionTitle from "@/app/(website)/components/ui/section-title";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { FaDumbbell } from "react-icons/fa6";
+import { LucideBicepsFlexed } from "lucide-react";
+import Link from "next/link";
 
-const workouts = [
-  {
-    title: "Full Body Strength",
-    level: "Advanced",
-    duration: "45 min",
-    calories: "450 kcal",
-    image:
-      "https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=1000&q=80",
-  },
-  {
-    title: "HIIT Fat Burner",
-    level: "Intermediate",
-    duration: "30 min",
-    calories: "380 kcal",
-    image:
-      "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=1000&q=80",
-  },
-  {
-    title: "Core Crusher",
-    level: "Beginner",
-    duration: "25 min",
-    calories: "250 kcal",
-    image:
-      "https://images.unsplash.com/photo-1558611848-73f7eb4001a1?w=1000&q=80",
-  },
-  {
-    title: "Upper Body Power",
-    level: "Advanced",
-    duration: "40 min",
-    calories: "420 kcal",
-    image:
-      "https://images.unsplash.com/photo-1605296867424-35fc25c9212a?w=1000&q=80",
-  },
-];
+interface Workout {
+  _id?: string;
+  id: string;
+  name: string;
+  force: string | null;
+  level: "beginner" | "intermediate" | "expert";
+  mechanic: string | null;
+  equipment: string | null;
+  primaryMuscles: string[];
+  secondaryMuscles: string[];
+  instructions: string[];
+  category: string;
+  images: string[];
+}
 
 export default function PopularWorkouts() {
+  const {data: workouts = []} = useQuery({
+    queryKey: ["workouts"],
+    queryFn: async () => {
+      const res = await axios.get("/api/exercises");
+      return res.data.exercises.slice(0, 4);
+    }
+  });
   return (
     <section className="pb-8 md:pb-12 px-6 bg-[var(--bg-primary)]">
       <div className="mx-auto max-w-7xl">
@@ -51,7 +43,7 @@ export default function PopularWorkouts() {
 
         {/* Workout Grid */}
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {workouts.map((workout, index) => (
+          {workouts.map((workout: Workout, index: number) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 40 }}
@@ -64,8 +56,13 @@ export default function PopularWorkouts() {
               {/* Image */}
               <div className="relative h-56 overflow-hidden">
                 <img
-                  src={workout.image}
-                  alt={workout.title}
+                  src={workout.images?.[0] 
+                      ? workout.images?.[0].startsWith('http') 
+                        ? workout.images?.[0] 
+                        : `/exercises/${workout.images?.[0].startsWith('/') ? workout.images?.[0].slice(1) : workout.images?.[0]}`
+                      : "/placeholder-exercise.jpg"
+                    }
+                  alt={workout.name}
                   className="object-cover w-full h-full transition duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-black/40"></div>
@@ -79,24 +76,24 @@ export default function PopularWorkouts() {
               {/* Content */}
               <div className="p-6">
                 <h3 className="mb-4 text-xl font-bold">
-                  {workout.title}
+                  {workout.name}
                 </h3>
 
                 <div className="flex items-center justify-between text-sm text-zinc-400">
                   <div className="flex items-center gap-2">
-                    <FaClock className="text-(--primary)" />
-                    {workout.duration}
+                    <FaDumbbell className="text-(--primary)" />
+                    {workout.equipment}
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <FaFire className="text-(--primary)" />
-                    {workout.calories}
+                    <LucideBicepsFlexed className="text-(--primary)" />
+                    {workout.force}
                   </div>
                 </div>
 
-                <button className="mt-6 w-full py-3 rounded-lg bg-(--primary) text-white font-semibold hover:bg-(--primary-dark) transition duration-300 shadow-lg">
+                <Link href={`/exercises/${workout._id}`} className="mt-6 w-full block py-3 rounded-lg bg-(--primary) text-white text-center font-semibold hover:bg-(--primary-dark) transition duration-300 shadow-lg">
                   Start Workout
-                </button>
+                </Link>
               </div>
             </motion.div>
           ))}

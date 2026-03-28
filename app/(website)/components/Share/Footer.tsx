@@ -88,7 +88,7 @@ const Footer = () => {
 
       {/* Divider */}
       <div className="border-t-2 border-[#add4c7] mt-10">
-        <p className="text-center text-[15px] font-semibold py-5 text-gray-500">
+        <p className="text-center text-[15px] font-semibold py-4 text-gray-500">
           © 2026 Flexify. All rights reserved.
         </p>
       </div>

@@ -133,8 +133,8 @@ const ROLES = [
     ],
     highlight: {
       icon: "💪",
-      title: "CS Token System",
-      text: "Coaches connect with users via Coach Selection tokens. Once a user purchases premium membership, they pick their coach — unlocking chat, calls & video.",
+      title: "Coach Selection System",
+      text: "Coaches connect with users via Elite Membership. Once a user purchases elite membership, they pick their coach — unlocking chat, calls & video.",
       stats: [
         { val: "10+", label: "Yrs for Premium" },
         { val: "CS", label: "Token System" },
@@ -275,14 +275,15 @@ function FeatureRow({
         duration: 0.45,
         ease: [0.22, 1, 0.36, 1],
       }}
+      onMouseEnter={() => setOpen(true)} // ← add these two
+      onMouseLeave={() => setOpen(false)}
     >
       <motion.button
-        onClick={() => setOpen((o) => !o)}
-        className="w-full text-left group"
+        className="w-full text-left group" // onClick removed
         whileTap={{ scale: 0.995 }}
       >
         <motion.div
-          className="flex items-center gap-4 py-4 px-3 rounded-xl transition-all duration-200"
+          className="flex items-center gap-4 py-4 px-3 rounded-xl transition-all duration-300"
           animate={{
             backgroundColor: open ? `${color}10` : "transparent",
           }}
@@ -732,6 +733,8 @@ export default function HowItWorksPage() {
         fontFamily: "'Sora', sans-serif",
       }}
     >
+      <title>How it works - Flexify</title>
+      
       <SideNav active={activeRole} onChange={scrollToRole} />
 
       <div className="max-w-7xl mx-auto px-6 mt-8 md:mt-12 mb-10">
