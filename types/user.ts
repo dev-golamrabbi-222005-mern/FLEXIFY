@@ -43,3 +43,11 @@ export interface GoalFormData {
   targetValue: number;
   unit: string;
 }
+
+ 
+  export interface DaySchedule {
+  routine: string;
+  time: string;
+}
+
+
