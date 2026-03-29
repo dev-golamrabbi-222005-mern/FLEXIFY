@@ -11,6 +11,7 @@ import {
   MoreVertical,
   X,
   Clock,
+  UserPen,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import axios from "axios";
@@ -28,6 +29,7 @@ interface WorkoutPlan {
   clientName: string;
   date: string;
   time: string;
+  assignedBy: string;
 }
 
 interface PlanFormData {
@@ -209,6 +211,14 @@ export default function CoachWorkouts() {
                 Time:
                 <span className="font-semibold" style={{ color: "var(--text-primary)" }}>
                   {formatTime12h(plan.time)}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2 mb-5 text-sm" style={{ color: "var(--text-secondary)" }}>
+                <UserPen size={16} style={{ color: "var(--primary)" }} />
+                Assigned By:
+                <span className="font-semibold" style={{ color: "var(--text-primary)" }}>
+                  {plan.assignedBy}
                 </span>
               </div>
 
