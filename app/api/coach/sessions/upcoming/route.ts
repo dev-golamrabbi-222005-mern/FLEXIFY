@@ -31,7 +31,7 @@ export const GET = async(req: NextRequest) => {
         }))
         .filter((session) => session.date >= now)
         .sort((a, b) => a.date.getTime() - b.date.getTime())
-        .slice(0, 5)
+        .slice(0, 3)
         .map((session) => {
             const { date, ...rest } = session;
             return rest;
