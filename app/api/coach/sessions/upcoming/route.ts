@@ -24,14 +24,14 @@ export const GET = async(req: NextRequest) => {
     const allSessions = await coachSessions.find({ coachId }).toArray() as unknown as Session[];
     
     const now = new Date();
+    const endOfWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
     const upcomingSessions = allSessions
         .map((session) => ({
             ...session,
             date: new Date(session.year, session.month - 1, session.day, ...session.time.split(':').map(Number))
         }))
-        .filter((session) => session.date >= now)
+        .filter((session) => session.date >= now && session.date <= endOfWeek)
         .sort((a, b) => a.date.getTime() - b.date.getTime())
-        .slice(0, 5)
         .map((session) => {
             const { date, ...rest } = session;
             return rest;
