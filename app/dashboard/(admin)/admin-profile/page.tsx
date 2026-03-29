@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { toast } from "react-toastify";
 
 interface AdminData {
   _id: string;
@@ -60,18 +61,10 @@ export default function AdminProfilePage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-profile"] });
-      Swal.fire({
-        title: "Success!",
-        text: "Profile updated successfully.",
-        icon: "success",
-        background: "var(--bg-secondary)",
-        color: "var(--text-primary)",
-        timer: 2000,
-        showConfirmButton: false,
-      });
+      toast.success("Profile updated successfully.");
     },
     onError: (err: AxiosError<ApiError>) => {
-      Swal.fire("Error", err.response?.data?.error || "Update failed", "error");
+      toast.error(err.response?.data?.error || "Update failed");
     }
   });
 
@@ -100,7 +93,7 @@ export default function AdminProfilePage() {
       
       {/* ===== PROFILE HEADER ===== */}
       <section className="card-glass p-8 rounded-3xl border border-[var(--border-color)] shadow-sm">
-        <div className="flex flex-col md:flex-row items-center gap-8">
+        <div className="flex flex-col items-center gap-8 md:flex-row">
           <div className="relative group">
             <img
               src={selectedImage || admin?.profileImage || "/default-avatar.png"}
@@ -124,13 +117,13 @@ export default function AdminProfilePage() {
             />
           </div>
 
-          <div className="flex-1 text-center md:text-left space-y-3">
+          <div className="flex-1 space-y-3 text-center md:text-left">
             <h1 className="text-3xl font-black tracking-tight">{admin?.fullName}</h1>
             <div className="flex flex-wrap justify-center md:justify-start gap-4 text-[var(--text-secondary)]">
               <p className="flex items-center gap-2 font-medium"><Mail size={16}/> {admin?.email}</p>
               <p className="flex items-center gap-2 font-medium"><Phone size={16}/> {admin?.phone || "N/A"}</p>
             </div>
-            <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-2">
+            <div className="flex flex-wrap justify-center gap-3 pt-2 md:justify-start">
               <span className="px-4 py-1 bg-[var(--primary)] text-white text-xs font-bold uppercase rounded-full shadow-lg">
                 {admin?.role}
               </span>
@@ -145,11 +138,11 @@ export default function AdminProfilePage() {
       {/* ===== EDIT PROFILE FORM ===== */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
         <section className="card-glass p-8 rounded-3xl border border-[var(--border-color)]">
-          <h2 className="text-xl font-bold mb-8 flex items-center gap-2">
+          <h2 className="flex items-center gap-2 mb-8 text-xl font-bold">
             <User size={22} className="text-[var(--primary)]"/> Personal Information
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="space-y-2">
               <label className="text-sm font-bold text-[var(--text-secondary)] ml-1">Full Name</label>
               <input 
@@ -194,14 +187,14 @@ export default function AdminProfilePage() {
 
         {/* ===== SECURITY SETTINGS ===== */}
         <section className="card-glass p-8 rounded-3xl border border-[var(--border-color)]">
-          <h2 className="text-xl font-bold mb-8 flex items-center gap-2">
+          <h2 className="flex items-center gap-2 mb-8 text-xl font-bold">
             <Shield size={22} className="text-orange-500"/> Security & Privacy
           </h2>
 
           <div className="space-y-4">
              <div className="flex items-center justify-between p-4 bg-[var(--bg-secondary)] rounded-2xl border border-[var(--border-color)]">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-orange-100 text-orange-600 rounded-xl"><Key size={20}/></div>
+                  <div className="p-3 text-orange-600 bg-orange-100 rounded-xl"><Key size={20}/></div>
                   <p className="font-bold">Change Password</p>
                 </div>
                 <button type="button" className="text-[var(--primary)] font-bold text-sm hover:underline">Update</button>
@@ -209,7 +202,7 @@ export default function AdminProfilePage() {
 
              <div className="flex items-center justify-between p-4 bg-[var(--bg-secondary)] rounded-2xl border border-[var(--border-color)]">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-blue-100 text-blue-600 rounded-xl"><Shield size={20}/></div>
+                  <div className="p-3 text-blue-600 bg-blue-100 rounded-xl"><Shield size={20}/></div>
                   <p className="font-bold">Two-Factor Auth</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">

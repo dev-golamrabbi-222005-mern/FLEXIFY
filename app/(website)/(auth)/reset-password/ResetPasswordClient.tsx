@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import {  FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 interface ApiErrorResponse {
   message: string;
@@ -24,15 +25,11 @@ export default function ResetPasswordClient() {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      return Swal.fire("Error", "Passwords do not match!", "error");
+      return toast.error("Passwords do not match!");
     }
 
     if (password.length < 6) {
-      return Swal.fire(
-        "Error",
-        "Password must be at least 6 characters!",
-        "error"
-      );
+      return toast.error("Password must be at least 6 characters!");
     }
 
     setLoading(true);
@@ -43,12 +40,7 @@ export default function ResetPasswordClient() {
       });
 
       if (response.status === 200) {
-        await Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: "Password reset successful! Please login with your new password.",
-          confirmButtonColor: "var(--primary)",
-        });
+        await toast.success("Password reset successful! Please login with your new password.");
         router.push("/login");
       }
     } catch (err) {
@@ -56,12 +48,7 @@ export default function ResetPasswordClient() {
       const errorMessage =
         axiosError.response?.data?.message || "Failed to reset password.";
 
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: errorMessage,
-        confirmButtonColor: "var(--danger)",
-      });
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -69,18 +56,18 @@ export default function ResetPasswordClient() {
 
   if (!email) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
+      <div className="flex items-center justify-center min-h-screen text-white">
         Invalid or expired reset link.
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="flex items-center justify-center min-h-screen px-4">
       <div className="w-full max-w-md card-glass">
         <div className="mb-8 text-center">
           <h1
-            className="text-2xl font-bold mb-2"
+            className="mb-2 text-2xl font-bold"
             style={{ color: "var(--text-primary)" }}
           >
             Reset Password
@@ -102,12 +89,12 @@ export default function ResetPasswordClient() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="input-style pl-12"
+                className="pl-12 input-style"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-4 text-gray-400 hover:text-accent"
+                className="absolute text-gray-400 right-4 top-4 hover:text-accent"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
@@ -124,7 +111,7 @@ export default function ResetPasswordClient() {
                 placeholder="••••••••"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="input-style pl-12"
+                className="pl-12 input-style"
               />
             </div>
           </div>

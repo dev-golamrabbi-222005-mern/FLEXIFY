@@ -17,7 +17,6 @@ import React from "react";
 import ClientProgressChart from "./ClientProgressChart";
 import ClientList from "./ClientList";
 
-// 1. Define all necessary interfaces
 interface Coach {
   _id: string;
   email: string;
@@ -36,10 +35,32 @@ interface Trainee {
   progress: number;
 }
 
+interface NewUsersWeekly {
+  newUsersThisWeek: number;
+}
+
+
+interface Session {
+  day: number;
+  month: number;
+  year: number;
+  time: string;
+  client: string;
+  type: string;
+}
+
 const CoachDashboard = ({ name }: { name: string }) => {
   const { data: session } = useSession();
 
-  // 2. Type the Coaches Query
+  const formatTime12h = (time24: string) => {
+    const [hourStr, minute] = time24.split(":");
+    if (hourStr === undefined || minute === undefined) return time24;
+    let hour = Number(hourStr);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12 || 12;
+    return `${hour.toString().padStart(2, "0")}:${minute} ${ampm}`;
+  };
+
   const { data: coaches = [] } = useQuery<Coach[]>({
     queryKey: ["coaches"],
     queryFn: async () => {
@@ -48,21 +69,34 @@ const CoachDashboard = ({ name }: { name: string }) => {
     },
   });
 
-  // Fix: Explicitly type 'coach' in find
   const singleCoach = coaches.find(
     (coach: Coach) => coach?.email === session?.user?.email,
   );
 
-  // 3. Type the Earnings Query
-  const { data: monthlyEarning } = useQuery<MonthlyEarning[]>({
-    queryKey: ["monthlyEarning"],
+  const {data: weeklyNewUsers} = useQuery<NewUsersWeekly>({
+    queryKey: ["weeklyNewUsers"],
     queryFn: async () => {
-      const res = await axios.get("/api/monthly-earnings");
-      return res.data.data;
+      const res = await axios.get(`/api/coach/new-users-weekly?coachId=${session?.user?.id}`);
+      return res.data;
     },
   });
 
-  // 4. Type the Reviews Query
+  const {data: todaySessions} = useQuery<Session[]>({
+    queryKey: ["todaySessions"],
+    queryFn: async () => {
+      const res = await axios.get(`/api/coach/sessions/today?coachId=${session?.user?.id}`);
+      return res.data;
+    },
+  });
+
+  const { data: monthlyEarning } = useQuery<MonthlyEarning[]>({
+    queryKey: ["monthlyEarning"],
+    queryFn: async () => {
+      const res = await axios.get(`/api/coach/earnings?coachId=${session?.user?.id}`);
+      return res.data;
+    },
+  });
+
   const { data: reviews = [] } = useQuery<Review[]>({
     queryKey: ["reviews"],
     queryFn: async () => {
@@ -71,7 +105,6 @@ const CoachDashboard = ({ name }: { name: string }) => {
     },
   });
 
-  // Fix: Add a check for reviews.length to avoid NaN
   const avgRating =
     reviews.length > 0
       ? (
@@ -79,20 +112,18 @@ const CoachDashboard = ({ name }: { name: string }) => {
         ).toFixed(1)
       : "0.0";
 
-  // 5. Type the Trainees Query
   const { data: trainees = [] } = useQuery<Trainee[]>({
     queryKey: ["trainees"],
     queryFn: async () => {
-      const res = await axios.get(`/api/coach/trainees`);
+      const res = await axios.get(`/api/coach/coach-users?coachId=${session?.user?.id}`);
       return res.data;
     },
   });
 
-  // Fix: Add a check for trainees.length to avoid NaN
   const avgCompletionRate =
     trainees.length > 0
       ? Math.round(
-          trainees.reduce((sum, t: Trainee) => sum + t.progress, 0) /
+          trainees.reduce((sum, t: Trainee) => sum + (t.progress | 0), 0) /
             trainees.length,
         )
       : 0;
@@ -102,8 +133,8 @@ const stats = [
     icon: Users,
     label: "Active Clients",
     // Convert number to string using a template literal
-    value: String(singleCoach?.clients || 0),
-    sub: "2 new this week",
+    value: String(trainees?.length || 0),
+    sub: `${weeklyNewUsers?.newUsersThisWeek} new this week`,
     iconColor: "#4b9eff",
     iconBg: "#dbeeff",
     trend: { val: 20 },
@@ -112,8 +143,8 @@ const stats = [
   {
     icon: CalendarCheck,
     label: "Sessions Today",
-    value: "4", // This was already a string
-    sub: "Next at 3:00 PM",
+    value: String(todaySessions?.length || 0),
+    sub: todaySessions?.[0]?.time ? `Next at ${formatTime12h(todaySessions?.[0]?.time)}` : "No session today",
     iconColor: "#f47920",
     iconBg: "#fff3e0",
     delay: 0.16,
@@ -141,7 +172,7 @@ const stats = [
     icon: TrendingUp,
     label: "Monthly Earnings",
     // The ৳ symbol makes this a string automatically
-    value: `৳${monthlyEarning?.[5]?.total || 0}`,
+    value: `৳${monthlyEarning?.[monthlyEarning.length - 1]?.total.toLocaleString() || 0}`,
     sub: "this month",
     iconColor: "#27ae60",
     iconBg: "#dcfce7",
@@ -194,10 +225,11 @@ const stats = [
           <p className="text-white/70 text-[11px] font-black uppercase tracking-widest mb-1">
             Today's Schedule
           </p>
-          <p className="text-lg font-black text-white">4 Sessions · 6 Hours</p>
-          <p className="mt-1 text-xs text-white/70">
-            Next: Ali Hassan at 3:00 PM — Hypertrophy Day 3
-          </p>
+          <p className="text-lg font-black text-white">{todaySessions?.length || 0} Sessions</p>
+          {todaySessions?.map((s: Session, i: number) => <p key={i} className="mt-1 text-xs text-white/70">
+            Next: {s.client} at {formatTime12h(s.time)} — {s.type}
+          </p>)}
+          
         </div>
       </motion.div>
 

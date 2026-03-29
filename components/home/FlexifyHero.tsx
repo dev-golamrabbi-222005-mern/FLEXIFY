@@ -13,8 +13,8 @@ const slides = [
     desc: "Join thousands of viewers watching real-time transformations and success stories.",
     img: "https://i.ibb.co.com/M5kfgdR2/image.png",
     icon: <Users size={24} />,
-    joinLink:"/",
-    learnMoreLink: "/"
+    joinLink: "/login",
+    learnMoreLink: "/",
   },
   {
     id: 2,
@@ -24,8 +24,8 @@ const slides = [
     desc: "Push beyond your boundaries with our AI-powered exercise tracking system.",
     img: "https://i.ibb.co.com/27PD6wh6/image.png",
     icon: <Dumbbell size={24} />,
-    joinLink:"/",
-    learnMoreLink: "/"
+    joinLink: "/login",
+    learnMoreLink: "/exercises",
   },
   {
     id: 3,
@@ -35,9 +35,9 @@ const slides = [
     desc: "Empower others. Manage your students with the most advanced coach dashboard.",
     img: "https://i.ibb.co.com/8Df59Q4p/image.png",
     icon: <Target size={24} />,
-    joinLink:"/applycoach",
-    learnMoreLink: "/coaches"
-  }
+    joinLink: "/login",
+    learnMoreLink: "/coaches",
+  },
 ];
 
 export default function FlexifyHero() {
@@ -51,13 +51,13 @@ export default function FlexifyHero() {
   }, []);
 
   return (
-    <section className="relative min-h-[500px] py-7 w-full bg-[var(--bg-primary)] overflow-hidden transition-colors duration-700 font-sans flex items-center">
+    <section className="relative min-h-[380px] pt-7 pb-4 w-full bg-[var(--bg-primary)] overflow-hidden transition-colors duration-700 font-sans flex items-center">
       <div className="absolute inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.div
             key={index}
             initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 0.50, scale: 1 }}
+            animate={{ opacity: 0.5, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
             className="w-full h-full"
@@ -103,10 +103,20 @@ export default function FlexifyHero() {
               </p>
 
               <div className="flex flex-col gap-6 lg:flex-row">
-                <button onClick={() => window.location.href = slides[index].joinLink} className="bg-[var(--primary)] text-white font-black px-8 py-4 md:py-6 w-full rounded-2xl flex items-center justify-center gap-4 transition-all hover:scale-105 shadow-2xl shadow-(--primary) uppercase text-lg">
+                <button
+                  onClick={() =>
+                    (window.location.href = slides[index].joinLink)
+                  }
+                  className="bg-[var(--primary)] text-white font-black px-8 py-4 md:py-6 w-full rounded-2xl flex items-center justify-center gap-4 transition-all hover:scale-105 shadow-2xl shadow-(--primary) uppercase text-lg"
+                >
                   Join Now <ArrowRight size={24} />
                 </button>
-                <button onClick={() => window.location.href = slides[index].learnMoreLink} className="px-8 py-4 md:py-6 rounded-2xl border-2 w-full border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all bg-transparent backdrop-blur-sm flex items-center justify-center gap-3 font-bold uppercase tracking-tight text-center">
+                <button
+                  onClick={() =>
+                    (window.location.href = slides[index].learnMoreLink)
+                  }
+                  className="px-8 py-4 md:py-6 rounded-2xl border-2 w-full border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all bg-transparent backdrop-blur-sm flex items-center justify-center gap-3 font-bold uppercase tracking-tight text-center"
+                >
                   Learn More <Zap size={22} className="fill-current" />
                 </button>
               </div>
@@ -148,7 +158,11 @@ export default function FlexifyHero() {
                       {slides.map((_, i) => (
                         <div
                           key={i}
-                          className={`h-2 rounded-full transition-all duration-700 ${index === i ? "w-12 bg-[var(--primary)]" : "w-5 bg-white/20"}`}
+                          className={`h-2 rounded-full transition-all duration-700 ${
+                            index === i
+                              ? "w-12 bg-[var(--primary)]"
+                              : "w-5 bg-white/20"
+                          }`}
                         />
                       ))}
                     </div>
@@ -157,7 +171,10 @@ export default function FlexifyHero() {
                     </p>
                   </div>
                   <div className="p-5 bg-[var(--primary)] rounded-2xl shadow-xl">
-                    <Zap className="w-6 h-6 text-white md:w-8 md:h-8 lg:w-10 lg:h-10" fill="white"  />
+                    <Zap
+                      className="w-6 h-6 text-white md:w-8 md:h-8 lg:w-10 lg:h-10"
+                      fill="white"
+                    />
                   </div>
                 </div>
               </motion.div>
