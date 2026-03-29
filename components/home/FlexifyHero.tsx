@@ -115,7 +115,7 @@ export default function FlexifyHero() {
         </div>
 
         <div className="relative flex items-center justify-center w-full h-full md:w-1/2 md:justify-end">
-          <div className="relative w-full aspect-[9/9]  rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] shadow-[0_10px_40px_-5px_rgba(0,0,0,0.2)]">
+          <div className="relative w-full aspect-[3/2]  rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] shadow-[0_10px_40px_-5px_rgba(0,0,0,0.2)]">
             <AnimatePresence initial={false} mode="popLayout">
               <motion.div
                 key={index}
@@ -130,7 +130,7 @@ export default function FlexifyHero() {
                   scale: 1,
                 }}
                 exit={{ opacity: 0, filter: "blur(10px)", scale: 1.05 }}
-                transition={{ duration: 1.5
+                transition={{ duration: 3
                   , ease: [0.4, 0, 0.2, 1] }}
                 className="absolute inset-0 w-full h-full"
               >
