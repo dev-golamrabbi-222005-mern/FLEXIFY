@@ -5,6 +5,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 
 // 1. Define the interface for progress data
 interface ClientProgress {
@@ -13,11 +14,12 @@ interface ClientProgress {
 }
 
 const ClientProgressChart = () => {
+  const { data: session } = useSession();
   // 2. Add the <ClientProgress[]> type to useQuery
   const { data: clients = [] } = useQuery<ClientProgress[]>({
     queryKey: ["clients"],
     queryFn: async () => {
-      const res = await axios.get(`/api/coach/trainees`);
+      const res = await axios.get(`/api/coach/coach-users?coachId=${session?.user?.id}`);
       return res.data;
     },
   });
@@ -32,7 +34,7 @@ const ClientProgressChart = () => {
               className="w-16 text-xs font-bold shrink-0"
               style={{ color: "var(--text-secondary)" }}
             >
-              {c.name}
+              {c?.name}
             </span>
             <div
               className="flex-1 h-2 rounded-full"
@@ -40,7 +42,7 @@ const ClientProgressChart = () => {
             >
               <motion.div
                 initial={{ width: 0 }}
-                animate={{ width: `${c.progress}%` }}
+                animate={{ width: `${c?.progress ?? 0}%` }}
                 transition={{
                   delay: 0.3 + i * 0.08,
                   duration: 0.7,
@@ -49,11 +51,11 @@ const ClientProgressChart = () => {
                 className="h-full rounded-full"
                 style={{
                   background:
-                    c.progress > 80
+                    c?.progress > 80
                       ? "#10b981"
-                      : c.progress > 60
+                      : c?.progress > 60
                         ? "#f0a500"
-                        : c.progress > 40
+                        : c?.progress > 40
                           ? "#f47920"
                           : "#ef4444",
                 }}
@@ -63,7 +65,7 @@ const ClientProgressChart = () => {
               className="w-10 text-xs font-black text-right"
               style={{ color: "var(--text-primary)" }}
             >
-              {c.progress}%
+              {c?.progress ?? 0}%
             </span>
           </div>
         ))}

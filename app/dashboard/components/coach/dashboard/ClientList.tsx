@@ -4,11 +4,13 @@ import { fadeUp, SectionHeader } from "@/app/dashboard/page";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { useSession } from "next-auth/react";
 
 // 1. Define the Client interface
 interface Client {
   name: string;
   plan: string;
+  image: string;
   nextSession: string;
   status: "excellent" | "on-track" | "needs-attention";
 }
@@ -28,11 +30,12 @@ const statusStyle: Record<
 };
 
 const ClientList = () => {
+  const { data: session } = useSession();
   // 3. Add <Client[]> to useQuery
   const { data: clients = [] } = useQuery<Client[]>({
     queryKey: ["clients"],
     queryFn: async () => {
-      const res = await axios.get(`/api/coach/trainees`);
+      const res = await axios.get(`/api/coach/coach-users?coachId=${session?.user?.id}`);
       return res.data;
     },
   });
@@ -59,26 +62,21 @@ const ClientList = () => {
               style={{ borderColor: "var(--border-color)" }}
             >
               <div className="flex items-center gap-3">
-                <div
-                  className="flex items-center justify-center text-sm font-black text-white rounded-full w-9 h-9"
-                  style={{
-                    background: "linear-gradient(135deg, #f0a500, #f47920)",
-                  }}
-                >
-                  {c.name ? c.name[0] : "?"}
-                </div>
+                <img src={c?.image} alt={c?.name}
+                  className="flex items-center justify-center text-sm font-black text-white bg-center bg-cover rounded-full w-9 h-9"
+                />
                 <div>
                   <p
                     className="text-sm font-bold"
                     style={{ color: "var(--text-primary)" }}
                   >
-                    {c.name}
+                    {c?.name}
                   </p>
                   <p
                     className="text-[11px]"
                     style={{ color: "var(--text-secondary)" }}
                   >
-                    {c.plan} · {c.nextSession}
+                    {c?.plan} · {c?.nextSession}
                   </p>
                 </div>
               </div>
