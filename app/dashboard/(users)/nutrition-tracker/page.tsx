@@ -6,10 +6,10 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { Coffee, Sun, Moon, Utensils, Sparkles, X, LayoutList, Loader2 } from "lucide-react"; 
 import type { FoodItem, MealSection, FoodEntry } from "@/types/food";
-import CircularProgress from "../components/nutritions/CircularProgress";
-import AddFoodModal from "../components/nutritions/AddFoodModal";
-import MealCard from "../components/nutritions/MealCard";
-import WaterTracker from "../components/nutritions/WaterTracker";
+import CircularProgress from "../../components/nutritions/CircularProgress";
+import AddFoodModal from "../../components/nutritions/AddFoodModal";
+import MealCard from "../../components/nutritions/MealCard";
+import WaterTracker from "../../components/nutritions/WaterTracker";
 import { UserProfileResponse } from "@/types/user";
 
 
@@ -175,7 +175,7 @@ const addFood = (item: FoodItem, qty: number) => {
   );
 }
   return (
-    <div className="py-2.5 px-0 max-w-7xl mx-auto">
+    <div className="max-w-full">
         <title>Nutrition Tracker | Dashboard - Flexify</title>
       {/* Header Section */}
       <div className="flex items-center justify-between mb-6">

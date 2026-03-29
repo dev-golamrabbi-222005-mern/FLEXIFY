@@ -40,7 +40,7 @@ export default function CoachTrainees() {
 
   return (
     <>
-      <div className="px-4 mx-auto space-y-8 max-w-7xl">
+      <div className="space-y-8 max-w-full">
         <title>Traines | Dashboard - Flexify</title>
 
         {/* Header */}

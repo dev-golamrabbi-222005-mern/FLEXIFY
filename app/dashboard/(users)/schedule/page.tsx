@@ -121,7 +121,7 @@ export default function SchedulePage() {
     );
 
   return (
-    <div className="mt-10 max-w-full mx-auto px-4 pb-20 font-sans relative">
+    <div className="max-w-full relative">
       {/* Custom Manual Entry Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">

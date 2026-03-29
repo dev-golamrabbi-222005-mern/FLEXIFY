@@ -35,7 +35,7 @@ export default function ContactRequests() {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <div className="p-6">
+    <div>
       <title>Users Connect | Dashboard - Flexify</title>
       <h1 className="text-3xl font-bold mb-6">Wants to Connect</h1>
 

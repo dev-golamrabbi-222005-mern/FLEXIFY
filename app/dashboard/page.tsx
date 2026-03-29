@@ -532,7 +532,7 @@ const { data: session } = useSession();
   const userName = dbUser?.name ?? "User";
 
   return (
-    <div className="max-w-full p-0 mx-auto md:px-4">
+    <div className="max-w-full">
       {role === "user" && <UserDashboard name={userName} />}
       {role === "coach" && <CoachDashboard name={userName} />}
       {role === "admin" && <AdminDashboard name={userName} />}
