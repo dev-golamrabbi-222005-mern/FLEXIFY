@@ -9,6 +9,7 @@ type CoachUser = {
   coachId: string;
   userId: string | null;
   userEmail: string;
+  userName: string;
   totalPaid: number;
   payments: {
     amount: number;
@@ -139,6 +140,7 @@ export async function POST(req: NextRequest) {
           coachId: payment.coachId,
           userId: payment.userId ?? null,
           userEmail: payment.userEmail,
+          userName: payment.userName,
 
           totalPaid: paymentData.amount,
           payments: [paymentData],

@@ -4,13 +4,15 @@ import { Search, Filter, MoreVertical } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import axios from "axios";
 
 // 1. Define the Trainee interface
 interface Trainee {
   _id: string;
   name: string;
-  email: string;
+  userEmail: string;
+  image: string;
   plan: string;
   status: string;
   progress: number;
@@ -19,13 +21,14 @@ interface Trainee {
 }
 
 export default function CoachTrainees() {
+  const {data: session} = useSession();
   const [search, setSearch] = useState("");
 
   // 2. Add <Trainee[]> to useQuery
   const { data: trainees = [] } = useQuery<Trainee[]>({
     queryKey: ["trainees", search],
     queryFn: async () => {
-      const res = await axios.get(`/api/coach/trainees?name=${search}`);
+      const res = await axios.get(`/api/coach/coach-users?coachId=${session?.user?.id}`);
       return res.data;
     },
   });
@@ -38,7 +41,7 @@ export default function CoachTrainees() {
   return (
     <>
       <div className="px-4 mx-auto space-y-8 max-w-7xl">
-         <title>Traines | Dashboard - Flexify</title>
+        <title>Traines | Dashboard - Flexify</title>
 
         {/* Header */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -99,15 +102,9 @@ export default function CoachTrainees() {
                 {/* Top */}
                 <div className="flex justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div
+                    <img src={t.image} alt={t.name}
                       className="flex items-center justify-center text-sm font-bold rounded-full w-11 h-11"
-                      style={{
-                        background: "var(--primary)",
-                        color: "white",
-                      }}
-                    >
-                      {t.avatar || t.name.charAt(0)}
-                    </div>
+                    />
                     <div>
                       <h3
                         className="text-sm font-semibold group-hover:underline"
@@ -119,7 +116,7 @@ export default function CoachTrainees() {
                         className="text-xs"
                         style={{ color: "var(--text-muted)" }}
                       >
-                        {t.email}
+                        {t.userEmail}
                       </p>
                     </div>
                   </div>
@@ -160,9 +157,9 @@ export default function CoachTrainees() {
                     style={{ background: "var(--bg-secondary)" }}
                   >
                     <div
-                      className="h-full rounded-full transition-all duration-300"
+                      className="h-full transition-all duration-300 rounded-full"
                       style={{
-                        width: `${t.progress}%`,
+                        width: `${t.progress | 0}%`,
                         background: "var(--primary)",
                       }}
                     />
@@ -171,7 +168,7 @@ export default function CoachTrainees() {
                     className="text-xs font-semibold"
                     style={{ color: "var(--text-primary)" }}
                   >
-                    {t.progress}%
+                    {t.progress | 0}%
                   </span>
                 </div>
 
