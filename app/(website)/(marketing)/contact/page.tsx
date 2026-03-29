@@ -5,7 +5,6 @@ import { FaLocationDot } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { useState } from "react";
 import axios from "axios";
-import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 
 const Contact = () => {
@@ -29,6 +28,7 @@ const data = {
     toast.success("Message sent successfully!");
     form.reset();
   } catch (err) {
+    console.error(err);
     toast.error("Something went wrong");
   } finally {
     setLoading(false);
@@ -37,7 +37,7 @@ const data = {
 
   return (
     <div>
-          <title>Contact - Flexify</title>
+      <title>Contact - Flexify</title>
       <section className="px-6 mt-8 mb-10 md:mt-12">
         <div className="grid items-start grid-cols-1 gap-12 mx-auto max-w-7xl md:grid-cols-2">
           {/* Left: Contact Info */}
@@ -91,7 +91,7 @@ const data = {
                   Your Name
                 </label>
                 <input
-                  type="text"
+                  type="text" required
                   name="name"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   placeholder="Enter your name"
@@ -103,7 +103,7 @@ const data = {
                   Email Address
                 </label>
                 <input
-                  type="email"
+                  type="email" required
                   name="email"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   placeholder="Enter your email"
@@ -115,7 +115,7 @@ const data = {
                   Message
                 </label>
                 <textarea
-                name="message"
+                  name="message" required
                   rows={4}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   placeholder="Write your message..."
@@ -124,9 +124,10 @@ const data = {
 
               <button
                 type="submit"
+                disabled={loading}
                 className="w-full btn-primary text-[1.05rem] font-semibold text-center hover:scale-105 transition"
               >
-                Send Message
+                {loading ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>

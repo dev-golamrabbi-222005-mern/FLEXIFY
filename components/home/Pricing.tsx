@@ -25,7 +25,7 @@ interface Plan {
   features: PlanFeature[];
 }
 
-const ELITE_BASE_PRICE = 29;
+const ELITE_BASE_PRICE = 9.99;
 const PLAN_RANK: Record<string, number> = { free: 0, pro: 1, elite: 2 };
 
 const PLANS: Plan[] = [
@@ -53,7 +53,7 @@ const PLANS: Plan[] = [
   {
     id: "pro",
     name: "Pro",
-    price: "12",
+    price: "3.99",
     desc: "AI-powered tools for serious training.",
     cta: "Start Pro",
     ctaStyle: "filled",
@@ -147,7 +147,12 @@ function PlanButton({
   // ── Style ──────────────────────────────────────────────────────────────────
   let style: React.CSSProperties = {};
   if (isCurrent) {
-    style = { background: "var(--primary)", color: "#fff", cursor: "default" };
+    style = {
+      background: "var(--primary)",
+      color: "#fff",
+      cursor: "default",
+      opacity: "60%",
+    };
   } else if (isLower) {
     style = {
       background: "transparent",
@@ -248,144 +253,146 @@ const Pricing = () => {
 
   return (
     <section className="pb-8 md:pb-12 bg-[var(--bg-primary)]" id="pricing">
-      <div className="px-6 mx-auto max-w-7xl">
+      <div className="px-4 md:px-6 mx-auto max-w-7xl">
         <SectionTitle
           title="Choose Your Plan"
           subtitle="Simple, transparent pricing for every stage of your fitness journey."
         />
 
-        <div
-          className="rounded-3xl overflow-hidden"
-          style={{ border: "3px solid var(--border-color)" }}
-        >
-          {/* ── Header row ── */}
+        <div className="overflow-x-auto">
           <div
-            className="grid grid-cols-4"
-            style={{ background: "var(--bg-secondary)" }}
+            className="rounded-3xl min-w-[800px] overflow-hidden" // set a min-width for table
+            style={{ border: "3px solid var(--border-color)" }}
           >
-            <div className="px-6 py-5 flex items-center">
-              <span
-                className="text-2xl font-extrabold uppercase tracking-widest"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                Features
-              </span>
-            </div>
-
-            {PLANS.map((plan) => (
-              <div
-                key={plan.id}
-                className="relative px-6 py-5 text-center flex flex-col items-center"
-                style={{
-                  background: plan.featured
-                    ? "rgba(244,121,32,0.06)"
-                    : "transparent",
-                  borderLeft: "1px solid var(--border-color)",
-                  borderTop: plan.featured
-                    ? "3px solid var(--primary)"
-                    : "3px solid transparent",
-                }}
-              >
-                {/* Recommended badge */}
-                {plan.featured && (
-                  <div
-                    className="absolute -top-px left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-b-lg text-[9px] font-black uppercase tracking-widest text-white"
-                    style={{ background: "var(--primary)" }}
-                  >
-                    Recommended
-                  </div>
-                )}
-
-                {/* Active plan badge */}
-                {session && userPlan === plan.id && (
-                  <div
-                    className="absolute top-2 right-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider"
-                    style={{
-                      background: "rgba(16,185,129,0.12)",
-                      border: "1px solid rgba(16,185,129,0.3)",
-                      color: "#059669",
-                    }}
-                  >
-                    ✓ Active
-                  </div>
-                )}
-
-                <p
-                  className="font-black text-base mb-1"
-                  style={{ color: "var(--text-primary)" }}
-                >
-                  {plan.name}
-                </p>
-                <div className="flex items-baseline gap-0.5 mb-1">
-                  <span
-                    className="text-3xl font-black"
-                    style={{
-                      color: plan.featured
-                        ? "var(--primary)"
-                        : "var(--text-primary)",
-                    }}
-                  >
-                    ${plan.price}
-                  </span>
-                  <span
-                    className="font-bold"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    /mo
-                  </span>
-                </div>
-                <p
-                  className="text-[13px] leading-snug mb-4"
+            {/* ── Header row ── */}
+            <div
+              className="grid grid-cols-4"
+              style={{ background: "var(--bg-secondary)" }}
+            >
+              <div className="px-6 py-5 flex items-center">
+                <span
+                  className="text-2xl font-extrabold uppercase tracking-widest"
                   style={{ color: "var(--text-secondary)" }}
                 >
-                  {plan.desc}
-                </p>
-
-                <PlanButton
-                  plan={plan}
-                  userPlan={userPlan}
-                  loading={loadingPlan === plan.id}
-                  onClick={() => handlePlanClick(plan.id)}
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* ── Feature rows ── */}
-          {PLANS[0].features.map((f, fi) => (
-            <div
-              key={f.label}
-              className="grid grid-cols-4"
-              style={{
-                borderTop: "1px solid var(--border-color)",
-                background:
-                  fi % 2 === 0 ? "var(--bg-primary)" : "var(--bg-secondary)",
-              }}
-            >
-              <div className="px-6 py-4 flex items-center">
-                <span
-                  className="text-sm font-semibold"
-                  style={{ color: "var(--text-primary)" }}
-                >
-                  {f.label}
+                  Features
                 </span>
               </div>
+
               {PLANS.map((plan) => (
                 <div
-                  key={`${f.label}-${plan.id}`}
-                  className="px-6 py-4 flex items-center justify-center"
+                  key={plan.id}
+                  className="relative px-6 py-5 text-center flex flex-col items-center"
                   style={{
-                    borderLeft: "1px solid var(--border-color)",
                     background: plan.featured
-                      ? "rgba(244,121,32,0.03)"
+                      ? "rgba(244,121,32,0.06)"
                       : "transparent",
+                    borderLeft: "1px solid var(--border-color)",
+                    borderTop: plan.featured
+                      ? "3px solid var(--primary)"
+                      : "3px solid transparent",
                   }}
                 >
-                  <FeatureValue val={plan.features[fi].val} />
+                  {/* Recommended badge */}
+                  {plan.featured && (
+                    <div
+                      className="absolute -top-px left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-b-lg text-[9px] font-black uppercase tracking-widest text-white"
+                      style={{ background: "var(--primary)" }}
+                    >
+                      Recommended
+                    </div>
+                  )}
+
+                  {/* Active plan badge */}
+                  {session && userPlan === plan.id && (
+                    <div
+                      className="absolute top-2 right-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider"
+                      style={{
+                        background: "rgba(16,185,129,0.12)",
+                        border: "1px solid rgba(16,185,129,0.3)",
+                        color: "#059669",
+                      }}
+                    >
+                      ✓ Active
+                    </div>
+                  )}
+
+                  <p
+                    className="font-black text-base mb-1"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    {plan.name}
+                  </p>
+                  <div className="flex items-baseline gap-0.5 mb-1">
+                    <span
+                      className="text-3xl font-black"
+                      style={{
+                        color: plan.featured
+                          ? "var(--primary)"
+                          : "var(--text-primary)",
+                      }}
+                    >
+                      ${plan.price}
+                    </span>
+                    <span
+                      className="font-bold"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      /mo
+                    </span>
+                  </div>
+                  <p
+                    className="text-[13px] leading-snug mb-4"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    {plan.desc}
+                  </p>
+
+                  <PlanButton
+                    plan={plan}
+                    userPlan={userPlan}
+                    loading={loadingPlan === plan.id}
+                    onClick={() => handlePlanClick(plan.id)}
+                  />
                 </div>
               ))}
             </div>
-          ))}
+
+            {/* ── Feature rows ── */}
+            {PLANS[0].features.map((f, fi) => (
+              <div
+                key={f.label}
+                className="grid grid-cols-4"
+                style={{
+                  borderTop: "1px solid var(--border-color)",
+                  background:
+                    fi % 2 === 0 ? "var(--bg-primary)" : "var(--bg-secondary)",
+                }}
+              >
+                <div className="px-6 py-4 flex items-center">
+                  <span
+                    className="text-sm font-semibold"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    {f.label}
+                  </span>
+                </div>
+                {PLANS.map((plan) => (
+                  <div
+                    key={`${f.label}-${plan.id}`}
+                    className="px-6 py-4 flex items-center justify-center"
+                    style={{
+                      borderLeft: "1px solid var(--border-color)",
+                      background: plan.featured
+                        ? "rgba(244,121,32,0.03)"
+                        : "transparent",
+                    }}
+                  >
+                    <FeatureValue val={plan.features[fi].val} />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
 
         <p

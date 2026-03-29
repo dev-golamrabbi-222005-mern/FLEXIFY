@@ -2,20 +2,36 @@ import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
 import { ObjectId } from "mongodb";
 
-// In Next.js 15, the second argument (context) MUST have params as a Promise
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: { id: string } },
 ) {
-  // You MUST await the params before using them
-  const { id } = await params;
+  try {
+    if (!ObjectId.isValid(params.id)) {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
 
-  const collection = dbConnect("contacts");
+    const body = await req.json();
 
-  await collection.updateOne(
-    { _id: new ObjectId(id) },
-    { $set: { isRead: true } },
-  );
+    // Only update status and repliedAt
+    const updateDoc: Record<string, unknown> = {};
+    if (body.status === "replied") {
+      updateDoc.status = "replied";
+      updateDoc.repliedAt = new Date();
+    }
 
-  return NextResponse.json({ success: true });
+    const collection = await dbConnect("contacts");
+    await collection.updateOne(
+      { _id: new ObjectId(params.id) },
+      { $set: updateDoc },
+    );
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("PATCH ERROR:", error);
+    return NextResponse.json(
+      { error: "Failed to update contact" },
+      { status: 500 },
+    );
+  }
 }
