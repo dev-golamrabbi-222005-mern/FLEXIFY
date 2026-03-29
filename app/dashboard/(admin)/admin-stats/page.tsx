@@ -83,7 +83,7 @@ export default function AdminStatsSection() {
   });
 
   return (
-    <div className="space-y-8 bg-[var(--bg-primary)] rounded-2xl">
+    <div className="space-y-8">
       <title>Stats | Dashboard - Flexify</title>
       
       {/* 1. TOP STATS CARDS */}

@@ -140,7 +140,7 @@ export default function CoachWorkouts() {
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-8" style={{ background: "var(--bg-primary)" }}>
+    <div className="max-w-full">
       <title>Workouts | Dashboard - Flexify</title>
       <div className="mx-auto space-y-8 max-w-7xl">
         {/* Header */}

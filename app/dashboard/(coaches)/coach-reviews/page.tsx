@@ -48,7 +48,7 @@ export default function CoachReviews() {
 
   return (
     <>
-      <div className="max-w-6xl px-4 mx-auto space-y-8">
+      <div className="max-w-full space-y-8">
           <title>Reviews | Dashboard - Flexify</title>
 
         {/* Header */}

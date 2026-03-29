@@ -181,7 +181,7 @@ export default function WorkoutBuilder() {
   ) as ExerciseGroup[];
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden py-8 pb-48 bg-[var(--bg-primary)] min-h-screen">
+    <div className="max-w-full overflow-x-hidden min-h-screen">
        <title>Creat Workout | Dashboard - Flexify</title>
       <header className="mb-8">
         <h1 className="text-4xl font-black uppercase tracking-tighter text-[var(--text-primary)]">

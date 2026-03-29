@@ -137,8 +137,7 @@ export default function CoachEarnings() {
 
   return (
     <div
-      className="min-h-screen p-4 md:p-8"
-      style={{ background: "var(--bg-primary)" }}
+      className="min-h-screen max-w-full"
     >
       <div className="mx-auto space-y-8 max-w-7xl">
           <title>Earning | Dashboard - Flexify</title>
@@ -252,7 +251,7 @@ export default function CoachEarnings() {
             </div>
 
             {/* Recent Payments Section */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 card-glass">
               {recentPayments.map((p: Payment, i: number) => ( // Fix 4 & 5: Explicit types
                 <div key={i} className="flex items-center justify-between p-2">
                   <div className="flex items-center gap-3">

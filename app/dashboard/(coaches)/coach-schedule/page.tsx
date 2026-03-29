@@ -123,7 +123,7 @@ export default function CoachSchedule() {
   return (
     <>
 
-      <div className="mx-auto space-y-8 max-w-7xl">
+      <div className="space-y-8 max-w-full">
         <title>Schedule | Dashboard - Flexify</title>
 
         {/* Header */}

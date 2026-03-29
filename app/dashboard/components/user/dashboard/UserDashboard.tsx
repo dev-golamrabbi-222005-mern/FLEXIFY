@@ -297,7 +297,7 @@ export default function UserDashboard({ name }: { name: string }) {
   ];
 
   return (
-    <div className="space-y-6 pb-10">
+    <div className="space-y-6">
       <GreetingHeader name={name} />
 
       <TodayGoalCard

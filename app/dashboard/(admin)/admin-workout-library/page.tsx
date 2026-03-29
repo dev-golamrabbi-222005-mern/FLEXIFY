@@ -57,7 +57,7 @@ export default function WorkoutLibraryPage() {
   ];
 
   return (
-    <div className=" bg-[var(--bg-primary)] space-y-10 pb-5">
+    <div className="space-y-8">
       <title>Workout Library | Dashboard - Flexify</title>
       
       {/* ===== STATS CARDS ===== */}
