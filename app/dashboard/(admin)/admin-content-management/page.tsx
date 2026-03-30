@@ -129,6 +129,34 @@ export default function AdminContentManagementPage() {
         <StatCard title="Sections" value="3" Icon={Home} colorClass="from-orange-400 to-pink-500" />
       </div>
 
+      {/* Home Settings */}
+      <section className="space-y-6 card-glass">
+         <h2 className="flex items-center gap-2 text-xl font-bold"><Home className="text-[var(--warning)]" /> Homepage Settings</h2>
+         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="space-y-2">
+              <label>Hero Title</label>
+              <input id="h-title" defaultValue={home?.[0]?.heroTitle} className="input-style" placeholder="e.g. Transform Your Life" />
+            </div>
+            <div className="space-y-2">
+              <label>Hero Subtitle</label>
+              <input id="h-sub" defaultValue={home?.[0]?.heroSubtitle} className="input-style" placeholder="e.g. Best Fitness App" />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <label>Hero Description</label>
+              <textarea id="h-desc" defaultValue={home?.[0]?.heroDescription} className="input-style" placeholder="Description..." rows={3} />
+            </div>
+         </div>
+         <button 
+           onClick={() => mutation.mutate({
+             type: "homeContent", 
+             id: home?.[0]?._id,
+             heroTitle: (document.getElementById('h-title') as HTMLInputElement).value,
+             heroSubtitle: (document.getElementById('h-sub') as HTMLInputElement).value,
+             heroDescription: (document.getElementById('h-desc') as HTMLTextAreaElement).value
+           })} 
+           className="w-full btn-primary md:w-auto">Save Changes</button>
+      </section>
+      
       {/* Articles */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
@@ -183,33 +211,6 @@ export default function AdminContentManagementPage() {
         </div>
       </section>
 
-      {/* Home Settings */}
-      <section className="space-y-6 card-glass">
-         <h2 className="flex items-center gap-2 text-xl font-bold"><Home className="text-[var(--warning)]" /> Homepage Settings</h2>
-         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div className="space-y-2">
-              <label>Hero Title</label>
-              <input id="h-title" defaultValue={home?.[0]?.heroTitle} className="input-style" placeholder="e.g. Transform Your Life" />
-            </div>
-            <div className="space-y-2">
-              <label>Hero Subtitle</label>
-              <input id="h-sub" defaultValue={home?.[0]?.heroSubtitle} className="input-style" placeholder="e.g. Best Fitness App" />
-            </div>
-            <div className="space-y-2 md:col-span-2">
-              <label>Hero Description</label>
-              <textarea id="h-desc" defaultValue={home?.[0]?.heroDescription} className="input-style" placeholder="Description..." rows={3} />
-            </div>
-         </div>
-         <button 
-           onClick={() => mutation.mutate({
-             type: "homeContent", 
-             id: home?.[0]?._id,
-             heroTitle: (document.getElementById('h-title') as HTMLInputElement).value,
-             heroSubtitle: (document.getElementById('h-sub') as HTMLInputElement).value,
-             heroDescription: (document.getElementById('h-desc') as HTMLTextAreaElement).value
-           })} 
-           className="w-full btn-primary md:w-auto">Save Changes</button>
-      </section>
     </div>
   );
 }
