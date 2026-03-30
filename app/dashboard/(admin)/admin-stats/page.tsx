@@ -41,6 +41,7 @@ interface AdminDashboardStats {
 const COLORS = ["#3b82f6", "#8b5cf6", "#f97316", "#10b981", "#ec4899"];
 
 export default function AdminStatsSection() {
+  
   const { data: dashboard, isLoading } = useQuery<AdminDashboardStats>({
     queryKey: ["admin-stats"],
     queryFn: async () => (await axios.get("/api/admin/stats")).data,

@@ -25,7 +25,6 @@ interface WorkoutStats {
 }
 
 export default function WorkoutLibraryPage() {
-  
   const { data: statsData, isLoading } = useQuery<WorkoutStats>({
     queryKey: ["workout-library-stats"],
     queryFn: async () => (await axios.get("/api/admin/workout-stats")).data,
@@ -59,27 +58,36 @@ export default function WorkoutLibraryPage() {
   return (
     <div className=" bg-[var(--bg-primary)] space-y-10 pb-5">
       <title>Workout Library | Dashboard - Flexify</title>
-      
+
       {/* ===== STATS CARDS ===== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {cards.map((stat, index) => (
-          <div key={index} className="bg-[var(--card-bg)] p-6 rounded-2xl border border-[var(--border-color)] shadow-sm">
-            <div className="flex justify-between mb-4">
-              <div className={`p-3 rounded-xl bg-gradient-to-r ${stat.color} text-white`}>
+          <div
+            key={index}
+            className="bg-[var(--card-bg)] flex items-center justify-between p-6 rounded-2xl border border-[var(--border-color)] shadow-sm hover:shadow-md transition-shadow"
+          >
+            {/* বাম পাশ: আইকন এবং টাইটেল */}
+            <div className="flex items-center gap-4">
+              <div
+                className={`p-3 rounded-xl bg-gradient-to-r ${stat.color} text-white shadow-lg shadow-black/5`}
+              >
                 <stat.icon size={22} />
               </div>
+              <h4 className="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">
+                {stat.title}
+              </h4>
             </div>
-            <h4 className="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">
-              {stat.title}
-            </h4>
-            <p className="text-3xl font-black mt-1">{stat.value}</p>
+
+            {/* ডান পাশ: ভ্যালু/নাম্বার (একেবারে ওই পাশে থাকবে) */}
+            <p className="text-3xl font-black text-[var(--text-primary)]">
+              {stat.value}
+            </p>
           </div>
         ))}
       </div>
 
       {/* ===== CHARTS ===== */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-        
         {/* Category Pie Chart */}
         <div className="bg-[var(--card-bg)] p-6 rounded-2xl border border-[var(--border-color)]">
           <h3 className="font-bold mb-6 text-lg">Workout Distribution</h3>
@@ -92,7 +100,7 @@ export default function WorkoutLibraryPage() {
                 innerRadius={60}
                 outerRadius={100}
                 paddingAngle={5}
-                label={({ name, percent }) => 
+                label={({ name, percent }) =>
                   `${name} ${((percent || 0) * 100).toFixed(0)}%`
                 }
               >
@@ -100,8 +108,12 @@ export default function WorkoutLibraryPage() {
                   <Cell key={index} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip 
-                contentStyle={{ background: "var(--card-bg)", borderRadius: "12px", border: "1px solid var(--border-color)" }}
+              <Tooltip
+                contentStyle={{
+                  background: "var(--card-bg)",
+                  borderRadius: "12px",
+                  border: "1px solid var(--border-color)",
+                }}
               />
             </PieChart>
           </ResponsiveContainer>
@@ -109,21 +121,47 @@ export default function WorkoutLibraryPage() {
 
         {/* Workout Usage Bar Chart */}
         <div className="bg-[var(--card-bg)] p-6 rounded-2xl border border-[var(--border-color)]">
-          <h3 className="font-bold mb-6 text-lg">Workout Activity (Monthly Logs)</h3>
+          <h3 className="font-bold mb-6 text-lg">
+            Workout Activity (Monthly Logs)
+          </h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={statsData?.workoutUsage}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" opacity={0.5} />
-              <XAxis dataKey="month" fontSize={12} stroke="var(--text-secondary)" axisLine={false} tickLine={false} />
-              <YAxis fontSize={12} stroke="var(--text-secondary)" axisLine={false} tickLine={false} />
-              <Tooltip 
-                 cursor={{fill: 'var(--bg-tertiary)', opacity: 0.4}}
-                 contentStyle={{ background: "var(--card-bg)", borderRadius: "12px", border: "1px solid var(--border-color)" }}
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke="var(--border-color)"
+                opacity={0.5}
               />
-              <Bar dataKey="workouts" fill="#3b82f6" radius={[6, 6, 0, 0]} barSize={40} />
+              <XAxis
+                dataKey="month"
+                fontSize={12}
+                stroke="var(--text-secondary)"
+                axisLine={false}
+                tickLine={false}
+              />
+              <YAxis
+                fontSize={12}
+                stroke="var(--text-secondary)"
+                axisLine={false}
+                tickLine={false}
+              />
+              <Tooltip
+                cursor={{ fill: "var(--bg-tertiary)", opacity: 0.4 }}
+                contentStyle={{
+                  background: "var(--card-bg)",
+                  borderRadius: "12px",
+                  border: "1px solid var(--border-color)",
+                }}
+              />
+              <Bar
+                dataKey="workouts"
+                fill="#3b82f6"
+                radius={[6, 6, 0, 0]}
+                barSize={40}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
-
       </div>
     </div>
   );

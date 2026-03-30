@@ -126,7 +126,7 @@ export default function AdminContentManagementPage() {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         <StatCard title="Articles" value={blogs.length} Icon={FileText} colorClass="from-emerald-400 to-emerald-600" />
         <StatCard title="FAQs" value={faqs.length} Icon={HelpCircle} colorClass="from-violet-400 to-violet-600" />
-        <StatCard title="Sections" value="3" Icon={Home} colorClass="from-orange-400 to-pink-500" />
+        <StatCard title="Sections" value="12" Icon={Home} colorClass="from-orange-400 to-pink-500" />
       </div>
 
       {/* Articles */}
@@ -184,7 +184,7 @@ export default function AdminContentManagementPage() {
       </section>
 
       {/* Home Settings */}
-      <section className="space-y-6 card-glass">
+      {/* <section className="space-y-6 card-glass">
          <h2 className="flex items-center gap-2 text-xl font-bold"><Home className="text-[var(--warning)]" /> Homepage Settings</h2>
          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="space-y-2">
@@ -209,7 +209,7 @@ export default function AdminContentManagementPage() {
              heroDescription: (document.getElementById('h-desc') as HTMLTextAreaElement).value
            })} 
            className="w-full btn-primary md:w-auto">Save Changes</button>
-      </section>
+      </section> */}
     </div>
   );
 }

@@ -157,17 +157,17 @@ const menuConfig = [
         roles: ["admin"],
       },
       {
-        name: "Admin Management",
+        name: "User Management",
         href: "/dashboard/admin-management",
         icon: UserRoundCog,
         roles: ["admin"],
       },
-      {
-        name: "Coach Applications",
-        href: "/dashboard/admin-coach-applications",
-        icon: NotebookText,
-        roles: ["admin"],
-      },
+      // {
+      //   name: "Coach Applications",
+      //   href: "/dashboard/admin-coach-applications",
+      //   icon: NotebookText,
+      //   roles: ["admin"],
+      // },
       {
         name: "Coach Management",
         href: "/dashboard/admin-coach-management",

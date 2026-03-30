@@ -35,6 +35,7 @@ interface StatCardProps {
 export default function PaymentsSubscriptionsPage() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
+  const [visibleDays, setVisibleDays] = useState(7);
 
   const { data: plans, isLoading: plansLoading } = useQuery<Plan[]>({
     queryKey: ["admin-plans"],
@@ -75,16 +76,24 @@ export default function PaymentsSubscriptionsPage() {
     });
   };
 
-  const filteredTransactions = paymentData?.transactions?.filter((t: Transaction) =>
-    t.userName.toLowerCase().includes(search.toLowerCase()) || 
-    t.transactionId.toLowerCase().includes(search.toLowerCase())
-  );
-
   if (plansLoading || paymentsLoading) return (
     <div className="flex h-screen items-center justify-center bg-[var(--bg-primary)]">
       <Loader2 className="animate-spin text-[var(--primary)]" size={40} />
     </div>
   );
+
+  // Recent Transactions: last 7 days by default
+  const now = new Date();
+  const filteredTransactions = paymentData?.transactions?.filter((t: Transaction) => {
+    const createdDate = new Date(t.createdAt);
+    const daysDiff = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
+    return daysDiff < visibleDays &&
+      (t.userName.toLowerCase().includes(search.toLowerCase()) || t.transactionId.toLowerCase().includes(search.toLowerCase()));
+  });
+
+  const totalRevenue = paymentData?.transactions?.reduce((acc: number, t: Transaction) => {
+    return t.status === "success" ? acc + t.amount : acc;
+  }, 0) || 0;
 
   return (
     <div className="space-y-10 bg-[var(--bg-primary)] min-h-screen text-[var(--text-primary)]">
@@ -97,8 +106,8 @@ export default function PaymentsSubscriptionsPage() {
       </div>
 
       {/* SUMMARY CARDS */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
-        <StatCard title="Total Users" value={paymentData?.summary.totalUsers} Icon={Users} color="from-blue-500 to-indigo-600" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <StatCard title="Total Revenue" value={`৳${totalRevenue}`} Icon={DollarSign} color="from-purple-400 to-purple-600" />
         <StatCard title="Paid" value={paymentData?.summary.paidCount} Icon={DollarSign} color="from-emerald-400 to-green-600" />
         <StatCard title="Pending" value={paymentData?.summary.pendingCount} Icon={Clock} color="from-yellow-400 to-orange-500" />
         <StatCard title="Refunded" value={paymentData?.summary.refundedCount} Icon={RefreshCcw} color="from-red-400 to-pink-500" />
@@ -193,21 +202,33 @@ export default function PaymentsSubscriptionsPage() {
             </div>
           )}
         </div>
+
+        {/* Load More Button */}
+        {paymentData?.transactions?.length > visibleDays && (
+          <div className="flex justify-center mt-6">
+            <button 
+              className="px-6 py-2 bg-[var(--primary)] text-white rounded-xl hover:bg-[var(--primary)/90] transition"
+              onClick={() => setVisibleDays(prev => prev + 7)}
+            >
+              Load More
+            </button>
+          </div>
+        )}
       </section>
     </div>
   );
 }
 
-// StatCard Component with LucideIcon type
+// StatCard Component with proper typing
 function StatCard({ title, value, Icon, color }: StatCardProps) {
   return (
-    <div className="card-glass p-5 flex items-center justify-between group transition-all duration-300 border border-[var(--border-color)]">
+    <div className="card-glass flex items-center justify-between group hover:border-[var(--primary)] transition-all duration-300">
       <div>
         <p className="text-xs text-[var(--text-secondary)] font-bold uppercase tracking-widest">{title}</p>
-        <h2 className="mt-1 text-3xl font-black">{value || 0}</h2>
+        <h2 className="text-3xl font-black mt-1">{value}</h2>
       </div>
-      <div className={`p-4 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg transform group-hover:rotate-12 transition-transform`}>
-        <Icon size={24} />
+      <div className={`p-4 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg transform group-hover:scale-110 transition-transform`}>
+        <Icon size={26} />
       </div>
     </div>
   );
