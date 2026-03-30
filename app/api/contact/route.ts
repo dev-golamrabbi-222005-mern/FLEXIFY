@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       email,
       message,
       createdAt: new Date(),
-      status: "pending-reply",
+      status: "pending",
     });
 
     return NextResponse.json({ success: true });

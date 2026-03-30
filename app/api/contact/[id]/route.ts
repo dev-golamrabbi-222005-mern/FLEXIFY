@@ -4,10 +4,13 @@ import { ObjectId } from "mongodb";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> }, // 👈 1. Update the type to a Promise
 ) {
   try {
-    if (!ObjectId.isValid(params.id)) {
+    // 👈 2. Await the params to extract the ID safely
+    const { id } = await params;
+
+    if (!ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
 
@@ -22,7 +25,7 @@ export async function PATCH(
 
     const collection = await dbConnect("contacts");
     await collection.updateOne(
-      { _id: new ObjectId(params.id) },
+      { _id: new ObjectId(id) }, // 👈 3. Use the extracted id
       { $set: updateDoc },
     );
 

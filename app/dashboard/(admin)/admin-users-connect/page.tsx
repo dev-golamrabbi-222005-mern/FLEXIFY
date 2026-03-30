@@ -1,8 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import {
+  Mail,
+  User,
+  Clock,
+  CheckCircle2,
+  Inbox,
+  MessageSquare,
+  AlertCircle,
+  Loader2,
+} from "lucide-react";
 
 interface ContactMessage {
   _id: string;
@@ -10,7 +20,7 @@ interface ContactMessage {
   email: string;
   message: string;
   status: "pending" | "replied";
-  date: string;
+  createdAt: string;
   repliedAt?: string;
 }
 
@@ -18,7 +28,6 @@ export default function ContactRequests() {
   const queryClient = useQueryClient();
   const [loadingIds, setLoadingIds] = useState<string[]>([]);
 
-  // Fetch contact messages
   const { data, isLoading } = useQuery<ContactMessage[]>({
     queryKey: ["contacts"],
     queryFn: async () => {
@@ -27,7 +36,14 @@ export default function ContactRequests() {
     },
   });
 
-  // Mark as replied mutation
+  // Calculate Stats for the top bar
+  const stats = useMemo(() => {
+    const total = data?.length || 0;
+    const pending = data?.filter((m) => m.status !== "replied").length || 0;
+    const replied = total - pending;
+    return { total, pending, replied };
+  }, [data]);
+
   const markAsReplied = useMutation({
     mutationFn: async (id: string) => {
       await axios.patch(`/api/contact/${id}`, { status: "replied" });
@@ -39,97 +55,209 @@ export default function ContactRequests() {
       queryClient.setQueryData<ContactMessage[]>(["contacts"], (old) =>
         old?.map((msg) =>
           msg._id === id
-            ? { ...msg, status: "replied", repliedAt: new Date().toISOString() }
+            ? {
+                ...msg,
+                status: "replied" as const,
+                repliedAt: new Date().toISOString(),
+              }
             : msg,
         ),
       );
     },
-    onSettled: () => setLoadingIds([]),
+    onSettled: (_, __, id) => {
+      setLoadingIds((prev) => prev.filter((item) => item !== id));
+    },
   });
 
   if (isLoading)
     return (
-      <div className="flex justify-center py-20 text-gray-500">Loading...</div>
+      <div className="flex flex-col items-center justify-center py-20 gap-4">
+        <Loader2 className="w-10 h-10 animate-spin text-[var(--primary)]" />
+        <p className="text-[var(--text-muted)] font-medium tracking-tight">
+          Syncing with Flexify DB...
+        </p>
+      </div>
     );
 
   return (
-    <div>
-      <h1 className="text-3xl md:text-4xl font-bold mb-8">User Feedback</h1>
+    <div className="space-y-8 p-1">
+      {/* Header & Stats Section */}
+      <div className="flex flex-col md:flex-row md:items-center lg:items-start justify-between gap-6">
+        <div>
+          <h1 className="text-4xl font-black text-center md:text-start tracking-tighter text-[var(--text-primary)] mb-2 uppercase">
+            User <span className="text-[var(--primary)]">Connect</span>
+          </h1>
+          <p className="text-[var(--text-secondary)] text-center font-medium">
+            Manage feedback and support inquiries.
+          </p>
+        </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {data?.map((item) => {
-          const isDisabled =
-            item.status === "replied" || loadingIds.includes(item._id);
+        <div className="flex gap-4 md:flex-col lg:flex-row">
+          <StatMiniCard
+            label="Pending"
+            value={stats.pending}
+            color="var(--warning)"
+            icon={<Clock size={22} />}
+          />
+          <StatMiniCard
+            label="Replied"
+            value={stats.replied}
+            color="var(--primary)"
+            icon={<CheckCircle2 size={22} />}
+          />
+        </div>
+      </div>
 
-          const mailto = `mailto:${item.email}?subject=${encodeURIComponent(
-            "Regarding your message",
-          )}&body=${encodeURIComponent(
-            `Hi ${item.name},\n\nThank you for your message.\n\nBest regards,\nYour Team`,
-          )}`;
+      {/* Main Grid */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        {data && data.length > 0 ? (
+          data.map((item) => {
+            const isUpdating = loadingIds.includes(item._id);
+            const isReplied = item.status === "replied";
 
-          return (
-            <div
-              key={item._id}
-              className="p-6 border rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300"
-            >
-              {/* Header */}
-              <div className="flex justify-between items-center mb-3">
-                <h3 className="text-lg md:text-xl font-semibold">
-                  {item.name}
-                </h3>
-                <span
-                  className={`px-3 py-1 text-sm rounded-full font-medium ${
-                    item.status === "replied"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-yellow-100 text-yellow-700"
-                  }`}
-                >
-                  {item.status === "replied" ? "Replied" : "Pending"}
-                </span>
+            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${item.email}&su=${encodeURIComponent(
+              "Regarding your message",
+            )}&body=${encodeURIComponent(
+              `Hi ${item.name},\n\n\n\n\nThank you for reaching out.\n\nBest regards,\nAdmin`,
+            )}`;
+
+            return (
+              <div
+                key={item._id}
+                className="card-glass group hover:border-[var(--primary)] transition-all duration-300 flex flex-col h-full"
+              >
+                <div className="flex-grow">
+                  {/* Status & Date */}
+                  <div className="flex items-center gap-2 text-[var(--text-muted)] text-xs font-bold uppercase tracking-widest">
+                    <Clock size={14} />
+                    {item.createdAt
+                      ? new Date(item.createdAt).toLocaleDateString(undefined, {
+                          month: "short",
+                          day: "numeric",
+                        })
+                      : "Recent" // Simple string fallback instead of a dynamic Date function
+                    }
+                  </div>
+
+                  {/* User Info */}
+                  <div className="space-y-1 mb-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--primary)] border border-[var(--border-color)]">
+                        <User size={16} />
+                      </div>
+                      <h3 className="text-xl font-bold text-[var(--text-primary)] leading-tight">
+                        {item.name}
+                      </h3>
+                    </div>
+                    <p className="text-sm text-[var(--primary)] font-semibold pl-10 opacity-90 truncate">
+                      {item.email}
+                    </p>
+                  </div>
+
+                  {/* Message Content */}
+                  <div className="relative p-4 bg-[var(--bg-primary)] rounded-xl border border-[var(--border-color)] mb-6">
+                    <MessageSquare
+                      className="absolute -top-2 -left-2 text-[var(--border-color)]"
+                      size={20}
+                    />
+                    <p className="text-[var(--text-secondary)] text-sm leading-relaxed italic">
+                      "{item.message}"
+                    </p>
+                  </div>
+                </div>
+
+                {/* Actions Area */}
+                <div className="mt-auto">
+                  {!isReplied ? (
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => markAsReplied.mutate(item._id)}
+                        disabled={isUpdating}
+                        className={`flex-[1.5] py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
+                          isUpdating
+                            ? "bg-[var(--bg-tertiary)] text-[var(--text-muted)] cursor-not-allowed"
+                            : "bg-[var(--text-primary)] text-[var(--bg-primary)] hover:scale-[1.02] active:scale-95 shadow-lg"
+                        }`}
+                      >
+                        {isUpdating ? (
+                          <Loader2 className="animate-spin" size={18} />
+                        ) : null}
+                        {isUpdating ? "Updating..." : "Mark as Replied"}
+                      </button>
+
+                      <a
+                        href={isUpdating ? undefined : gmailUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => isUpdating && e.preventDefault()}
+                        className={`flex-1 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all border-2 ${
+                          isUpdating
+                            ? "border-[var(--border-color)] text-[var(--text-muted)] cursor-not-allowed"
+                            : "border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white"
+                        }`}
+                      >
+                        <Mail size={18} />
+                        Gmail
+                      </a>
+                    </div>
+                  ) : (
+                    item.repliedAt && (
+                      <div className="flex items-center gap-2 text-[10px] font-bold text-[var(--primary-dark)] bg-[var(--primary-light)] p-2.5 rounded-xl border border-[var(--primary)]/30">
+                        <AlertCircle size={14} />
+                        <span>
+                          Replied on{" "}
+                          {new Date(item.repliedAt).toLocaleString([], {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          })}
+                        </span>
+                      </div>
+                    )
+                  )}
+                </div>
               </div>
+            );
+          })
+        ) : (
+          <div className="col-span-full py-24 card-glass flex flex-col items-center justify-center text-[var(--text-muted)]">
+            <Inbox size={64} className="mb-4 opacity-10" />
+            <p className="font-black uppercase tracking-[0.2em] text-lg">
+              Inbox Clear
+            </p>
+            <p className="text-sm font-medium">No new messages to display.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
-              {/* Email & Message */}
-              <p className="text-sm text-gray-500 mb-2">{item.email}</p>
-              <p className="text-gray-700 mb-4">{item.message}</p>
+interface StatCardProps {
+  label: string;
+  value: number;
+  color: string;
+  icon: React.ReactNode;
+}
 
-              {/* Buttons */}
-              <div className="flex flex-wrap gap-3">
-                <button
-                  onClick={() => markAsReplied.mutate(item._id)}
-                  disabled={isDisabled}
-                  className={`flex-1 px-4 py-2 rounded-lg font-medium text-white transition ${
-                    isDisabled
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-blue-600 hover:bg-blue-700"
-                  }`}
-                >
-                  {loadingIds.includes(item._id)
-                    ? "Updating..."
-                    : "Mark as Replied"}
-                </button>
-
-                <a
-                  href={mailto}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`flex-1 px-4 py-2 rounded-lg font-medium text-white text-center transition ${
-                    isDisabled
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-green-600 hover:bg-green-700"
-                  }`}
-                >
-                  Gmail
-                </a>
-              </div>
-
-              {item.repliedAt && (
-                <p className="mt-2 text-xs text-gray-500">
-                  Replied at: {new Date(item.repliedAt).toLocaleString()}
-                </p>
-              )}
-            </div>
-          );
-        })}
+function StatMiniCard({ label, value, color, icon }: StatCardProps) {
+  return (
+    <div
+      className="card-glass !p-3 flex items-center gap-4 min-w-[140px] border-b-4 transition-transform hover:translate-y-[-2px]"
+      style={{ borderBottomColor: color }}
+    >
+      <div
+        className="p-2.5 rounded-xl bg-[var(--bg-primary)] shadow-inner"
+        style={{ color: color }}
+      >
+        {icon}
+      </div>
+      <div>
+        <p className="text-xs font-black uppercase text-[var(--text-muted)] leading-none mb-1.5 tracking-wider">
+          {label}
+        </p>
+        <p className="text-2xl font-black text-center leading-none text-[var(--text-primary)]">
+          {value}
+        </p>
       </div>
     </div>
   );
