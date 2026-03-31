@@ -26,11 +26,11 @@ import axios, { AxiosError } from "axios";
 import { Coach, AnalyticsData, UpdateStatusParams } from "@/types/coach";
 import { toast } from "react-toastify";
 
-// ১. টাইপ এরর ফিক্স করতে ইন্টারফেস আপডেট
-interface CoachApplication extends Coach {
+// Improved type definition
+type CoachApplication = Coach & {
   specialties?: string;
   experienceYears?: number;
-}
+};
 
 export default function CombinedCoachManagement() {
   const queryClient = useQueryClient();
@@ -108,7 +108,7 @@ export default function CombinedCoachManagement() {
     <div className="space-y-10 min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] p-6">
       <title>Coach Management | Flexify Admin</title>
 
-      {/* --- STATS SECTION (নাম্বার ডানপাশে) --- */}
+      {/* Stats Section */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {stats.map((stat, i) => (
           <div
@@ -130,7 +130,7 @@ export default function CombinedCoachManagement() {
         ))}
       </div>
 
-      {/* --- ANALYTICS CHARTS --- */}
+      {/* Analytics Charts */}
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <div className="bg-[var(--card-bg)] p-6 rounded-2xl border border-[var(--border-color)]">
           <h3 className="mb-6 text-lg font-bold flex items-center gap-2 text-[var(--text-primary)]">
@@ -224,7 +224,7 @@ export default function CombinedCoachManagement() {
         </div>
       </div>
 
-      {/* --- SECTION 1: PENDING APPLICATIONS --- */}
+      {/* Pending Applications */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold flex items-center gap-2">
@@ -234,6 +234,7 @@ export default function CombinedCoachManagement() {
             {pendingApplications.length} New
           </span>
         </div>
+
         <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--border-color)] overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
@@ -249,7 +250,7 @@ export default function CombinedCoachManagement() {
                 {pendingApplications.length > 0 ? (
                   pendingApplications.map((app) => (
                     <tr
-                      key={app._id}
+                      key={app._id.toString || app.email}   // Safe key
                       className="hover:bg-[var(--bg-tertiary)] transition-colors text-sm"
                     >
                       <td className="px-6 py-4">
@@ -269,7 +270,7 @@ export default function CombinedCoachManagement() {
                           <button
                             onClick={() =>
                               updateStatusMutation.mutate({
-                                id: app._id,
+                                id: app._id!,
                                 status: "approved",
                               })
                             }
@@ -280,7 +281,7 @@ export default function CombinedCoachManagement() {
                           <button
                             onClick={() =>
                               updateStatusMutation.mutate({
-                                id: app._id,
+                                id: app._id!,
                                 status: "rejected",
                               })
                             }
@@ -308,7 +309,7 @@ export default function CombinedCoachManagement() {
         </div>
       </section>
 
-      {/* --- SECTION 2: APPROVED COACHES MANAGEMENT --- */}
+      {/* Approved Coaches */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold flex items-center gap-2">
@@ -319,6 +320,7 @@ export default function CombinedCoachManagement() {
             Total: {approvedCoaches.length}
           </span>
         </div>
+
         <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--border-color)] overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
@@ -333,7 +335,7 @@ export default function CombinedCoachManagement() {
               <tbody className="divide-y divide-[var(--border-color)]">
                 {approvedCoaches.map((coach) => (
                   <tr
-                    key={coach._id}
+                    key={coach._id}   // _id usually always present here
                     className="hover:bg-[var(--bg-tertiary)] transition-colors text-sm"
                   >
                     <td className="px-6 py-4 font-bold">{coach.fullName}</td>
@@ -356,7 +358,7 @@ export default function CombinedCoachManagement() {
                         <button
                           onClick={() =>
                             updateStatusMutation.mutate({
-                              id: coach._id,
+                              id: coach._id!,
                               status: "warning",
                             })
                           }
@@ -367,7 +369,7 @@ export default function CombinedCoachManagement() {
                         <button
                           onClick={() =>
                             updateStatusMutation.mutate({
-                              id: coach._id,
+                              id: coach._id!,
                               status: "rejected",
                             })
                           }
@@ -385,13 +387,12 @@ export default function CombinedCoachManagement() {
         </div>
       </section>
 
-      {/* --- SECTION 3: SYSTEM ALERT COACHES --- */}
+      {/* System Alerts */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold flex items-center gap-2">
             <AlertTriangle className="text-red-500" size={20} /> System Alerts
           </h2>
-
           <span className="px-3 py-1 bg-red-500/10 text-red-500 text-xs font-bold rounded-full">
             {
               approvedCoaches.filter(
@@ -414,7 +415,6 @@ export default function CombinedCoachManagement() {
                   <th className="px-6 py-4 text-right">Action</th>
                 </tr>
               </thead>
-
               <tbody className="divide-y divide-[var(--border-color)]">
                 {approvedCoaches.filter(
                   (coach) =>
@@ -428,7 +428,7 @@ export default function CombinedCoachManagement() {
                     )
                     .map((coach) => (
                       <tr
-                        key={coach._id?.toString() || coach.email}
+                        key={coach._id}   // Fixed key
                         className="hover:bg-[var(--bg-tertiary)] transition-colors text-sm"
                       >
                         <td className="px-6 py-4">
@@ -437,13 +437,11 @@ export default function CombinedCoachManagement() {
                             {coach.email}
                           </div>
                         </td>
-
                         <td className="px-6 py-4 text-[var(--text-secondary)]">
                           {coach.status === "warning"
                             ? "Performance Warning"
                             : "Rejected / Disabled"}
                         </td>
-
                         <td className="px-6 py-4">
                           <span
                             className={`px-2.5 py-1 rounded text-[10px] font-black uppercase ${
@@ -455,14 +453,12 @@ export default function CombinedCoachManagement() {
                             {coach.status}
                           </span>
                         </td>
-
                         <td className="px-6 py-4 text-right">
                           <div className="flex justify-end gap-2">
-                            {/* Re-Approve */}
                             <button
                               onClick={() =>
                                 updateStatusMutation.mutate({
-                                  id: coach._id,
+                                  id: coach._id!,
                                   status: "approved",
                                 })
                               }

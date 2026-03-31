@@ -1,3 +1,4 @@
+import Articles from "@/components/home/Articles";
 import BecomeCoachCTA from "@/components/home/BecomeCoachCTA";
 import BMI from "@/components/home/BMI";
 import BodyChallenges from "@/components/home/Challenges";
@@ -25,6 +26,7 @@ export default function Home() {
       <BecomeCoachCTA />
       <Pricing />
       <FAQ />
+      <Articles/>
       <Motivation />
     </div>
   );
