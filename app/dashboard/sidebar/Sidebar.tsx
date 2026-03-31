@@ -162,12 +162,6 @@ const menuConfig = [
         icon: FileCog,
         roles: ["admin"],
       },
-      {
-        name: "Admin Profile",
-        href: "/dashboard/admin-profile",
-        icon: UserRoundPen,
-        roles: ["admin"],
-      },
     ],
   },
   {
