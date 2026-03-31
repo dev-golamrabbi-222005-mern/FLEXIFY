@@ -101,6 +101,9 @@ export default function CoachWorkouts() {
     }
     const res = await axios.post("/api/coach/workout-plans", payload);
     if(res.data.acknowledged){
+      refetchPlans();
+      refetchClients();
+      refetchExercises();
       toast.success("Workout plan added successfully");
     }
     setIsModalOpen(false);
@@ -120,10 +123,10 @@ export default function CoachWorkouts() {
     if (result.isConfirmed) {
       try {
         await axios.delete(`/api/coach/workout-plans/${id}`);
+        toast.success("Workout plan has been deleted");
         refetchPlans();
         refetchClients();
         refetchExercises();
-        toast.success("Workout plan has been deleted");
       } catch (error) {
         toast.error(`Failed to delete the plan: ${error}`);
       }

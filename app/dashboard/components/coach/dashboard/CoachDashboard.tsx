@@ -240,9 +240,6 @@ const stats = [
         ))}
       </div>
 
-      {/* Client Progress Chart */}
-      <ClientProgressChart />
-
       {/* Client List */}
       <ClientList />
     </div>

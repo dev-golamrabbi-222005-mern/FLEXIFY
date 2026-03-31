@@ -19,6 +19,16 @@ export const GET = async(req: NextRequest) => {
         return dateA.getTime() - dateB.getTime();
     });
     
+    // Enrich with client info
+    const clientEmails = [...new Set(result.map(s => s.clientEmail))];
+    const usersCollection = dbConnect("users");
+    const users = await usersCollection.find({ email: { $in: clientEmails } }).toArray();
+    const userMap = new Map(users.map(u => [u.email, { name: u.name, imageUrl: u.imageUrl, phone: u.phone, plan: u.plan }]));
+    
+    result.forEach(session => {
+        session.clientInfo = userMap.get(session.clientEmail);
+    });
+    
     return NextResponse.json(
         result,
         {status: 200}

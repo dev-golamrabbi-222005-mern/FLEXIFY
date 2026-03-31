@@ -27,8 +27,14 @@ interface Session {
   month: number;
   year: number;
   time: string;
-  client: string;
   type: string;
+  clientEmail: string;
+  clientInfo?: {
+    name: string;
+    imageUrl: string;
+    phone: string;
+    plan: string;
+  };
 }
 
 interface SessionFormData {
@@ -37,6 +43,7 @@ interface SessionFormData {
   year: string;
   time: string;
   client: string;
+  clientEmail: string;
   type: string;
 }
 
@@ -123,7 +130,7 @@ export default function CoachSchedule() {
   return (
     <>
 
-      <div className="space-y-8 max-w-full">
+      <div className="max-w-full space-y-8">
         <title>Schedule | Dashboard - Flexify</title>
 
         {/* Header */}
@@ -257,7 +264,7 @@ export default function CoachSchedule() {
                             color: "var(--primary)",
                           }}
                         >
-                          {formatTime12h(s.time)} – {s.client.split(" ")[0]}
+                          {formatTime12h(s.time)} – {s?.clientInfo?.name?.split(" ")[0]}
                         </div>
                       ))}
 
@@ -304,7 +311,7 @@ export default function CoachSchedule() {
                     className="text-sm font-medium"
                     style={{ color: "var(--text-primary)" }}
                   >
-                    {s.client}
+                    {s?.clientInfo?.name}
                   </span>
 
                   <p
@@ -396,10 +403,10 @@ export default function CoachSchedule() {
             <div>
               <label className="block mb-2 text-sm font-medium">Client</label>
               <select
-                {...register("client")}
+                {...register("clientEmail")}
                 className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
               >
-                {trainees.map((t, i) => <option key={i} value={t.name}>{t.name}</option>)}
+                {trainees.map((t, i) => <option key={i} value={t.userEmail}>{t.name}</option>)}
               </select>
             </div>
             <div>

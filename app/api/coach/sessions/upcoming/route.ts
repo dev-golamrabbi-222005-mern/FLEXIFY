@@ -8,8 +8,14 @@ interface Session {
     month: number;
     year: number;
     time: string;
-    client: string;
+    clientEmail: string;
     type: string;
+    clientInfo?: {
+        name: string;
+        imageUrl: string;
+        phone: string;
+        plan: string;
+    };
 }
 
 export const GET = async(req: NextRequest) => {
@@ -33,9 +39,19 @@ export const GET = async(req: NextRequest) => {
         .filter((session) => session.date >= now && session.date <= endOfWeek)
         .sort((a, b) => a.date.getTime() - b.date.getTime())
         .map((session) => {
-            const { date, ...rest } = session;
+            const { date: _, ...rest } = session;
             return rest;
         });
+
+    // Enrich with client info
+    const clientEmails = [...new Set(upcomingSessions.map(s => s.clientEmail))];
+    const usersCollection = dbConnect("users");
+    const users = await usersCollection.find({ email: { $in: clientEmails } }).toArray();
+    const userMap = new Map(users.map(u => [u.email, { name: u.name, imageUrl: u.imageUrl, phone: u.phone, plan: u.plan }]));
+    
+    upcomingSessions.forEach(session => {
+        session.clientInfo = userMap.get(session.clientEmail);
+    });
 
     return NextResponse.json(
         upcomingSessions,
