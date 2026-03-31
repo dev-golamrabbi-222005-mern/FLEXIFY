@@ -22,6 +22,7 @@ import {
   UserCheck,
   PackageCheck,
   CreditCard,
+  Link,
 } from "lucide-react";
 import {
   BarChart,
@@ -153,7 +154,7 @@ export function StatCard({
 }
 
 // ─── Section Header ───────────────────────────────────────────────────────────
-export function SectionHeader({ title, action }: { title: string; action?: string }) {
+export function SectionHeader({ title, action, link }: { title: string; action?: string; link?: string }) {
   return (
     <div className="flex items-center justify-between mb-4">
       <h3
@@ -162,12 +163,12 @@ export function SectionHeader({ title, action }: { title: string; action?: strin
       >
         {title}
       </h3>
-      {action && (
+      {action && link && (
         <button
           className="text-xs font-bold hover:underline"
           style={{ color: "var(--primary)" }}
         >
-          {action}
+          <Link href={link}>{action}</Link>
         </button>
       )}
     </div>
@@ -265,7 +266,7 @@ const { data: session } = useSession();
   const userName = dbUser?.name ?? "User";
 
   return (
-    <div className="max-w-full p-0 mx-auto md:px-4">
+    <div className="max-w-full">
       {role === "user" && <UserDashboard name={userName} />}
       {role === "coach" && <CoachDashboard name={userName} />}
       {role === "admin" && <AdminDashboard name={userName} />}

@@ -96,7 +96,7 @@ export default function PaymentsSubscriptionsPage() {
   }, 0) || 0;
 
   return (
-    <div className="space-y-10 bg-[var(--bg-primary)] min-h-screen text-[var(--text-primary)]">
+    <div className="space-y-8 min-h-screen text-[var(--text-primary)]">
       <title>Payments Subscriptions | Dashboard - Flexify</title>
       
       {/* HEADER */}

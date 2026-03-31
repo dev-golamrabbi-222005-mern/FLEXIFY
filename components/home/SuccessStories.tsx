@@ -163,7 +163,7 @@ function SuccessCard({ item }: { item: (typeof SUCCESS_DATA)[0] }) {
     <div className="flex flex-col gap-3 w-full min-w-0">
       <div
         className="relative w-full overflow-hidden rounded-2xl"
-        style={{ aspectRatio: "4/5" }}
+        style={{ aspectRatio: "4/3" }}
       >
         <Image
           src={item.image}

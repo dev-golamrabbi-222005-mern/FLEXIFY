@@ -29,7 +29,6 @@ export const GET = async (req: NextRequest) => {
       filter.specialties = specialty;
     }
 
-    // ৫+ বছর এবং অন্যান্য এক্সপেরিয়েন্স ফিক্স
     if (experience) {
       if (experience === "0-2 Years") {
         filter.experienceYears = { $lte: 2 };

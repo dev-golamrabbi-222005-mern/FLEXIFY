@@ -79,27 +79,15 @@ const menuConfig = [
     roles: ["user"],
   },
   {
-    name: "Assigned",
-    href: "/dashboard/assigned-coach",
-    icon: UserCheck2,
-    roles: ["user"],
-  },
-  {
-    name: "Progress",
-    href: "/dashboard/user-progress",
-    icon: Shield,
-    roles: ["user"],
-  },
-  {
-    name: "User Profile",
-    href: "/dashboard/user-profile",
-    icon: ShieldAlertIcon,
-    roles: ["user"],
-  },
-  {
     name: "My Goals",
     href: "/dashboard/my-goals",
     icon: Flag,
+    roles: ["user"],
+  },
+  {
+    name: "Challenges",
+    href: "/dashboard/my-challenges",
+    icon: Swords,
     roles: ["user"],
   },
   {
@@ -118,30 +106,6 @@ const menuConfig = [
     name: "Achievements",
     href: "/dashboard/achievements",
     icon: Trophy,
-    roles: ["user"],
-  },
-  {
-    name: "Challenges",
-    href: "/dashboard/my-challenges",
-    icon: Swords,
-    roles: ["user"],
-  },
-  {
-    name: "Notification",
-    href: "/dashboard/user-notification",
-    icon: MessageCircleCode,
-    roles: ["user"],
-  },
-  {
-    name: "Live Sessions",
-    href: "/dashboard/live-sessions",
-    icon: Video,
-    roles: ["user"],
-  },
-  {
-    name: "User Update Form",
-    href: "/dashboard/fitness-update-form",
-    icon: BookText,
     roles: ["user"],
   },
 ],
@@ -216,27 +180,9 @@ const menuConfig = [
     label: "COACH",
     items: [
       {
-        name: "Client Progress",
-        href: "/dashboard/client-progress",
-        icon: UserPen,
-        roles: ["coach"],
-      },
-      {
-        name: "Session Planner",
-        href: "/dashboard/session-planner",
-        icon: Speech,
-        roles: ["coach"],
-      },
-      {
         name: "My Trainees",
         href: "/dashboard/coach-traines",
         icon: User,
-        roles: ["coach"],
-      },
-      {
-        name: "Message",
-        href: "/dashboard/coach-messages",
-        icon: MessageCircle,
         roles: ["coach"],
       },
       {
@@ -252,12 +198,6 @@ const menuConfig = [
         roles: ["coach"],
       },
       {
-        name: "Nutrition",
-        href: "/dashboard/coach-nutrition",
-        icon: Apple,
-        roles: ["coach"],
-      },
-      {
         name: "Schedule",
         href: "/dashboard/coach-schedule",
         icon: Calendar,
@@ -269,23 +209,11 @@ const menuConfig = [
         icon: Star,
         roles: ["coach"],
       },
-      {
-        name: "Profile",
-        href: "/dashboard/coach-profile",
-        icon: UserRoundPen,
-        roles: ["coach"],
-      },
     ],
   },
   {
     label: "ACCOUNT",
     items: [
-      {
-        name: "Live Sessions",
-        href: "/dashboard/live-sessions",
-        icon: Video,
-        roles: ["coach"],
-      },
       {
         name: "Settings",
         href: "/dashboard/settings",
