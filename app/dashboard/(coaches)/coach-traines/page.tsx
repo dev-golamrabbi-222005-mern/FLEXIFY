@@ -14,10 +14,7 @@ interface Trainee {
   userEmail: string;
   image: string;
   plan: string;
-  status: string;
-  progress: number;
-  joined: string;
-  avatar: string;
+  createdAt: Date;
 }
 
 export default function CoachTrainees() {
@@ -136,47 +133,13 @@ export default function CoachTrainees() {
                   >
                     {t.plan}
                   </span>
-                  <span
-                    className="px-2 py-1 text-xs rounded-full"
-                    style={{
-                      background:
-                        t.status === "Active"
-                          ? "rgba(16,185,129,0.15)"
-                          : "rgba(245,158,11,0.15)",
-                      color: t.status === "Active" ? "#10b981" : "#f59e0b",
-                    }}
-                  >
-                    {t.status}
-                  </span>
-                </div>
-
-                {/* Progress */}
-                <div className="flex items-center gap-2">
-                  <div
-                    className="flex-1 h-1.5 rounded-full"
-                    style={{ background: "var(--bg-secondary)" }}
-                  >
-                    <div
-                      className="h-full transition-all duration-300 rounded-full"
-                      style={{
-                        width: `${t.progress | 0}%`,
-                        background: "var(--primary)",
-                      }}
-                    />
-                  </div>
-                  <span
-                    className="text-xs font-semibold"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    {t.progress | 0}%
-                  </span>
                 </div>
 
                 <p
                   className="mt-3 text-xs"
                   style={{ color: "var(--text-muted)" }}
                 >
-                  Joined {t.joined}
+                  Joined {new Date(t.createdAt).toLocaleString()}
                 </p>
               </div>
             </motion.div>
