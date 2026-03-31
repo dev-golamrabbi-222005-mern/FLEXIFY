@@ -82,6 +82,7 @@ export default function DashboardLayoutClient({
       <DashboardNavbar
         sidebarOpen={sidebarOpen}
         onMenuToggle={() => setSidebarOpen((o) => !o)}
+        user={dbUser}
       />
 
       {/* ❷ flex-1 + overflow-hidden — fills remaining height, clips children */}
