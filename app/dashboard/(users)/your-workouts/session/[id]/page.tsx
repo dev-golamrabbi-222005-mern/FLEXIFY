@@ -13,14 +13,21 @@ import {
   Zap,
   Target,
   Pause,
-  RotateCcw,
   Plus,
-  Minus,
-  AlertTriangle,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { Exercise, WorkoutResponse } from "@/components/user/workout";
 import RestTimer from "@/components/user/RestTimer";
+
+// ── Constants matching my-challenges ─────────────────────────────────────────
+const ease = [0.22, 1, 0.36, 1] as [number, number, number, number];
+
+// Same level style as challenges exercise session
+const LEVEL_STYLE: Record<string, { bg: string; text: string }> = {
+  beginner: { bg: "#dcfce7", text: "#16a34a" },
+  intermediate: { bg: "#fff3e0", text: "#f47920" },
+  expert: { bg: "#fee2e2", text: "#dc2626" },
+};
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function fmt(s: number) {
@@ -29,27 +36,22 @@ function fmt(s: number) {
   return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
 }
 
-const LEVEL_STYLE: Record<string, { bg: string; text: string }> = {
-  beginner: { bg: "#dcfce7", text: "#16a34a" },
-  intermediate: { bg: "#fff3e0", text: "#f47920" },
-  expert: { bg: "#fee2e2", text: "#dc2626" },
-};
-
-// ── Exercise image helper (matches detail page) ───────────────────────────────
+// ── Exercise image — identical to challenges session ──────────────────────────
 function ExerciseImage({ images, name }: { images?: string[]; name: string }) {
+  // These will now reset automatically when the 'key' changes
   const [idx, setIdx] = useState(0);
   const [err, setErr] = useState(false);
-  const src = images?.[idx] ? `/exercises/${images[idx]}` : null;
 
-  useEffect(() => {
-    setErr(false);
-    setIdx(0);
-  }, [name]);
+  const src = images?.[idx] ? `/exercises/${images[idx]}` : null;
 
   return (
     <div
-      className="relative w-full aspect-video rounded-2xl overflow-hidden"
-      style={{ background: "var(--bg-primary)" }}
+      // Adding 'key={name}' solves the cascading render error.
+      // Whenever the exercise name changes, React destroys this instance
+      // and creates a new one, resetting idx to 0 and err to false.
+      key={name}
+      className="relative w-full overflow-hidden rounded-2xl"
+      style={{ background: "var(--bg-primary)", aspectRatio: "16/9" }}
     >
       {src && !err ? (
         <>
@@ -58,13 +60,18 @@ function ExerciseImage({ images, name }: { images?: string[]; name: string }) {
             alt={name}
             className="w-full h-full object-contain"
             onError={() => {
-              if (idx < (images?.length ?? 0) - 1) setIdx((i) => i + 1);
-              else setErr(true);
+              // Try the next image in the array if the current one fails
+              if (idx < (images?.length ?? 0) - 1) {
+                setIdx((i) => i + 1);
+              } else {
+                setErr(true);
+              }
             }}
           />
-          {/* Image dots */}
+
+          {/* Pagination Dots */}
           {images && images.length > 1 && (
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
               {images.map((_, i) => (
                 <button
                   key={i}
@@ -80,8 +87,18 @@ function ExerciseImage({ images, name }: { images?: string[]; name: string }) {
               ))}
             </div>
           )}
+
+          {/* Bottom Gradient Overlay */}
+          <div
+            className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(to top, var(--bg-secondary), transparent)",
+            }}
+          />
         </>
       ) : (
+        /* Fallback State (Error or No Image) */
         <div className="w-full h-full flex flex-col items-center justify-center gap-2">
           <span className="text-5xl">🏋️</span>
           <p
@@ -96,7 +113,7 @@ function ExerciseImage({ images, name }: { images?: string[]; name: string }) {
   );
 }
 
-// ── Set row inside exercise card ──────────────────────────────────────────────
+// ── Set row — green accent matching challenges ─────────────────────────────────
 function SetRow({
   set,
   setIdx,
@@ -130,12 +147,12 @@ function SetRow({
       className="grid items-center gap-2 py-2.5 px-3 rounded-xl transition-all"
       style={{
         gridTemplateColumns: "28px 1fr 1fr 36px",
-        background: done ? "rgba(244,121,32,0.06)" : "var(--bg-primary)",
-        border: `1px solid ${done ? "rgba(244,121,32,0.25)" : "var(--border-color)"}`,
+        // ✅ green tint when done — matches challenges
+        background: done ? "rgba(16,185,129,0.06)" : "var(--bg-primary)",
+        border: `1px solid ${done ? "rgba(16,185,129,0.25)" : "var(--border-color)"}`,
         opacity: done ? 0.85 : 1,
       }}
     >
-      {/* Set number */}
       <span
         className="text-xs font-black text-center"
         style={{ color: done ? "var(--primary)" : "var(--text-secondary)" }}
@@ -143,7 +160,6 @@ function SetRow({
         {setIdx + 1}
       </span>
 
-      {/* Weight or time input */}
       <input
         type="number"
         placeholder={isTime ? "sec" : "kg"}
@@ -160,7 +176,6 @@ function SetRow({
         }}
       />
 
-      {/* Reps input (hidden for TIME) */}
       {!isTime ? (
         <input
           type="number"
@@ -179,7 +194,6 @@ function SetRow({
         <div />
       )}
 
-      {/* Complete toggle */}
       <button
         onClick={() => onToggle(exIdx, setIdx)}
         className="w-8 h-8 flex items-center justify-center rounded-xl transition-all hover:scale-110"
@@ -194,7 +208,7 @@ function SetRow({
   );
 }
 
-// ── Exercise Card ─────────────────────────────────────────────────────────────
+// ── Exercise card — green accent, same as challenges ──────────────────────────
 function SessionExerciseCard({
   exercise,
   exIdx,
@@ -222,24 +236,28 @@ function SessionExerciseCard({
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{
-        delay: exIdx * 0.07,
-        duration: 0.4,
-        ease: [0.22, 1, 0.36, 1],
-      }}
+      transition={{ delay: exIdx * 0.07, duration: 0.4, ease }}
       className="rounded-2xl overflow-hidden"
       style={{
         background: "var(--bg-secondary)",
-        border: `1px solid ${allDone ? "rgba(244,121,32,0.35)" : "var(--border-color)"}`,
-        boxShadow: allDone ? "0 0 0 1px rgba(244,121,32,0.1)" : "none",
+        // ✅ green glow when done — matches challenges card style
+        border: `1px solid ${allDone ? "rgba(16,185,129,0.35)" : "var(--border-color)"}`,
+        boxShadow: allDone ? "0 0 0 1px rgba(16,185,129,0.1)" : "none",
       }}
     >
-      {/* Card header — clickable to expand/collapse */}
+      {/* ── Colored top strip — same as challenges cards ── */}
+      <div
+        className="h-1.5 w-full"
+        style={{
+          background: allDone ? "var(--primary)" : "var(--border-color)",
+        }}
+      />
+
+      {/* Header */}
       <button
         onClick={() => setExpanded((e) => !e)}
         className="w-full flex items-center gap-3 px-4 py-3.5 text-left hover:bg-[var(--bg-primary)]/40 transition-colors"
       >
-        {/* Completion indicator */}
         <div
           className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 font-black text-sm"
           style={{
@@ -276,7 +294,6 @@ function SessionExerciseCard({
           </div>
         </div>
 
-        {/* Sets progress */}
         <div className="text-right shrink-0">
           <p
             className="font-black text-sm"
@@ -310,14 +327,13 @@ function SessionExerciseCard({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.28, ease }}
             className="overflow-hidden"
           >
             <div className="px-4 pb-4 pt-1 space-y-3">
-              {/* Exercise image */}
               <ExerciseImage images={exercise.images} name={exercise.name} />
 
-              {/* Muscles */}
+              {/* Muscle chips — green primary, muted secondary — same as challenges */}
               {(exercise.primaryMuscles?.length ?? 0) > 0 && (
                 <div className="flex flex-wrap gap-1.5">
                   {exercise.primaryMuscles?.map((m) => (
@@ -325,7 +341,7 @@ function SessionExerciseCard({
                       key={m}
                       className="px-2 py-0.5 rounded-lg text-[10px] font-black capitalize"
                       style={{
-                        background: "rgba(244,121,32,0.1)",
+                        background: "rgba(16,185,129,0.1)",
                         color: "var(--primary)",
                       }}
                     >
@@ -369,7 +385,6 @@ function SessionExerciseCard({
                 <span className="text-center">✓</span>
               </div>
 
-              {/* Sets */}
               <div className="space-y-2">
                 {exercise.sets?.map((set, si) => (
                   <SetRow
@@ -384,7 +399,6 @@ function SessionExerciseCard({
                 ))}
               </div>
 
-              {/* Add set */}
               <button
                 onClick={() => onAddSet(exIdx)}
                 className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-black transition-all hover:bg-[var(--primary)]/10"
@@ -424,14 +438,14 @@ export default function WorkoutSessionPage() {
     enabled: !!id,
   });
 
-  // Timer
+  // Timer — pauses when paused flag is set
   useEffect(() => {
     if (paused) return;
     const t = setInterval(() => setSecondsElapsed((p) => p + 1), 1000);
     return () => clearInterval(t);
   }, [paused]);
 
-  // Init exercises
+  // Init exercises from routine data
   useEffect(() => {
     if (routineData?.success && exercises.length === 0) {
       const initial = routineData.data.exercises.map((ex) => ({
@@ -462,15 +476,15 @@ export default function WorkoutSessionPage() {
     setExercises((prev) =>
       prev.map((ex, i) => {
         if (i !== exIdx) return ex;
-        const updatedSets = ex.sets.map((set, j) => {
-          if (j !== setIdx) return set;
-          const isNowCompleted = !set.isCompleted;
-          if (isNowCompleted) {
-            setTimeout(() => setShowRestTimer(true), 50);
-          }
-          return { ...set, isCompleted: isNowCompleted };
-        });
-        return { ...ex, sets: updatedSets };
+        return {
+          ...ex,
+          sets: ex.sets.map((set, j) => {
+            if (j !== setIdx) return set;
+            const isNowCompleted = !set.isCompleted;
+            if (isNowCompleted) setTimeout(() => setShowRestTimer(true), 50);
+            return { ...set, isCompleted: isNowCompleted };
+          }),
+        };
       }),
     );
   };
@@ -482,37 +496,39 @@ export default function WorkoutSessionPage() {
     val: string,
   ) => {
     setExercises((prev) =>
-      prev.map((ex, i) => {
-        if (i !== exIdx) return ex;
-        return {
-          ...ex,
-          sets: ex.sets.map((s, j) =>
-            j === setIdx ? { ...s, [field]: val } : s,
-          ),
-        };
-      }),
+      prev.map((ex, i) =>
+        i !== exIdx
+          ? ex
+          : {
+              ...ex,
+              sets: ex.sets.map((s, j) =>
+                j === setIdx ? { ...s, [field]: val } : s,
+              ),
+            },
+      ),
     );
   };
 
   const handleAddSet = (exIdx: number) => {
     setExercises((prev) =>
-      prev.map((ex, i) => {
-        if (i !== exIdx) return ex;
-        return {
-          ...ex,
-          sets: [
-            ...ex.sets,
-            {
-              id: crypto.randomUUID(),
-              weight: "",
-              reps: "",
-              seconds: "",
-              previous: "-",
-              isCompleted: false,
+      prev.map((ex, i) =>
+        i !== exIdx
+          ? ex
+          : {
+              ...ex,
+              sets: [
+                ...ex.sets,
+                {
+                  id: crypto.randomUUID(),
+                  weight: "",
+                  reps: "",
+                  seconds: "",
+                  previous: "-",
+                  isCompleted: false,
+                },
+              ],
             },
-          ],
-        };
-      }),
+      ),
     );
   };
 
@@ -548,7 +564,6 @@ export default function WorkoutSessionPage() {
     }
   };
 
-  // Progress stats
   const totalSets = exercises.reduce((s, ex) => s + (ex.sets?.length ?? 0), 0);
   const doneSets = exercises.reduce(
     (s, ex) => s + (ex.sets?.filter((st) => st.isCompleted).length ?? 0),
@@ -556,20 +571,21 @@ export default function WorkoutSessionPage() {
   );
   const progress = totalSets > 0 ? doneSets / totalSets : 0;
 
+  // ── Loading ───────────────────────────────────────────────────────────────
   if (isLoading || (routineData && exercises.length === 0)) {
     return (
       <div
-        className="min-h-screen flex flex-col items-center justify-center gap-4"
+        className="flex flex-col items-center justify-center h-64 gap-3"
         style={{ background: "var(--bg-primary)" }}
       >
         <Loader2
-          size={36}
+          size={32}
           className="animate-spin"
           style={{ color: "var(--primary)" }}
         />
         <p
           className="text-[11px] font-black uppercase tracking-widest animate-pulse"
-          style={{ color: "var(--text-secondary)" }}
+          style={{ color: "var(--text-muted)" }}
         >
           Loading session...
         </p>
@@ -587,18 +603,18 @@ export default function WorkoutSessionPage() {
     >
       <title>Your Session | Dashboard - Flexify</title>
 
-      {/* ── Sticky Header ── */}
+      {/* ── Sticky Header — green border matching challenges ── */}
       <header
         className="sticky top-0 z-40 px-4 py-3"
         style={{
           background: "var(--bg-primary)",
-          borderBottom: "2px solid var(--primary)",
+          borderBottom: "2px solid var(--primary)", // ✅ green not orange
           backdropFilter: "blur(16px)",
-          boxShadow: "0 4px 24px rgba(244,121,32,0.08)",
+          boxShadow: "0 4px 24px rgba(16,185,129,0.08)", // ✅ green glow
         }}
       >
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
-          {/* Left: back + title */}
+          {/* Left */}
           <div className="flex items-center gap-2.5 min-w-0">
             <button
               onClick={() => setQuitConfirm(true)}
@@ -614,7 +630,7 @@ export default function WorkoutSessionPage() {
             <div className="flex items-center gap-2 min-w-0">
               <div
                 className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                style={{ background: "rgba(244,121,32,0.12)" }}
+                style={{ background: "rgba(16,185,129,0.12)" }} // ✅ green
               >
                 <Play
                   size={13}
@@ -631,7 +647,7 @@ export default function WorkoutSessionPage() {
             </div>
           </div>
 
-          {/* Center: timer */}
+          {/* Center: timer — same style as challenges session */}
           <div className="flex flex-col items-center shrink-0">
             <div className="flex items-center gap-1 mb-0.5">
               <Clock
@@ -641,7 +657,7 @@ export default function WorkoutSessionPage() {
               />
               <span
                 className="text-[8px] font-black uppercase tracking-widest"
-                style={{ color: "var(--text-secondary)" }}
+                style={{ color: "var(--text-muted)" }}
               >
                 {paused ? "Paused" : "Duration"}
               </span>
@@ -667,6 +683,7 @@ export default function WorkoutSessionPage() {
             >
               {paused ? <Play size={13} /> : <Pause size={13} />}
             </button>
+
             <motion.button
               onClick={handleFinish}
               disabled={isSaving}
@@ -675,7 +692,7 @@ export default function WorkoutSessionPage() {
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-black text-xs text-white disabled:opacity-60"
               style={{
                 background: "var(--primary)",
-                boxShadow: "0 3px 14px rgba(244,121,32,0.4)",
+                boxShadow: "0 3px 14px rgba(16,185,129,0.4)", // ✅ green
               }}
             >
               {isSaving ? (
@@ -688,7 +705,7 @@ export default function WorkoutSessionPage() {
           </div>
         </div>
 
-        {/* Progress bar */}
+        {/* Progress bar — green */}
         <div className="max-w-2xl mx-auto mt-2.5">
           <div
             className="h-1.5 rounded-full overflow-hidden"
@@ -698,13 +715,13 @@ export default function WorkoutSessionPage() {
               className="h-full rounded-full"
               style={{ background: "var(--primary)" }}
               animate={{ width: `${progress * 100}%` }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.5, ease }}
             />
           </div>
           <div className="flex justify-between mt-1">
             <span
               className="text-[9px] font-black uppercase tracking-wider"
-              style={{ color: "var(--text-secondary)" }}
+              style={{ color: "var(--text-muted)" }}
             >
               {doneSets} sets done
             </span>
@@ -718,41 +735,43 @@ export default function WorkoutSessionPage() {
         </div>
       </header>
 
-      {/* ── Exercise List ── */}
+      {/* ── Main content ── */}
       <main className="max-w-2xl mx-auto px-4 py-5 space-y-4">
-        {/* Quick stats */}
+        {/* Quick stats — same 3-card layout as challenges */}
         <div className="grid grid-cols-3 gap-3">
           {[
             { icon: Target, label: "Exercises", val: exercises.length },
             { icon: Zap, label: "Sets Done", val: doneSets },
             { icon: Clock, label: "Elapsed", val: fmt(secondsElapsed) },
           ].map((s) => (
-            <div
+            <motion.div
               key={s.label}
-              className="rounded-xl p-3 text-center"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="rounded-2xl p-4 text-center"
               style={{
                 background: "var(--bg-secondary)",
                 border: "1px solid var(--border-color)",
               }}
             >
               <s.icon
-                size={13}
-                className="mx-auto mb-1"
+                size={14}
+                className="mx-auto mb-1.5"
                 style={{ color: "var(--primary)" }}
               />
               <p
-                className="font-black text-sm leading-none"
+                className="font-black text-lg leading-none"
                 style={{ color: "var(--text-primary)" }}
               >
                 {s.val}
               </p>
               <p
-                className="text-[9px] font-bold uppercase tracking-wider mt-0.5"
-                style={{ color: "var(--text-secondary)" }}
+                className="text-[9px] font-black uppercase tracking-wider mt-1"
+                style={{ color: "var(--text-muted)" }}
               >
                 {s.label}
               </p>
-            </div>
+            </motion.div>
           ))}
         </div>
 
@@ -768,10 +787,9 @@ export default function WorkoutSessionPage() {
         ))}
       </main>
 
-      {/* ── Rest Timer ── */}
       {showRestTimer && <RestTimer onClose={() => setShowRestTimer(false)} />}
 
-      {/* ── Quit Confirm ── */}
+      {/* ── Quit confirm modal — same style as challenges ── */}
       <AnimatePresence>
         {quitConfirm && (
           <motion.div
@@ -831,13 +849,13 @@ export default function WorkoutSessionPage() {
         )}
       </AnimatePresence>
 
-      {/* ── Sticky Bottom Finish Bar ── */}
+      {/* ── Sticky bottom bar — green, matching challenges ── */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-5 pt-3"
+        className="sticky bottom-0 z-40 px-4 pb-5 pt-3"
         style={{
           background: "var(--bg-primary)",
-          borderTop: "2px solid var(--primary)",
-          boxShadow: "0 -8px 32px rgba(244,121,32,0.1)",
+          borderTop: "2px solid var(--primary)", // ✅ green
+          boxShadow: "0 -8px 32px rgba(16,185,129,0.1)", // ✅ green
         }}
       >
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
@@ -861,18 +879,19 @@ export default function WorkoutSessionPage() {
               {doneSets}/{totalSets} sets · {fmt(secondsElapsed)}
             </p>
           </div>
+
           <motion.button
             onClick={handleFinish}
             disabled={isSaving}
             whileHover={{
               scale: 1.03,
-              boxShadow: "0 8px 28px rgba(244,121,32,0.55)",
+              boxShadow: "0 8px 28px rgba(16,185,129,0.5)",
             }}
             whileTap={{ scale: 0.97 }}
             className="flex items-center gap-2 px-6 py-3 rounded-2xl font-black text-sm text-white disabled:opacity-60"
             style={{
               background: "var(--primary)",
-              boxShadow: "0 4px 20px rgba(244,121,32,0.4)",
+              boxShadow: "0 4px 20px rgba(16,185,129,0.4)", // ✅ green
             }}
           >
             {isSaving ? (

@@ -148,7 +148,7 @@ export default function Articles() {
 
       {/* FOOTER ACTION: Explore More Button */}
       {blogs.length > 4 && (
-        <div className="flex justify-center">
+        <div className="flex justify-center pb-12">
           <NextLink
             href="/blogs" // Point this to your full list page
             className="flex items-center gap-3 bg-[var(--primary)] text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-[var(--primary)]/80 transition-all shadow-xl hover:-translate-y-1 active:translate-y-0 group"
