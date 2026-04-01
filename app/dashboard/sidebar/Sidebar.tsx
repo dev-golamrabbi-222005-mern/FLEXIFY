@@ -24,6 +24,7 @@ import {
   Utensils,
   X,
   User,
+  UserCheck2,
   Workflow,
   EarIcon,
   Swords,
