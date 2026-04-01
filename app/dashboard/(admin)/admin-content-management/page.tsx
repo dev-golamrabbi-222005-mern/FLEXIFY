@@ -4,36 +4,33 @@ import { useState } from "react";
 import {
   FileText,
   HelpCircle,
-  Home,
-  Edit,
   Trash2,
   Plus,
   Search,
   Loader2,
   Image as ImageIcon,
+  X,
 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Swal from "sweetalert2";
-import {
-  Article,
-  FAQ,
-  HomeContent,
-  MutationPayload,
-  ContentType,
-} from "@/types/content";
+import { Article, FAQ, MutationPayload, ContentType } from "@/types/content";
 import { toast } from "react-toastify";
-import ImageUpload from "@/components/ImageUpload/page"; // Ensure this path is correct
-import { string } from "zod";
+import ImageUpload from "@/components/ImageUpload/page";
 
 export default function AdminContentManagementPage() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState<string>("");
 
-  // 1. ADD STATE FOR IMAGE URL
+  // --- MODAL & FORM STATE ---
+  const [isArticleModalOpen, setIsArticleModalOpen] = useState(false);
   const [tempImageUrl, setTempImageUrl] = useState<string>("");
+  const [articleData, setArticleData] = useState({
+    title: "",
+    content: "",
+  });
 
-  // Queries (Unchanged)
+  // --- QUERIES ---
   const { data: blogs = [], isLoading: bLoading } = useQuery<Article[]>({
     queryKey: ["articles"],
     queryFn: async () =>
@@ -45,13 +42,7 @@ export default function AdminContentManagementPage() {
     queryFn: async () => (await axios.get("/api/admin/content?type=faqs")).data,
   });
 
-  const { data: home } = useQuery<HomeContent[]>({
-    queryKey: ["homeContent"],
-    queryFn: async () =>
-      (await axios.get("/api/admin/content?type=homeContent")).data,
-  });
-
-  // Mutations (Unchanged)
+  // --- MUTATIONS ---
   const mutation = useMutation({
     mutationFn: async (payload: MutationPayload) => {
       if (payload.id) return axios.patch("/api/admin/content", payload);
@@ -59,8 +50,11 @@ export default function AdminContentManagementPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries();
-      toast.success("Operation Completed");
-      setTempImageUrl(""); // 2. CLEAR IMAGE AFTER SUCCESS
+      toast.success("Content Updated Successfully");
+      closeAndResetModal();
+    },
+    onError: () => {
+      toast.error("Failed to save content");
     },
   });
 
@@ -69,53 +63,33 @@ export default function AdminContentManagementPage() {
       axios.delete(`/api/admin/content?type=${type}&id=${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries();
-      toast.error("Item Deleted"); // Feedback is always good!
+      toast.error("Item Deleted");
     },
   });
 
-  // Handlers
-  const handleAddArticle = async (): Promise<void> => {
-    // 3. VALIDATE IMAGE BEFORE OPENING MODAL (Optional but recommended)
-    if (!tempImageUrl) {
-      toast.info("Please upload a cover image first!");
-    }
-
-    const { value: formValues } = await Swal.fire({
-      title: "Article Details",
-      background: "var(--bg-secondary)",
-      color: "var(--text-primary)",
-      html: `
-        <div style="text-align: left; margin-bottom: 15px;">
-           <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px;">COVER IMAGE URL:</p>
-           <input class="input-style" value="${tempImageUrl}" disabled style="opacity: 0.6; cursor: not-allowed">
-        </div>
-        <input id="swal-title" class="input-style mb-4" placeholder="Article Title" style="margin-bottom: 10px">
-        <textarea id="swal-content" class="input-style" placeholder="Write your article content here..." rows="6"></textarea>
-      `,
-      confirmButtonColor: "var(--primary)",
-      showCancelButton: true,
-      confirmButtonText: "Publish Article",
-      preConfirm: () => ({
-        title: (document.getElementById("swal-title") as HTMLInputElement)
-          .value,
-        content: (
-          document.getElementById("swal-content") as HTMLTextAreaElement
-        ).value,
-      }),
-    });
-
-    if (formValues?.title) {
-      // 4. INCLUDE IMAGE URL IN MUTATION
-      mutation.mutate({
-        type: "articles",
-        ...formValues,
-        image: tempImageUrl, // This comes from our state
-        status: "Published",
-      });
-    }
+  // --- HANDLERS ---
+  const closeAndResetModal = () => {
+    setIsArticleModalOpen(false);
+    setTempImageUrl("");
+    setArticleData({ title: "", content: "" });
   };
 
-  const handleAddFAQ = async (): Promise<void> => {
+  const handlePublishArticle = () => {
+    if (!articleData.title || !articleData.content || !tempImageUrl) {
+      toast.warning("Please fill all fields and upload an image");
+      return;
+    }
+
+    mutation.mutate({
+      type: "articles",
+      title: articleData.title,
+      content: articleData.content,
+      image: tempImageUrl,
+      status: "Published",
+    });
+  };
+
+  const handleAddFAQ = async () => {
     const { value: formValues } = await Swal.fire({
       title: "Add New FAQ",
       background: "var(--bg-secondary)",
@@ -147,194 +121,102 @@ export default function AdminContentManagementPage() {
   }
 
   return (
-    <div className="space-y-8">
-      <title>Content Management | Dashboard - Flexify</title>
+    <div className="space-y-8 relative">
+      <title>Content Management | Flexify</title>
 
-      {/* Search Header */}
+      {/* --- SEARCH HEADER --- */}
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
         <h1 className="text-3xl font-black text-[var(--text-primary)]">
           Content Manager
         </h1>
-        <div className="relative w-full md:w-72">
+        <div className="relative w-full md:max-w-72 flex items-center gap-4">
           <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
+            className="absolute left-3 text-[var(--text-muted)]"
             size={18}
           />
           <input
             type="text"
             placeholder="Search articles..."
-            className="pl-10 input-style"
+            className="input-style pl-10"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+      {/* --- STATS --- */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <StatCard
-          title="Articles"
+          title="Total Articles"
           value={blogs.length}
           Icon={FileText}
           colorClass="from-emerald-400 to-emerald-600"
         />
         <StatCard
-          title="FAQs"
+          title="Total FAQs"
           value={faqs.length}
           Icon={HelpCircle}
           colorClass="from-violet-400 to-violet-600"
         />
-        <StatCard
-          title="Sections"
-          value={home?.length}
-          Icon={Home}
-          colorClass="from-orange-400 to-pink-500"
-        />
       </div>
 
-      {/* Home Settings */}
-      <section className="space-y-6 card-glass">
-        <h2 className="flex items-center gap-2 text-xl font-bold">
-          <Home className="text-[var(--warning)]" /> Homepage Settings
-        </h2>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div className="space-y-2">
-            <label>Hero Title</label>
-            <input
-              id="h-title"
-              defaultValue={home?.[0]?.heroTitle}
-              className="input-style"
-              placeholder="e.g. Transform Your Life"
-            />
-          </div>
-          <div className="space-y-2">
-            <label>Hero Subtitle</label>
-            <input
-              id="h-sub"
-              defaultValue={home?.[0]?.heroSubtitle}
-              className="input-style"
-              placeholder="e.g. Best Fitness App"
-            />
-          </div>
-          <div className="space-y-2 md:col-span-2">
-            <label>Hero Description</label>
-            <textarea
-              id="h-desc"
-              defaultValue={home?.[0]?.heroDescription}
-              className="input-style"
-              placeholder="Description..."
-              rows={3}
-            />
-          </div>
-        </div>
-        <button
-          onClick={() =>
-            mutation.mutate({
-              type: "homeContent",
-              id: home?.[0]?._id,
-              heroTitle: (
-                document.getElementById("h-title") as HTMLInputElement
-              ).value,
-              heroSubtitle: (
-                document.getElementById("h-sub") as HTMLInputElement
-              ).value,
-              heroDescription: (
-                document.getElementById("h-desc") as HTMLTextAreaElement
-              ).value,
-            })
-          }
-          className="w-full btn-primary md:w-auto"
-        >
-          Save Changes
-        </button>
-      </section>
-
-      {/* Articles Section */}
+      {/* --- ARTICLES SECTION --- */}
       <section className="space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <h2 className="flex items-center gap-2 text-2xl font-black text-[var(--text-primary)]">
+        <div className="flex items-center justify-between">
+          <h2 className="flex items-center gap-2 text-2xl font-black">
             <FileText className="text-[var(--primary)]" /> ARTICLES
           </h2>
-
-          {/* 5. THE ADD BUTTON (Only highlight if image is uploaded) */}
           <button
-            onClick={handleAddArticle}
-            disabled={!tempImageUrl}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${
-              tempImageUrl
-                ? "bg-[var(--primary)] text-white shadow-lg hover:scale-105"
-                : "bg-[var(--bg-tertiary)] text-[var(--text-muted)] cursor-not-allowed border border-[var(--border-color)]"
-            }`}
+            onClick={() => setIsArticleModalOpen(true)}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold bg-[var(--primary)] text-white hover:scale-105 transition-all shadow-lg shadow-[var(--primary)]/20"
           >
-            <Plus size={18} />{" "}
-            {tempImageUrl ? "Create Post" : "Upload Image to Start"}
+            <Plus size={18} /> Create Article
           </button>
         </div>
 
-        {/* 6. THE IMAGE UPLOADER (Placed here for visibility) */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 space-y-2">
-            <label className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-tighter">
-              1. Upload Background
-            </label>
-            <ImageUpload onUploadSuccess={(url) => setTempImageUrl(url)} />
-          </div>
-
-          <div className="lg:col-span-2 space-y-2">
-            <label className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-tighter">
-              2. Manage Content
-            </label>
-            <div className="p-0 overflow-hidden card-glass min-h-[220px]">
-              {filteredBlogs.length > 0 ? (
-                filteredBlogs.map((blog) => (
-                  <div
-                    key={blog._id}
-                    className="flex justify-between p-5 border-b border-[var(--border-color)] items-center hover:bg-[var(--bg-tertiary)] transition-colors"
-                  >
-                    <div className="flex items-center gap-4">
-                      {blog.image && (
-                        <img
-                          src={blog.image}
-                          className="w-12 h-12 rounded-lg object-cover border border-[var(--border-color)]"
-                          alt=""
-                        />
-                      )}
-                      <div>
-                        <p className="font-bold text-[var(--text-primary)]">
-                          {blog.title}
-                        </p>
-                        <span className="text-[10px] font-black px-2 py-0.5 rounded bg-[var(--primary-light)] text-[var(--primary)] uppercase">
-                          {blog.status}
-                        </span>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() =>
-                        blog._id &&
-                        deleteMutation.mutate({
-                          type: "articles",
-                          id: blog._id,
-                        })
-                      }
-                      className="text-[var(--danger)] hover:bg-red-500/10 p-2 rounded-full transition-all"
-                    >
-                      <Trash2 size={18} />
-                    </button>
+        <div className="card-glass p-0 overflow-hidden min-h-[300px]">
+          {filteredBlogs.length > 0 ? (
+            filteredBlogs.map((blog) => (
+              <div
+                key={blog._id}
+                className="flex justify-between p-5 border-b border-[var(--border-color)] items-center hover:bg-[var(--bg-tertiary)] transition-colors"
+              >
+                <div className="flex items-center gap-4">
+                  <img
+                    src={blog.image}
+                    className="w-14 h-14 rounded-xl object-cover border border-[var(--border-color)]"
+                    alt=""
+                  />
+                  <div>
+                    <p className="font-bold text-[var(--text-primary)]">
+                      {blog.title}
+                    </p>
+                    <span className="text-[10px] font-black px-2 py-0.5 rounded bg-[var(--primary)]/10 text-[var(--primary)] uppercase">
+                      {blog.status}
+                    </span>
                   </div>
-                ))
-              ) : (
-                <div className="flex flex-col items-center justify-center py-10 opacity-40">
-                  <ImageIcon size={40} />
-                  <p className="p-5 text-[var(--text-muted)] font-bold">
-                    No articles found.
-                  </p>
                 </div>
-              )}
+                <button
+                  onClick={() =>
+                    blog._id &&
+                    deleteMutation.mutate({ type: "articles", id: blog._id })
+                  }
+                  className="text-red-500 hover:bg-red-500/10 p-3 rounded-full transition-all"
+                >
+                  <Trash2 size={20} />
+                </button>
+              </div>
+            ))
+          ) : (
+            <div className="flex flex-col items-center justify-center py-20 opacity-30">
+              <ImageIcon size={48} />
+              <p className="mt-4 font-bold">No articles found</p>
             </div>
-          </div>
+          )}
         </div>
       </section>
 
-      {/* FAQs */}
+      {/* --- FAQ SECTION --- */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-2 text-xl font-bold">
@@ -342,16 +224,16 @@ export default function AdminContentManagementPage() {
           </h2>
           <button
             onClick={handleAddFAQ}
-            className="flex items-center gap-2 btn-secondary"
+            className="btn-secondary flex items-center gap-2 px-4 py-2 rounded-lg"
           >
             <Plus size={18} /> Add FAQ
           </button>
         </div>
-        <div className="p-0 overflow-hidden card-glass">
+        <div className="card-glass p-0 overflow-hidden">
           {faqs.map((faq) => (
             <div
               key={faq._id}
-              className="flex justify-between p-5 border-b border-[var(--border-color)] items-center hover:bg-[var(--bg-tertiary)] transition-colors"
+              className="flex justify-between p-5 border-b border-[var(--border-color)] items-center"
             >
               <div>
                 <p className="font-bold text-[var(--text-primary)]">
@@ -366,7 +248,7 @@ export default function AdminContentManagementPage() {
                   faq._id &&
                   deleteMutation.mutate({ type: "faqs", id: faq._id })
                 }
-                className="text-[var(--danger)] p-2 rounded-full"
+                className="text-red-500 p-2"
               >
                 <Trash2 size={18} />
               </button>
@@ -374,25 +256,120 @@ export default function AdminContentManagementPage() {
           ))}
         </div>
       </section>
+
+      {/* --- NATIVE REACT MODAL FOR ARTICLES --- */}
+      {isArticleModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+          <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)] w-full max-w-2xl rounded-3xl p-8 shadow-2xl space-y-6 relative animate-in fade-in zoom-in duration-200">
+            <button
+              onClick={closeAndResetModal}
+              className="absolute top-6 right-6 text-[var(--text-muted)] hover:text-white"
+            >
+              <X size={24} />
+            </button>
+
+            <h2 className="text-3xl font-black text-[var(--text-primary)] tracking-tighter">
+              NEW ARTICLE
+            </h2>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-[var(--text-muted)] uppercase">
+                      Title
+                    </label>
+                    <input
+                      className="input-style"
+                      placeholder="Catchy fitness title..."
+                      value={articleData.title}
+                      onChange={(e) =>
+                        setArticleData({
+                          ...articleData,
+                          title: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-[var(--text-muted)] uppercase">
+                      Content
+                    </label>
+                    <textarea
+                      className="input-style"
+                      placeholder="Write the body of the article..."
+                      rows={6}
+                      value={articleData.content}
+                      onChange={(e) =>
+                        setArticleData({
+                          ...articleData,
+                          content: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-[var(--text-muted)] uppercase">
+                    Thumbnail Image
+                  </label>
+                  <ImageUpload
+                    onUploadSuccess={(url) => setTempImageUrl(url)}
+                    className="min-h-[220px]"
+                  />
+                  {tempImageUrl && (
+                    <p className="text-[10px] text-emerald-400 font-bold text-center">
+                      ✓ Image Uploaded Ready
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex gap-4 pt-4">
+                <button
+                  onClick={closeAndResetModal}
+                  className="flex-1 py-4 font-bold text-[var(--text-muted)] hover:text-white transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  disabled={
+                    !tempImageUrl || !articleData.title || mutation.isPending
+                  }
+                  onClick={handlePublishArticle}
+                  className="flex-[2] py-4 rounded-2xl font-black bg-[var(--primary)] text-white shadow-xl shadow-[var(--primary)]/20 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-95 transition-all"
+                >
+                  {mutation.isPending ? "Publishing..." : "PUBLISH NOW"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-interface StatCardProps {
+// --- STAT CARD COMPONENT ---
+function StatCard({
+  title,
+  value,
+  Icon,
+  colorClass,
+}: {
   title: string;
-  value: number | string | undefined;
+  value: number | string;
   Icon: React.ElementType;
   colorClass: string;
-}
-
-function StatCard({ title, value, Icon, colorClass }: StatCardProps) {
+}) {
   return (
-    <div className="card-glass flex items-center justify-between group hover:border-[var(--primary)] transition-all">
+    <div className="card-glass flex items-center justify-between p-6">
       <div>
         <p className="text-xs text-[var(--text-muted)] font-bold uppercase tracking-widest">
           {title}
         </p>
-        <h2 className="text-3xl font-black text-[var(--text-primary)]">
+        <h2 className="text-4xl font-black text-[var(--text-primary)]">
           {value}
         </h2>
       </div>

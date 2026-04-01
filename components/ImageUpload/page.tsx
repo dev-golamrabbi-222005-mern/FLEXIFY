@@ -8,11 +8,13 @@ import { toast } from "react-toastify";
 interface ImageUploadProps {
   onUploadSuccess: (url: string) => void;
   defaultImage?: string;
+  className?: string; // ADD THIS LINE (make it optional)
 }
 
 export default function ImageUpload({
   onUploadSuccess,
   defaultImage,
+  className,
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(defaultImage || null);
@@ -59,14 +61,10 @@ export default function ImageUpload({
   };
 
   return (
-    <div className="w-full">
-      <label className="block text-xs font-black uppercase tracking-widest text-[var(--text-muted)] mb-2">
-        Cover Image
-      </label>
-
+    <div className={`w-full ${className}`}>
       <div
         onClick={() => !uploading && fileInputRef.current?.click()}
-        className={`relative group cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all duration-300 min-h-[200px] flex flex-col items-center justify-center
+        className={`relative group cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all duration-300 min-h-[50px] flex flex-col items-center justify-center
           ${preview ? "border-[var(--primary)] bg-[var(--bg-secondary)]" : "border-[var(--border-color)] hover:border-[var(--primary)] bg-[var(--bg-primary)]"}
         `}
       >

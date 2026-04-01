@@ -85,6 +85,12 @@ const menuConfig = [
     roles: ["user"],
   },
   {
+    name: "My Coach",
+    href: "/dashboard/my-coach",
+    icon: UserCheck2,
+    roles: ["user"],
+  },
+  {
     name: "Nutrition",
     href: "/dashboard/nutrition-tracker",
     icon: Utensils,
@@ -163,7 +169,7 @@ const menuConfig = [
     items: [
       {
         name: "My Trainees",
-        href: "/dashboard/coach-traines",
+        href: "/dashboard/coach-my-trainees",
         icon: User,
         roles: ["coach"],
       },

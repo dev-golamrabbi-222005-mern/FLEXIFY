@@ -36,7 +36,7 @@ export function DayExerciseList({ dayPlan, exercises, onStart, onBack }: Props) 
   );
 
   return (
-    <div className="w-full max-w-2xl mx-auto pb-32">
+    <div className="pb-32">
       {/* Back */}
       <button
         onClick={onBack}
@@ -181,7 +181,7 @@ export function DayExerciseList({ dayPlan, exercises, onStart, onBack }: Props) 
 
       {/* Sticky Start button */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-6 pt-4"
+        className="fixed bottom-0 left-0 md:left-64 right-0 z-40 px-4 pb-6 pt-4"
         style={{
           background: "var(--bg-primary)",
           borderTop: "2px solid var(--primary)",

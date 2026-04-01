@@ -184,7 +184,7 @@ export function DayComplete({
   const allCompleted = [...new Set([...completedDays, dayPlan.day])];
 
   return (
-    <div className="w-full max-w-lg mx-auto pb-8 space-y-4">
+    <div className="space-y-4">
       {/* Hero checkmark */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}

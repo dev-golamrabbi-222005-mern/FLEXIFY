@@ -1,3 +1,4 @@
+import Articles from "@/components/home/Articles";
 import BecomeCoachCTA from "@/components/home/BecomeCoachCTA";
 import BMI from "@/components/home/BMI";
 import BodyChallenges from "@/components/home/Challenges";
@@ -10,23 +11,34 @@ import Pricing from "@/components/home/Pricing";
 import StatsSection from "@/components/home/StatsSection";
 import SuccessStory from "@/components/home/SuccessStories";
 import TopCoaches from "@/components/home/Topcoaches";
-import Articles from "./(marketing)/blogs/page";
 
 export default function Home() {
   return (
     <div>
       <FlexifyHero />
+
       <StatsSection />
+
       <Precision />
+
       <BMI />
+
       <PopularWorkouts />
+
+      <BodyChallenges />
+
       <SuccessStory />
-      <BodyChallenges/>
+
       <TopCoaches />
+
       <BecomeCoachCTA />
+
       <Pricing />
+
       <FAQ />
-      <Articles/>
+
+      <Articles />
+
       <Motivation />
     </div>
   );

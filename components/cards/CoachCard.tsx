@@ -11,7 +11,7 @@ type Coach = {
   profileImage?: string;
   imageUrl?: string;
   location?: string;
-  experience?: number;
+  experienceYears?: number;
   trainingTypes?: string[];
   expertise?: string;
   charge?: number;
@@ -54,7 +54,7 @@ const CoachCard = ({ coach }: CoachCardProps) => {
         <div className="flex items-center gap-3 text-sm font-semibold">
           <span className="flex items-center gap-1 bg-[var(--bg-primary)] px-2 py-1 rounded-lg border border-[var(--border-color)]">
             <Award size={14} className="text-[var(--primary)]" />{" "}
-            {coach.experience}Y Exp
+            {coach.experienceYears}Y Exp
           </span>
 
           <span className="text-[var(--text-secondary)] uppercase text-[10px] tracking-widest bg-[var(--border-color)] px-2 py-1 rounded-lg">

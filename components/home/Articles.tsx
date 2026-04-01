@@ -41,11 +41,12 @@ export default function Articles() {
 
   // LOGIC: 1 Featured + Top 3 Latest
   const featuredBlog = blogs[0];
+  const latestThree = blogs.slice(1, 4); // Grabs index 1, 2, and 3
 
   return (
-    <section className="max-w-7xl mx-auto px-6 mt-8 md:mt-12 lg:mt-16 mb-10 space-y-12">
+    <section className="max-w-7xl mx-auto px-6 space-y-12">
       {/* Header Section */}
-      <div className="text-center space-y-4">
+      <div className="text-center space-y-4 mt-8 md:mt-12 lg:mt-16 mb-10">
         {" "}
         {/* Added spacing between elements */}
         <div className="mb-2">
@@ -107,7 +108,7 @@ export default function Articles() {
 
       {/* Grid Layout for exactly 3 Blogs */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {blogs.map((blog) => (
+        {latestThree.map((blog) => (
           <NextLink
             key={blog._id}
             href={`/blogs/${blog._id}`}
@@ -144,6 +145,22 @@ export default function Articles() {
           </NextLink>
         ))}
       </div>
+
+      {/* FOOTER ACTION: Explore More Button */}
+      {blogs.length > 4 && (
+        <div className="flex justify-center pb-12">
+          <NextLink
+            href="/blogs" // Point this to your full list page
+            className="flex items-center gap-3 bg-[var(--primary)] text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-[var(--primary)]/80 transition-all shadow-xl hover:-translate-y-1 active:translate-y-0 group"
+          >
+            Explore Full Journal
+            <ArrowUpRight
+              size={20}
+              className="group-hover:rotate-45 transition-transform"
+            />
+          </NextLink>
+        </div>
+      )}
 
       {/* Empty State */}
       {blogs.length === 0 && (
