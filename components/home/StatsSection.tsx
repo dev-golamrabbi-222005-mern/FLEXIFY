@@ -9,6 +9,8 @@ import {
   animate,
   useInView,
 } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 // 🔹 Type
 type StatItem = {
@@ -18,32 +20,6 @@ type StatItem = {
   label: string;
   icon: ReactNode;
 };
-
-// 🔹 Data
-const stats: StatItem[] = [
-  { id: 1, value: 50, suffix: "K+", label: "Active Users", icon: <FaUsers /> },
-  {
-    id: 2,
-    value: 300,
-    suffix: "K+",
-    label: "Workouts Completed",
-    icon: <FaDumbbell />,
-  },
-  {
-    id: 3,
-    value: 44,
-    suffix: "K+",
-    label: "Goals Achieved",
-    icon: <FaBullseye />,
-  },
-  {
-    id: 4,
-    value: 100,
-    suffix: "+",
-    label: "Expert Trainers",
-    icon: <FaUserTie />,
-  },
-];
 
 // 🔹 Counter Component
 function Counter({ value, suffix }: { value: number; suffix: string }) {
@@ -71,9 +47,68 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
 }
 
 export default function StatsSection() {
+  const {data: users} = useQuery({
+    queryKey: ["users"],
+    queryFn: async() => {
+      const res = await axios.get(`/api/user?role=user`);
+      return res.data;
+    }
+  });
+  const {data: achievements} = useQuery({
+    queryKey: ["achievements"],
+    queryFn: async() => {
+      const res = await axios.get(`/api/stats/goal-achieved`);
+      return res.data;
+    }
+  });
+  const {data: completedWorkouts} = useQuery({
+    queryKey: ["completedWorkouts"],
+    queryFn: async() => {
+      const res = await axios.get(`/api/stats/workout-complete`);
+      return res.data;
+    }
+  });
+  const {data: coaches} = useQuery({
+    queryKey: ["coaches"],
+    queryFn: async() => {
+      const res = await axios.get(`/api/coach`);
+      return res.data;
+    }
+  });
+  // 🔹 Data
+  const stats: StatItem[] = [
+    {
+      id: 1,
+      value: users?.length | 0,
+      suffix: "K+",
+      label: "Active Users",
+      icon: <FaUsers />
+    },
+    {
+      id: 2,
+      value: completedWorkouts?.length | 0,
+      suffix: "K+",
+      label: "Workouts Completed",
+      icon: <FaDumbbell />,
+    },
+    {
+      id: 3,
+      value: achievements?.length | 0,
+      suffix: "K+",
+      label: "Goals Achieved",
+      icon: <FaBullseye />,
+    },
+    {
+      id: 4,
+      value: coaches?.length | 0,
+      suffix: "+",
+      label: "Expert Trainers",
+      icon: <FaUserTie />,
+    },
+  ];
   return (
     <section className="relative overflow-hidden pb-8 md:pb-12 bg-[var(--bg-primary)]">
-      <div className="relative mx-auto max-w-7xl px-6">
+      <div className="relative px-6 mx-auto max-w-7xl">
         <SectionTitle
           title="Flexify Impact"
           subtitle="Building healthier lifestyles through smart fitness tracking"
@@ -100,7 +135,7 @@ export default function StatsSection() {
               "
             >
               {/* Icon */}
-              <div className="mb-5 flex justify-center">
+              <div className="flex justify-center mb-5">
                 <div
                   className="
                     text-4xl
