@@ -617,7 +617,7 @@ export default function WorkoutSessionPage() {
 
       {/* ── Sticky Header — green border matching challenges ── */}
       <header
-        className="sticky top-0 z-40 px-4 py-3"
+        className="sticky -top-16 z-40 px-4 py-3"
         style={{
           background: "var(--bg-primary)",
           borderBottom: "2px solid var(--primary)", // ✅ green not orange

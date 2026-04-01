@@ -79,12 +79,6 @@ const menuConfig = [
     roles: ["user"],
   },
   {
-    name: "My Goals",
-    href: "/dashboard/my-goals",
-    icon: Flag,
-    roles: ["user"],
-  },
-  {
     name: "Challenges",
     href: "/dashboard/my-challenges",
     icon: Swords,
