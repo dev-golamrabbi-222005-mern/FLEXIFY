@@ -79,13 +79,14 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     const email = session.user.email;
+    const name = session.user.name || "User";
     const collection = await dbConnect<DbUser>("users");
   const existingUser = await collection.findOne({ email });
     const result = await collection.updateOne(
       { email: email },
       { 
         $set: { 
-          name: session.user.name || body.name, 
+          name: name, 
           imageUrl: session.user.image || body.imageUrl,
           role: "user", 
           status: "none", 
