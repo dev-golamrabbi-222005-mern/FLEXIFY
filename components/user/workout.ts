@@ -17,6 +17,7 @@ export interface Exercise {
   equipment?: string;
   level?: string;
   primaryMuscles?: string[]; 
+  secondaryMuscles?: string[]; 
   image?: string;
   images?: string[];         
   instructions?: string[];   

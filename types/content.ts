@@ -1,10 +1,12 @@
 export type ContentType = "articles" | "faqs" | "homeContent";
 
 export interface Article {
-  _id?: string;
+  _id?: string; // Optional because new articles don't have IDs yet
   title: string;
   content: string;
-  status: "Published" | "Draft";
+  status: string;
+  image?: string; // ADD THIS LINE (The '?' makes it optional)
+  createdAt?: string;
 }
 
 export interface FAQ {
@@ -25,6 +27,7 @@ export interface MutationPayload {
   id?: string;
   title?: string;
   content?: string;
+  image?: string; // ADD THIS LINE
   status?: string;
   question?: string;
   answer?: string;
