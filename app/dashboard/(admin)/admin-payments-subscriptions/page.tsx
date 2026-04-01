@@ -1,17 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { Users, CreditCard, DollarSign, Clock, RefreshCcw, Search, Loader2, Edit, Trash2, LucideIcon } from "lucide-react";
+import {
+  Users,
+  CreditCard,
+  DollarSign,
+  Clock,
+  RefreshCcw,
+  Search,
+  Loader2,
+  Edit,
+  Trash2,
+  LucideIcon,
+} from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 
-// টাইপ ডিফিনিশন
 interface Plan {
   _id: string;
   name: string;
-  price: number;
+  price: string | number;
   duration: string;
 }
 
@@ -36,6 +46,18 @@ export default function PaymentsSubscriptionsPage() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
 
+  const updatePlanMutation = useMutation({
+    mutationFn: async ({ id, price, duration }: { id: string; price: number | string; duration: string }) =>
+      axios.patch("/api/admin/plans", { id, price, duration }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-plans"] });
+      toast.success("Plan updated successfully!");
+    },
+    onError: () => {
+      toast.error("Failed to update the plan.");
+    },
+  });
+
   const { data: plans, isLoading: plansLoading } = useQuery<Plan[]>({
     queryKey: ["admin-plans"],
     queryFn: async () => (await axios.get("/api/admin/plans")).data,
@@ -47,16 +69,69 @@ export default function PaymentsSubscriptionsPage() {
   });
 
   const refundMutation = useMutation({
-    mutationFn: async (id: string) => axios.patch("/api/admin/payments", { id, status: "refunded" }),
+    mutationFn: async (id: string) =>
+      axios.patch("/api/admin/payments", { id, status: "refunded" }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-payments"] });
       toast.success("The payment has been marked as refunded.");
     },
     onError: () => {
       toast.error("Something went wrong while processing the refund.");
-    }
+    },
   });
 
+ const handleEdit = (plan: Plan) => {
+    Swal.fire({
+      title: `Update ${plan.name} Plan`,
+      background: "#1f2937",
+      color: "#f3f4f6",
+      customClass: {
+        popup: "rounded-2xl border border-gray-700 shadow-2xl",
+        confirmButton: "rounded-xl px-6 py-2 font-bold",
+        cancelButton: "rounded-xl px-6 py-2 font-bold",
+      },
+      html: `
+        <div style="text-align: left; padding: 10px; font-family: inherit;">
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #9ca3af; font-weight: 600;">Price (৳)</label>
+            <input id="swal-price" type="number" value="${plan.price}" 
+              style="width: 100%; padding: 12px; background: #111827; border: 1px solid #374151; color: white; border-radius: 12px; outline: none; transition: border-color 0.2s;"
+              onfocus="this.style.borderColor='var(--primary)'" 
+              onblur="this.style.borderColor='#374151'">
+          </div>
+          
+          <div>
+            <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #9ca3af; font-weight: 600;">Duration</label>
+            <input id="swal-duration" value="${plan.duration}" 
+              style="width: 100%; padding: 12px; background: #111827; border: 1px solid #374151; color: white; border-radius: 12px; outline: none; transition: border-color 0.2s;"
+              onfocus="this.style.borderColor='var(--primary)'" 
+              onblur="this.style.borderColor='#374151'">
+          </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonColor: "#10B981",
+      cancelButtonColor: "#EF4444",
+      confirmButtonText: "Save Changes",
+      buttonsStyling: true,
+      preConfirm: () => {
+        const price = (document.getElementById("swal-price") as HTMLInputElement).value;
+        const duration = (document.getElementById("swal-duration") as HTMLInputElement).value;
+        if (!price || !duration) {
+          Swal.showValidationMessage("Both fields are required");
+        }
+        return { price, duration };
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        updatePlanMutation.mutate({
+          id: plan._id,
+          price: result.value.price,
+          duration: result.value.duration,
+        });
+      }
+    });
+  };
   const handleRefund = (id: string) => {
     Swal.fire({
       title: "Are you sure?",
@@ -67,7 +142,7 @@ export default function PaymentsSubscriptionsPage() {
       cancelButtonColor: "#EF4444",
       confirmButtonText: "Yes, refund it!",
       background: "var(--bg-secondary)",
-      color: "var(--text-primary)"
+      color: "var(--text-primary)",
     }).then((result) => {
       if (result.isConfirmed) {
         refundMutation.mutate(id);
@@ -75,33 +150,57 @@ export default function PaymentsSubscriptionsPage() {
     });
   };
 
-  const filteredTransactions = paymentData?.transactions?.filter((t: Transaction) =>
-    t.userName.toLowerCase().includes(search.toLowerCase()) || 
-    t.transactionId.toLowerCase().includes(search.toLowerCase())
+  const filteredTransactions = paymentData?.transactions?.filter(
+    (t: Transaction) =>
+      t.userName.toLowerCase().includes(search.toLowerCase()) ||
+      t.transactionId.toLowerCase().includes(search.toLowerCase())
   );
 
-  if (plansLoading || paymentsLoading) return (
-    <div className="flex h-screen items-center justify-center bg-[var(--bg-primary)]">
-      <Loader2 className="animate-spin text-[var(--primary)]" size={40} />
-    </div>
-  );
+  if (plansLoading || paymentsLoading)
+    return (
+      <div className="flex h-screen items-center justify-center bg-[var(--bg-primary)]">
+        <Loader2 className="animate-spin text-[var(--primary)]" size={40} />
+      </div>
+    );
 
   return (
     <div className="space-y-8 min-h-screen text-[var(--text-primary)]">
       <title>Payments Subscriptions | Dashboard - Flexify</title>
-      
+
       {/* HEADER */}
       <div>
         <h1 className="text-3xl font-black">Payments & Subscriptions</h1>
-        <p className="text-[var(--text-secondary)]">Manage revenue, active plans, and user transactions</p>
+        <p className="text-[var(--text-secondary)]">
+          Manage revenue, active plans, and user transactions
+        </p>
       </div>
 
       {/* SUMMARY CARDS */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
-        <StatCard title="Total Users" value={paymentData?.summary.totalUsers} Icon={Users} color="from-blue-500 to-indigo-600" />
-        <StatCard title="Paid" value={paymentData?.summary.paidCount} Icon={DollarSign} color="from-emerald-400 to-green-600" />
-        <StatCard title="Pending" value={paymentData?.summary.pendingCount} Icon={Clock} color="from-yellow-400 to-orange-500" />
-        <StatCard title="Refunded" value={paymentData?.summary.refundedCount} Icon={RefreshCcw} color="from-red-400 to-pink-500" />
+        <StatCard
+          title="Total Users"
+          value={paymentData?.summary.totalUsers}
+          Icon={Users}
+          color="from-blue-500 to-indigo-600"
+        />
+        <StatCard
+          title="Paid"
+          value={paymentData?.summary.paidCount}
+          Icon={DollarSign}
+          color="from-emerald-400 to-green-600"
+        />
+        <StatCard
+          title="Pending"
+          value={paymentData?.summary.pendingCount}
+          Icon={Clock}
+          color="from-yellow-400 to-orange-500"
+        />
+        <StatCard
+          title="Refunded"
+          value={paymentData?.summary.refundedCount}
+          Icon={RefreshCcw}
+          color="from-red-400 to-pink-500"
+        />
       </div>
 
       {/* SUBSCRIPTION PLANS */}
@@ -111,18 +210,36 @@ export default function PaymentsSubscriptionsPage() {
         </h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {plans?.map((plan) => (
-            <div key={plan._id} className="card-glass p-6 flex flex-col gap-4 border border-[var(--border-color)] group hover:border-[var(--primary)] transition-all">
+            <div
+              key={plan._id}
+              className="card-glass p-6 flex flex-col gap-4 border border-[var(--border-color)] group hover:border-[var(--primary)] transition-all"
+            >
               <div className="flex items-start justify-between">
-                <h3 className="text-lg font-bold tracking-wider uppercase">{plan.name}</h3>
-                <span className="text-xs font-bold px-2 py-1 bg-[var(--primary)] text-white rounded">{plan.duration}</span>
+                <h3 className="text-lg font-bold tracking-wider uppercase">
+                  {plan.name}
+                </h3>
+                <span className="text-xs font-bold px-2 py-1 bg-[var(--primary)] text-white rounded">
+                  {plan.duration}
+                </span>
               </div>
-              <p className="text-4xl font-black">৳{plan.price}</p>
+              <p className="text-4xl font-black">
+                {plan.price === 0 || plan.price === "0" ? (
+                  "FREE"
+                ) : (
+                  <>৳{plan.price}</>
+                )}
+              </p>
               <div className="flex gap-2 mt-4">
-                <button className="flex-1 flex items-center justify-center gap-2 bg-[var(--bg-tertiary)] py-2 rounded-lg hover:bg-[var(--primary)] hover:text-white transition duration-300">
-                  <Edit size={16} /> Edit
-                </button>
-                <button className="p-2 text-red-500 transition rounded-lg hover:bg-red-500/10">
-                  <Trash2 size={20} />
+                <button 
+                  onClick={() => handleEdit(plan)}
+                  className="flex-1 flex items-center justify-center gap-2 bg-[var(--bg-tertiary)] py-2 rounded-lg hover:bg-[var(--primary)] hover:text-white transition duration-300"
+                >
+                  {updatePlanMutation.isPending && updatePlanMutation.variables?.id === plan._id ? (
+                     <Loader2 className="animate-spin" size={16} />
+                  ) : (
+                    <Edit size={16} />
+                  )} 
+                  Edit
                 </button>
               </div>
             </div>
@@ -137,7 +254,10 @@ export default function PaymentsSubscriptionsPage() {
             <DollarSign className="text-green-500" /> Recent Transactions
           </h2>
           <div className="relative w-full md:w-72">
-            <Search className="absolute text-gray-400 -translate-y-1/2 left-3 top-1/2" size={18} />
+            <Search
+              className="absolute text-gray-400 -translate-y-1/2 left-3 top-1/2"
+              size={18}
+            />
             <input
               type="text"
               placeholder="Search by name or TxID..."
@@ -150,37 +270,52 @@ export default function PaymentsSubscriptionsPage() {
 
         <div className="space-y-4">
           {filteredTransactions?.map((t: Transaction) => (
-            <div key={t._id} className="card-glass p-4 flex flex-wrap items-center justify-between gap-4 border border-[var(--border-color)] hover:border-[var(--primary)] transition">
+            <div
+              key={t._id}
+              className="card-glass p-4 flex flex-wrap items-center justify-between gap-4 border border-[var(--border-color)] hover:border-[var(--primary)] transition"
+            >
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-[var(--bg-tertiary)] rounded-full flex items-center justify-center font-bold text-[var(--primary)] text-lg">
                   {t.userName.charAt(0)}
                 </div>
                 <div>
                   <p className="font-bold">{t.userName}</p>
-                  <p className="text-xs text-[var(--text-secondary)] font-mono">{t.transactionId}</p>
+                  <p className="text-xs text-[var(--text-secondary)] font-mono">
+                    {t.transactionId}
+                  </p>
                 </div>
               </div>
 
               <div className="text-right md:text-left min-w-[100px]">
                 <p className="text-lg font-black">৳{t.amount}</p>
-                <p className="text-xs text-[var(--text-secondary)]">{new Date(t.createdAt).toLocaleDateString('en-GB')}</p>
+                <p className="text-xs text-[var(--text-secondary)]">
+                  {new Date(t.createdAt).toLocaleDateString("en-GB")}
+                </p>
               </div>
 
               <div className="flex items-center gap-4">
-                <span className={`px-4 py-1 text-[10px] font-black rounded-full uppercase tracking-tighter ${
-                  t.status === "success" ? "bg-green-500/10 text-green-500" : 
-                  t.status === "pending" ? "bg-yellow-500/10 text-yellow-500" : "bg-red-500/10 text-red-500"
-                }`}>
+                <span
+                  className={`px-4 py-1 text-[10px] font-black rounded-full uppercase tracking-tighter ${
+                    t.status === "success"
+                      ? "bg-green-500/10 text-green-500"
+                      : t.status === "pending"
+                      ? "bg-yellow-500/10 text-yellow-500"
+                      : "bg-red-500/10 text-red-500"
+                  }`}
+                >
                   {t.status}
                 </span>
 
                 {t.status === "success" && (
-                  <button 
+                  <button
                     onClick={() => handleRefund(t._id)}
                     className="p-2 text-[var(--text-secondary)] hover:text-red-500 transition-colors"
                     title="Refund"
                   >
-                    <RefreshCcw size={18} className={refundMutation.isPending ? "animate-spin" : ""} />
+                    <RefreshCcw
+                      size={18}
+                      className={refundMutation.isPending ? "animate-spin" : ""}
+                    />
                   </button>
                 )}
               </div>
@@ -203,10 +338,14 @@ function StatCard({ title, value, Icon, color }: StatCardProps) {
   return (
     <div className="card-glass p-5 flex items-center justify-between group transition-all duration-300 border border-[var(--border-color)]">
       <div>
-        <p className="text-xs text-[var(--text-secondary)] font-bold uppercase tracking-widest">{title}</p>
+        <p className="text-xs text-[var(--text-secondary)] font-bold uppercase tracking-widest">
+          {title}
+        </p>
         <h2 className="mt-1 text-3xl font-black">{value || 0}</h2>
       </div>
-      <div className={`p-4 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg transform group-hover:rotate-12 transition-transform`}>
+      <div
+        className={`p-4 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg transform group-hover:rotate-12 transition-transform`}
+      >
         <Icon size={24} />
       </div>
     </div>

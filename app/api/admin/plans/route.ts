@@ -12,15 +12,34 @@ export async function GET() {
   }
 }
 
-export async function DELETE(req: NextRequest) {
+export async function PATCH(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
+    const body = await req.json();
+    const { id, price, duration } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: "Plan ID is required" }, { status: 400 });
+    }
+
     const plansCol = await dbConnect("plans");
 
-    await plansCol.deleteOne({ _id: new ObjectId(id!) });
-    return NextResponse.json({ message: "Plan deleted" });
+    const result = await plansCol.updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $set: {
+          price: Number(price), 
+          duration: duration,
+        },
+      }
+    );
+
+    if (result.matchedCount === 0) {
+      return NextResponse.json({ error: "Plan not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Plan updated successfully" });
   } catch (error) {
-    return NextResponse.json({ error: "Delete failed" }, { status: 500 });
+    console.error("PATCH Error:", error);
+    return NextResponse.json({ error: "Failed to update plan" }, { status: 500 });
   }
 }
