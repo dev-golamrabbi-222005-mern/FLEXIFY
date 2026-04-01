@@ -6,10 +6,7 @@ import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { signOut } from "next-auth/react";
 import {
-  BarChart2,
-  BrickWallShield,
   Calendar,
-  ChartNoAxesGanttIcon,
   CircleDollarSign,
   Dumbbell,
   FileCog,
@@ -18,33 +15,21 @@ import {
   LayersPlus,
   LogOut,
   MessageSquareWarning,
-  NotebookText,
   PlusCircle,
   Settings,
-  Speech,
   SquareLibrary,
   TableOfContents,
   Trophy,
-  UserPen,
   UserRoundCog,
-  UserRoundPen,
   Utensils,
-  Video,
   X,
   User,
-  BookText,
-  MessageCircle,
+  UserCheck2,
   Workflow,
   EarIcon,
   Swords,
-  Apple,
-  Calendar1,
   Star,
-  Magnet,
-  UserCheck2,
-  Shield,
-  MessageCircleCode,
-  ShieldAlertIcon,
+
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -79,15 +64,15 @@ const menuConfig = [
     roles: ["user"],
   },
   {
-    name: "My Goals",
-    href: "/dashboard/my-goals",
-    icon: Flag,
-    roles: ["user"],
-  },
-  {
     name: "Challenges",
     href: "/dashboard/my-challenges",
     icon: Swords,
+    roles: ["user"],
+  },
+  {
+    name: "My Coach",
+    href: "/dashboard/my-coach",
+    icon: UserCheck2,
     roles: ["user"],
   },
   {
@@ -115,17 +100,12 @@ const menuConfig = [
     label: "ADMIN",
     items: [
       {
-        name: "Admin Management",
+        name: "Users Management",
         href: "/dashboard/admin-management",
         icon: UserRoundCog,
         roles: ["admin"],
       },
-      {
-        name: "Coach Applications",
-        href: "/dashboard/admin-coach-applications",
-        icon: NotebookText,
-        roles: ["admin"],
-      },
+     
       {
         name: "Coach Management",
         href: "/dashboard/admin-coach-management",
@@ -169,7 +149,7 @@ const menuConfig = [
     items: [
       {
         name: "My Trainees",
-        href: "/dashboard/coach-traines",
+        href: "/dashboard/coach-my-trainees",
         icon: User,
         roles: ["coach"],
       },

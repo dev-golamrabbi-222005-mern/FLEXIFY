@@ -134,7 +134,7 @@ export function WorkoutSession({
   const circ = 2 * Math.PI * 40;
 
   return (
-    <div className="w-full max-w-md mx-auto pb-32">
+    <div className="pb-32">
       {/* Top bar */}
       <div className="flex items-center justify-between mb-4">
         <button
@@ -337,7 +337,7 @@ export function WorkoutSession({
 
       {/* Sticky CTA */}
       <div
-        className="sticky bottom-0 z-40 px-4 pb-6 pt-3 mt-4"
+        className="fixed bottom-0 left-0 md:left-64 right-0 z-40 px-4 pb-6 pt-4"
         style={{
           background: "var(--bg-primary)",
           borderTop: "1px solid var(--border-color)",

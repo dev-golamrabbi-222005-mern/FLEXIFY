@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent, JSX } from "react";
+import { useState, JSX } from "react";
 import Link from "next/link";
 import {
   FaEye,
@@ -9,14 +9,14 @@ import {
   FaEnvelope,
   FaLock,
   FaUser,
-  FaImage,
 } from "react-icons/fa";
 import { postUser } from "@/actions/server/auth";
 import { signIn } from "next-auth/react";
-import Swal from "sweetalert2";
 import { useRouter, useSearchParams } from "next/navigation";
 import SocialButtons from "@/components/auth/SocialButtons";
 import { toast } from "react-toastify";
+import ImageUpload from "@/components/ImageUpload/page";
+import { useForm } from "react-hook-form";
 
 interface RegisterFormData {
   name: string;
@@ -31,85 +31,59 @@ export default function RegisterPage(): JSX.Element {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [role, setRole] = useState<"user" | "coach">("user");
   const [agree, setAgree] = useState<boolean>(false);
+  
+  // Consolidated image state from golamrabbi branch
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
 
   const params = useSearchParams();
   const router = useRouter();
   const callbackUrl = params.get("callbackUrl") || "/";
+
+  // Validation Patterns
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const noSpacePattern = /^[\S]+$/;
-  const min8Pattern = /^.{8,}$/;
-  const casePattern = /^(?=.*[a-z])(?=.*[A-Z]).+$/;
-  const numberPattern = /^(?=.*\d).+$/;
-  const specialCharPattern = /^(?=.*[!@#$%^&*(),.?":;{}|<>]).+$/;
-  const imageUrlPattern = /^https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp)$/i;
+  const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":;{}|<>])\S{8,}$/;
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const formData: RegisterFormData = {
-      name: (form.elements.namedItem("name") as HTMLInputElement).value,
-      phone: (form.elements.namedItem("phone") as HTMLInputElement).value,
-      email: (form.elements.namedItem("email") as HTMLInputElement).value,
-      imageUrl: (form.elements.namedItem("imageUrl") as HTMLInputElement).value,
-      password: (form.elements.namedItem("password") as HTMLInputElement).value,
-      role,
-    };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormData>();
 
-    if (
-      !formData.name ||
-      !formData.imageUrl ||
-      !formData.email ||
-      !formData.phone ||
-      !formData.password ||
-      !formData.role
-    ) {
-      await toast.error("Please fill up all fields");
-      return;
-    } else if (!emailPattern.test(formData.email)) {
-      await toast.error("Invalid email");
-      return;
-    } else if (!imageUrlPattern.test(formData.imageUrl)) {
-      await toast.error("Invalid image URL");
-      return;
-    } else if (!min8Pattern.test(formData.password)) {
-      await toast.error("Password must be at least 8 characters long");
-      return;
-    } else if (!noSpacePattern.test(formData.password)) {
-      await toast.error("Password must not contain any whitespaces");
-      return;
-    } else if (!casePattern.test(formData.password)) {
-      await toast.error("Password must contain at least one uppercase and one lowercase letter");
-      return;
-    } else if (!numberPattern.test(formData.password)) {
-      await toast.error("Password must contain at least one number",);
-      return;
-    } else if (!specialCharPattern.test(formData.password)) {
-      await toast.error("Password must contain at least one special character",);
+  const handleRegister = async (data: RegisterFormData) => {
+    // Manual check for the image upload since it's outside the standard form inputs
+    if (!uploadedImageUrl) {
+      toast.error("Please upload a profile picture");
       return;
     }
 
-    const result = await postUser(formData);
+    const payload = {
+      ...data,
+      role, // Using the role state
+      imageUrl: uploadedImageUrl,
+    };
+
+    const result = await postUser(payload);
 
     if (result.success) {
       const signInResult = await signIn("credentials", {
-        email: formData.email,
-        password: formData.password,
+        email: payload.email,
+        password: payload.password,
         redirect: false,
         callbackUrl,
       });
 
       if (signInResult?.ok) {
-        await toast.success(result.message);
+        toast.success(result.message);
         router.push(callbackUrl);
       }
     } else {
-      await toast.error(result.message);
+      toast.error(result.message);
     }
   };
 
   return (
     <div
-      className="relative flex items-center justify-center min-h-screen px-4 bg-center bg-cover"
+      className="relative flex items-center justify-center min-h-screen py-12 px-4 bg-center bg-cover"
       style={{
         backgroundImage:
           "url('https://i.ibb.co/W4SrF8Vn/pngtree-rows-of-dumbbells-in-the-gym-image-15662386.jpg')",
@@ -120,12 +94,26 @@ export default function RegisterPage(): JSX.Element {
       <div className="relative z-10 w-full max-w-md p-8 border bg-white/5 backdrop-blur-xl border-white/10 rounded-2xl">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-white">
-            Create <span className="text-(--primary)">Flexify</span> Account
+            Create <span className="text-[var(--primary)]">Flexify</span> Account
           </h1>
           <p className="mt-2 text-gray-400">Start your fitness journey today</p>
         </div>
 
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-5" onSubmit={handleSubmit(handleRegister)}>
+          {/* Profile Image Upload - Merged compact UI */}
+          <div className="space-y-1.5">
+            <label className="text-sm text-gray-300">Profile Picture</label>
+            <ImageUpload
+              onUploadSuccess={(url) => setUploadedImageUrl(url)}
+              className="min-h-[10px] py-4"
+            />
+            {uploadedImageUrl && (
+              <p className="text-[10px] text-emerald-400 font-medium">
+                ✓ Image ready
+              </p>
+            )}
+          </div>
+
           {/* Name */}
           <div>
             <label className="text-sm text-gray-300">Name</label>
@@ -133,24 +121,30 @@ export default function RegisterPage(): JSX.Element {
               <FaUser className="absolute text-gray-400 left-3 top-4" />
               <input
                 type="text"
-                name="name"
-                className="w-full py-3 pl-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-(--primary)"
+                {...register("name", { required: "Name is required" })}
+                className="w-full py-3 pl-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-[var(--primary)]"
                 placeholder="Your name"
               />
+              {errors.name && (
+                <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+              )}
             </div>
           </div>
 
-          {/* Email */}
+          {/* Phone */}
           <div>
             <label className="text-sm text-gray-300">Phone Number</label>
             <div className="relative mt-1">
               <FaMobileAlt className="absolute text-gray-400 left-3 top-4" />
               <input
                 type="text"
-                name="phone"
-                className="w-full py-3 pl-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-(--primary)"
+                {...register("phone", { required: "Phone number is required" })}
+                className="w-full py-3 pl-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-[var(--primary)]"
                 placeholder="+880123456789"
               />
+              {errors.phone && (
+                <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>
+              )}
             </div>
           </div>
 
@@ -158,27 +152,19 @@ export default function RegisterPage(): JSX.Element {
           <div>
             <label className="text-sm text-gray-300">Email</label>
             <div className="relative mt-1">
-              <FaEnvelope className="absolute left-3 top-4.5 text-gray-400" />
+              <FaEnvelope className="absolute left-3 top-4 text-gray-400" />
               <input
                 type="email"
-                name="email"
-                className="w-full py-3 pl-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-(--primary)"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: { value: emailPattern, message: "Invalid email" },
+                })}
+                className="w-full py-3 pl-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-[var(--primary)]"
                 placeholder="you@example.com"
               />
-            </div>
-          </div>
-
-          {/* Image URL */}
-          <div>
-            <label className="text-sm text-gray-300">Profile Image URL</label>
-            <div className="relative mt-1">
-              <FaImage className="absolute left-3 top-4.5 text-gray-400" />
-              <input
-                type="text"
-                name="imageUrl"
-                className="w-full py-3 pl-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-(--primary)"
-                placeholder="https://image-url.com"
-              />
+              {errors.email && (
+                <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+              )}
             </div>
           </div>
 
@@ -186,52 +172,33 @@ export default function RegisterPage(): JSX.Element {
           <div>
             <label className="text-sm text-gray-300">Password</label>
             <div className="relative mt-1">
-              <FaLock className="absolute left-3 top-4.5 text-gray-400" />
+              <FaLock className="absolute left-3 top-4 text-gray-400" />
               <input
                 type={showPassword ? "text" : "password"}
-                name="password"
-                className="w-full py-3 pl-10 pr-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-(--primary)"
+                {...register("password", {
+                  required: "Password is required",
+                  pattern: {
+                    value: passwordPattern,
+                    message: "Password must be 8+ chars with uppercase, lowercase, number, and special character.",
+                  },
+                })}
+                className="w-full py-3 pl-10 pr-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-[var(--primary)]"
                 placeholder="••••••••"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-4.5 text-gray-400 hover:text-white"
+                className="absolute right-3 top-4 text-gray-400 hover:text-white"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
+              {errors.password && (
+                <p className="text-red-500 text-xs mt-1 leading-tight">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
           </div>
-
-          {/* Role
-          <div>
-            <label className="block mb-2 text-sm text-gray-300">
-              Register as
-            </label>
-            <div className="flex gap-6 text-gray-300">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="role"
-                  value="user"
-                  checked={role === "user"}
-                  onChange={() => setRole("user")}
-                />
-                User
-              </label>
-
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="role"
-                  value="coach"
-                  checked={role === "coach"}
-                  onChange={() => setRole("coach")}
-                />
-                Coach
-              </label>
-            </div>
-          </div> */}
 
           {/* Terms */}
           <div className="flex items-center gap-2 text-sm text-gray-300">
@@ -239,18 +206,20 @@ export default function RegisterPage(): JSX.Element {
               type="checkbox"
               checked={agree}
               onChange={() => setAgree(!agree)}
+              className="accent-[var(--primary)]"
             />
             <span>
               I agree to the{" "}
-              <span className="text-(--primary) underline cursor-pointer">
+              <span className="text-[var(--primary)] underline cursor-pointer">
                 Terms & Conditions
               </span>
             </span>
           </div>
+
           <button
             type="submit"
-            disabled={!agree}
-            className="w-full py-3 font-semibold text-black transition rounded-lg btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!agree || !uploadedImageUrl}
+            className="w-full py-3 font-semibold text-black transition rounded-lg bg-[var(--primary)] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Register
           </button>
@@ -266,7 +235,7 @@ export default function RegisterPage(): JSX.Element {
 
         <p className="mt-6 text-sm text-center text-gray-400">
           Already have an account?{" "}
-          <Link href="/login" className="text-(--primary) hover:underline">
+          <Link href="/login" className="text-[var(--primary)] hover:underline">
             Login
           </Link>
         </p>

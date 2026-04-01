@@ -65,8 +65,8 @@ const About = () => {
 
   return (
     <div className="bg-[var(--bg-primary)]">
-          <title>About - Flexify</title>
-      <section className="px-4 mx-auto mt-8 md:mt-12 mb-10 max-w-7xl">
+      <title>About - Flexify</title>
+      <section className="px-4 md:px-6 mx-auto mt-8 md:mt-12 mb-10 max-w-7xl">
         {/* About Section */}
         <div className="grid items-center grid-cols-1 gap-10 md:grid-cols-2">
           {/* Left Text */}
@@ -94,6 +94,83 @@ const About = () => {
             />
           </div>
         </div>
+
+        <section className="mt-12 md:mt-16 lg:mt-20">
+          <div className="max-w-7xl mx-auto">
+            {/* 🔹 Mission + Vision */}
+            <div className="grid md:grid-cols-2 gap-10 mb-16">
+              <div className="bg-[var(--card-bg)] p-6 md:p-8 rounded-2xl border border-[var(--border-color)]">
+                <h3 className="text-2xl font-bold mb-4 text-[var(--text-primary)]">
+                  Our Mission
+                </h3>
+                <p className="text-[var(--text-secondary)] leading-relaxed">
+                  Our mission is to make fitness more personalized, structured,
+                  and accessible for everyone by leveraging smart technology and
+                  user-centric design.
+                </p>
+              </div>
+
+              <div className="bg-[var(--card-bg)] p-6 md:p-8 rounded-2xl border border-[var(--border-color)]">
+                <h3 className="text-2xl font-bold mb-4 text-[var(--text-primary)]">
+                  Our Vision
+                </h3>
+                <p className="text-[var(--text-secondary)] leading-relaxed">
+                  We envision a future where technology empowers individuals to
+                  achieve their fitness goals with intelligent guidance,
+                  real-time tracking, and professional support.
+                </p>
+              </div>
+            </div>
+
+            {/* 🔹 Why Flexify */}
+            <div className="text-center mb-10">
+              <SectionTitle
+                title="Why Flexify?"
+                subtitle="Flexify is designed to bridge the gap between generic fitness
+                plans and real personalized guidance."
+              />
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                {
+                  title: "Personalized Plans",
+                  desc: "Workout and nutrition plans tailored to individual goals and body data.",
+                },
+                {
+                  title: "AI Smartness",
+                  desc: "AI-driven recommendations to optimize workouts and performance.",
+                },
+                {
+                  title: "Coach Integration",
+                  desc: "Direct communication with professional coaches for guidance.",
+                },
+                {
+                  title: "Progress Tracking",
+                  desc: "Track calories, workouts, and consistency with smart dashboards.",
+                },
+                {
+                  title: "Challenges & Motivation",
+                  desc: "Gamified challenges and streak systems to keep users engaged.",
+                },
+                {
+                  title: "Modern Experience",
+                  desc: "Responsive, multilingual, and user-friendly interface.",
+                },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="p-6 rounded-2xl bg-[var(--card-bg)] border border-[var(--border-color)] transition-all duration-300 hover:bg-[var(--primary)] hover:text-white"
+                >
+                  <h4 className="font-bold text-lg mb-2">{item.title}</h4>
+                  <p className="text-sm text-[var(--text-secondary)] hover:text-white">
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* Meet Team Section */}
         <section className="pt-8 md:pt-12">

@@ -3,19 +3,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { ObjectId } from "mongodb";
+import { pusherServer } from "@/lib/pusher";
 
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || !session.user) {
+    if (!session?.user?.email) {
       return NextResponse.json(
         { message: "Unauthorized! Please login first." },
         { status: 401 }
       );
     }
 
-    const userEmail = session.user.email;
+    const userEmail:string = session.user.email;
     const body = await request.json();
     const { date, type, data } = body;
 
@@ -57,6 +58,7 @@ export async function POST(request: NextRequest) {
 
     if (type === "ADD_FOOD") {
       const calorieGain = Number(data.entry.foodItem.calories * data.entry.quantity);
+      const mealName = data.mealId;
       await logCollection.updateOne(
         filter,
         {
@@ -70,6 +72,11 @@ export async function POST(request: NextRequest) {
         { userId: userEmail, type: "WEIGHT_LOSS" }, 
         { $inc: { currentValue: calorieGain } }
       );
+  
+  const userChannelName = `user-${userEmail.replace(/[@.]/g, "-")}`;
+      await pusherServer.trigger(userChannelName, "new-update", {
+        message: `Logged ${data.entry.foodItem.name} for ${mealName}. Total calories updated! 🥗`,
+      });
     }
 
     return NextResponse.json({ 

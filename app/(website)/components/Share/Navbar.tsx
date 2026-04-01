@@ -265,7 +265,7 @@ const Navbar = () => {
                 onClick={() => setMobileOpen(false)}
                 className="block btn-primary text-center"
               >
-                Get Started
+                Login
               </Link>
             )}
           </div>

@@ -4,6 +4,7 @@ import { DbUser } from "@/actions/server/auth";
 import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth";
 import { FitnessProfile, UserGoals } from "@/types/user";
+import { pusherServer } from "@/lib/pusher";
 
 function calculateGoals(profile: FitnessProfile): UserGoals {
   if (!profile || !profile.weight || !profile.height || !profile.age) {
@@ -78,13 +79,14 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     const email = session.user.email;
+    const name = session.user.name || "User";
     const collection = await dbConnect<DbUser>("users");
-
+  const existingUser = await collection.findOne({ email });
     const result = await collection.updateOne(
       { email: email },
       { 
         $set: { 
-          name: session.user.name || body.name, 
+          name: name, 
           imageUrl: session.user.image || body.imageUrl,
           role: "user", 
           status: "none", 
@@ -96,6 +98,17 @@ export async function POST(req: Request) {
     );
 
     if (result.matchedCount > 0 || result.upsertedCount > 0) {
+      const userChannel = `user-${email.replace(/[@.]/g, "-")}`;
+      await pusherServer.trigger(userChannel, "new-update", {
+        message: `🔥 Welcome to Flexify, ${name}! Your fitness journey starts now. Let's hit those goals!`,
+      });
+
+      if (result.upsertedCount > 0 || !existingUser?.fitnessProfile) {
+        await pusherServer.trigger("admin-updates", "new-payment", { // আপনি চাইলে ইভেন্ট নাম 'new-user' ও দিতে পারেন
+          message: `👤 New Member Joined: ${name} (${email}) has just set up their fitness profile!`,
+        });
+      }
+      
       return NextResponse.json({ 
         success: true, 
         message: "Profile saved successfully!" 

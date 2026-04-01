@@ -11,10 +11,13 @@ type Coach = {
   name: string;
   imageUrl?: string;
   location?: string;
-  experience?: number;
+  experienceYears?: number; 
   trainingTypes?: string[];
-  expertise?: string;
-  charge?: number;
+  specialties?: string; 
+  pricing?: {
+    monthly: number;
+    perSession: number;
+  };
 };
 
 const TopCoaches = () => {
@@ -32,8 +35,8 @@ const TopCoaches = () => {
 
 const topCoaches = coaches
   ? [...coaches]
-      .filter((c) => c.experience !== undefined)
-      .sort((a, b) => b.experience! - a.experience!)
+      .filter((c) => c.experienceYears !== undefined)
+      .sort((a, b) => b.experienceYears! - a.experienceYears!)
       .slice(0, 3)
   : [];
 

@@ -8,11 +8,13 @@ import { toast } from "react-toastify";
 interface ImageUploadProps {
   onUploadSuccess: (url: string) => void;
   defaultImage?: string;
+  className?: string; // ADD THIS LINE (make it optional)
 }
 
 export default function ImageUpload({
   onUploadSuccess,
   defaultImage,
+  className,
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(defaultImage || null);
@@ -59,14 +61,10 @@ export default function ImageUpload({
   };
 
   return (
-    <div className="w-full">
-      <label className="block text-xs font-black uppercase tracking-widest text-[var(--text-muted)] mb-2">
-        Cover Image
-      </label>
-
+    <div className={`w-full ${className}`}>
       <div
         onClick={() => !uploading && fileInputRef.current?.click()}
-        className={`relative group cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all duration-300 min-h-[200px] flex flex-col items-center justify-center
+        className={`relative group cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all duration-300 min-h-[50px] flex flex-col items-center justify-center
           ${preview ? "border-[var(--primary)] bg-[var(--bg-secondary)]" : "border-[var(--border-color)] hover:border-[var(--primary)] bg-[var(--bg-primary)]"}
         `}
       >
@@ -83,7 +81,7 @@ export default function ImageUpload({
             <img
               src={preview}
               alt="Preview"
-              className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity"
+              className="absolute inset-0 object-cover w-full h-full transition-opacity opacity-60 group-hover:opacity-40"
             />
             <div className="relative z-10 flex flex-col items-center gap-2">
               {uploading ? (
@@ -92,14 +90,14 @@ export default function ImageUpload({
                     className="animate-spin text-[var(--primary)]"
                     size={32}
                   />
-                  <span className="text-xs font-bold text-white uppercase tracking-widest bg-black/50 px-3 py-1 rounded-full">
+                  <span className="px-3 py-1 text-xs font-bold tracking-widest text-white uppercase rounded-full bg-black/50">
                     Uploading to Cloud...
                   </span>
                 </>
               ) : (
                 <>
                   <CheckCircle2 className="text-[var(--primary)]" size={32} />
-                  <span className="text-xs font-bold text-white uppercase tracking-widest bg-black/50 px-3 py-1 rounded-full">
+                  <span className="px-3 py-1 text-xs font-bold tracking-widest text-white uppercase rounded-full bg-black/50">
                     Click to Change
                   </span>
                 </>
@@ -110,7 +108,7 @@ export default function ImageUpload({
                 e.stopPropagation();
                 removeImage();
               }}
-              className="absolute top-3 right-3 z-20 p-2 bg-red-500 text-white rounded-full hover:scale-110 transition-transform"
+              className="absolute z-20 p-2 text-white transition-transform bg-red-500 rounded-full top-3 right-3 hover:scale-110"
             >
               <X size={16} />
             </button>
@@ -121,7 +119,7 @@ export default function ImageUpload({
               <ImageIcon size={32} />
             </div>
             <div className="text-center">
-              <p className="font-bold uppercase text-xs tracking-widest">
+              <p className="text-xs font-bold tracking-widest uppercase">
                 Click to upload image
               </p>
               <p className="text-[10px] opacity-60">

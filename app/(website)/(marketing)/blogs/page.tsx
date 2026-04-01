@@ -41,12 +41,11 @@ export default function Articles() {
 
   // LOGIC: 1 Featured + Top 3 Latest
   const featuredBlog = blogs[0];
-  const latestThree = blogs.slice(1, 4); // Grabs index 1, 2, and 3
 
   return (
-    <section className="max-w-7xl mx-auto px-6 space-y-12">
+    <section className="max-w-7xl mx-auto px-6 mt-8 md:mt-12 lg:mt-16 mb-10 space-y-12">
       {/* Header Section */}
-      <div className="text-center space-y-4 mt-8 md:mt-12 lg:mt-16 mb-10">
+      <div className="text-center space-y-4">
         {" "}
         {/* Added spacing between elements */}
         <div className="mb-2">
@@ -67,7 +66,7 @@ export default function Articles() {
 
       {/* Featured Blog Layout */}
       {featuredBlog && (
-        <NextLink href={`/blog/${featuredBlog._id}`} className="group block">
+        <NextLink href={`/blogs/${featuredBlog._id}`} className="group block">
           <div className="card-glass overflow-hidden !p-0 border-none relative min-h-[400px] flex flex-col md:flex-row hover:shadow-2xl transition-all duration-500">
             <div className="md:w-1/2 bg-[var(--bg-tertiary)] relative overflow-hidden flex items-center justify-center border-r border-[var(--border-color)]">
               {featuredBlog.image ? (
@@ -108,10 +107,10 @@ export default function Articles() {
 
       {/* Grid Layout for exactly 3 Blogs */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {latestThree.map((blog) => (
+        {blogs.map((blog) => (
           <NextLink
             key={blog._id}
-            href={`/blog/${blog._id}`}
+            href={`/blogs/${blog._id}`}
             className="group flex flex-col h-full card-glass !p-0 border-transparent hover:border-[var(--primary)] transition-all duration-300 overflow-hidden"
           >
             <div className="h-48 bg-[var(--bg-primary)] flex items-center justify-center border-b border-[var(--border-color)] relative">
@@ -145,22 +144,6 @@ export default function Articles() {
           </NextLink>
         ))}
       </div>
-
-      {/* FOOTER ACTION: Explore More Button */}
-      {blogs.length > 4 && (
-        <div className="flex justify-center pb-12">
-          <NextLink
-            href="/blogs" // Point this to your full list page
-            className="flex items-center gap-3 bg-[var(--primary)] text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-[var(--primary)]/80 transition-all shadow-xl hover:-translate-y-1 active:translate-y-0 group"
-          >
-            Explore Full Journal
-            <ArrowUpRight
-              size={20}
-              className="group-hover:rotate-45 transition-transform"
-            />
-          </NextLink>
-        </div>
-      )}
 
       {/* Empty State */}
       {blogs.length === 0 && (

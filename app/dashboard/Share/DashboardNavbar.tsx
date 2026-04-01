@@ -55,25 +55,36 @@ useEffect(() => {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
     });
 
-    const roleChannel = pusher.subscribe(`role-${user.role}`);
+    const roleChannelName = `role-${user.role}`;
+  const userChannelName = `user-${user.email.replace(/[@.]/g, "-")}`;
 
-    roleChannel.bind("new-update", (data: { message: string }) => {
-      const newNotif: Notification = {
-        id: Math.random().toString(36).substring(2, 9),
-        message: data.message,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        read: false,
-      };
-      setNotifications((prev) => [newNotif, ...prev]);
-      toast.info(data.message, { 
-  icon: <Bell size={16} className="text-[var(--primary)]" /> 
-});
+  const roleChannel = pusher.subscribe(roleChannelName);
+  const userChannel = pusher.subscribe(userChannelName);
+   const handleNewNotification = (data: { message: string }) => {
+    const newNotif: Notification = {
+      id: Math.random().toString(36).substring(2, 9),
+      message: data.message,
+      time: new Date().toLocaleTimeString([], { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: true 
+      }),
+      read: false,
+    };
+
+    setNotifications((prev) => [newNotif, ...prev]);
+    toast.info(data.message, { 
+      icon: <Bell size={16} className="text-[var(--primary)]" /> 
     });
+  };
+  roleChannel.bind("new-update", handleNewNotification);
+  userChannel.bind("new-update", handleNewNotification);
 
     return () => {
-      pusher.unsubscribe(`role-${user.role}`);
+      pusher.unsubscribe(roleChannelName);
+    pusher.unsubscribe(userChannelName);
     };
-  }, [user?.role]);
+  }, [user?.role , user?.email]);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
   const markAllAsRead = () => {
@@ -148,7 +159,7 @@ useEffect(() => {
             </button>
 
             {showNotif && (
-              <div className="absolute right-0 mt-3 w-80 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-2xl z-50 overflow-hidden">
+              <div className="absolute right-0 mt-3 w-64 md:w-80 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-2xl z-50 overflow-hidden">
                 <div className="p-4 border-b border-[var(--border-color)] flex justify-between items-center bg-[var(--bg-tertiary)]">
                   <h3 className="text-[10px] font-black uppercase tracking-widest text-[var(--text-primary)]">Notifications</h3>
                   {unreadCount > 0 && (

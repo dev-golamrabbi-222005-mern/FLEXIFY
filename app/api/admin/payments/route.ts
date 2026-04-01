@@ -10,12 +10,24 @@ export async function GET() {
     const transactions = await paymentsCol.find({}).sort({ createdAt: -1 }).toArray();
 
     const totalUsers = await usersCol.countDocuments({ role: "user" });
-    const paidCount = await paymentsCol.countDocuments({ status: "success" });
+
+    const paidCount = await usersCol.countDocuments({ 
+      role: "user", 
+      plan: { $exists: true, $ne: "free" } 
+    });
+
     const pendingCount = await paymentsCol.countDocuments({ status: "pending" });
+
+
     const refundedCount = await paymentsCol.countDocuments({ status: "refunded" });
 
     return NextResponse.json({
-      summary: { totalUsers, paidCount, pendingCount, refundedCount },
+      summary: { 
+        totalUsers, 
+        paidCount, 
+        pendingCount, 
+        refundedCount 
+      },
       transactions
     });
   } catch (error) {
