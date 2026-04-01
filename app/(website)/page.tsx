@@ -12,6 +12,7 @@ import StatsSection from "@/components/home/StatsSection";
 import SuccessStory from "@/components/home/SuccessStories";
 import TopCoaches from "@/components/home/Topcoaches";
 
+
 export default function Home() {
   return (
     <div>

@@ -1,145 +1,121 @@
 "use client";
 
-import SectionTitle from "@/app/(website)/components/ui/section-title";
-import {motion} from "framer-motion";
 import {
+  FiChevronDown,
+  FiTrendingUp,
+  FiUserCheck,
   FiBarChart2,
   FiCoffee,
-  FiTrendingUp,
-  FiHeart,
-  FiUserCheck,
-  FiZap,
   FiCompass,
-  FiStar,
+  FiZap,
   FiShieldOff,
+  FiStar,
+  FiHeart,
   FiSmile,
 } from "react-icons/fi";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import Link from "next/link";
 
-const newFaqs = [
-  {
-    question: "How long does it take to see results?",
-    answer:
-      "Results vary depending on consistency, nutrition, and exercise intensity. Most users notice improvements within 4–6 weeks.",
-    icon: <FiTrendingUp />,
-  },
-  {
-    question: "Can beginners use Flexify safely?",
-    answer:
-      "Yes, Flexify adapts recommendations for all fitness levels, ensuring safe and effective routines for beginners.",
-    icon: <FiUserCheck />,
-  },
-  {
-    question: "Do I need equipment to follow workouts?",
-    answer:
-      "Many workouts can be done using bodyweight. Optional equipment enhances variety but isn’t mandatory.",
-    icon: <FiBarChart2 />,
-  },
-  {
-    question: "Does Flexify track nutrition?",
-    answer:
-      "Currently, we provide nutrition guidance based on logic rules. Full tracking features may be added in future updates.",
-    icon: <FiCoffee />,
-  },
-  {
-    question: "Can I personalize my goals?",
-    answer:
-      "Yes, you can set personal goals and adjust focus areas, such as weight loss, strength, or endurance.",
-    icon: <FiCompass />,
-  },
-  {
-    question: "Is Flexify suitable for remote training?",
-    answer:
-      "Absolutely. Flexify’s platform works on mobile, tablet, and desktop, making it perfect for home or remote workouts.",
-    icon: <FiZap />,
-  },
-  {
-    question: "Are my personal data and privacy safe?",
-    answer:
-      "Yes. Flexify does not permanently store sensitive health information, ensuring your data stays private.",
-    icon: <FiShieldOff />,
-  },
-  {
-    question: "Can I combine Flexify with other fitness apps?",
-    answer:
-      "Yes, Flexify’s recommendations can complement other apps, but tracking remains independent within Flexify.",
-    icon: <FiStar />,
-  },
-  {
-    question: "Does Flexify motivate long-term?",
-    answer:
-      "Flexify provides adaptive routines and progress tracking to keep you motivated over the long term.",
-    icon: <FiHeart />,
-  },
-  {
-    question: "Is support available if I have questions?",
-    answer:
-      "Yes, our team is ready to help with any inquiries or technical support to ensure smooth use.",
-    icon: <FiSmile />,
-  },
+// Define the FAQ type
+interface FAQ {
+  _id: string;
+  question: string;
+  answer: string;
+}
+
+const icons = [
+  <FiTrendingUp key="icon-1" />,
+  <FiUserCheck key="icon-2" />,
+  <FiBarChart2 key="icon-3" />,
+  <FiCoffee key="icon-4" />,
+  <FiCompass key="icon-5" />,
+  <FiZap key="icon-6" />,
+  <FiShieldOff key="icon-7" />,
+  <FiStar key="icon-8" />,
+  <FiHeart key="icon-9" />,
+  <FiSmile key="icon-10" />,
 ];
 
-export default function MoreFAQPage() {
+export default function FAQPage() {
+  // Fetch FAQs from backend
+  const { data: faqs = [] } = useQuery<FAQ[]>({
+    queryKey: ["faqs"],
+    queryFn: async () => {
+      const res = await axios.get<FAQ[]>("/api/admin/content?type=faqs");
+      return res.data;
+    },
+  });
+
   return (
-    <section className="min-h-screen mt-8 md:mt-12 mb-10">
-      <div className="max-w-6xl mx-auto px-4 text-center">
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.7 }}
-          className="text-3xl md:text-5xl font-bold mb-6 tracking-tight"
-          style={{ color: "var(--text-primary)" }}
-        >
-          More Frequently Asked Questions
-        </motion.h1>
+    <main className="min-h-screen mt-8 mb-10 md:mt-12 max-w-7xl px-6 mx-auto relative overflow-hidden">
+      <h1 className="text-3xl md:text-5xl font-bold mb-10 text-center text-[var(--text-primary)]">
+        Frequently Asked Questions
+      </h1>
 
-        <p className="max-w-xl mx-auto text-[var(--text-secondary)]">
-          Explore additional details about Flexify and get answers to common
-          questions.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-          {newFaqs.map((faq, index) => (
-            <div
-              key={index}
-              className="bg-[var(--card-bg)] rounded-2xl p-8 text-left shadow-sm"
-            >
-              <div className="flex items-start gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-6 mt-8">
+        {faqs.map((faq, index) => (
+          <div
+            key={faq._id}
+            className="group cursor-default bg-[var(--card-bg)] rounded-2xl p-8 text-left relative
+                       transition-all duration-300
+                       hover:bg-[var(--primary)]
+                       hover:-translate-y-2
+                       hover:shadow-[0_20px_40px_rgba(0,0,0,0.25)]"
+          >
+            {/* Icon + Question + Arrow */}
+            <div className="flex items-start justify-between gap-4 mb-4">
+              <div className="flex items-start gap-4">
                 <div
                   className="w-10 h-10 flex items-center justify-center rounded-lg 
                              border border-[var(--primary)]
-                             text-[var(--primary)] text-lg"
+                             text-[var(--primary)] text-lg
+                             transition-colors duration-300
+                             group-hover:border-white
+                             group-hover:text-white"
                 >
-                  {faq.icon}
+                  {icons[index % icons.length]}
                 </div>
 
-                <h3 className="text-xl font-bold text-[var(--text-primary)]">
+                <h3
+                  className="text-xl font-bold 
+                             text-[var(--text-primary)]
+                             transition-colors
+                             group-hover:text-white"
+                >
                   {faq.question}
                 </h3>
               </div>
+            </div>
 
-              <p className="text-[var(--text-secondary)] leading-relaxed">
+            {/* Answer (always visible) */}
+            <div className="overflow-hidden transition-all duration-500 max-h-40 opacity-100">
+              <p
+                className="text-[var(--text-secondary)] leading-relaxed
+                           transition-colors
+                           group-hover:text-white/90"
+              >
                 {faq.answer}
               </p>
             </div>
-          ))}
-        </div>
-
-        {/* Back To Home Page Button */}
-        <div className="mt-12">
-          <Link
-            href="/"
-            className="inline-block px-8 py-3 rounded-xl font-semibold
-                       bg-[var(--primary)] text-white
-                       transition-all duration-300
-                       hover:opacity-90
-                       hover:-translate-y-1
-                       hover:shadow-lg"
-          >
-            Back To Home
-          </Link>
-        </div>
+          </div>
+        ))}
       </div>
-    </section>
+
+      {/* See More Button */}
+      <div className="mt-12 flex justify-center items-center">
+        <Link
+          href="/"
+          className="inline-block px-8 py-3 rounded-xl font-semibold
+                     bg-[var(--primary)] text-white
+                     transition-all duration-300
+                     hover:opacity-90
+                     hover:-translate-y-1
+                     hover:shadow-lg"
+        >
+          Back to Home
+        </Link>
+      </div>
+    </main>
   );
 }
