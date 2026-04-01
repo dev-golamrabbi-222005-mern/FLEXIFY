@@ -1,5 +1,6 @@
 // app/api/payment/fail/route.ts
 import { dbConnect } from "@/lib/dbConnect";
+import { pusherServer } from "@/lib/pusher";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -8,10 +9,21 @@ export async function POST(req: NextRequest) {
     const tran_id = formData.get("tran_id") as string;
 
     if (tran_id) {
-      await dbConnect("payments").updateOne(
-        { transactionId: tran_id },
-        { $set: { status: "failed", updatedAt: new Date() } },
-      );
+      const paymentsColl = await dbConnect("payments");
+      
+      const paymentRecord = await paymentsColl.findOne({ transactionId: tran_id });
+
+      if (paymentRecord && paymentRecord.status !== "failed") {
+        await paymentsColl.updateOne(
+          { transactionId: tran_id },
+          { $set: { status: "failed", updatedAt: new Date() } }
+        );
+
+        const userChannel = `user-${paymentRecord.userEmail.replace(/[@.]/g, "-")}`;
+        await pusherServer.trigger(userChannel, "new-update", {
+          message: `❌ Payment Failed! Your transaction (${tran_id}) was unsuccessful. Please try again or use a different method.`,
+        });
+      }
     }
   } catch (err) {
     console.error("[payment/fail]", err);

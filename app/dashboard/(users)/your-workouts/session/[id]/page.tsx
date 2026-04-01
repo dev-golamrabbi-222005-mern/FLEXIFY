@@ -7,6 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import ExerciseCard from "@/components/user/ExerciseCard";
 import RestTimer from "@/components/user/RestTimer";
 import { Exercise, WorkoutResponse } from "@/components/user/workout";
+import { toast } from "react-toastify";
 
 export default function WorkoutSessionPage() {
   const { id } = useParams<{ id: string }>();
@@ -99,7 +100,10 @@ const handleSetComplete = (exIdx: number, setIdx: number, capturedTime?: string)
       .filter((ex) => ex.sets.length > 0);
 
     if (completedExercises.length === 0) {
-      alert("Please complete at least one set before finishing!");
+      toast.warning("Please complete at least one set before finishing!", {
+      position: "top-center",
+      autoClose: 3000,
+    });
       return;
     }
 
@@ -116,11 +120,12 @@ const handleSetComplete = (exIdx: number, setIdx: number, capturedTime?: string)
       const res = await axios.post("/api/routines/finish", payload);
 
       if (res.data.success) {
+        toast.success("Workout saved successfully! Keep it up.");
         router.push("/dashboard");
       }
     } catch (error) {
       console.error("Save Error:", error);
-      alert("Failed to save workout session.");
+      toast.error("Failed to save workout session. Please try again.");
     } finally {
       setIsSaving(false);
     }
