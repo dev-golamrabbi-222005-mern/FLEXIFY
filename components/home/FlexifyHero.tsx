@@ -107,7 +107,7 @@ export default function FlexifyHero() {
                   onClick={() =>
                     (window.location.href = slides[index].joinLink)
                   }
-                  className="bg-[var(--primary)] text-white font-black px-8 py-4 md:py-6 w-full rounded-2xl flex items-center justify-center gap-4 transition-all hover:scale-105 shadow-2xl shadow-(--primary) uppercase text-lg"
+                  className="bg-[var(--primary)] text-white font-black px-6 py-2 md:py-5 w-full rounded-2xl flex items-center justify-center gap-4 transition-all hover:scale-105 shadow-2xl shadow-(--primary) uppercase text-lg"
                 >
                   Join Now <ArrowRight size={24} />
                 </button>
@@ -115,7 +115,7 @@ export default function FlexifyHero() {
                   onClick={() =>
                     (window.location.href = slides[index].learnMoreLink)
                   }
-                  className="px-8 py-4 md:py-6 rounded-2xl border-2 w-full border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all bg-transparent backdrop-blur-sm flex items-center justify-center gap-3 font-bold uppercase tracking-tight text-center"
+                  className="px-6 py-2 md:py-5 rounded-2xl border-2 w-full border-[var(--border-color)] text-[var(--text-primary)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all bg-transparent backdrop-blur-sm flex items-center justify-center gap-3 font-bold uppercase tracking-tight text-center"
                 >
                   Learn More <Zap size={22} className="fill-current" />
                 </button>
@@ -125,7 +125,7 @@ export default function FlexifyHero() {
         </div>
 
         <div className="relative flex items-center justify-center w-full h-full md:w-1/2 md:justify-end">
-          <div className="relative w-full aspect-[9/9]  rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] shadow-[0_10px_40px_-5px_rgba(0,0,0,0.2)]">
+          <div className="relative w-full aspect-[16/11]  rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] shadow-[0_10px_40px_-5px_rgba(0,0,0,0.2)]">
             <AnimatePresence initial={false} mode="popLayout">
               <motion.div
                 key={index}

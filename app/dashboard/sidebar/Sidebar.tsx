@@ -24,6 +24,7 @@ import {
   Utensils,
   X,
   User,
+  UserCheck2,
   Workflow,
   EarIcon,
   Swords,
@@ -66,6 +67,12 @@ const menuConfig = [
     name: "Challenges",
     href: "/dashboard/my-challenges",
     icon: Swords,
+    roles: ["user"],
+  },
+  {
+    name: "My Coach",
+    href: "/dashboard/my-coach",
+    icon: UserCheck2,
     roles: ["user"],
   },
   {
@@ -142,7 +149,7 @@ const menuConfig = [
     items: [
       {
         name: "My Trainees",
-        href: "/dashboard/coach-traines",
+        href: "/dashboard/coach-my-trainees",
         icon: User,
         roles: ["coach"],
       },

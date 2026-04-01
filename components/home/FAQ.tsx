@@ -128,7 +128,7 @@ const FAQ = () => {
         {/* See More Button */}
         <div className="mt-12 flex justify-center items-center">
           <a
-            href="/more-faq"
+            href="/faqs"
             className="inline-block px-8 py-3 rounded-xl font-semibold
                        bg-[var(--primary)] text-white
                        transition-all duration-300

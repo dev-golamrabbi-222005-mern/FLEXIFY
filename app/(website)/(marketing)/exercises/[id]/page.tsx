@@ -1733,7 +1733,7 @@ function SessionView({
   const currentSet = setsCompleted + 1;
 
   return (
-    <div className="max-w-lg mx-auto pb-28 space-y-4">
+    <div className="max-w-7xl mx-auto px-6 mt-8 md:mt-12 mb-10 space-y-4">
       {/* Top bar */}
       <div className="flex items-center justify-between pt-1">
         <button
@@ -1967,7 +1967,7 @@ function SessionView({
 
       {/* Sticky bottom */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-5 pt-3"
+        className="px-4 pb-5 pt-3"
         style={{
           background: "var(--bg-primary)",
           borderTop: "1px solid var(--border-color)",
@@ -2117,7 +2117,7 @@ function CompleteView({
   const zoneMax = Math.max(...Object.values(zones));
 
   return (
-    <div className="max-w-lg mx-auto flex flex-col gap-4 pb-8">
+    <div className="max-w-7xl mx-auto flex flex-col gap-4 mt-8 md:mt-12 mb-10 px-6">
       {/* Well Done */}
       <motion.div
         initial={{ opacity: 0, scale: 0.94 }}

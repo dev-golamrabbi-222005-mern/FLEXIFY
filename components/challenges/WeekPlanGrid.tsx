@@ -33,7 +33,7 @@ export function WeekPlanGrid({ type, level, plan, completedDays, onSelectDay, on
   const currentDay = plan.find((d) => !completedDays.includes(d.day))?.day ?? null;
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
+    <div className="">
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">
         <button
