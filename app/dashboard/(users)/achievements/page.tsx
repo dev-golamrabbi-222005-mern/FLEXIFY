@@ -69,7 +69,7 @@ export default function AchievementsPage() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-full">
       {/* Header */}
       <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4 bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-color)] shadow-sm">
         <div className="flex items-center gap-4">

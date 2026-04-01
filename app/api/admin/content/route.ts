@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   const type = searchParams.get("type"); 
   
   try {
-    const collection = await dbConnect(type === "articles" ? "articles" : type === "faqs" ? "faqs" : "homeContent");
+    const collection = await dbConnect(type === "articles" ? "articles" : type === "faqs" ? "faqs" : "hero");
     const data = await collection.find({}).toArray();
     return NextResponse.json(data);
   } catch (error) {
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const { type, ...body } = await req.json();
   try {
-    const collection = await dbConnect(type === "articles" ? "articles" : type === "faqs" ? "faqs" : "homeContent");
+    const collection = await dbConnect(type === "articles" ? "articles" : type === "faqs" ? "faqs" : "hero");
     const result = await collection.insertOne({ ...body, createdAt: new Date() });
     return NextResponse.json(result);
   } catch (error) {
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   const { type, id, ...updates } = await req.json();
   try {
-    const collection = await dbConnect(type === "articles" ? "articles" : type === "faqs" ? "faqs" : "homeContent");
+    const collection = await dbConnect(type === "articles" ? "articles" : type === "faqs" ? "faqs" : "hero");
     const result = await collection.updateOne(
       { _id: new ObjectId(id) },
       { $set: updates }

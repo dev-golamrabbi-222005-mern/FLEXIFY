@@ -10,6 +10,7 @@ import Pricing from "@/components/home/Pricing";
 import StatsSection from "@/components/home/StatsSection";
 import SuccessStory from "@/components/home/SuccessStories";
 import TopCoaches from "@/components/home/Topcoaches";
+import Articles from "./(marketing)/blogs/page";
 
 export default function Home() {
   return (
@@ -25,6 +26,7 @@ export default function Home() {
       <BecomeCoachCTA />
       <Pricing />
       <FAQ />
+      <Articles/>
       <Motivation />
     </div>
   );

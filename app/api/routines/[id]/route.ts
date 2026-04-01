@@ -2,6 +2,8 @@ import { dbConnect } from "@/lib/dbConnect";
 import { NextRequest, NextResponse } from "next/server";
 import { ObjectId, Document } from "mongodb";
 import { Exercise, SetData } from "@/components/user/workout";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
 interface RoutineDocument extends Document {
   _id: ObjectId;
   planName: string;
@@ -29,6 +31,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email) {
+      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+    }
+    const email = session.user.email;
     const { id } = await params;
     const routineCol = await dbConnect("user_routines");
     const exerciseCol = await dbConnect("exercises");
@@ -63,7 +70,7 @@ if (suggestedPlans[id]) {
     }
 
     const lastWorkout = await logCol
-      .find<WorkoutLogDocument>({ routineId: id })
+      .find<WorkoutLogDocument>({ routineId: id, email:email })
       .sort({ createdAt: -1 })
       .limit(1)
       .toArray();

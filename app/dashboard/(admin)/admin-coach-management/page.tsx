@@ -49,7 +49,7 @@ export default function CoachManagementPage() {
   ];
 
   return (
-    <div className=" gap-2 space-y-4 bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <div className="space-y-4 text-[var(--text-primary)]">
        <title>Coach Management | Dashboard - Flexify</title>
       
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

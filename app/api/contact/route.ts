@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
@@ -14,9 +14,10 @@ export async function POST(req: Request) {
       );
     }
 
-    const collection = dbConnect("contacts");
+    // 🔥 MUST await
+    const collection = await dbConnect("contacts");
 
-    const result = await collection.insertOne({
+    await collection.insertOne({
       name,
       email,
       message,
@@ -26,13 +27,26 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    return NextResponse.json({ error: "Failed" }, { status: 500 });
+    console.error("POST ERROR:", error); // 👈 VERY IMPORTANT
+    return NextResponse.json(
+      { error: "Failed to send message" },
+      { status: 500 },
+    );
   }
 }
 
 export async function GET() {
-  const collection = dbConnect("contacts");
-  const data = await collection.find().toArray();
+  try {
+    const collection = await dbConnect("contacts");
 
-  return NextResponse.json(data);
+    const data = await collection.find().sort({ createdAt: -1 }).toArray();
+
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error("GET ERROR:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch contacts" },
+      { status: 500 },
+    );
+  }
 }

@@ -82,6 +82,7 @@ export default function DashboardLayoutClient({
       <DashboardNavbar
         sidebarOpen={sidebarOpen}
         onMenuToggle={() => setSidebarOpen((o) => !o)}
+        user={dbUser}
       />
 
       {/* ❷ flex-1 + overflow-hidden — fills remaining height, clips children */}
@@ -90,7 +91,9 @@ export default function DashboardLayoutClient({
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
         {/* ❹ Only this scrolls — sidebar stays put */}
-        <main className="flex-1 overflow-y-auto p-4 md:pr-1 md:py-8">{children}</main>
+        <main className="flex-1 overflow-y-auto bg-[var(--bg-primary)] pl-4 md:pr-2 md:py-8">
+          {children}
+        </main>
       </div>
     </div>
   );

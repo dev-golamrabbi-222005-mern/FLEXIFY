@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { dbConnect } from "@/lib/dbConnect";
 import { ChallengeType } from "@/lib/challengeUtils";
+import { pusherServer } from "@/lib/pusher";
 
 // ── GET: fetch user's progress for a challenge ────────────────────────────────
 export async function GET(req: NextRequest) {
@@ -122,6 +123,15 @@ export async function POST(req: NextRequest) {
         $set: { updatedAt: now },
       },
     );
+
+    const userChannelName = `user-${session.user.email.replace(/[@.]/g, "-")}`;
+    
+    const displayType = type === "upper-body" ? "Upper Body" : "Lower Body";
+    const notificationMessage = `Day ${day} Completed! You finished the ${displayType} Challenge (${level}). Keep crushing it! 🔥`;
+
+    await pusherServer.trigger(userChannelName, "new-update", {
+      message: notificationMessage,
+    });
 
     return NextResponse.json({ success: true });
   } catch (err) {

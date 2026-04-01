@@ -13,7 +13,7 @@ const slides = [
     desc: "Join thousands of viewers watching real-time transformations and success stories.",
     img: "https://i.ibb.co.com/M5kfgdR2/image.png",
     icon: <Users size={24} />,
-    joinLink: "/login",
+    joinLink: "/",
     learnMoreLink: "/",
   },
   {
@@ -24,8 +24,8 @@ const slides = [
     desc: "Push beyond your boundaries with our AI-powered exercise tracking system.",
     img: "https://i.ibb.co.com/27PD6wh6/image.png",
     icon: <Dumbbell size={24} />,
-    joinLink: "/login",
-    learnMoreLink: "/exercises",
+    joinLink: "/",
+    learnMoreLink: "/",
   },
   {
     id: 3,
@@ -35,7 +35,7 @@ const slides = [
     desc: "Empower others. Manage your students with the most advanced coach dashboard.",
     img: "https://i.ibb.co.com/8Df59Q4p/image.png",
     icon: <Target size={24} />,
-    joinLink: "/login",
+    joinLink: "/applycoach",
     learnMoreLink: "/coaches",
   },
 ];
@@ -51,7 +51,7 @@ export default function FlexifyHero() {
   }, []);
 
   return (
-    <section className="relative min-h-[380px] pt-7 pb-4 w-full bg-[var(--bg-primary)] overflow-hidden transition-colors duration-700 font-sans flex items-center">
+    <section className="relative min-h-[500px] py-7 w-full bg-[var(--bg-primary)] overflow-hidden transition-colors duration-700 font-sans flex items-center">
       <div className="absolute inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.div
@@ -125,7 +125,7 @@ export default function FlexifyHero() {
         </div>
 
         <div className="relative flex items-center justify-center w-full h-full md:w-1/2 md:justify-end">
-          <div className="relative w-full aspect-[13/10]  rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] shadow-[0_10px_40px_-5px_rgba(0,0,0,0.2)]">
+          <div className="relative w-full aspect-[9/9]  rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] shadow-[0_10px_40px_-5px_rgba(0,0,0,0.2)]">
             <AnimatePresence initial={false} mode="popLayout">
               <motion.div
                 key={index}
@@ -157,11 +157,7 @@ export default function FlexifyHero() {
                       {slides.map((_, i) => (
                         <div
                           key={i}
-                          className={`h-2 rounded-full transition-all duration-700 ${
-                            index === i
-                              ? "w-12 bg-[var(--primary)]"
-                              : "w-5 bg-white/20"
-                          }`}
+                          className={`h-2 rounded-full transition-all duration-700 ${index === i ? "w-12 bg-[var(--primary)]" : "w-5 bg-white/20"}`}
                         />
                       ))}
                     </div>

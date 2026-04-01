@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 
 export default function LoginClient(): JSX.Element {
   const [showPassword, setShowPassword] = useState(false);
+  const [isMockLoading, setIsMockLoading] = useState(false);
 
   const params = useSearchParams();
   const router = useRouter();
@@ -43,6 +44,9 @@ export default function LoginClient(): JSX.Element {
   };
 
   const handleMockLogin = async (email: string, pass: string) => {
+    setIsMockLoading(true); 
+  
+  try {
     const result = await signIn("credentials", {
       email,
       password: pass,
@@ -54,8 +58,13 @@ export default function LoginClient(): JSX.Element {
       toast.success("Mock Login Successful!");
       router.push("/dashboard");
     } else {
-      toast.error("Mock user not found in DB");
+      toast.error(result?.error || "User not found. Please try again.");
     }
+  } catch (error) {
+    toast.error("Something went wrong with the server.");
+  } finally {
+    setIsMockLoading(false); 
+  }
   };
   return (
     <div
@@ -82,9 +91,10 @@ export default function LoginClient(): JSX.Element {
         <div className="grid grid-cols-3 gap-3 mt-6 mb-4">
           {/* User Mock  */}
           <button
+          disabled={isMockLoading}
             type="button"
             onClick={() => handleMockLogin("user@flexify.com", "User@Flexify")}
-            className="px-2 py-2 text-[11px] font-bold uppercase tracking-wider rounded-xl transition-all duration-300"
+            className={` px-2 py-2 text-[11px] font-bold uppercase tracking-wider rounded-xl transition-all duration-300 ${isMockLoading ? 'opacity-70 cursor-wait' : ''}`}
             style={{
               backgroundColor: "rgba(16, 185, 129, 0.1)",
               color: "var(--primary)",
@@ -99,16 +109,17 @@ export default function LoginClient(): JSX.Element {
               e.currentTarget.style.color = "var(--primary)";
             }}
           >
-            User Login
+           {isMockLoading ? "Processing..." : "User Login"} 
           </button>
 
           {/* Coach Mock  */}
           <button
             type="button"
+            disabled={isMockLoading}
             onClick={() =>
               handleMockLogin("coach@flexify.com", "Coach@Flexify1")
             }
-            className="px-2 py-2 text-[11px] font-bold uppercase tracking-wider rounded-xl transition-all duration-300"
+            className={`px-2 py-2 text-[11px] font-bold uppercase tracking-wider rounded-xl transition-all duration-300 ${isMockLoading ? 'opacity-70 cursor-wait' : ''}`}
             style={{
               backgroundColor: "rgba(139, 92, 246, 0.1)",
               color: "var(--secondary)",
@@ -123,16 +134,18 @@ export default function LoginClient(): JSX.Element {
               e.currentTarget.style.color = "var(--secondary)";
             }}
           >
-            Coach Login
+    {isMockLoading ? "Processing..." : " Coach Login"} 
+
           </button>
 
           {/* Admin Mock  */}
           <button
             type="button"
+            disabled={isMockLoading}
             onClick={() =>
               handleMockLogin("admin@flexify.com", "Admin@Flexify")
             }
-            className="px-2 py-2 text-[11px] font-bold uppercase tracking-wider rounded-xl transition-all duration-300"
+            className={`px-2 py-2 text-[11px] font-bold uppercase tracking-wider rounded-xl transition-all duration-300 ${isMockLoading ? 'opacity-70 cursor-wait' : ''}`}
             style={{
               backgroundColor: "rgba(239, 68, 68, 0.1)",
               color: "var(--danger)",
@@ -147,7 +160,7 @@ export default function LoginClient(): JSX.Element {
               e.currentTarget.style.color = "var(--danger)";
             }}
           >
-            Admin Login
+            {isMockLoading ? "Processing..." : "Admin Login"}
           </button>
         </div>
         <form className="space-y-5" onSubmit={handleSubmit}>

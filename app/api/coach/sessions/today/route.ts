@@ -8,8 +8,14 @@ interface Session {
     month: number;
     year: number;
     time: string;
-    client: string;
+    clientEmail: string;
     type: string;
+    clientInfo?: {
+        name: string;
+        imageUrl: string;
+        phone: string;
+        plan: string;
+    };
 }
 
 export const GET = async(req: NextRequest) => {
@@ -35,6 +41,16 @@ export const GET = async(req: NextRequest) => {
             const timeB = b.time.split(':').map(Number);
             return (timeA[0] * 60 + timeA[1]) - (timeB[0] * 60 + timeB[1]);
         });
+
+    // Enrich with client info
+    const clientEmails = [...new Set(todaySessions.map(s => s.clientEmail))];
+    const usersCollection = dbConnect("users");
+    const users = await usersCollection.find({ email: { $in: clientEmails } }).toArray();
+    const userMap = new Map(users.map(u => [u.email, { name: u.name, imageUrl: u.imageUrl, phone: u.phone, plan: u.plan }]));
+
+    todaySessions.forEach(session => {
+        session.clientInfo = userMap.get(session.clientEmail);
+    });
 
     return NextResponse.json(
         todaySessions,
