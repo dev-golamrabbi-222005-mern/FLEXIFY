@@ -1,5 +1,6 @@
 import { authOptions } from "@/lib/authOptions";
 import { dbConnect } from "@/lib/dbConnect";
+import { pusherServer } from "@/lib/pusher";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -46,6 +47,13 @@ export async function POST(request: NextRequest) {
     };
 
     const result = await logCol.insertOne(newLog);
+    if (result.insertedId) {
+      const userChannelName = `user-${session.user.email.replace(/[@.]/g, "-")}`;
+      
+      await pusherServer.trigger(userChannelName, "new-update", {
+        message: `Workout Completed! You've finished "${planName}" successfully.`,
+      });
+    }
 
     return NextResponse.json({ 
       success: true, 

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPlan, computeExpiry } from "@/lib/plans";
 import { dbConnect } from "@/lib/dbConnect";
 import { ObjectId } from "mongodb";
+import { pusherServer } from "@/lib/pusher";
 
 type CoachUser = {
   _id?: ObjectId;
@@ -150,7 +151,24 @@ export async function POST(req: NextRequest) {
         });
       }
     }
+    // user
+const userChannel = `user-${payment.userEmail.replace(/[@.]/g, "-")}`;
+    await pusherServer.trigger(userChannel, "new-update", {
+      message: `🎉 Success! Your ${plan.name} subscription is now active until ${expiry.toLocaleDateString()}.`,
+    });
 
+    // Admin 
+    await pusherServer.trigger("admin-updates", "new-payment", {
+      message: `💰 New Revenue: ${payment.userName} paid ${amount} BDT for ${plan.name} Plan.`,
+    });
+
+    // coach 
+    if (payment.coachId) {
+      const coachChannel = `user-${payment.coachId.replace(/[@.]/g, "-")}`;
+      await pusherServer.trigger(coachChannel, "new-update", {
+        message: `👟 New Client Alert! ${payment.userName} has joined your coaching program.`,
+      });
+    }
     return NextResponse.redirect(
       // `${baseUrl}/dashboard?payment=success&plan=${plan.id}`,
       `${baseUrl}/payment/success?payment=success&plan=${plan.id}`
