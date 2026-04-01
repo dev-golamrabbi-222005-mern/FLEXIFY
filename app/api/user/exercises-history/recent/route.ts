@@ -1,12 +1,15 @@
+import { authOptions } from "@/lib/authOptions";
 import { dbConnect } from "@/lib/dbConnect";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  try {
+  try {const session = await getServerSession(authOptions);
+    if (!session?.user?.email) return NextResponse.json({ success: false }, { status: 401 });
     const logCol = await dbConnect("workout_logs");
     
     const logs = await logCol
-      .find({})
+      .find({email: session.user.email})
       .sort({ createdAt: -1 })
       .limit(10)
       .toArray();

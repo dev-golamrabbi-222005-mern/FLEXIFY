@@ -1,14 +1,22 @@
+import { authOptions } from "@/lib/authOptions";
 import { dbConnect } from "@/lib/dbConnect";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email) {
+      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+    }
+
+    const email = session.user.email;
     const logCol = await dbConnect("workout_logs");
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 6);
     startDate.setHours(0, 0, 0, 0);
 
-    const logs = await logCol.find({ createdAt: { $gte: startDate } }).toArray();
+    const logs = await logCol.find({email: email, createdAt: { $gte: startDate } }).toArray();
 
     const result = [];
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -18,7 +26,10 @@ export async function GET() {
       d.setDate(d.getDate() - i);
       const dayName = days[d.getDay()];
       
-      const dayLogs = logs.filter(log => new Date(log.createdAt).toDateString() === d.toDateString());
+      const dayLogs = logs.filter(log => {
+        const logDate = log.createdAt instanceof Date ? log.createdAt : new Date(log.createdAt);
+        return logDate.toDateString() === d.toDateString();
+      });
       
       const totalMinutes = dayLogs.reduce((acc, curr) => acc + (Number(curr.duration) || 0), 0) / 60;
       
