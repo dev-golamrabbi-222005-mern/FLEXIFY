@@ -17,6 +17,8 @@ import Swal from "sweetalert2";
 import { useRouter, useSearchParams } from "next/navigation";
 import SocialButtons from "@/components/auth/SocialButtons";
 import { toast } from "react-toastify";
+import ImageUpload from "@/components/ImageUpload/page";
+import { useForm } from "react-hook-form";
 
 interface RegisterFormData {
   name: string;
@@ -31,6 +33,7 @@ export default function RegisterPage(): JSX.Element {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [role, setRole] = useState<"user" | "coach">("user");
   const [agree, setAgree] = useState<boolean>(false);
+  const [tempImageUrl, setTempImageUrl] = useState<string>("");
 
   const params = useSearchParams();
   const router = useRouter();
@@ -43,57 +46,20 @@ export default function RegisterPage(): JSX.Element {
   const specialCharPattern = /^(?=.*[!@#$%^&*(),.?":;{}|<>]).+$/;
   const imageUrlPattern = /^https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp)$/i;
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const formData: RegisterFormData = {
-      name: (form.elements.namedItem("name") as HTMLInputElement).value,
-      phone: (form.elements.namedItem("phone") as HTMLInputElement).value,
-      email: (form.elements.namedItem("email") as HTMLInputElement).value,
-      imageUrl: (form.elements.namedItem("imageUrl") as HTMLInputElement).value,
-      password: (form.elements.namedItem("password") as HTMLInputElement).value,
-      role,
+
+  const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormData>();
+
+  const handleRegister = async(data: RegisterFormData) => {
+    const payload = {
+      ...data,
+      imageUrl: tempImageUrl
     };
-
-    if (
-      !formData.name ||
-      !formData.imageUrl ||
-      !formData.email ||
-      !formData.phone ||
-      !formData.password ||
-      !formData.role
-    ) {
-      await toast.error("Please fill up all fields");
-      return;
-    } else if (!emailPattern.test(formData.email)) {
-      await toast.error("Invalid email");
-      return;
-    } else if (!imageUrlPattern.test(formData.imageUrl)) {
-      await toast.error("Invalid image URL");
-      return;
-    } else if (!min8Pattern.test(formData.password)) {
-      await toast.error("Password must be at least 8 characters long");
-      return;
-    } else if (!noSpacePattern.test(formData.password)) {
-      await toast.error("Password must not contain any whitespaces");
-      return;
-    } else if (!casePattern.test(formData.password)) {
-      await toast.error("Password must contain at least one uppercase and one lowercase letter");
-      return;
-    } else if (!numberPattern.test(formData.password)) {
-      await toast.error("Password must contain at least one number",);
-      return;
-    } else if (!specialCharPattern.test(formData.password)) {
-      await toast.error("Password must contain at least one special character",);
-      return;
-    }
-
-    const result = await postUser(formData);
+    const result = await postUser(payload);
 
     if (result.success) {
       const signInResult = await signIn("credentials", {
-        email: formData.email,
-        password: formData.password,
+        email: payload.email,
+        password: payload.password,
         redirect: false,
         callbackUrl,
       });
@@ -105,8 +71,7 @@ export default function RegisterPage(): JSX.Element {
     } else {
       await toast.error(result.message);
     }
-  };
-
+  }
   return (
     <div
       className="relative flex items-center justify-center min-h-screen px-4 bg-center bg-cover"
@@ -125,7 +90,7 @@ export default function RegisterPage(): JSX.Element {
           <p className="mt-2 text-gray-400">Start your fitness journey today</p>
         </div>
 
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-5" onSubmit={handleSubmit(handleRegister)}>
           {/* Name */}
           <div>
             <label className="text-sm text-gray-300">Name</label>
@@ -133,24 +98,36 @@ export default function RegisterPage(): JSX.Element {
               <FaUser className="absolute text-gray-400 left-3 top-4" />
               <input
                 type="text"
-                name="name"
+                {...register("name", {
+                  required: true,
+                })}
                 className="w-full py-3 pl-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-(--primary)"
                 placeholder="Your name"
               />
+              {
+                errors.name?.type === "required" &&
+                  <p className="text-red-500">Name is required</p>
+              }
             </div>
           </div>
 
-          {/* Email */}
+          {/* Phone */}
           <div>
             <label className="text-sm text-gray-300">Phone Number</label>
             <div className="relative mt-1">
               <FaMobileAlt className="absolute text-gray-400 left-3 top-4" />
               <input
                 type="text"
-                name="phone"
+                {...register("phone", {
+                  required: true,
+                })}
                 className="w-full py-3 pl-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-(--primary)"
                 placeholder="+880123456789"
               />
+              {
+                errors.phone?.type === "required" &&
+                  <p className="text-red-500">Phone number is required</p>
+              }
             </div>
           </div>
 
@@ -161,10 +138,21 @@ export default function RegisterPage(): JSX.Element {
               <FaEnvelope className="absolute left-3 top-4.5 text-gray-400" />
               <input
                 type="email"
-                name="email"
+                {...register("email", {
+                  required: true,
+                  pattern: emailPattern
+                })}
                 className="w-full py-3 pl-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-(--primary)"
                 placeholder="you@example.com"
               />
+              {
+                errors.email?.type === "required" &&
+                <p className="text-red-500">Email is required</p>
+              }
+              {
+                errors.email?.type === "pattern" &&
+                <p className="text-red-500">Invalid Email</p>
+              }
             </div>
           </div>
 
@@ -172,13 +160,7 @@ export default function RegisterPage(): JSX.Element {
           <div>
             <label className="text-sm text-gray-300">Profile Image URL</label>
             <div className="relative mt-1">
-              <FaImage className="absolute left-3 top-4.5 text-gray-400" />
-              <input
-                type="text"
-                name="imageUrl"
-                className="w-full py-3 pl-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-(--primary)"
-                placeholder="https://image-url.com"
-              />
+              <ImageUpload onUploadSuccess={(url) => setTempImageUrl(url)} />
             </div>
           </div>
 
@@ -189,10 +171,21 @@ export default function RegisterPage(): JSX.Element {
               <FaLock className="absolute left-3 top-4.5 text-gray-400" />
               <input
                 type={showPassword ? "text" : "password"}
-                name="password"
+                {...register("password", {
+                  required: true,
+                  pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":;{}|<>])\S{8,}$/
+                })}
                 className="w-full py-3 pl-10 pr-10 text-white border rounded-lg outline-none bg-black/40 border-white/10 focus:border-(--primary)"
                 placeholder="••••••••"
               />
+              {
+                errors.password?.type === "required" &&
+                <p className="text-red-500">Password is required</p>
+              }
+              {
+                errors.password?.type === "pattern" &&
+                <p className="text-red-500">Password must be at least 8 characters and have at least one uppercase letter, one lowercase letter, one number, one special character and not contain whitespace.</p>
+              }
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
@@ -202,36 +195,6 @@ export default function RegisterPage(): JSX.Element {
               </button>
             </div>
           </div>
-
-          {/* Role
-          <div>
-            <label className="block mb-2 text-sm text-gray-300">
-              Register as
-            </label>
-            <div className="flex gap-6 text-gray-300">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="role"
-                  value="user"
-                  checked={role === "user"}
-                  onChange={() => setRole("user")}
-                />
-                User
-              </label>
-
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="role"
-                  value="coach"
-                  checked={role === "coach"}
-                  onChange={() => setRole("coach")}
-                />
-                Coach
-              </label>
-            </div>
-          </div> */}
 
           {/* Terms */}
           <div className="flex items-center gap-2 text-sm text-gray-300">

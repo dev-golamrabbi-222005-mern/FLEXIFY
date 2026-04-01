@@ -250,7 +250,7 @@ export default function AdminContentManagementPage() {
 
       {/* Articles Section */}
       <section className="space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <h2 className="flex items-center gap-2 text-2xl font-black text-[var(--text-primary)]">
             <FileText className="text-[var(--primary)]" /> ARTICLES
           </h2>
@@ -271,15 +271,15 @@ export default function AdminContentManagementPage() {
         </div>
 
         {/* 6. THE IMAGE UPLOADER (Placed here for visibility) */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 space-y-2">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="space-y-2 lg:col-span-1">
             <label className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-tighter">
               1. Upload Background
             </label>
             <ImageUpload onUploadSuccess={(url) => setTempImageUrl(url)} />
           </div>
 
-          <div className="lg:col-span-2 space-y-2">
+          <div className="space-y-2 lg:col-span-2">
             <label className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-tighter">
               2. Manage Content
             </label>
