@@ -6,10 +6,7 @@ import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { signOut } from "next-auth/react";
 import {
-  BarChart2,
-  BrickWallShield,
   Calendar,
-  ChartNoAxesGanttIcon,
   CircleDollarSign,
   Dumbbell,
   FileCog,
@@ -18,33 +15,20 @@ import {
   LayersPlus,
   LogOut,
   MessageSquareWarning,
-  NotebookText,
   PlusCircle,
   Settings,
-  Speech,
   SquareLibrary,
   TableOfContents,
   Trophy,
-  UserPen,
   UserRoundCog,
-  UserRoundPen,
   Utensils,
-  Video,
   X,
   User,
-  BookText,
-  MessageCircle,
   Workflow,
   EarIcon,
   Swords,
-  Apple,
-  Calendar1,
   Star,
-  Magnet,
-  UserCheck2,
-  Shield,
-  MessageCircleCode,
-  ShieldAlertIcon,
+
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -109,17 +93,12 @@ const menuConfig = [
     label: "ADMIN",
     items: [
       {
-        name: "Admin Management",
+        name: "Users Management",
         href: "/dashboard/admin-management",
         icon: UserRoundCog,
         roles: ["admin"],
       },
-      {
-        name: "Coach Applications",
-        href: "/dashboard/admin-coach-applications",
-        icon: NotebookText,
-        roles: ["admin"],
-      },
+     
       {
         name: "Coach Management",
         href: "/dashboard/admin-coach-management",
