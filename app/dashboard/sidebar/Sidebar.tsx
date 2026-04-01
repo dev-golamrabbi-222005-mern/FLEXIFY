@@ -45,6 +45,7 @@ import {
   Shield,
   MessageCircleCode,
   ShieldAlertIcon,
+  CircleDollarSignIcon,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -248,7 +249,7 @@ const menuConfig = [
       {
         name: "Earning",
         href: "/dashboard/coach-earning",
-        icon: EarIcon,
+        icon: CircleDollarSignIcon ,
         roles: ["coach"],
       },
       {
