@@ -49,8 +49,10 @@ export interface Coach {
 
 export interface AnalyticsData {
   stats: {
+    pendingCount: number;
     approvedCount: number;
     warningCount: number;
+    totalSessions?: number;
   };
   performanceData: {
     month: string;
@@ -61,5 +63,5 @@ export interface AnalyticsData {
 
 export interface UpdateStatusParams {
   id: string | ObjectId;
-  status: "approved" | "warning" | "rejected";
+  status: "approved" | "warning" | "rejected" | "suspended";
 }
