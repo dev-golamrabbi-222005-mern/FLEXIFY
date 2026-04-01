@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 // Zod Schema for validation
 const coachSchema = z.object({
@@ -101,12 +102,12 @@ const ApplyCoachPage = () => {
       return response.data;
     },
     onSuccess: () => {
-      Swal.fire("Success", "Application submitted successfully!", "success");
+      toast.success("Application submitted successfully!");
       reset();
     },
     onError: (err: AxiosError<ApiErrorResponse>) => {
       const errorMessage = err.response?.data?.message || "Something went wrong";
-      Swal.fire("Error", errorMessage, "error");
+      toast.error(errorMessage);
     },
   });
 
@@ -117,12 +118,12 @@ const ApplyCoachPage = () => {
       <div className="max-w-7xl mx-auto bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-xl overflow-hidden">
         
         <div className="bg-[var(--primary)] p-8 text-white text-center">
-          <h1 className="text-3xl font-extrabold uppercase tracking-widest">Apply to be a Coach</h1>
+          <h1 className="text-3xl font-extrabold tracking-widest uppercase">Apply to be a Coach</h1>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="p-8 md:p-12 space-y-12">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-12 md:p-12">
           
-          <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <section className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <h2 className="col-span-full text-lg font-bold text-[var(--primary)] border-b border-[var(--border-color)] pb-2">BASIC INFORMATION</h2>
             <div className="space-y-1">
               <label className="text-sm font-semibold">Full Name</label>
@@ -135,7 +136,7 @@ const ApplyCoachPage = () => {
             <div className="space-y-1">
               <label className="text-sm font-semibold">Phone Number</label>
               <input {...register("phone")} placeholder="+88017..." className="input-style" />
-              {errors.phone && <p className="text-red-500 text-xs">{errors.phone.message}</p>}
+              {errors.phone && <p className="text-xs text-red-500">{errors.phone.message}</p>}
             </div>
             <div className="space-y-1">
               <label className="text-sm font-semibold">Gender</label>
@@ -148,26 +149,33 @@ const ApplyCoachPage = () => {
             <div className="space-y-1">
               <label className="text-sm font-semibold">Location</label>
               <input {...register("location")} placeholder="City, Country" className="input-style" />
-              {errors.location && <p className="text-red-500 text-xs">{errors.location.message}</p>}
+              {errors.location && <p className="text-xs text-red-500">{errors.location.message}</p>}
             </div>
             <div className="space-y-1">
               <label className="text-sm font-semibold">Profile Image URL</label>
               <input {...register("profileImage")} readOnly className="input-style bg-[var(--bg-tertiary)]" />
             </div>
-            <div className="col-span-full space-y-1">
+            <div className="space-y-1 col-span-full">
               <label className="text-sm font-semibold">Short Bio</label>
               <textarea {...register("bio")} rows={3} className="input-style" placeholder="Tell us about yourself..." />
-              {errors.bio && <p className="text-red-500 text-xs">{errors.bio.message}</p>}
+              {errors.bio && <p className="text-xs text-red-500">{errors.bio.message}</p>}
             </div>
           </section>
 
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <h2 className="col-span-full text-lg font-bold text-[var(--primary)] border-b border-[var(--border-color)] pb-2">EXPERTISE</h2>
             <div className="space-y-1">
-              <label className="text-sm font-semibold">Specialties</label>
-              <input {...register("specialties")} placeholder="Yoga, Gym" className="input-style" />
-              {errors.specialties && <p className="text-red-500 text-xs">{errors.specialties.message}</p>}
-            </div>
+  <label className="text-sm font-semibold">Specialty</label>
+  <select {...register("specialties")} className="input-style">
+    <option value="">Select Specialty</option>
+    <option value="Gymnishiam">Gymnishiam</option>
+    <option value="Yoga">Yoga</option>
+    <option value="Cardio">Cardio</option>
+    <option value="CrossFit">CrossFit</option>
+    <option value="Bodybuilding">Bodybuilding</option>
+  </select>
+  {errors.specialties && <p className="text-xs text-red-500">{errors.specialties.message}</p>}
+</div>
             <div className="space-y-1">
               <label className="text-sm font-semibold">Experience (Years)</label>
               <input type="number" {...register("experienceYears", { valueAsNumber: true })} className="input-style" />
@@ -194,11 +202,11 @@ const ApplyCoachPage = () => {
                   <label className="text-xs">Issued By</label>
                   <input {...register(`certifications.${index}.issuedBy` as const)} className="input-style" />
                 </div>
-                <div className="w-full md:w-32 space-y-1">
+                <div className="w-full space-y-1 md:w-32">
                   <label className="text-xs">Year</label>
                   <input type="number" {...register(`certifications.${index}.year` as const, { valueAsNumber: true })} className="input-style" />
                 </div>
-                <button type="button" onClick={() => remove(index)} className="p-2 text-red-500 font-bold border border-red-500 rounded-lg">X</button>
+                <button type="button" onClick={() => remove(index)} className="p-2 font-bold text-red-500 border border-red-500 rounded-lg">X</button>
               </div>
             ))}
             <button type="button" onClick={() => append({ title: "", issuedBy: "", year: 2026 })} className="text-[var(--primary)] text-sm font-bold">
@@ -208,37 +216,37 @@ const ApplyCoachPage = () => {
 
           <section className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6 bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-color)]">
             <div className="space-y-3">
-              <label className="underline font-bold">Training Types</label>
+              <label className="font-bold underline">Training Types</label>
               {["Online", "1-on-1", "Group"].map((t) => (
-                <label key={t} className="flex items-center gap-2 cursor-pointer font-normal">
+                <label key={t} className="flex items-center gap-2 font-normal cursor-pointer">
                   <input type="checkbox" value={t} {...register("trainingTypes")} className="w-4 h-4 accent-[var(--primary)]" /> {t}
                 </label>
               ))}
-              {errors.trainingTypes && <p className="text-red-500 text-xs">{errors.trainingTypes.message}</p>}
+              {errors.trainingTypes && <p className="text-xs text-red-500">{errors.trainingTypes.message}</p>}
             </div>
             <div className="space-y-3">
-              <label className="underline font-bold">Available Days</label>
+              <label className="font-bold underline">Available Days</label>
               <div className="grid grid-cols-2 gap-2">
                 {["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"].map((d) => (
-                  <label key={d} className="flex items-center gap-2 cursor-pointer font-normal">
+                  <label key={d} className="flex items-center gap-2 font-normal cursor-pointer">
                     <input type="checkbox" value={d} {...register("availableDays")} className="w-4 h-4 accent-[var(--primary)]" /> {d}
                   </label>
                 ))}
               </div>
-              {errors.availableDays && <p className="text-red-500 text-xs">{errors.availableDays.message}</p>}
+              {errors.availableDays && <p className="text-xs text-red-500">{errors.availableDays.message}</p>}
             </div>
             <div className="space-y-3">
-              <label className="underline font-bold">Preferred Clients</label>
+              <label className="font-bold underline">Preferred Clients</label>
               {["Beginner", "Intermediate", "Advanced"].map((l) => (
-                <label key={l} className="flex items-center gap-2 cursor-pointer font-normal">
+                <label key={l} className="flex items-center gap-2 font-normal cursor-pointer">
                   <input type="checkbox" value={l} {...register("preferredClients")} className="w-4 h-4 accent-[var(--primary)]" /> {l}
                 </label>
               ))}
-              {errors.preferredClients && <p className="text-red-500 text-xs">{errors.preferredClients.message}</p>}
+              {errors.preferredClients && <p className="text-xs text-red-500">{errors.preferredClients.message}</p>}
             </div>
           </section>
 
-          <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <section className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <div className="space-y-1">
               <label className="text-sm font-semibold">Monthly Price ($)</label>
               <input type="number" {...register("pricing.monthly", { valueAsNumber: true })} className="input-style" />
@@ -253,7 +261,7 @@ const ApplyCoachPage = () => {
             </div>
           </section>
 
-          <button type="submit" disabled={mutation.isPending} className="btn-primary w-full py-5 text-xl uppercase disabled:opacity-50">
+          <button type="submit" disabled={mutation.isPending} className="w-full py-5 text-xl uppercase btn-primary disabled:opacity-50">
             {mutation.isPending ? "Submitting..." : "Submit Application"}
           </button>
         </form>

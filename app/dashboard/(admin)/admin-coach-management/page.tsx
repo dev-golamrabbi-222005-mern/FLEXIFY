@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 import { Coach, AnalyticsData, UpdateStatusParams } from "@/types/coach";
+import { toast } from "react-toastify";
 
 export default function CoachManagementPage() {
   const queryClient = useQueryClient();
@@ -26,17 +27,17 @@ export default function CoachManagementPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-coaches"] });
       queryClient.invalidateQueries({ queryKey: ["coach-analytics"] });
-      Swal.fire({ title: "Success", text: "Status Updated", icon: "success", timer: 1500, showConfirmButton: false });
+      toast.success("Status Updated");
     },
     onError: (error: AxiosError<{ message?: string }>) => {
-      Swal.fire({ title: "Error", text: error.response?.data?.message || "Failed", icon: "error" });
+      toast.error(error.response?.data?.message || "Failed");
     }
   });
 
   if (isStatsLoading || isCoachesLoading) {
     return (
       <div className="flex justify-center items-center h-[70vh]">
-        <Loader2 className="animate-spin text-blue-500" size={40} />
+        <Loader2 className="text-blue-500 animate-spin" size={40} />
       </div>
     );
   }
@@ -48,24 +49,24 @@ export default function CoachManagementPage() {
   ];
 
   return (
-    <div className=" gap-2 space-y-4 bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <div className="space-y-4 text-[var(--text-primary)]">
        <title>Coach Management | Dashboard - Flexify</title>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {stats.map((stat, i) => (
           <div key={i} className="bg-[var(--card-bg)] p-6 rounded-2xl border border-[var(--border-color)] shadow-sm">
             <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${stat.color} flex items-center justify-center text-white mb-4`}>
               <stat.icon size={24} />
             </div>
             <h4 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">{stat.title}</h4>
-            <p className="text-3xl font-black mt-1">{stat.value}</p>
+            <p className="mt-1 text-3xl font-black">{stat.value}</p>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <div className="bg-[var(--card-bg)] p-6 rounded-2xl border border-[var(--border-color)]">
-          <h3 className="mb-6 font-bold text-lg">Monthly Performance</h3>
+          <h3 className="mb-6 text-lg font-bold">Monthly Performance</h3>
           <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={analytics?.performanceData}>
@@ -80,7 +81,7 @@ export default function CoachManagementPage() {
         </div>
 
         <div className="bg-[var(--card-bg)] p-6 rounded-2xl border border-[var(--border-color)]">
-          <h3 className="mb-6 font-bold text-lg">Engagement Growth</h3>
+          <h3 className="mb-6 text-lg font-bold">Engagement Growth</h3>
           <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={analytics?.performanceData}>
@@ -122,8 +123,8 @@ export default function CoachManagementPage() {
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-2">
-                      <button onClick={() => updateStatus.mutate({ id: coach._id, status: "warning" })} className="p-2 text-orange-500 hover:bg-orange-500/10 rounded-xl transition" disabled={updateStatus.isPending}><AlertTriangle size={18} /></button>
-                      <button onClick={() => updateStatus.mutate({ id: coach._id, status: "rejected" })} className="p-2 text-red-500 hover:bg-red-500/10 rounded-xl transition" disabled={updateStatus.isPending}><XCircle size={18} /></button>
+                      <button onClick={() => updateStatus.mutate({ id: coach._id, status: "warning" })} className="p-2 text-orange-500 transition hover:bg-orange-500/10 rounded-xl" disabled={updateStatus.isPending}><AlertTriangle size={18} /></button>
+                      <button onClick={() => updateStatus.mutate({ id: coach._id, status: "rejected" })} className="p-2 text-red-500 transition hover:bg-red-500/10 rounded-xl" disabled={updateStatus.isPending}><XCircle size={18} /></button>
                     </div>
                   </td>
                 </tr>

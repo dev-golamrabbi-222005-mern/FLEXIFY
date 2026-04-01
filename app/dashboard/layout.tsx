@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import DashboardLayoutClient from "./DashboardLayoutClient";
+import { ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
   title: "Dashboard - Flexify",
@@ -11,5 +12,8 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <DashboardLayoutClient>{children}</DashboardLayoutClient>;
+  return <DashboardLayoutClient>
+      {children}
+      <ToastContainer />
+    </DashboardLayoutClient>;
 }

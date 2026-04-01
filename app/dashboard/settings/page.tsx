@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { User, Bell, Shield, Dumbbell, Moon } from "lucide-react";
+import { User, Bell, Shield, Dumbbell, Moon, Settings } from "lucide-react";
 import ThemeToggle from "../Share/ThemeToggle";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
@@ -94,11 +94,11 @@ const [profile, setProfile] = useState<Profile>(() => ({
   };
 
   return (
-    <div className="p-4 md:p-6 bg-[var(--bg-primary)] min-h-screen">
+    <div className="max-w-full min-h-screen">
         <title>Settings | Dashboard - Flexify</title>
-      <div className="flex items-center gap-3">
-        <User className="w-6 h-6 md:w-7 md:h-7" />
-        <h1 className="text-2xl md:text-3xl font-bold mb-6">Settings</h1>
+      <div className="flex items-center gap-3 mb-8">
+        <Settings />
+        <h1 className="text-2xl md:text-3xl font-bold">Settings</h1>
       </div>
 
       <div className="flex flex-col md:grid md:grid-cols-4 gap-6">

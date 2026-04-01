@@ -62,12 +62,12 @@ const FAQ = () => {
     <section className="pb-8 md:pb-12 max-w-7xl px-6 mx-auto relative overflow-hidden">
         <SectionTitle title="Frequently Asked Questions" />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {faqs.map((faq, index) => (
             <div
               key={index}
               onClick={() => toggleFAQ(index)}
-              className="group cursor-pointer bg-[var(--card-bg)] rounded-2xl p-8 text-left relative
+              className="group cursor-pointer bg-[var(--card-bg)] rounded-2xl p-4 md:p-6 text-left relative
                          transition-all duration-300
                          hover:bg-[var(--primary)]
                          hover:-translate-y-2

@@ -193,7 +193,7 @@ export default function ChallengePage() {
 
   return (
     <div
-      className="min-h-screen px-4 py-8 md:px-6"
+      className="min-h-screen"
       style={{
         fontFamily: "'Sora', sans-serif",
         background: "var(--bg-primary)",

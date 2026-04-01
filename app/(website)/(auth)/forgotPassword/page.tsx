@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 interface ApiErrorResponse {
   message: string;
@@ -22,12 +23,7 @@ export default function ForgotPassword() {
 
       if (response.status === 200) {
         setSent(true);
-        await Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: "Reset link sent to your email!",
-          confirmButtonColor: "var(--primary)",
-        });
+        await toast.success("Reset link sent to your email!");
       }
     } catch (err) {
       const axiosError = err as { response?: { data: ApiErrorResponse } };
@@ -38,17 +34,12 @@ export default function ForgotPassword() {
         axiosError.response?.data?.message || 
         "Something went wrong!";
 
-      await Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: errorMessage,
-        confirmButtonColor: "#ef4444",
-      });
+      await toast.error(errorMessage);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="flex items-center justify-center min-h-screen px-4">
 
       <div
         className="w-full max-w-md p-8 rounded-2xl"
@@ -60,21 +51,21 @@ export default function ForgotPassword() {
 
         {/* Title */}
         <h1
-          className="text-2xl font-bold mb-2 text-center"
+          className="mb-2 text-2xl font-bold text-center"
           style={{ color: "var(--text-primary)" }}
         >
           Forgot Password
         </h1>
 
         <p
-          className="text-sm text-center mb-6"
+          className="mb-6 text-sm text-center"
           style={{ color: "var(--text-muted)" }}
         >
           Enter your email and we will send you a password reset link
         </p>
 
         {sent ? (
-          <div className="text-center space-y-4">
+          <div className="space-y-4 text-center">
 
             <p
               className="text-sm"
@@ -139,7 +130,7 @@ export default function ForgotPassword() {
               className="text-sm text-center"
               style={{ color: "var(--text-muted)" }}
             >
-              Remember your password?{" "}
+              Remembered your password?{" "}
               <Link
                 href="/login"
                 style={{ color: "var(--primary)" }}

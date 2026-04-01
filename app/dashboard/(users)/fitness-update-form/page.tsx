@@ -8,6 +8,7 @@ import axios, { AxiosError } from "axios";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 const profileSchema = z.object({
   age: z.number().min(10).max(100),
@@ -57,26 +58,21 @@ const FitnessProfileUpdateForm = () => {
       return response.data;
     },
     onSuccess: () => {
-      Swal.fire({
-        title: "Updated!",
-        text: "Your fitness profile has been updated.",
-        icon: "success",
-        timer: 2000,
-        showConfirmButton: false,
-      }).then(() => router.push("/dashboard"));
+      toast.success("Your fitness profile has been updated.");
+      router.push("/dashboard");
     },
     onError: (err) => {
       const errorMessage = err.response?.data?.message || "Failed to update";
-      Swal.fire("Error", errorMessage, "error");
+      toast.error(errorMessage);
     },
   });
 
   const onSubmit = (data: ProfileFormValues) => mutation.mutate(data);
 
-  if (isFetching) return <div className="text-center py-20 text-xl font-bold">Loading Profile...</div>;
+  if (isFetching) return <div className="py-20 text-xl font-bold text-center">Loading Profile...</div>;
 
   return (
-    <div className="min-h-screen py-10 px-4">
+    <div className="min-h-screen px-4 py-10">
        <title>Fitness Update Form | Dashboard - Flexify</title>
       <div className="max-w-7xl mx-auto bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-lg overflow-hidden">
         
@@ -85,10 +81,10 @@ const FitnessProfileUpdateForm = () => {
           <p className="mt-1 opacity-90">Modify your health and fitness details</p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-12 space-y-10">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-10 md:p-12">
           
           {/* Physical Stats Section */}
-          <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <section className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <h2 className="col-span-full text-xl font-bold border-b border-[var(--border-color)] pb-2 text-[var(--primary)] uppercase">
               Physical Stats
             </h2>
@@ -96,7 +92,7 @@ const FitnessProfileUpdateForm = () => {
             <div className="flex flex-col gap-1">
               <label className="text-sm font-semibold">Age</label>
               <input type="number" {...register("age", { valueAsNumber: true })} className="input-style" />
-              {errors.age && <span className="text-red-500 text-xs">{errors.age.message}</span>}
+              {errors.age && <span className="text-xs text-red-500">{errors.age.message}</span>}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -130,7 +126,7 @@ const FitnessProfileUpdateForm = () => {
           </section>
 
           {/* Fitness & Lifestyle Section */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <h2 className="col-span-full text-xl font-bold border-b border-[var(--border-color)] pb-2 text-[var(--primary)] uppercase">
               Fitness & Lifestyle
             </h2>
@@ -175,7 +171,7 @@ const FitnessProfileUpdateForm = () => {
           </section>
 
           {/* Health & History Section */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <h2 className="col-span-full text-xl font-bold border-b border-[var(--border-color)] pb-2 text-[var(--primary)] uppercase">
               Health & History
             </h2>

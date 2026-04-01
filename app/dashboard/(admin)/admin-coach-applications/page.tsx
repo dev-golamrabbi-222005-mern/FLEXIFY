@@ -4,6 +4,7 @@ import { CheckCircle, XCircle, UserCheck, Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 interface CoachApplication {
   _id: string;
@@ -31,14 +32,10 @@ export default function AdminCoachApplications() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["admin-coach-apps"] });
-      Swal.fire(
-        variables.status === "approved" ? "Approved!" : "Rejected!",
-        `Coach request has been ${variables.status}.`,
-        "success"
-      );
+      toast.success(`Coach request has been ${variables.status}.`);
     },
     onError: () => {
-      Swal.fire("Error", "Action failed", "error");
+      toast.error("Action failed");
     },
   });
 
@@ -48,34 +45,34 @@ export default function AdminCoachApplications() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <Loader2 className="animate-spin text-blue-500" size={40} />
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="text-blue-500 animate-spin" size={40} />
       </div>
     );
   }
 
   return (
     
-    <div className=" space-y-8 min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <div className=" space-y-8 min-h-screen max-w-full text-[var(--text-primary)]">
        <title>Coach Applications | Dashboard - Flexify</title>
       
       {/* HEADER */}
       <header>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="flex items-center gap-2 text-2xl font-bold">
           <UserCheck /> Coach Applications
         </h1>
         <p className="text-sm text-[var(--text-secondary)]">Review and approve new coach requests</p>
       </header>
 
       {/* SUMMARY CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {/* Pending Card */}
         <div className="bg-[var(--card-bg)] rounded-2xl shadow-sm border border-[var(--border-color)] p-5 flex items-center justify-between hover:shadow-md transition">
           <div>
             <p className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Pending Apps</p>
-            <h2 className="text-3xl font-black mt-1">{pendingCount}</h2>
+            <h2 className="mt-1 text-3xl font-black">{pendingCount}</h2>
           </div>
-          <div className="p-3 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 text-white shadow-lg">
+          <div className="p-3 text-white shadow-lg rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500">
             <UserCheck size={22} />
           </div>
         </div>
@@ -84,9 +81,9 @@ export default function AdminCoachApplications() {
         <div className="bg-[var(--card-bg)] rounded-2xl shadow-sm border border-[var(--border-color)] p-5 flex items-center justify-between hover:shadow-md transition">
           <div>
             <p className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Approved</p>
-            <h2 className="text-3xl font-black mt-1">{approvedCount}</h2>
+            <h2 className="mt-1 text-3xl font-black">{approvedCount}</h2>
           </div>
-          <div className="p-3 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 text-white shadow-lg">
+          <div className="p-3 text-white shadow-lg rounded-xl bg-gradient-to-br from-green-400 to-emerald-600">
             <CheckCircle size={22} />
           </div>
         </div>
@@ -95,9 +92,9 @@ export default function AdminCoachApplications() {
         <div className="bg-[var(--card-bg)] rounded-2xl shadow-sm border border-[var(--border-color)] p-5 flex items-center justify-between hover:shadow-md transition">
           <div>
             <p className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Rejected</p>
-            <h2 className="text-3xl font-black mt-1">{rejectedCount}</h2>
+            <h2 className="mt-1 text-3xl font-black">{rejectedCount}</h2>
           </div>
-          <div className="p-3 rounded-xl bg-gradient-to-br from-red-400 to-pink-500 text-white shadow-lg">
+          <div className="p-3 text-white shadow-lg rounded-xl bg-gradient-to-br from-red-400 to-pink-500">
             <XCircle size={22} />
           </div>
         </div>
@@ -132,7 +129,7 @@ export default function AdminCoachApplications() {
                   <button
                     onClick={() => statusMutation.mutate({ id: app._id, status: "approved" })}
                     disabled={statusMutation.isPending}
-                    className="p-2 rounded-lg bg-green-500/10 text-green-500 hover:bg-green-500/20 transition disabled:opacity-50"
+                    className="p-2 text-green-500 transition rounded-lg bg-green-500/10 hover:bg-green-500/20 disabled:opacity-50"
                     title="Approve"
                   >
                     <CheckCircle size={18} />
@@ -140,7 +137,7 @@ export default function AdminCoachApplications() {
                   <button
                     onClick={() => statusMutation.mutate({ id: app._id, status: "rejected" })}
                     disabled={statusMutation.isPending}
-                    className="p-2 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 transition disabled:opacity-50"
+                    className="p-2 text-red-500 transition rounded-lg bg-red-500/10 hover:bg-red-500/20 disabled:opacity-50"
                     title="Reject"
                   >
                     <XCircle size={18} />

@@ -4,28 +4,28 @@ import { Search, Filter, MoreVertical } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import axios from "axios";
 
 // 1. Define the Trainee interface
 interface Trainee {
   _id: string;
   name: string;
-  email: string;
+  userEmail: string;
+  image: string;
   plan: string;
-  status: string;
-  progress: number;
-  joined: string;
-  avatar: string;
+  createdAt: Date;
 }
 
 export default function CoachTrainees() {
+  const {data: session} = useSession();
   const [search, setSearch] = useState("");
 
   // 2. Add <Trainee[]> to useQuery
   const { data: trainees = [] } = useQuery<Trainee[]>({
     queryKey: ["trainees", search],
     queryFn: async () => {
-      const res = await axios.get(`/api/coach/trainees?name=${search}`);
+      const res = await axios.get(`/api/coach/coach-users?coachId=${session?.user?.id}`);
       return res.data;
     },
   });
@@ -37,8 +37,8 @@ export default function CoachTrainees() {
 
   return (
     <>
-      <div className="px-4 mx-auto space-y-8 max-w-7xl">
-         <title>Traines | Dashboard - Flexify</title>
+      <div className="space-y-8 max-w-full">
+        <title>Traines | Dashboard - Flexify</title>
 
         {/* Header */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -99,15 +99,9 @@ export default function CoachTrainees() {
                 {/* Top */}
                 <div className="flex justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div
+                    <img src={t.image} alt={t.name}
                       className="flex items-center justify-center text-sm font-bold rounded-full w-11 h-11"
-                      style={{
-                        background: "var(--primary)",
-                        color: "white",
-                      }}
-                    >
-                      {t.avatar || t.name.charAt(0)}
-                    </div>
+                    />
                     <div>
                       <h3
                         className="text-sm font-semibold group-hover:underline"
@@ -119,7 +113,7 @@ export default function CoachTrainees() {
                         className="text-xs"
                         style={{ color: "var(--text-muted)" }}
                       >
-                        {t.email}
+                        {t.userEmail}
                       </p>
                     </div>
                   </div>
@@ -139,47 +133,13 @@ export default function CoachTrainees() {
                   >
                     {t.plan}
                   </span>
-                  <span
-                    className="px-2 py-1 text-xs rounded-full"
-                    style={{
-                      background:
-                        t.status === "Active"
-                          ? "rgba(16,185,129,0.15)"
-                          : "rgba(245,158,11,0.15)",
-                      color: t.status === "Active" ? "#10b981" : "#f59e0b",
-                    }}
-                  >
-                    {t.status}
-                  </span>
-                </div>
-
-                {/* Progress */}
-                <div className="flex items-center gap-2">
-                  <div
-                    className="flex-1 h-1.5 rounded-full"
-                    style={{ background: "var(--bg-secondary)" }}
-                  >
-                    <div
-                      className="h-full rounded-full transition-all duration-300"
-                      style={{
-                        width: `${t.progress}%`,
-                        background: "var(--primary)",
-                      }}
-                    />
-                  </div>
-                  <span
-                    className="text-xs font-semibold"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    {t.progress}%
-                  </span>
                 </div>
 
                 <p
                   className="mt-3 text-xs"
                   style={{ color: "var(--text-muted)" }}
                 >
-                  Joined {t.joined}
+                  Joined {new Date(t.createdAt).toLocaleString()}
                 </p>
               </div>
             </motion.div>

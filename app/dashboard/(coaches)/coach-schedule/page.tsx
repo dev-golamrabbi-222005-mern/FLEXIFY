@@ -1,27 +1,58 @@
 
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
-const sessions = [
-  { day: 1, time: "10:00 AM", client: "Arif Hossain", type: "Upper Body" },
-  { day: 1, time: "2:00 PM", client: "Kamal Uddin", type: "Leg Day" },
-  { day: 3, time: "9:00 AM", client: "Nadia Akter", type: "Cardio HIIT" },
-  { day: 3, time: "11:00 AM", client: "Rashed Khan", type: "Full Body" },
-  { day: 5, time: "10:00 AM", client: "Sabrina Islam", type: "Yoga" },
-  { day: 8, time: "9:00 AM", client: "Fatima Begum", type: "Post-natal" },
-  { day: 10, time: "10:00 AM", client: "Arif Hossain", type: "Push Day" },
-  { day: 12, time: "2:00 PM", client: "Kamal Uddin", type: "Pull Day" },
-  { day: 15, time: "9:00 AM", client: "Nadia Akter", type: "Cardio" },
-];
+interface Trainee {
+  _id: string;
+  name: string;
+  userEmail: string;
+  image: string;
+  plan: string;
+  status: string;
+  progress: number;
+  joined: string;
+  avatar: string;
+}
+
+interface Session {
+  day: number;
+  month: number;
+  year: number;
+  time: string;
+  type: string;
+  clientEmail: string;
+  clientInfo?: {
+    name: string;
+    imageUrl: string;
+    phone: string;
+    plan: string;
+  };
+}
+
+interface SessionFormData {
+  day: string;
+  month: string;
+  year: string;
+  time: string;
+  client: string;
+  clientEmail: string;
+  type: string;
+}
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function CoachSchedule() {
-
-  const [currentMonth] = useState(new Date(2025, 2));
+  const {data: session} = useSession();
+  const {register, handleSubmit} = useForm<SessionFormData>();
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const daysInMonth = new Date(
     currentMonth.getFullYear(),
@@ -45,11 +76,62 @@ export default function CoachSchedule() {
   for (let i = 0; i < firstDay; i++) calendarDays.push(null);
   for (let i = 1; i <= daysInMonth; i++) calendarDays.push(i);
 
+  const { data: trainees = [] } = useQuery<Trainee[]>({
+    queryKey: ["trainees"],
+    queryFn: async () => {
+      const res = await axios.get(`/api/coach/coach-users?coachId=${session?.user?.id}`);
+      return res.data;
+    },
+  });
+
+  const { data: sessions = [], refetch: refetchSession } = useQuery<Session[]>({
+    queryKey: ["sessions"],
+    queryFn: async () => {
+      const res = await axios.get(`/api/coach/sessions?coachId=${session?.user?.id}`);
+      return res.data;
+    },
+  });
+
+  const { data: upcomingSessions = [], refetch: refetchUpcoming } = useQuery<Session[]>({
+    queryKey: ["upcomingSessions"],
+    queryFn: async () => {
+      const res = await axios.get(`/api/coach/sessions/upcoming?coachId=${session?.user?.id}`);
+      return res.data;
+    },
+  });
+
+  const handleAddSession = async(data: SessionFormData) => {
+    const payload = {
+      ...data,
+      day: Number(data.day),
+      month: Number(data.month),
+      year: Number(data.year),
+    };
+    const res = await axios.post(`/api/coach/sessions/add`, payload);
+    refetchSession();
+    refetchUpcoming();
+    if(res.data.acknowledged){
+      toast.success("Session added successfully");
+    }
+    else{
+      toast.error("Failed to add session");
+    }
+  }
+
+  const formatTime12h = (time24: string) => {
+    const [hourStr, minute] = time24.split(":");
+    if (hourStr === undefined || minute === undefined) return time24;
+    let hour = Number(hourStr);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12 || 12;
+    return `${hour.toString().padStart(2, "0")}:${minute} ${ampm}`;
+  };
+
   return (
     <>
 
-      <div className="max-w-7xl mx-auto space-y-8">
-         <title>Schedule | Dashboard - Flexify</title>
+      <div className="max-w-full space-y-8">
+        <title>Schedule | Dashboard - Flexify</title>
 
         {/* Header */}
         <div>
@@ -61,7 +143,7 @@ export default function CoachSchedule() {
           </h1>
 
           <p
-            className="text-sm mt-1"
+            className="mt-1 text-sm"
             style={{ color: "var(--text-muted)" }}
           >
             Manage your availability and training sessions
@@ -79,7 +161,13 @@ export default function CoachSchedule() {
           <div className="flex items-center justify-between mb-6">
 
             <button
+              onClick={() => {
+                const prevMonth = new Date(currentMonth);
+                prevMonth.setMonth(prevMonth.getMonth() - 1);
+                setCurrentMonth(prevMonth);
+              }}
               className="p-2 rounded-lg hover:bg-gray-500/10"
+              title="Previous month"
             >
               <ChevronLeft size={20} />
             </button>
@@ -92,7 +180,13 @@ export default function CoachSchedule() {
             </h2>
 
             <button
+              onClick={() => {
+                const nextMonth = new Date(currentMonth);
+                nextMonth.setMonth(nextMonth.getMonth() + 1);
+                setCurrentMonth(nextMonth);
+              }}
               className="p-2 rounded-lg hover:bg-gray-500/10"
+              title="Next month"
             >
               <ChevronRight size={20} />
             </button>
@@ -105,7 +199,7 @@ export default function CoachSchedule() {
             {daysOfWeek.map((d) => (
               <div
                 key={d}
-                className="text-center text-xs font-medium py-2"
+                className="py-2 text-xs font-medium text-center"
                 style={{ color: "var(--text-muted)" }}
               >
                 {d}
@@ -120,7 +214,7 @@ export default function CoachSchedule() {
             {calendarDays.map((day, i) => {
 
               const daySessions = day
-                ? sessions.filter((s) => s.day === day)
+                ? sessions.filter((s: Session) => s.day === day && s.month === currentMonth.getMonth() + 1 && s.year === currentMonth.getFullYear())
                 : [];
 
               return (
@@ -170,7 +264,7 @@ export default function CoachSchedule() {
                             color: "var(--primary)",
                           }}
                         >
-                          {s.time} – {s.client.split(" ")[0]}
+                          {formatTime12h(s.time)} – {s?.clientInfo?.name?.split(" ")[0]}
                         </div>
                       ))}
 
@@ -193,7 +287,7 @@ export default function CoachSchedule() {
         >
 
           <h3
-            className="font-semibold mb-4"
+            className="mb-4 font-semibold"
             style={{ color: "var(--text-primary)" }}
           >
             Upcoming Sessions
@@ -201,7 +295,7 @@ export default function CoachSchedule() {
 
           <div className="space-y-3">
 
-            {sessions.slice(0, 5).map((s, i) => (
+            {upcomingSessions.map((s, i) => (
 
               <div
                 key={i}
@@ -217,7 +311,7 @@ export default function CoachSchedule() {
                     className="text-sm font-medium"
                     style={{ color: "var(--text-primary)" }}
                   >
-                    {s.client}
+                    {s?.clientInfo?.name}
                   </span>
 
                   <p
@@ -231,17 +325,17 @@ export default function CoachSchedule() {
                 <div className="text-right">
 
                   <span
-                    className="text-xs font-mono"
+                    className="font-mono text-xs"
                     style={{ color: "var(--primary)" }}
                   >
-                    {s.time}
+                    {formatTime12h(s.time)}
                   </span>
 
                   <p
                     className="text-xs"
                     style={{ color: "var(--text-muted)" }}
                   >
-                    March {s.day}
+                    {new Date(s.year, s.month - 1).toLocaleString("default", { month: "long" })} {s.day}
                   </p>
 
                 </div>
@@ -251,6 +345,88 @@ export default function CoachSchedule() {
             ))}
 
           </div>
+        </motion.div>
+
+        {/* Add Session */}
+        <motion.div
+          className="card-glass"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+
+          <h3
+            className="mb-4 font-semibold"
+            style={{ color: "var(--text-primary)" }}
+          >
+            Add Session
+          </h3>
+
+          <form
+            onSubmit={handleSubmit(handleAddSession)}
+            className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label className="block mb-2 text-sm font-medium">Day</label>
+              <select
+                {...register("day")}
+                className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
+              >
+                {[...Array(31)].map((_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block mb-2 text-sm font-medium">Month</label>
+              <select
+                {...register("month")}
+                className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
+              >
+                {[...Array(12)].map((_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block mb-2 text-sm font-medium">Year</label>
+              <select
+                {...register("year")}
+                className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
+              >
+                {[...Array(11)].map((_, i) => <option key={i} value={i + new Date().getFullYear()}>{i + new Date().getFullYear()}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block mb-2 text-sm font-medium">Time</label>
+              <input
+                type="time"
+                {...register("time")}
+                className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
+              />
+            </div>
+            <div>
+              <label className="block mb-2 text-sm font-medium">Client</label>
+              <select
+                {...register("clientEmail")}
+                className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
+              >
+                {trainees.map((t, i) => <option key={i} value={t.userEmail}>{t.name}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block mb-2 text-sm font-medium">Type</label>
+              <input
+                {...register("type")}
+                type="text"
+                className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
+              />
+            </div>
+            <div className="md:col-span-2">
+            <button
+              type="submit"
+              className="bg-[var(--primary)] text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:opacity-90 transition-opacity"
+            >
+              Add Session
+            </button>
+          </div>
+          </form>
+
         </motion.div>
 
       </div>
