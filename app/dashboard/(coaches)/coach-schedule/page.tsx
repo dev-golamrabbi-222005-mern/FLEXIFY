@@ -4,7 +4,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -53,6 +53,10 @@ export default function CoachSchedule() {
   const {data: session} = useSession();
   const {register, handleSubmit} = useForm<SessionFormData>();
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const daysInMonth = new Date(
     currentMonth.getFullYear(),
@@ -134,20 +138,26 @@ export default function CoachSchedule() {
         <title>Schedule | Dashboard - Flexify</title>
 
         {/* Header */}
-        <div>
-          <h1
-            className="text-2xl font-bold"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Schedule
-          </h1>
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          <div>
+            <h1
+              className="text-2xl font-bold"
+              style={{ color: "var(--text-primary)" }}
+            >
+              Schedule
+            </h1>
 
-          <p
-            className="mt-1 text-sm"
-            style={{ color: "var(--text-muted)" }}
-          >
-            Manage your availability and training sessions
-          </p>
+            <p
+              className="mt-1 text-sm"
+              style={{ color: "var(--text-muted)" }}
+            >
+              Manage your availability and training sessions
+            </p>
+          </div>
+          <button onClick={openModal} className="flex items-center gap-2 btn-primary">
+            <Plus size={18} />
+            Add Schedule
+          </button>
         </div>
 
         {/* Calendar */}
@@ -347,87 +357,105 @@ export default function CoachSchedule() {
           </div>
         </motion.div>
 
-        {/* Add Session */}
-        <motion.div
-          className="card-glass"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-
-          <h3
-            className="mb-4 font-semibold"
-            style={{ color: "var(--text-primary)" }}
+        {isModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md"
+            onClick={closeModal}
           >
-            Add Session
-          </h3>
-
-          <form
-            onSubmit={handleSubmit(handleAddSession)}
-            className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div>
-              <label className="block mb-2 text-sm font-medium">Day</label>
-              <select
-                {...register("day")}
-                className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
-              >
-                {[...Array(31)].map((_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium">Month</label>
-              <select
-                {...register("month")}
-                className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
-              >
-                {[...Array(12)].map((_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium">Year</label>
-              <select
-                {...register("year")}
-                className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
-              >
-                {[...Array(11)].map((_, i) => <option key={i} value={i + new Date().getFullYear()}>{i + new Date().getFullYear()}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium">Time</label>
-              <input
-                type="time"
-                {...register("time")}
-                className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
-              />
-            </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium">Client</label>
-              <select
-                {...register("clientEmail")}
-                className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
-              >
-                {trainees.map((t, i) => <option key={i} value={t.userEmail}>{t.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block mb-2 text-sm font-medium">Type</label>
-              <input
-                {...register("type")}
-                type="text"
-                className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
-              />
-            </div>
-            <div className="md:col-span-2">
-            <button
-              type="submit"
-              className="bg-[var(--primary)] text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:opacity-90 transition-opacity"
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 30 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 30 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="w-full max-w-lg p-8 border shadow-2xl bg-(--bg-primary) rounded-3xl border-white/50 backdrop-saturate-200"
+              onClick={(e) => e.stopPropagation()}
             >
-              Add Session
-            </button>
-          </div>
-          </form>
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="p-2">
+                    <Calendar size={24} className="text-(--primary)" />
+                  </div>
+                  <h2 className="text-xl font-bold text-(--text-primary)">Create Session</h2>
+                </div>
+                <button
+                  onClick={closeModal}
+                  className="p-2 transition-colors rounded-full hover:bg-gray-100"
+                  aria-label="Close modal"
+                >
+                  <X size={20} className="text-gray-500" />
+                </button>
+              </div>
 
-        </motion.div>
+              <form
+                onSubmit={handleSubmit(handleAddSession)}
+                className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div>
+                  <label className="block mb-2 text-sm font-medium">Day</label>
+                  <select
+                    {...register("day")}
+                    className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
+                  >
+                    {[...Array(31)].map((_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block mb-2 text-sm font-medium">Month</label>
+                  <select
+                    {...register("month")}
+                    className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
+                  >
+                    {[...Array(12)].map((_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block mb-2 text-sm font-medium">Year</label>
+                  <select
+                    {...register("year")}
+                    className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
+                  >
+                    {[...Array(11)].map((_, i) => <option key={i} value={i + new Date().getFullYear()}>{i + new Date().getFullYear()}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block mb-2 text-sm font-medium">Time</label>
+                  <input
+                    type="time"
+                    {...register("time")}
+                    className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block mb-2 text-sm font-medium">Client</label>
+                  <select
+                    {...register("clientEmail")}
+                    className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
+                  >
+                    {trainees.map((t, i) => <option key={i} value={t.userEmail}>{t.name}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block mb-2 text-sm font-medium">Type</label>
+                  <input
+                    {...register("type")}
+                    type="text"
+                    className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <button
+                    type="submit"
+                    className="bg-[var(--primary)] text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:opacity-90 transition-opacity"
+                  >
+                    Add Session
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
 
       </div>
 
