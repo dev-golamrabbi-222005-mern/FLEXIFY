@@ -69,8 +69,8 @@ const CoachCard = ({ coach }: CoachCardProps) => {
         </div>
 
         <div className="flex flex-wrap gap-2 text-[10px] font-bold text-[var(--primary)]">
-          {coach.expertise ? (
-            coach.expertise
+          {coach.specialties ? (
+            coach.specialties
               .split(",")
               .slice(0, 3)
               .map((s: string) => (
