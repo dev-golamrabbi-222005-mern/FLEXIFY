@@ -145,7 +145,7 @@ function SectionCard({
 }) {
   return (
     <div
-      className="rounded-2xl p-5 space-y-4"
+      className="p-5 space-y-4 rounded-2xl"
       style={{
         background: "var(--bg-secondary)",
         border: "1px solid var(--border-color)",
@@ -153,7 +153,7 @@ function SectionCard({
     >
       <div className="flex items-center gap-2.5 mb-1">
         <div
-          className="w-8 h-8 rounded-xl flex items-center justify-center"
+          className="flex items-center justify-center w-8 h-8 rounded-xl"
           style={{
             background: "rgba(16,185,129,0.1)",
             border: "1px solid rgba(16,185,129,0.2)",
@@ -162,7 +162,7 @@ function SectionCard({
           <Icon size={15} style={{ color: "var(--primary)" }} />
         </div>
         <h3
-          className="font-black text-sm"
+          className="text-sm font-black"
           style={{ color: "var(--text-primary)" }}
         >
           {title}
@@ -186,7 +186,7 @@ function SaveButton({
       disabled={loading}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.97 }}
-      className="flex items-center gap-2 px-6 py-3 rounded-2xl font-black text-sm text-white disabled:opacity-60"
+      className="flex items-center gap-2 px-6 py-3 text-sm font-black text-white rounded-2xl disabled:opacity-60"
       style={{
         background: "var(--primary)",
         boxShadow: "0 4px 16px rgba(16,185,129,0.3)",
@@ -303,7 +303,7 @@ function Toggle({
       <button
         type="button"
         onClick={() => onChange(!checked)}
-        className="relative w-11 h-6 rounded-full transition-colors"
+        className="relative h-6 transition-colors rounded-full w-11"
         style={{
           background: checked ? "var(--primary)" : "var(--border-color)",
         }}
@@ -311,7 +311,7 @@ function Toggle({
         <motion.div
           animate={{ x: checked ? 20 : 2 }}
           transition={{ type: "spring", stiffness: 500, damping: 38 }}
-          className="absolute top-1 w-4 h-4 rounded-full bg-white shadow"
+          className="absolute w-4 h-4 bg-white rounded-full shadow top-1"
         />
       </button>
     </div>
@@ -368,11 +368,11 @@ function ProfileTab({
           <img
             src={form.imageUrl}
             alt="avatar"
-            className="w-16 h-16 rounded-full object-cover"
+            className="object-cover w-16 h-16 rounded-full"
           />
         ) : (
           <div
-            className="w-16 h-16 rounded-full flex items-center justify-center font-black text-2xl text-white"
+            className="flex items-center justify-center w-16 h-16 text-2xl font-black text-white rounded-full"
             style={{ background: "var(--primary)" }}
           >
             {form.name?.charAt(0).toUpperCase() || "U"}
@@ -380,7 +380,7 @@ function ProfileTab({
         )}
         <div>
           <p
-            className="font-black text-base"
+            className="text-base font-black"
             style={{ color: "var(--text-primary)" }}
           >
             {form.name || "Your Name"}
@@ -407,7 +407,7 @@ function ProfileTab({
       </SectionCard>
 
       <SectionCard title="Basic Info" icon={User}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field
             label="Full Name"
             name="name"
@@ -490,7 +490,7 @@ function UserFitnessTab({
   return (
     <div className="space-y-4">
       <SectionCard title="Body Metrics" icon={Activity}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field
             label="Age"
             name="age"
@@ -523,7 +523,7 @@ function UserFitnessTab({
       </SectionCard>
 
       <SectionCard title="Goals & Activity" icon={Dumbbell}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <SelectField
             label="Fitness Goal"
             name="goal"
@@ -583,7 +583,7 @@ function UserFitnessTab({
       </SectionCard>
 
       <SectionCard title="Health & Lifestyle" icon={Heart}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field
             label="Sleep Hours/Night"
             name="sleepHours"
@@ -631,7 +631,7 @@ function UserFitnessTab({
               Current Plan
             </p>
             <p
-              className="font-black text-lg capitalize"
+              className="text-lg font-black capitalize"
               style={{ color: "var(--primary)" }}
             >
               {dbUser.plan}
@@ -646,7 +646,7 @@ function UserFitnessTab({
                 Expires
               </p>
               <p
-                className="font-bold text-sm"
+                className="text-sm font-bold"
                 style={{ color: "var(--text-primary)" }}
               >
                 {new Date(dbUser.planExpiry).toLocaleDateString("en-GB", {
@@ -731,7 +731,7 @@ function CoachScheduleTab({
   return (
     <div className="space-y-4">
       <SectionCard title="Pricing" icon={DollarSign}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field
             label="Monthly Rate ($)"
             name="monthlyRate"
@@ -807,7 +807,7 @@ function CoachScheduleTab({
       </SectionCard>
 
       <SectionCard title="Professional Info" icon={Award}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field
             label="Specialties"
             name="specialties"
@@ -843,7 +843,7 @@ function CoachScheduleTab({
               handleInput as React.ChangeEventHandler<HTMLTextAreaElement>
             }
             rows={3}
-            className="input-style resize-none"
+            className="resize-none input-style"
             placeholder="Tell clients about yourself..."
           />
         </div>
@@ -871,11 +871,11 @@ function AdminInfoTab({ dbUser }: { dbUser: DbUser }) {
           <img
             src={dbUser.imageUrl}
             alt="admin"
-            className="w-20 h-20 rounded-full object-cover"
+            className="object-cover w-20 h-20 rounded-full"
           />
         ) : (
           <div
-            className="w-20 h-20 rounded-full flex items-center justify-center font-black text-3xl text-white"
+            className="flex items-center justify-center w-20 h-20 text-3xl font-black text-white rounded-full"
             style={{ background: "var(--primary)" }}
           >
             {dbUser.name?.charAt(0)?.toUpperCase() ?? "A"}
@@ -883,7 +883,7 @@ function AdminInfoTab({ dbUser }: { dbUser: DbUser }) {
         )}
         <div>
           <p
-            className="font-black text-xl"
+            className="text-xl font-black"
             style={{ color: "var(--text-primary)" }}
           >
             {dbUser.name}
@@ -934,7 +934,7 @@ function AdminInfoTab({ dbUser }: { dbUser: DbUser }) {
       </SectionCard>
 
       <div
-        className="p-4 rounded-2xl text-center"
+        className="p-4 text-center rounded-2xl"
         style={{
           background: "var(--bg-secondary)",
           border: "1px solid var(--border-color)",
@@ -946,10 +946,10 @@ function AdminInfoTab({ dbUser }: { dbUser: DbUser }) {
         >
           Admin Access
         </p>
-        <p className="font-black text-base" style={{ color: "var(--primary)" }}>
+        <p className="text-base font-black" style={{ color: "var(--primary)" }}>
           Full Platform Control
         </p>
-        <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+        <p className="mt-1 text-xs" style={{ color: "var(--text-secondary)" }}>
           Manage coaches, users, payments and content.
         </p>
       </div>
@@ -990,7 +990,7 @@ function NotificationsTab() {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => toast.success("Notification preferences saved!")}
-          className="flex items-center gap-2 px-6 py-3 rounded-2xl font-black text-sm text-white"
+          className="flex items-center gap-2 px-6 py-3 text-sm font-black text-white rounded-2xl"
           style={{
             background: "var(--primary)",
             boxShadow: "0 4px 16px rgba(16,185,129,0.3)",
@@ -1073,7 +1073,7 @@ function AppearanceTab() {
   return (
     <div className="space-y-4">
       <SectionCard title="Theme" icon={Moon}>
-        <p className="text-sm mb-3" style={{ color: "var(--text-secondary)" }}>
+        <p className="mb-3 text-sm" style={{ color: "var(--text-secondary)" }}>
           Switch between light and dark mode.
         </p>
         <ThemeToggle />
@@ -1186,7 +1186,7 @@ export default function SettingsPage() {
             </h1>
           </div>
           <div
-            className="w-11 h-11 rounded-2xl flex items-center justify-center"
+            className="flex items-center justify-center w-11 h-11 rounded-2xl"
             style={{
               background: "rgba(16,185,129,0.12)",
               border: "1px solid rgba(16,185,129,0.25)",
@@ -1197,13 +1197,13 @@ export default function SettingsPage() {
         </div>
       </motion.div>
 
-      <div className="flex flex-col md:grid md:grid-cols-4 gap-5">
+      <div className="flex flex-col gap-5 md:grid md:grid-cols-4">
         {/* Sidebar */}
         <motion.div
           initial={{ opacity: 0, x: -12 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1, duration: 0.4, ease }}
-          className="rounded-2xl p-3 md:col-span-1 self-start"
+          className="self-start p-3 rounded-2xl md:col-span-1"
           style={{
             background: "var(--bg-secondary)",
             border: "1px solid var(--border-color)",
@@ -1220,7 +1220,7 @@ export default function SettingsPage() {
               Logged in as
             </p>
             <p
-              className="font-black text-sm capitalize"
+              className="text-sm font-black capitalize"
               style={{ color: "var(--primary)" }}
             >
               {role}

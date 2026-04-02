@@ -12,8 +12,8 @@ interface CoachUser {
   _id: string;
   coachId: string;
   userId: string;
-  userName: string;
-  userEmail: string;
+  name: string;
+  email: string;
   totalPaid: number;
   meetLink?: string;
 }
@@ -55,9 +55,9 @@ export default function MyCoach() {
         `/api/coach-users?userId=${userId}`,
       );
       return res.data.map((cu) => ({
-        _id: cu.coachId,
-        name: cu.userName, // optionally map actual coach name from your db
-        email: cu.userEmail,
+        _id: cu._id,
+        name: cu.name, // optionally map actual coach name from your db
+        email: cu.email,
         status: "approved",
         meetLink: cu.meetLink,
       }));
@@ -90,6 +90,7 @@ export default function MyCoach() {
         <p className="text-muted">No approved coach assigned yet.</p>
       </div>
     );
+
 
   return (
     <div className="p-6 space-y-6">
