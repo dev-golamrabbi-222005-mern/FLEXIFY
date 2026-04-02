@@ -66,8 +66,12 @@ export default function AdminDashboard({ name }: { name: string }) {
   return (
     <div className="space-y-6">
       <motion.div {...fadeUp(0)}>
-        <p className="text-sm font-medium text-[var(--text-secondary)] mb-0.5">{greeting()}, Admin</p>
-        <h1 className="text-3xl font-black text-[var(--text-primary)]">{name} 🖥️</h1>
+        <p className="leading-relaxed mb-2 text-[var(--text-secondary)]">
+          {greeting()}, Admin
+        </p>
+        <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
+          {name} 🖥️
+        </h1>
       </motion.div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -80,37 +84,75 @@ export default function AdminDashboard({ name }: { name: string }) {
         <div className="h-[250px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
-              <XAxis dataKey="month" tick={{ fontSize: 11, fill: "var(--text-secondary)" }} axisLine={false} tickLine={false} />
-              <YAxis hide />
-              <Tooltip 
-                cursor={{ fill: 'var(--bg-tertiary)' }}
-                contentStyle={{ 
-                  backgroundColor: 'var(--bg-secondary)', 
-                  borderColor: 'var(--border-color)',
-                  borderRadius: '12px',
-                  fontSize: '12px',
-                  color: 'var(--text-primary)'
-                }}
-                itemStyle={{ fontWeight: 'bold' }}
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="var(--border-color)"
+                vertical={false}
               />
-              <Bar dataKey="revenue" name="Revenue" fill="#7c5cbf" radius={[4, 4, 0, 0]} barSize={20} />
-              <Bar dataKey="users" name="New Users" fill="#f47920" radius={[4, 4, 0, 0]} barSize={20} />
+              <XAxis
+                dataKey="month"
+                tick={{ fontSize: 11, fill: "var(--text-secondary)" }}
+                axisLine={false}
+                tickLine={false}
+              />
+              <YAxis hide />
+              <Tooltip
+                cursor={{ fill: "var(--bg-tertiary)" }}
+                contentStyle={{
+                  backgroundColor: "var(--bg-secondary)",
+                  borderColor: "var(--border-color)",
+                  borderRadius: "12px",
+                  fontSize: "12px",
+                  color: "var(--text-primary)",
+                }}
+                itemStyle={{ fontWeight: "bold" }}
+              />
+              <Bar
+                dataKey="revenue"
+                name="Revenue"
+                fill="#7c5cbf"
+                radius={[4, 4, 0, 0]}
+                barSize={20}
+              />
+              <Bar
+                dataKey="users"
+                name="New Users"
+                fill="#f47920"
+                radius={[4, 4, 0, 0]}
+                barSize={20}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </ChartCard>
 
-      <motion.div {...fadeUp(0.3)} className="p-6 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border-color)]">
-        <SectionHeader title="System Activity" action="View Records" link="/dashboard/admin/logs" />
+      <motion.div
+        {...fadeUp(0.3)}
+        className="p-6 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border-color)]"
+      >
+        <SectionHeader
+          title="System Activity"
+          action="View Records"
+          link="/dashboard/admin/logs"
+        />
         <div className="mt-4 space-y-4">
           {activities.length > 0 ? (
             activities.map((a, i) => (
-              <div key={i} className="flex items-start gap-4 pb-4 border-b border-[var(--border-color)] last:border-0 last:pb-0">
-                <div className="mt-1.5 w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: a.dot }} />
+              <div
+                key={i}
+                className="flex items-start gap-4 pb-4 border-b border-[var(--border-color)] last:border-0 last:pb-0"
+              >
+                <div
+                  className="mt-1.5 w-2.5 h-2.5 rounded-full shrink-0"
+                  style={{ backgroundColor: a.dot }}
+                />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-[var(--text-primary)]">{a.action}</p>
-                  <p className="text-xs text-[var(--text-secondary)] truncate">{a.detail}</p>
+                  <p className="text-sm font-bold text-[var(--text-primary)]">
+                    {a.action}
+                  </p>
+                  <p className="text-xs text-[var(--text-secondary)] truncate">
+                    {a.detail}
+                  </p>
                 </div>
                 <div className="flex items-center gap-1 text-[var(--text-secondary)]">
                   <Clock size={12} />
@@ -119,7 +161,9 @@ export default function AdminDashboard({ name }: { name: string }) {
               </div>
             ))
           ) : (
-            <p className="text-xs text-center text-[var(--text-secondary)] py-4">No recent activity.</p>
+            <p className="text-xs text-center text-[var(--text-secondary)] py-4">
+              No recent activity.
+            </p>
           )}
         </div>
       </motion.div>

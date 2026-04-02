@@ -72,7 +72,7 @@ export default function FlexifyHero() {
         </AnimatePresence>
       </div>
 
-      <div className="relative z-10 flex flex-col items-center justify-center w-full gap-12 px-6 mx-auto mb-8 max-w-7xl md:mb-12 md:flex-row md:gap-16">
+      <div className="relative z-10 flex flex-col items-center justify-center w-full gap-12 px-4 md:px-6 mx-auto mb-8 max-w-7xl md:mb-12 md:flex-row md:gap-16">
         <div className="w-full md:w-1/2">
           <AnimatePresence mode="wait">
             <motion.div

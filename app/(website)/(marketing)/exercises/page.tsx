@@ -67,7 +67,7 @@ const ExercisesPage = () => {
   ].filter(Boolean).length;
   
   return (
-    <div className="min-h-screen px-6 mx-auto mt-8 mb-10 md:mt-12 max-w-7xl">
+    <div className="min-h-screen mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6">
     <title>Exercises - Flexify</title>
       <div className="mb-10 text-center">
         <h1 className="text-3xl md:text-5xl font-bold text-[var(--text-primary)] tracking-tighter">

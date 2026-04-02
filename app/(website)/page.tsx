@@ -17,27 +17,29 @@ export default function Home() {
     <div>
       <FlexifyHero />
 
-      <StatsSection />
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
+        <StatsSection />
 
-      <Precision />
+        <Precision />
 
-      <BMI />
+        <BMI />
 
-      <PopularWorkouts />
+        <PopularWorkouts />
 
-      <BodyChallenges />
+        <BodyChallenges />
 
-      <SuccessStory />
+        <SuccessStory />
 
-      <TopCoaches />
+        <TopCoaches />
 
-      <BecomeCoachCTA />
+        <BecomeCoachCTA />
 
-      <Pricing />
+        <Pricing />
 
-      <FAQ />
+        <FAQ />
 
-      <Articles />
+        <Articles />
+      </div>
 
       <Motivation />
     </div>

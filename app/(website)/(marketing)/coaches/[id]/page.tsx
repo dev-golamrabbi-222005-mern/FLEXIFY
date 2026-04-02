@@ -47,7 +47,7 @@ const CoachDetails = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] pb-20 selection:bg-[var(--primary)] selection:text-white">
+    <div className="min-h-screen bg-[var(--bg-primary)]  selection:bg-[var(--primary)] selection:text-white">
       {/* ─── Hero / Header Section ─── */}
       <div className="relative h-[250px] md:h-[400px] w-full overflow-hidden">
         <img 
@@ -58,7 +58,7 @@ const CoachDetails = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-transparent to-transparent" />
       </div>
 
-      <div className="relative z-10 px-4 mx-auto -mt-48 max-w-7xl md:-mt-80">
+      <div className="relative z-10 px-4 md:px-6 mx-auto -mt-55 md:-mt-90 max-w-7xl lg:-mt-85 pb-8 md:pb-12 lg:pb-16">
         <div className="flex flex-col items-start gap-6 lg:flex-row">
           
           {/* ─── Left Sidebar: Main Profile Card ─── */}

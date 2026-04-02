@@ -1433,7 +1433,7 @@ function DetailView({
   const lc = LEVEL_STYLE[ex.level] ?? { bg: "#f1f5f9", text: "#64748b" };
   
   return (
-    <div className="max-w-7xl mx-auto px-6 my-10">
+    <div className="mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6">
       {/* Breadcrumb */}
       <nav
         className="flex items-center gap-1.5 text-xs mb-4"
@@ -1733,7 +1733,7 @@ function SessionView({
   const currentSet = setsCompleted + 1;
 
   return (
-    <div className="max-w-7xl mx-auto px-6 mt-8 md:mt-12 mb-10 space-y-4">
+    <div className="mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6 space-y-4">
       {/* Top bar */}
       <div className="flex items-center justify-between pt-1">
         <button
@@ -2117,7 +2117,7 @@ function CompleteView({
   const zoneMax = Math.max(...Object.values(zones));
 
   return (
-    <div className="max-w-7xl mx-auto flex flex-col gap-4 mt-8 md:mt-12 mb-10 px-6">
+    <div className="mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6 flex flex-col gap-4">
       {/* Well Done */}
       <motion.div
         initial={{ opacity: 0, scale: 0.94 }}

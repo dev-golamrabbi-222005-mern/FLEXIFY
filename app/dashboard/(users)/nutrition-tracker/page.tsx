@@ -204,15 +204,21 @@ const addFood = (item: FoodItem, qty: number) => {
 
   return (
     <div className="max-w-full">
-        <title>Nutrition Tracker | Dashboard - Flexify</title>
+      <title>Nutrition Tracker | Dashboard - Flexify</title>
       {/* Header Section */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <p className="text-[14px] text-[var(--text-secondary)] font-medium">{dayName}, {dateStr}</p>
-          <h1 className="font-bold text-3xl text-[var(--text-primary)] tracking-tight">Daily Calorie Progress</h1>
+          <p className="leading-relaxed mb-2 text-[var(--text-secondary)]">
+            {dayName}, {dateStr}
+          </p>
+          <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
+            Daily Calorie Progress
+          </h1>
         </div>
         <div className="text-right">
-          <p className={`text-4xl font-black leading-none ${remaining >= 0 ? "text-[var(--primary)]" : "text-red-500"}`}>
+          <p
+            className={`text-4xl font-black leading-none ${remaining >= 0 ? "text-[var(--primary)]" : "text-red-500"}`}
+          >
             {Math.abs(Math.round(remaining))}
           </p>
           <p className="text-[11px] uppercase tracking-wider text-[var(--text-secondary)] font-bold mt-1">
@@ -224,29 +230,61 @@ const addFood = (item: FoodItem, qty: number) => {
       {/* Main Progress Bar */}
       <div className="mb-8">
         <div className="h-3 bg-[var(--bg-secondary)] rounded-full overflow-hidden border border-[var(--border-color)]">
-          <div 
+          <div
             className="h-full transition-all duration-1000 ease-out rounded-full"
-            style={{ 
-              width: `${calPct * 100}%`, 
-              backgroundColor: calPct > 1 ? "#ef4444" : calPct > 0.8 ? "#f59e0b" : "var(--primary)" 
+            style={{
+              width: `${calPct * 100}%`,
+              backgroundColor:
+                calPct > 1
+                  ? "#ef4444"
+                  : calPct > 0.8
+                    ? "#f59e0b"
+                    : "var(--primary)",
             }}
           />
         </div>
         <div className="flex justify-between mt-2">
-          <span className="text-xs font-bold text-[var(--text-primary)]">{Math.round(totals.calories)} kcal consumed</span>
-          <span className="text-xs font-medium text-[var(--text-secondary)]">Daily Goal: {GOALS.calories} kcal</span>
+          <span className="text-xs font-bold text-[var(--text-primary)]">
+            {Math.round(totals.calories)} kcal consumed
+          </span>
+          <span className="text-xs font-medium text-[var(--text-secondary)]">
+            Daily Goal: {GOALS.calories} kcal
+          </span>
         </div>
       </div>
 
       {/* Macro Stats */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         {[
-          { label: "Protein", val: totals.protein, max: GOALS.protein, color: "#4b9eff" },
-          { label: "Carbs", val: totals.carbs, max: GOALS.carbs, color: "var(--primary)" },
-          { label: "Fats", val: totals.fats, max: GOALS.fats, color: "#9b59b6" },
+          {
+            label: "Protein",
+            val: totals.protein,
+            max: GOALS.protein,
+            color: "#4b9eff",
+          },
+          {
+            label: "Carbs",
+            val: totals.carbs,
+            max: GOALS.carbs,
+            color: "var(--primary)",
+          },
+          {
+            label: "Fats",
+            val: totals.fats,
+            max: GOALS.fats,
+            color: "#9b59b6",
+          },
         ].map((macro) => (
-          <div key={macro.label} className="bg-[var(--bg-secondary)] p-5 rounded-2xl border border-[var(--border-color)] shadow-sm">
-            <CircularProgress value={macro.val} max={macro.max} label={macro.label} color={macro.color} />
+          <div
+            key={macro.label}
+            className="bg-[var(--bg-secondary)] p-5 rounded-2xl border border-[var(--border-color)] shadow-sm"
+          >
+            <CircularProgress
+              value={macro.val}
+              max={macro.max}
+              label={macro.label}
+              color={macro.color}
+            />
           </div>
         ))}
       </div>
@@ -259,11 +297,13 @@ const addFood = (item: FoodItem, qty: number) => {
           </h2>
           <div className="flex flex-col gap-4">
             {meals.map((meal) => (
-              <MealCard 
-                key={meal.id} 
-                meal={meal} 
-                onAddFood={() => setModal({ open: true, mealId: meal.id, mealName: meal.name })} 
-                onRemoveEntry={(id) => removeEntry(meal.id, id)} 
+              <MealCard
+                key={meal.id}
+                meal={meal}
+                onAddFood={() =>
+                  setModal({ open: true, mealId: meal.id, mealName: meal.name })
+                }
+                onRemoveEntry={(id) => removeEntry(meal.id, id)}
               />
             ))}
           </div>
@@ -277,47 +317,70 @@ const addFood = (item: FoodItem, qty: number) => {
                   <Sparkles size={16} className="text-[var(--primary)]" />
                   <span className="text-sm font-bold">Smart Insights</span>
                 </div>
-                <button onClick={() => setInsightDismissed(true)} className="text-[var(--text-secondary)] hover:text-red-500 transition-colors">
+                <button
+                  onClick={() => setInsightDismissed(true)}
+                  className="text-[var(--text-secondary)] hover:text-red-500 transition-colors"
+                >
                   <X size={16} />
                 </button>
               </div>
               <div className="space-y-3">
                 {totals.protein < GOALS.protein * 0.5 && (
                   <div className="p-3 border bg-blue-500/5 border-blue-500/10 rounded-xl">
-                    <p className="text-[10px] font-black text-blue-500 uppercase mb-1">Low Protein</p>
-                    <p className="text-[12px] text-[var(--text-secondary)]">Try adding eggs or chicken to your next meal.</p>
+                    <p className="text-[10px] font-black text-blue-500 uppercase mb-1">
+                      Low Protein
+                    </p>
+                    <p className="text-[12px] text-[var(--text-secondary)]">
+                      Try adding eggs or chicken to your next meal.
+                    </p>
                   </div>
                 )}
                 {glasses < 4 && (
                   <div className="p-3 border bg-cyan-500/5 border-cyan-500/10 rounded-xl">
-                    <p className="text-[10px] font-black text-cyan-500 uppercase mb-1">Hydration Hint</p>
-                    <p className="text-[12px] text-[var(--text-secondary)]">You've only had {glasses} glasses. Aim for 8.</p>
+                    <p className="text-[10px] font-black text-cyan-500 uppercase mb-1">
+                      Hydration Hint
+                    </p>
+                    <p className="text-[12px] text-[var(--text-secondary)]">
+                      You've only had {glasses} glasses. Aim for 8.
+                    </p>
                   </div>
                 )}
               </div>
             </div>
           )}
 
-          <WaterTracker glasses={glasses} setGlasses={handleWaterUpdate} goal={GOALS.waterGoal} />
+          <WaterTracker
+            glasses={glasses}
+            setGlasses={handleWaterUpdate}
+            goal={GOALS.waterGoal}
+          />
 
           <div className="bg-[var(--bg-secondary)] rounded-2xl p-5 border border-[var(--border-color)]">
-            <h3 className="text-xs font-black text-[var(--text-secondary)] uppercase tracking-widest mb-4">Calorie Split</h3>
+            <h3 className="text-xs font-black text-[var(--text-secondary)] uppercase tracking-widest mb-4">
+              Calorie Split
+            </h3>
             <div className="space-y-4">
               {meals.map((meal) => {
-                const mealCal = meal.entries.reduce((s, e) => s + (e.foodItem.calories * e.quantity), 0);
-                const pct = totals.calories > 0 ? (mealCal / totals.calories) * 100 : 0;
+                const mealCal = meal.entries.reduce(
+                  (s, e) => s + e.foodItem.calories * e.quantity,
+                  0,
+                );
+                const pct =
+                  totals.calories > 0 ? (mealCal / totals.calories) * 100 : 0;
                 return (
                   <div key={meal.id} className="group">
                     <div className="flex justify-between mb-1.5">
                       <span className="text-xs font-bold text-[var(--text-primary)] flex items-center gap-2">
                         {meal.icon} {meal.name}
                       </span>
-                      <span className="text-[11px] font-medium text-[var(--text-secondary)]">{Math.round(mealCal)} kcal</span>
+                      <span className="text-[11px] font-medium text-[var(--text-secondary)]">
+                        {Math.round(mealCal)} kcal
+                      </span>
                     </div>
                     <div className="h-1.5 bg-[var(--bg-primary)] rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-[var(--primary)] transition-all duration-500" 
-                        style={{ width: `${pct}%`, opacity: 0.6 + (pct/200) }}
+                      <div
+                        className="h-full bg-[var(--primary)] transition-all duration-500"
+                        style={{ width: `${pct}%`, opacity: 0.6 + pct / 200 }}
                       />
                     </div>
                   </div>
@@ -329,10 +392,10 @@ const addFood = (item: FoodItem, qty: number) => {
       </div>
 
       {modal.open && (
-        <AddFoodModal 
-          mealName={modal.mealName} 
-          onClose={() => setModal({ open: false, mealId: "", mealName: "" })} 
-          onAdd={addFood} 
+        <AddFoodModal
+          mealName={modal.mealName}
+          onClose={() => setModal({ open: false, mealId: "", mealName: "" })}
+          onAdd={addFood}
         />
       )}
     </div>

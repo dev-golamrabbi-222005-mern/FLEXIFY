@@ -378,10 +378,7 @@ export default function MyChallengesPage() {
   );
 
   return (
-    <div
-      className="max-w-full space-y-6"
-      style={{ fontFamily: "'Sora', sans-serif" }}
-    >
+    <div className="max-w-full space-y-6">
       {/* ── Header ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -397,11 +394,7 @@ export default function MyChallengesPage() {
               — Your Arena
             </p>
             <h1
-              className="font-black tracking-tighter"
-              style={{
-                fontSize: "clamp(28px, 5vw, 42px)",
-                color: "var(--text-primary)",
-              }}
+              className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]"
             >
               My Challenges
             </h1>
@@ -430,7 +423,12 @@ export default function MyChallengesPage() {
           className="grid grid-cols-3 gap-3"
         >
           {[
-            { icon: Trophy, label: "Challenge Done", val: totalDays, unit: "/56" },
+            {
+              icon: Trophy,
+              label: "Challenge Done",
+              val: totalDays,
+              unit: "/56",
+            },
             { icon: Flame, label: "Kcal Burned", val: totalCal, unit: "" },
             {
               icon: Clock,

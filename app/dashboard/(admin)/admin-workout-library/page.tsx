@@ -16,7 +16,6 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-// ইন্টারফেস ডিফাইন করা হয়েছে আপনার রিকোয়েস্ট অনুযায়ী
 interface WorkoutStats {
   totalWorkouts: number;
   categoriesCount: number;

@@ -100,77 +100,83 @@ export default function AchievementsPage() {
   return (
     <>
       <div className="max-w-full">
-      {/* Header */}
-      <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4 bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-color)] shadow-sm">
-        <div className="flex items-center gap-4">
-          <div className="p-3 bg-[var(--primary-light)] text-[var(--primary-dark)] rounded-xl">
-            <Trophy size={32} />
-          </div>
-          <div>
-            <h1 className="text-2xl font-black tracking-tight text-[var(--text-primary)]">HALL OF FAME</h1>
-            <p className="text-xs text-[var(--text-secondary)] font-medium ">
-              {unlocked.length} of {ALL_ACHIEVEMENTS.length} Badges Unlocked
-            </p>
-          </div>
-        </div>
-        <div className="w-full md:w-64 h-3 bg-[var(--bg-primary)] rounded-full border border-[var(--border-color)] overflow-hidden">
-          <div 
-            className="h-full bg-[var(--primary)] transition-all duration-1000" 
-            style={{ width: `${(unlocked.length / ALL_ACHIEVEMENTS.length) * 100}%` }} 
-          />
-        </div>
-      </div>
-
-      {/* Grid */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {sortedAchievements.map((badge) => {
-          const unlockData = unlocked.find((u) => u.id === badge.id);
-          const isUnlocked = !!unlockData;
-          const Icon = badge.icon;
-
-          return (
-            <div 
-              key={badge.id} 
-              className={`relative p-5 rounded-2xl border flex flex-col items-center text-center transition-all duration-500 ${
-                isUnlocked 
-                ? 'bg-[var(--bg-secondary)] border-[var(--primary)] shadow-md translate-y-[-2px]' 
-                : 'bg-[var(--bg-secondary)] opacity-60 border-[var(--border-color)] grayscale'
-              }`}
-            >
-              <div className={`mb-4 p-4 rounded-full ${
-                isUnlocked 
-                ? 'bg-[var(--primary-light)] text-[var(--primary-dark)]' 
-                : 'bg-[var(--bg-primary)] text-[var(--text-muted)] border-2 border-dashed border-[var(--border-color)]'
-              }`}>
-                {isUnlocked ? <Icon size={32} /> : <Lock size={32} />}
-              </div>
-              
-              <div className="absolute top-3 right-3 px-2 py-0.5 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-full text-[7px] font-black uppercase tracking-tighter text-[var(--text-muted)]">
-                {badge.level}
-              </div>
-
-              <h3 className="text-sm font-black text-[var(--text-primary)] mb-1 uppercase leading-tight">
-                {badge.title}
-              </h3>
-              <p className="text-[10px] text-[var(--text-secondary)] font-medium leading-tight h-6 overflow-hidden">
-                {isUnlocked ? badge.desc : "Locked"}
-              </p>
-
-              <div className="mt-4 w-full pt-3 border-t border-[var(--border-color)]">
-                {isUnlocked ? (
-                  <span className="text-[8px] text-[var(--primary)] font-black uppercase">
-                    {new Date(unlockData.unlockedAt).toLocaleDateString()}
-                  </span>
-                ) : (
-                  <span className="text-[8px] text-[var(--text-muted)] font-bold uppercase tracking-widest">
-                    Locked
-                  </span>
-                )}
-              </div>
+        {/* Header */}
+        <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4 bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-color)] shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-[var(--primary-light)] text-[var(--primary-dark)] rounded-xl">
+              <Trophy size={32} />
             </div>
-          );
-        })}
-      </div>
+            <div>
+              <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
+                HALL OF FAME
+              </h1>
+              <p className="leading-relaxed mt-2 text-[var(--text-secondary)]">
+                {unlocked.length} of {ALL_ACHIEVEMENTS.length} Badges Unlocked
+              </p>
+            </div>
+          </div>
+          <div className="w-full md:w-64 h-3 bg-[var(--bg-primary)] rounded-full border border-[var(--border-color)] overflow-hidden">
+            <div
+              className="h-full bg-[var(--primary)] transition-all duration-1000"
+              style={{
+                width: `${(unlocked.length / ALL_ACHIEVEMENTS.length) * 100}%`,
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Grid */}
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {sortedAchievements.map((badge) => {
+            const unlockData = unlocked.find((u) => u.id === badge.id);
+            const isUnlocked = !!unlockData;
+            const Icon = badge.icon;
+
+            return (
+              <div
+                key={badge.id}
+                className={`relative p-5 rounded-2xl border flex flex-col items-center text-center transition-all duration-500 ${
+                  isUnlocked
+                    ? "bg-[var(--bg-secondary)] border-[var(--primary)] shadow-md translate-y-[-2px]"
+                    : "bg-[var(--bg-secondary)] opacity-60 border-[var(--border-color)] grayscale"
+                }`}
+              >
+                <div
+                  className={`mb-4 p-4 rounded-full ${
+                    isUnlocked
+                      ? "bg-[var(--primary-light)] text-[var(--primary-dark)]"
+                      : "bg-[var(--bg-primary)] text-[var(--text-muted)] border-2 border-dashed border-[var(--border-color)]"
+                  }`}
+                >
+                  {isUnlocked ? <Icon size={32} /> : <Lock size={32} />}
+                </div>
+
+                <div className="absolute top-3 right-3 px-2 py-0.5 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-full text-[7px] font-black uppercase tracking-tighter text-[var(--text-muted)]">
+                  {badge.level}
+                </div>
+
+                <h3 className="text-sm font-black text-[var(--text-primary)] mb-1 uppercase leading-tight">
+                  {badge.title}
+                </h3>
+                <p className="text-[10px] text-[var(--text-secondary)] font-medium leading-tight h-6 overflow-hidden">
+                  {isUnlocked ? badge.desc : "Locked"}
+                </p>
+
+                <div className="mt-4 w-full pt-3 border-t border-[var(--border-color)]">
+                  {isUnlocked ? (
+                    <span className="text-[8px] text-[var(--primary)] font-black uppercase">
+                      {new Date(unlockData.unlockedAt).toLocaleDateString()}
+                    </span>
+                  ) : (
+                    <span className="text-[8px] text-[var(--text-muted)] font-bold uppercase tracking-widest">
+                      Locked
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </>
   );

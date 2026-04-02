@@ -33,13 +33,10 @@ export default function PopularWorkouts() {
     }
   });
   return (
-    <section className="pb-8 md:pb-12 px-6 bg-[var(--bg-primary)]">
+    <section className="py-8 md:py-12 lg:py-16">
       <div className="mx-auto max-w-7xl">
-
         {/* ✅ BMI Style Section Title */}
-        <SectionTitle
-          title="Popular Workouts"
-        />
+        <SectionTitle title="Popular Workouts" />
 
         {/* Workout Grid */}
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -56,12 +53,13 @@ export default function PopularWorkouts() {
               {/* Image */}
               <div className="relative h-56 overflow-hidden">
                 <img
-                  src={workout.images?.[0] 
-                      ? workout.images?.[0].startsWith('http') 
-                        ? workout.images?.[0] 
-                        : `/exercises/${workout.images?.[0].startsWith('/') ? workout.images?.[0].slice(1) : workout.images?.[0]}`
+                  src={
+                    workout.images?.[0]
+                      ? workout.images?.[0].startsWith("http")
+                        ? workout.images?.[0]
+                        : `/exercises/${workout.images?.[0].startsWith("/") ? workout.images?.[0].slice(1) : workout.images?.[0]}`
                       : "/placeholder-exercise.jpg"
-                    }
+                  }
                   alt={workout.name}
                   className="object-cover w-full h-full transition duration-700 group-hover:scale-110"
                 />
@@ -75,9 +73,7 @@ export default function PopularWorkouts() {
 
               {/* Content */}
               <div className="p-6">
-                <h3 className="mb-4 text-xl font-bold">
-                  {workout.name}
-                </h3>
+                <h3 className="mb-4 text-xl font-bold">{workout.name}</h3>
 
                 <div className="flex items-center justify-between text-sm text-zinc-400">
                   <div className="flex items-center gap-2">
@@ -91,14 +87,16 @@ export default function PopularWorkouts() {
                   </div>
                 </div>
 
-                <Link href={`/exercises/${workout._id}`} className="mt-6 w-full block py-3 rounded-lg bg-(--primary) text-white text-center font-semibold hover:bg-(--primary-dark) transition duration-300 shadow-lg">
+                <Link
+                  href={`/exercises/${workout._id}`}
+                  className="mt-6 w-full block py-3 rounded-lg bg-(--primary) text-white text-center font-semibold hover:bg-(--primary-dark) transition duration-300 shadow-lg"
+                >
                   Start Workout
                 </Link>
               </div>
             </motion.div>
           ))}
         </div>
-
       </div>
     </section>
   );
