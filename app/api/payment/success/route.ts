@@ -12,7 +12,6 @@ type CoachUser = {
   userEmail: string;
   userName: string;
   totalPaid: number;
-  status: string;
   payments: {
     amount: number;
     paidAt: Date;
@@ -143,9 +142,7 @@ export async function POST(req: NextRequest) {
           userId: payment.userId ?? null,
           userEmail: payment.userEmail,
           userName: payment.userName,
-
           totalPaid: paymentData.amount,
-          status: "approved",
           payments: [paymentData],
 
           createdAt: now,

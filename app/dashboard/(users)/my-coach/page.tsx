@@ -97,6 +97,7 @@ export default function MyCoachPage() {
     </div>
   );
 
+
   return (
     <div className="space-y-6 text-[var(--text-primary)] pb-10 relative">
       <div 
