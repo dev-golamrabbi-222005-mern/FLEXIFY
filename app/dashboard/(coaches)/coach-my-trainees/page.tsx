@@ -43,8 +43,8 @@ export default function MyTrainees() {
       return res.data.map((cu) => ({
         _id: cu._id,
         userId: cu.userId,
-        userName: cu.name,
-        userEmail: cu.email,
+        name: cu.name,
+        email: cu.email,
         totalPaid: cu.totalPaid,
         createdAt: cu.createdAt,
       }));
@@ -65,8 +65,8 @@ export default function MyTrainees() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {trainees.map((t) => (
           <div key={t.userId} className="flex flex-col p-4 card-glass">
-            <h3 className="text-lg font-semibold">{t.userName}</h3>
-            <p className="text-accent">{t.userEmail}</p>
+            <h3 className="text-lg font-semibold">{t.name}</h3>
+            <p className="text-accent">{t.email}</p>
             <p>Total Paid: ${t.totalPaid}</p>
 
             <div className="flex gap-2 mt-3">
