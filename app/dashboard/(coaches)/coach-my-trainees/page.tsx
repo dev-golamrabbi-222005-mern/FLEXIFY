@@ -10,8 +10,8 @@ interface CoachUser {
   _id: string;
   coachId: string;
   userId: string;
-  userName: string;
-  userEmail: string;
+  name: string;
+  email: string;
   totalPaid: number;
   createdAt: string;
 }
@@ -19,8 +19,8 @@ interface CoachUser {
 interface Trainee {
   _id: string;
   userId: string;
-  userName: string;
-  userEmail: string;
+  name: string;
+  email: string;
   totalPaid: number;
   createdAt: string;
 }
@@ -43,8 +43,8 @@ export default function MyTrainees() {
       return res.data.map((cu) => ({
         _id: cu._id,
         userId: cu.userId,
-        userName: cu.userName,
-        userEmail: cu.userEmail,
+        userName: cu.name,
+        userEmail: cu.email,
         totalPaid: cu.totalPaid,
         createdAt: cu.createdAt,
       }));
