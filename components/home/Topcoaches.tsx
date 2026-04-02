@@ -40,6 +40,8 @@ const topCoaches = coaches
       .slice(0, 3)
   : [];
 
+  console.log(topCoaches);
+
   const rankStyles = [
     "bg-yellow-400 text-black border-2 border-yellow-500", // 🥇
     "bg-gray-300 text-black border-2 border-gray-400", // 🥈
