@@ -88,7 +88,7 @@ export default function DashboardLayoutClient({
       {/* ❷ flex-1 + overflow-hidden — fills remaining height, clips children */}
       <div className="flex flex-1 overflow-hidden">
         {/* ❸ Sidebar — h-full keeps it exactly as tall as this row */}
-        <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} user={dbUser} />
 
         {/* ❹ Only this scrolls — sidebar stays put */}
         <main className="flex-1 overflow-y-auto bg-[var(--bg-primary)] pl-4 md:pr-2 md:py-8">

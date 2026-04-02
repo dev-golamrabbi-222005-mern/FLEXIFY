@@ -5,6 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/axios";
 import ChatBox from "../../components/live-chat/ChatBox";
 import { useSession } from "next-auth/react";
+import PlanAccessModal from "@/components/modals/PlanAccessModal";
+import { PlanId } from "@/lib/plans";
 
 interface CoachUser {
   _id: string;
@@ -29,6 +31,19 @@ export default function MyCoach() {
   const userId = session?.user?.id || null;
   const [showChat, setShowChat] = useState(false);
 
+  // Fetch user data to check plan
+  const { data: dbUser } = useQuery({
+    queryKey: ["currentUser", session?.user?.email],
+    queryFn: async () => {
+      if (!session?.user?.email) return null;
+      const res = await api.get(`/api/user/me?email=${session.user.email}`);
+      return res.data;
+    },
+    enabled: !!session?.user?.email,
+  });
+
+  const userPlan = (dbUser?.plan as PlanId) || "free";
+
   const {
     data: coaches,
     isLoading,
@@ -52,6 +67,17 @@ export default function MyCoach() {
 
   if (!userId || status === "loading")
     return <p className="p-6">Loading session...</p>;
+
+  if (userPlan === "free" || userPlan === "pro") {
+    return (
+      <PlanAccessModal
+        currentPlan={userPlan}
+        requiredPlan="elite"
+        isOpen={true}
+        onClose={() => {}}
+      />
+    );
+  }
 
   if (isLoading) return <p className="p-6">Loading coach...</p>;
   if (error) return <p className="p-6 text-red-500">Error loading coach</p>;
@@ -83,7 +109,7 @@ export default function MyCoach() {
               href={coach.meetLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-secondary flex items-center gap-1"
+              className="flex items-center gap-1 btn-secondary"
             >
               Live Session
               <span className="material-icons">videocam</span>

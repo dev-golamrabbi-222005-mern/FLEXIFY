@@ -10,6 +10,8 @@ import { useSession } from "next-auth/react";
 import { FilterSection } from "@/components/user/FilterSection";
 import { Exercise } from "@/components/user/workout";
 import { toast } from "react-toastify";
+import PlanAccessModal from "@/components/modals/PlanAccessModal";
+import { PlanId } from "@/lib/plans";
 
 
 interface ExerciseGroup {
@@ -57,6 +59,20 @@ export default function WorkoutBuilder() {
   const [visibleCounts, setVisibleCounts] = useState<Record<string, number>>(
     {},
   );
+
+  // Fetch user data to check plan
+  const { data: dbUser } = useQuery({
+    queryKey: ["currentUser", session?.user?.email],
+    queryFn: async () => {
+      if (!session?.user?.email) return null;
+      const res = await axios.get(`/api/user/me?email=${session.user.email}`);
+      return res.data;
+    },
+    enabled: !!session?.user?.email,
+  });
+
+  // Compute user plan
+  const userPlan = (dbUser?.plan as PlanId) || "free";
 
   const resetVisibleCounts = () => setVisibleCounts({});
 
@@ -181,7 +197,14 @@ export default function WorkoutBuilder() {
   ) as ExerciseGroup[];
 
   return (
-    <div className="max-w-full overflow-x-hidden min-h-screen">
+    <>
+      <PlanAccessModal
+        currentPlan={userPlan}
+        requiredPlan="pro"
+        isOpen={userPlan === "free"}
+        onClose={() => {}}
+      />
+      <div className="max-w-full min-h-screen overflow-x-hidden">
        <title>Creat Workout | Dashboard - Flexify</title>
       <header className="mb-8">
         <h1 className="text-4xl font-black uppercase tracking-tighter text-[var(--text-primary)]">
@@ -328,6 +351,7 @@ export default function WorkoutBuilder() {
         exercise={detailExercise}
         onClose={() => setDetailExercise(null)}
       />
-    </div>
+      </div>
+    </>
   );
 }
