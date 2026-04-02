@@ -17,7 +17,7 @@ export default function BecomeCoachCTA() {
       title: "Flexible Hours",
       desc: "Schedule on your terms",
     },
-    { icon: <FaUsers />, title: "Global Reach", desc: "50K+ active users" },
+    { icon: <FaUsers />, title: "Global Reach", desc: "Access to a growing community of active users" },
     {
       icon: <FaChartLine />,
       title: "High Revenue",
@@ -51,7 +51,7 @@ export default function BecomeCoachCTA() {
                 />
                 <div className="absolute z-20 bottom-6 left-6 right-6">
                   <div className="p-4 border bg-black/60 backdrop-blur-md rounded-2xl border-white/10">
-                    <p className="text-xl font-bold text-white">$4,500+</p>
+                    <p className="text-xl font-bold text-white">$500+</p>
                     <p className="text-xs tracking-wider uppercase text-white/60">
                       Avg. Monthly Earnings
                     </p>
