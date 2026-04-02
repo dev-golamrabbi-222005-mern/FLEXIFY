@@ -18,6 +18,7 @@ export type Coach = {
   specialties?: string;
   pricing?: {
     monthly?: number;
+    perSession?: number;
   };
 };
 
