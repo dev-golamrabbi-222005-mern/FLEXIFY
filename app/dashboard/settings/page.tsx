@@ -477,7 +477,16 @@ function UserFitnessTab({
   const save = async () => {
     setSaving(true);
     try {
-      await axios.patch("/api/user/me", { fitnessProfile: form });
+      await axios.patch("/api/user/me", {
+          fitnessProfile: {
+          ...form,
+          age: Number(form.age),
+          height: Number(form.height),
+          weight: Number(form.weight),
+          sleepHours: Number(form.sleepHours),
+          waterIntake: Number(form.waterIntake),
+        }
+      });
       toast.success("Fitness profile updated!");
       onSaved();
     } catch {
@@ -677,14 +686,14 @@ function CoachScheduleTab({
 }) {
   const pricing = dbUser.pricing ?? {};
   const [form, setForm] = useState({
-    monthlyRate: String(pricing.monthly ?? ""),
-    perSessionRate: String(pricing.perSession ?? ""),
-    maxClients: String(dbUser.maxClients ?? ""),
+    monthlyRate: pricing.monthly ?? 0,
+    perSessionRate: pricing.perSession ?? 0,
+    maxClients: dbUser.maxClients ?? 0,
     specialties: String(dbUser.specialties ?? ""),
     bio: String(dbUser.bio ?? ""),
     languages: String(dbUser.languages ?? ""),
     education: String(dbUser.education ?? ""),
-    experienceYears: String(dbUser.experienceYears ?? ""),
+    experienceYears: dbUser.experienceYears ?? 0,
   });
   const [availableDays, setAvailableDays] = useState<string[]>(
     dbUser.availableDays ?? [],

@@ -36,9 +36,6 @@ export async function PATCH(req: NextRequest) {
             password: hashedPassword
         }
     });
-
-    console.log(result);
-
-    return NextResponse.json(user);
+    return NextResponse.json(result);
 
 } 
