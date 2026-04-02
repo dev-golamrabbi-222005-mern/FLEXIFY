@@ -62,16 +62,16 @@ export default function MyTrainees() {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {trainees.map((t) => (
-          <div key={t.userId} className="card-glass flex flex-col p-4">
+          <div key={t.userId} className="flex flex-col p-4 card-glass">
             <h3 className="text-lg font-semibold">{t.userName}</h3>
             <p className="text-accent">{t.userEmail}</p>
             <p>Total Paid: ${t.totalPaid}</p>
 
             <div className="flex gap-2 mt-3">
               <button
-                className="btn-primary flex-1"
+                className="flex-1 btn-primary"
                 onClick={() => setSelectedTrainee(t)}
               >
                 Messaging
@@ -80,7 +80,7 @@ export default function MyTrainees() {
                 href={`https://meet.google.com/new`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-secondary flex-1 flex items-center justify-center gap-1"
+                className="flex items-center justify-center flex-1 gap-1 btn-secondary"
               >
                 Live Session
                 <span className="material-icons">videocam</span>
@@ -93,7 +93,7 @@ export default function MyTrainees() {
       {selectedTrainee && (
         <div className="mt-6">
           <button
-            className="btn-secondary mb-2"
+            className="mb-2 btn-secondary"
             onClick={() => setSelectedTrainee(null)}
           >
             Close Chat
