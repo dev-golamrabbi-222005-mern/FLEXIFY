@@ -56,9 +56,9 @@ export default function MyTraineesPage() {
 
   return (
     <div className="flex h-[calc(100vh-80px)] overflow-hidden text-[var(--text-primary)]">
-      <div className="w-full lg:w-80 border-r border-[var(--border-color)] flex flex-col bg-[var(--bg-primary)]">
+      <div className={`w-full lg:w-80 border-r border-[var(--border-color)] flex flex-col bg-[var(--bg-primary)] ${activeTrainee ? 'hidden lg:flex' : 'flex'}`}>
         <div className="p-6 border-b border-[var(--border-color)]">
-          <h2 className="text-xl font-bold flex items-center gap-2">
+          <h2 className="flex items-center gap-2 text-xl font-bold">
             <User className="text-[var(--primary)]" size={20} /> Trainees
             <span className="ml-auto text-xs bg-[var(--bg-tertiary)] px-2 py-1 rounded-lg">
               {trainees?.length || 0}
@@ -66,7 +66,7 @@ export default function MyTraineesPage() {
           </h2>
         </div>
         
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+        <div className="flex-1 p-4 space-y-3 overflow-y-auto custom-scrollbar">
           {trainees?.map((t) => (
             <div 
               key={t._id} 
@@ -84,7 +84,7 @@ export default function MyTraineesPage() {
                   {t.userName.charAt(0)}
                 </div>
                 <div className="flex-1 overflow-hidden">
-                  <p className="font-bold text-sm truncate">{t.userName}</p>
+                  <p className="text-sm font-bold truncate">{t.userName}</p>
                   <p className="text-[10px] truncate opacity-70">{t.userEmail}</p>
                 </div>
               </div>
@@ -95,7 +95,7 @@ export default function MyTraineesPage() {
 
       <div className="flex-1 flex flex-col bg-[var(--bg-nav-footer)]/30 overflow-y-auto custom-scrollbar">
         {activeTrainee && session?.user?.id ? (
-          <div className="p-6 space-y-4 max-w-5xl mx-auto w-full">
+          <div className="w-full max-w-5xl p-6 mx-auto space-y-4">
             <div 
               ref={stickyRef}
               className={`flex justify-between items-center card-glass p-4 border border-[var(--border-color)] sticky top-0 z-20 transition-all duration-300 ${
@@ -107,7 +107,7 @@ export default function MyTraineesPage() {
                   <MessageSquare size={20} />
                 </div>
                 <div>
-                  <span className="font-bold block text-sm">{activeTrainee.userName}</span>
+                  <span className="block text-sm font-bold">{activeTrainee.userName}</span>
                   <span className="text-[10px] text-[var(--success)] flex items-center gap-1 italic">
                     <span className="w-1.5 h-1.5 bg-[var(--success)] rounded-full animate-pulse"></span> Active Session
                   </span>
