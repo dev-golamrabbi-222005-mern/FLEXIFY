@@ -94,7 +94,7 @@ const Challenges = () => {
               {/* Content */}
               <div className="relative z-10 flex flex-col justify-between h-full p-8 md:p-10">
                 {/* Top: tag + stats */}
-                <div className="flex items-start justify-between flex-wrap gap-2">
+                <div className="flex flex-wrap items-start justify-between gap-2">
                   {/* Tag */}
                   <div
                     className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em]"
