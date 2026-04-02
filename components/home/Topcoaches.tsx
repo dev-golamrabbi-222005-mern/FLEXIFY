@@ -40,6 +40,8 @@ const topCoaches = coaches
       .slice(0, 3)
   : [];
 
+  console.log(topCoaches);
+
   const rankStyles = [
     "bg-yellow-400 text-black border-2 border-yellow-500", // 🥇
     "bg-gray-300 text-black border-2 border-gray-400", // 🥈
@@ -66,7 +68,7 @@ const topCoaches = coaches
     );
 
   return (
-    <section className="relative px-6 py-8 mx-auto overflow-hidden md:py-12 max-w-7xl">
+    <section className="relative py-8 md:py-12 lg:py-16 overflow-hidden">
       {/* Title */}
       <div className="flex flex-col gap-3 mb-10">
         <motion.h2

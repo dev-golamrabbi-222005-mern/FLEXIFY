@@ -46,3 +46,22 @@ export async function GET(request: Request) {
     );
   }
 }
+
+export async function PATCH(request: Request) {
+  const session = await getServerSession(authOptions);
+  if(!session) {
+    return NextResponse.json(
+      {message: "Unauthorized"},
+      {status: 401}
+    );
+  }
+  const body = await request.json();
+  const result = await dbConnect("users").updateOne({
+    email: session?.user?.email,
+  }, {
+    $set: {
+      ...body
+    }
+  });
+  return NextResponse.json(result);
+}

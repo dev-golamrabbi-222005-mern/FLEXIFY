@@ -1,223 +1,164 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import api from "@/lib/axios";
 import { motion } from "framer-motion";
-import { Star, Quote } from "lucide-react";
+import { Star, Quote, MessageSquare } from "lucide-react";
 
-// 1. Define the Review interface to fix all "implicit any" errors
-interface Review {
-  client: string;
+interface IReview {
+  userId: string;
+  userName: string;
   rating: number;
   comment: string;
-  date: string;
-  avatar: string;
+  createdAt: string; 
 }
 
 export default function CoachReviews() {
-  // 2. Add the type <Review[]> to useQuery
-  const { data: reviews = [] } = useQuery<Review[]>({
-    queryKey: ["reviews"],
+  const { data: reviews = [], isLoading } = useQuery<IReview[]>({
+    queryKey: ["coach-reviews"],
     queryFn: async () => {
-      const res = await axios.get("/api/coach/reviews");
+      const res = await api.get<IReview[]>("/api/coach/reviews");
       return res.data;
     },
   });
 
-  // 3. Calculate Average Rating with a fallback to 0 to prevent NaN
   const avgRating =
     reviews.length > 0
-      ? (
-          reviews.reduce((sum: number, r: Review) => sum + r.rating, 0) /
-          reviews.length
-        ).toFixed(1)
+      ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
       : "0.0";
 
-  // 4. Calculate Distribution with proper typing
-  const ratingDistribution = [5, 4, 3, 2, 1].map((stars: number) => {
-    const count = reviews.filter((rv: Review) => rv.rating === stars).length;
-    const pct =
-      reviews.length > 0 ? Math.round((count / reviews.length) * 100) : 0;
-
-    return {
-      stars,
-      count,
-      pct,
-    };
+  const ratingDistribution = [5, 4, 3, 2, 1].map((stars) => {
+    const count = reviews.filter((rv) => rv.rating === stars).length;
+    const pct = reviews.length > 0 ? Math.round((count / reviews.length) * 100) : 0;
+    return { stars, count, pct };
   });
 
+  const formatDate = (dateStr: string) => {
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    }).format(new Date(dateStr));
+  };
+
+  if (isLoading) {
+    return (
+      <div className="p-10 text-center animate-pulse text-[var(--primary)] font-bold">
+        Loading Reviews...
+      </div>
+    );
+  }
+
   return (
-    <>
-      <div className="max-w-full space-y-8">
-          <title>Reviews | Dashboard - Flexify</title>
+    <div className="max-w-full space-y-8 pb-10">
+      <title>Reviews | Coach Dashboard</title>
 
-        {/* Header */}
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1
-            className="text-2xl font-bold"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Reviews & Ratings
+          <h1 className="font-black text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
+            Client Reviews
           </h1>
-          <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
-            Client feedback and public coach profile
-          </p>
+          <p className="text-[var(--text-secondary)]">Manage and monitor your professional ratings</p>
         </div>
-
-        {/* Rating Summary */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {/* Average Rating Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="p-6 text-center card-glass"
-          >
-            <div
-              className="text-5xl font-bold"
-              style={{ color: "var(--primary)" }}
-            >
-              {avgRating}
-            </div>
-
-            <div className="flex justify-center gap-1 my-2">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star
-                  key={s}
-                  size={20}
-                  className={
-                    s <= Math.round(Number(avgRating))
-                      ? "fill-yellow-400 text-yellow-400"
-                      : "text-gray-400"
-                  }
-                />
-              ))}
-            </div>
-
-            <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-              {reviews.length} reviews
-            </span>
-          </motion.div>
-
-          {/* Distribution Card */}
-          <motion.div
-            className="p-6 card-glass md:col-span-2"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <h3
-              className="mb-4 font-semibold"
-              style={{ color: "var(--text-primary)" }}
-            >
-              Rating Distribution
-            </h3>
-
-            <div className="space-y-3">
-              {ratingDistribution.map((r) => (
-                <div key={r.stars} className="flex items-center gap-3">
-                  <span
-                    className="text-sm w-14"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    {r.stars} star
-                  </span>
-
-                  <div
-                    className="flex-1 h-2 rounded-full"
-                    style={{ background: "var(--bg-secondary)" }}
-                  >
-                    <div
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{
-                        width: `${r.pct}%`,
-                        background: "var(--primary)",
-                      }}
-                    />
-                  </div>
-
-                  <span
-                    className="w-6 text-sm"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    {r.count}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+        <div className="px-4 py-2 bg-[var(--primary)]/10 rounded-xl border border-[var(--primary)]/20 text-[var(--primary)] font-bold flex items-center gap-2 w-fit">
+          <MessageSquare size={18} /> Total: {reviews.length}
         </div>
+      </div>
 
-        {/* Reviews List */}
-        <div className="space-y-4">
-          {reviews.map((r: Review, i: number) => (
-            <motion.div
-              key={i}
-              className="p-5 card-glass"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 + i * 0.05 }}
-            >
-              <div className="flex gap-4">
-                {/* Avatar */}
-                <div
-                  className="flex items-center justify-center w-10 h-10 text-sm font-bold rounded-full"
-                  style={{ background: "var(--primary)", color: "white" }}
-                >
-                  {r.avatar || r.client.charAt(0)}
+      {/* Summary Section */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          className="p-8 text-center card-glass border border-[var(--border-color)]"
+        >
+          <div className="text-6xl font-black text-[var(--primary)] mb-2">{avgRating}</div>
+          <div className="flex justify-center gap-1 mb-3">
+            {[1, 2, 3, 4, 5].map((s) => (
+              <Star 
+                key={s} 
+                size={22} 
+                className={s <= Math.round(Number(avgRating)) ? "fill-yellow-400 text-yellow-400" : "text-[var(--bg-tertiary)]"} 
+              />
+            ))}
+          </div>
+          <p className="text-sm font-medium text-[var(--text-muted)]">Average Rating</p>
+        </motion.div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ delay: 0.1 }} 
+          className="p-8 card-glass md:col-span-2 border border-[var(--border-color)]"
+        >
+          <h3 className="mb-6 font-bold text-[var(--text-primary)]">Rating Breakdown</h3>
+          <div className="space-y-4">
+            {ratingDistribution.map((r) => (
+              <div key={r.stars} className="flex items-center gap-4">
+                <span className="text-sm font-bold w-12 text-[var(--text-secondary)]">{r.stars} Star</span>
+                <div className="flex-1 h-3 bg-[var(--bg-tertiary)] rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }} 
+                    animate={{ width: `${r.pct}%` }} 
+                    transition={{ duration: 1 }}
+                    className="h-full bg-[var(--primary)] rounded-full" 
+                  />
                 </div>
+                <span className="w-8 text-sm font-bold text-[var(--text-primary)]">{r.count}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
 
-                {/* Content */}
+      {/* Reviews List */}
+      <div className="grid grid-cols-1 gap-4">
+        {reviews.length === 0 ? (
+          <div className="p-10 text-center border-2 border-dashed border-[var(--border-color)] rounded-3xl text-[var(--text-muted)]">
+            No reviews received yet.
+          </div>
+        ) : (
+          reviews.map((r, i) => (
+            <motion.div 
+              key={i} 
+              initial={{ opacity: 0, x: -10 }} 
+              animate={{ opacity: 1, x: 0 }} 
+              transition={{ delay: i * 0.05 }}
+              className="p-6 card-glass border border-[var(--border-color)] hover:border-[var(--primary)]/50 transition-all group"
+            >
+              <div className="flex gap-5">
+                <div className="w-12 h-12 rounded-2xl bg-[var(--primary)] text-white flex items-center justify-center font-black text-xl shadow-lg shrink-0">
+                  {r.userName?.charAt(0) || "U"}
+                </div>
                 <div className="flex-1">
-                  <div className="flex flex-col gap-1 mb-1 sm:flex-row sm:items-center sm:justify-between">
-                    <span
-                      className="text-sm font-medium"
-                      style={{ color: "var(--text-primary)" }}
-                    >
-                      {r.client}
-                    </span>
-                    <span
-                      className="text-xs"
-                      style={{ color: "var(--text-muted)" }}
-                    >
-                      {r.date}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
+                    <h4 className="font-bold text-[var(--text-primary)]">{r.userName}</h4>
+                    <span className="text-xs font-medium text-[var(--text-muted)] bg-[var(--bg-tertiary)] px-3 py-1 rounded-full">
+                      {formatDate(r.createdAt)}
                     </span>
                   </div>
-
-                  {/* Stars */}
-                  <div className="flex gap-1 mb-2">
+                  <div className="flex gap-1 mb-3">
                     {[1, 2, 3, 4, 5].map((s) => (
-                      <Star
-                        key={s}
-                        size={14}
-                        className={
-                          s <= r.rating
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "text-gray-400"
-                        }
+                      <Star 
+                        key={s} 
+                        size={14} 
+                        className={s <= r.rating ? "fill-yellow-400 text-yellow-400" : "text-[var(--bg-tertiary)]"} 
                       />
                     ))}
                   </div>
-
-                  {/* Comment */}
-                  <div className="flex gap-2">
-                    <Quote
-                      size={16}
-                      className="mt-1"
-                      style={{ color: "var(--text-muted)" }}
-                    />
-                    <p
-                      className="text-sm italic"
-                      style={{ color: "var(--text-muted)" }}
-                    >
+                  <div className="flex gap-3 items-start bg-[var(--bg-tertiary)]/30 p-4 rounded-2xl">
+                    <Quote size={18} className="text-[var(--primary)] shrink-0" />
+                    <p className="text-sm italic leading-relaxed text-[var(--text-secondary)]">
                       {r.comment}
                     </p>
                   </div>
                 </div>
               </div>
             </motion.div>
-          ))}
-        </div>
+          ))
+        )}
       </div>
-    </>
+    </div>
   );
 }

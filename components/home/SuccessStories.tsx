@@ -236,7 +236,7 @@ function SuccessStory() {
 
   return (
     <section
-      className="w-full pb-8 md:pb-12"
+      className="py-8 md:py-12 lg:py-16"
       style={{ backgroundColor: "var(--bg-primary)" }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}

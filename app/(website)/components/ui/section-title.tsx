@@ -19,7 +19,7 @@ export default function SectionTitle({
         : "items-start text-left";
 
   return (
-    <div className={`flex flex-col gap-3 mt-8 md:mt-12 lg:mt-16 mb-10 ${alignStyle} ${className}`}>
+    <div className={`flex flex-col gap-3 mb-6 md:mb-8 lg:mb-10 ${alignStyle} ${className}`}>
       {/* Title */}
       <h2 className="text-3xl font-bold tracking-tight uppercase md:text-4xl">{title}</h2>
       {/* Decorative line */}

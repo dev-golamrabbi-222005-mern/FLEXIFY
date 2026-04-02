@@ -44,9 +44,9 @@ export default function Articles() {
   const latestThree = blogs.slice(1, 4); // Grabs index 1, 2, and 3
 
   return (
-    <section className="max-w-7xl mx-auto px-6 space-y-12">
+    <section className="py-8 md:py-12 lg:py-16 space-y-12">
       {/* Header Section */}
-      <div className="text-center space-y-4 mt-8 md:mt-12 lg:mt-16 mb-10">
+      <div className="text-center space-y-4 mb-6 md:mb-8 lg:mb-10">
         {" "}
         {/* Added spacing between elements */}
         <div className="mb-2">
@@ -148,7 +148,7 @@ export default function Articles() {
 
       {/* FOOTER ACTION: Explore More Button */}
       {blogs.length > 4 && (
-        <div className="flex justify-center pb-12">
+        <div className="flex justify-center">
           <NextLink
             href="/blogs" // Point this to your full list page
             className="flex items-center gap-3 bg-[var(--primary)] text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-[var(--primary)]/80 transition-all shadow-xl hover:-translate-y-1 active:translate-y-0 group"

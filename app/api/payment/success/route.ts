@@ -142,7 +142,6 @@ export async function POST(req: NextRequest) {
           userId: payment.userId ?? null,
           userEmail: payment.userEmail,
           userName: payment.userName,
-
           totalPaid: paymentData.amount,
           payments: [paymentData],
 

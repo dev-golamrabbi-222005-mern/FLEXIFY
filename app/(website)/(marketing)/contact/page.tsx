@@ -38,7 +38,7 @@ const data = {
   return (
     <div>
       <title>Contact - Flexify</title>
-      <section className="px-6 mt-8 mb-10 md:mt-12">
+      <section className="mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6">
         <div className="grid items-start grid-cols-1 gap-12 mx-auto max-w-7xl md:grid-cols-2">
           {/* Left: Contact Info */}
           <div>
@@ -91,7 +91,8 @@ const data = {
                   Your Name
                 </label>
                 <input
-                  type="text" required
+                  type="text"
+                  required
                   name="name"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   placeholder="Enter your name"
@@ -103,7 +104,8 @@ const data = {
                   Email Address
                 </label>
                 <input
-                  type="email" required
+                  type="email"
+                  required
                   name="email"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   placeholder="Enter your email"
@@ -115,7 +117,8 @@ const data = {
                   Message
                 </label>
                 <textarea
-                  name="message" required
+                  name="message"
+                  required
                   rows={4}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   placeholder="Write your message..."

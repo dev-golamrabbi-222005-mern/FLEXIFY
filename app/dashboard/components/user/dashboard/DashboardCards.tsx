@@ -34,13 +34,10 @@ export const GreetingHeader = ({ name }: { name: string }) => {
   return (
     // 2. Spreading the function call now works perfectly with the correct type
     <motion.div {...fadeUp(0)}>
-      <p className="text-sm font-medium mb-0.5 text-[var(--text-secondary)]">
+      <p className="leading-relaxed mb-2 text-[var(--text-secondary)]">
         {greet},
       </p>
-      <h1
-        className="font-black tracking-tight text-[var(--text-primary)]"
-        style={{ fontSize: "clamp(22px, 4vw, 32px)" }}
-      >
+      <h1 className="font-bold uppercase text-3xl md:text-4xl tracking-tight text-[var(--text-primary)]">
         {name} 👋
       </h1>
     </motion.div>

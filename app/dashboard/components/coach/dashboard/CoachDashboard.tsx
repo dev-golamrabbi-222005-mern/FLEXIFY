@@ -196,18 +196,11 @@ const stats = [
       {/* Greeting */}
       <motion.div {...fadeUp(0)}>
         <p
-          className="text-sm font-medium mb-0.5"
-          style={{ color: "var(--text-secondary)" }}
+          className="leading-relaxed mb-2 text-[var(--text-secondary)]"
         >
           {greeting()}, Coach
         </p>
-        <h1
-          className="font-black tracking-tight"
-          style={{
-            fontSize: "clamp(22px, 4vw, 32px)",
-            color: "var(--text-primary)",
-          }}
-        >
+        <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
           {name} 💪
         </h1>
       </motion.div>
@@ -225,11 +218,14 @@ const stats = [
           <p className="text-white/70 text-[11px] font-black uppercase tracking-widest mb-1">
             Today's Schedule
           </p>
-          <p className="text-lg font-black text-white">{todaySessions?.length || 0} Sessions</p>
-          {todaySessions?.map((s: Session, i: number) => <p key={i} className="mt-1 text-xs text-white/70">
-            Next: {s.client} at {formatTime12h(s.time)} — {s.type}
-          </p>)}
-          
+          <p className="text-lg font-black text-white">
+            {todaySessions?.length || 0} Sessions
+          </p>
+          {todaySessions?.map((s: Session, i: number) => (
+            <p key={i} className="mt-1 text-xs text-white/70">
+              Next: {s.client} at {formatTime12h(s.time)} — {s.type}
+            </p>
+          ))}
         </div>
       </motion.div>
 

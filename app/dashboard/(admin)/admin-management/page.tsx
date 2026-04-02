@@ -70,14 +70,33 @@ export default function AdminDashboard() {
     <div className="space-y-8 min-h-screen max-w-full text-[var(--text-primary)]">
       <title>Management | Dashboard - Flexify</title>
       <header>
-        <h1 className="text-2xl font-bold tracking-tight">Admin Dashboard</h1>
-        <p className="text-sm text-[var(--text-secondary)]">Platform management</p>
+        <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
+          User Management
+        </h1>
+        <p className="leading-relaxed mt-2 text-[var(--text-secondary)]">
+          Review the activity of users
+        </p>
       </header>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <StatCard title="Total Users" value={users.length} icon={Users} color="from-blue-500 to-indigo-600" />
-        <StatCard title="Pending Coaches" value={coaches.length} icon={UserCheck} color="from-orange-400 to-rose-500" />
-        <StatCard title="Active Plans" value={plans.length} icon={CreditCard} color="from-emerald-400 to-teal-600" />
+        <StatCard
+          title="Total Users"
+          value={users.length}
+          icon={Users}
+          color="from-blue-500 to-indigo-600"
+        />
+        <StatCard
+          title="Pending Coaches"
+          value={coaches.length}
+          icon={UserCheck}
+          color="from-orange-400 to-rose-500"
+        />
+        <StatCard
+          title="Active Plans"
+          value={plans.length}
+          icon={CreditCard}
+          color="from-emerald-400 to-teal-600"
+        />
       </div>
 
       <section className="space-y-4">
@@ -85,12 +104,17 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-2">
             <Users size={18} />
             <h2 className="font-semibold">User Management</h2>
-            {usersFetching && <Loader2 className="text-blue-500 animate-spin" size={16} />}
+            {usersFetching && (
+              <Loader2 className="text-blue-500 animate-spin" size={16} />
+            )}
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" size={16} />
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]"
+                size={16}
+              />
               <input
                 type="text"
                 placeholder="Search name/email..."
@@ -119,7 +143,7 @@ export default function AdminDashboard() {
         {/* Scrollable Wrapper */}
         <div className="card-glass rounded-xl border border-[var(--border-color)] relative overflow-hidden">
           <div className="overflow-x-auto">
-            <div className="min-w-[800px]"> 
+            <div className="min-w-[800px]">
               <div className="grid grid-cols-5 px-6 py-3 text-xs font-bold bg-[var(--bg-secondary)] border-b border-[var(--border-color)] uppercase text-[var(--text-secondary)]">
                 <div>Name</div>
                 <div>Email</div>
@@ -128,24 +152,45 @@ export default function AdminDashboard() {
                 <div className="text-right">Action</div>
               </div>
 
-              <div className={`divide-y divide-[var(--border-color)] transition-opacity duration-200 ${usersFetching ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
+              <div
+                className={`divide-y divide-[var(--border-color)] transition-opacity duration-200 ${usersFetching ? "opacity-50 pointer-events-none" : "opacity-100"}`}
+              >
                 {users.length > 0 ? (
                   users.map((user) => (
-                    <div key={user._id} className="grid grid-cols-5 px-6 py-4 items-center text-sm hover:bg-[var(--bg-tertiary)] transition">
-                      <div className="pr-2 font-medium truncate">{user.name || user.fullName}</div>
-                      <div className="truncate text-[var(--text-secondary)]">{user.email}</div>
+                    <div
+                      key={user._id}
+                      className="grid grid-cols-5 px-6 py-4 items-center text-sm hover:bg-[var(--bg-tertiary)] transition"
+                    >
+                      <div className="pr-2 font-medium truncate">
+                        {user.name || user.fullName}
+                      </div>
+                      <div className="truncate text-[var(--text-secondary)]">
+                        {user.email}
+                      </div>
                       <div className="capitalize font-semibold text-[10px]">
-                        <span className="bg-blue-500/10 text-blue-500 px-2 py-0.5 rounded-md">{user.role}</span>
+                        <span className="bg-blue-500/10 text-blue-500 px-2 py-0.5 rounded-md">
+                          {user.role}
+                        </span>
                       </div>
                       <div>
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${user.status === "Suspended" ? "bg-red-500/10 text-red-500" : "bg-green-500/10 text-green-500"}`}>
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${user.status === "Suspended" ? "bg-red-500/10 text-red-500" : "bg-green-500/10 text-green-500"}`}
+                        >
                           {user.status || "Active"}
                         </span>
                       </div>
                       <div className="text-right">
                         <button
                           disabled={userStatusMutation.isPending}
-                          onClick={() => userStatusMutation.mutate({ id: user._id, status: user.status === "Suspended" ? "Active" : "Suspended" })}
+                          onClick={() =>
+                            userStatusMutation.mutate({
+                              id: user._id,
+                              status:
+                                user.status === "Suspended"
+                                  ? "Active"
+                                  : "Suspended",
+                            })
+                          }
                           className={`px-3 py-1 text-xs rounded-lg font-medium transition ${user.status === "Suspended" ? "text-green-500 hover:bg-green-500/10" : "text-red-500 hover:bg-red-500/10"}`}
                         >
                           {user.status === "Suspended" ? "Unban" : "Ban"}
@@ -154,7 +199,9 @@ export default function AdminDashboard() {
                     </div>
                   ))
                 ) : (
-                  <div className="p-10 text-center text-[var(--text-secondary)]">No users found.</div>
+                  <div className="p-10 text-center text-[var(--text-secondary)]">
+                    No users found.
+                  </div>
                 )}
               </div>
             </div>

@@ -8,13 +8,15 @@ import Link from "next/link";
 type Coach = {
   _id: string;
   name: string;
-  profileImage?: string;
   imageUrl?: string;
   location?: string;
-  experienceYears?: number;
+  experienceYears?: number; 
   trainingTypes?: string[];
-  expertise?: string;
-  charge?: number;
+  specialties?: string; 
+  pricing?: {
+    monthly?: number;
+    perSession?: number;
+  };
 };
 
 type CoachCardProps = {
@@ -26,7 +28,7 @@ const CoachCard = ({ coach }: CoachCardProps) => {
     <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-sm overflow-hidden flex flex-col transition-all hover:border-[var(--primary)] group">
       <div className="relative w-full h-56">
         <img
-          src={coach.profileImage ?? coach.imageUrl ?? "/placeholder-coach.png"}
+          src={coach.imageUrl ?? "/placeholder-coach.png"}
           alt={coach.name ?? "Coach"}
           className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
           onError={(e) => {
@@ -35,7 +37,7 @@ const CoachCard = ({ coach }: CoachCardProps) => {
         />
 
         <div className="absolute bottom-3 left-3 bg-[var(--primary)] text-white px-3 py-1 rounded-lg text-sm font-black shadow-lg">
-          {coach.charge ? `$${coach.charge}/MO` : "Contact"}
+          {coach.pricing?.monthly ? `$${coach.pricing.monthly} /Month` : "Contact"}
         </div>
       </div>
 
@@ -67,8 +69,8 @@ const CoachCard = ({ coach }: CoachCardProps) => {
         </div>
 
         <div className="flex flex-wrap gap-2 text-[10px] font-bold text-[var(--primary)]">
-          {coach.expertise ? (
-            coach.expertise
+          {coach.specialties ? (
+            coach.specialties
               .split(",")
               .slice(0, 3)
               .map((s: string) => (

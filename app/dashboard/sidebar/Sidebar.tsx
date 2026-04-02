@@ -10,7 +10,6 @@ import {
   CircleDollarSign,
   Dumbbell,
   FileCog,
-  Flag,
   Home,
   LayersPlus,
   LogOut,
@@ -25,7 +24,6 @@ import {
   X,
   User,
   Workflow,
-  EarIcon,
   Swords,
   Star,
   UserCheck2,
@@ -203,7 +201,7 @@ const menuConfig = [
       {
         name: "Earning",
         href: "/dashboard/coach-earning",
-        icon: EarIcon,
+        icon: CircleDollarSign,
         roles: ["coach"],
       },
       {

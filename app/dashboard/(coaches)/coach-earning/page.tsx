@@ -136,23 +136,18 @@ export default function CoachEarnings() {
   const recentPayments = allTransactions.slice(0, 5);
 
   return (
-    <div
-      className="min-h-screen max-w-full"
-    >
+    <div className="min-h-screen max-w-full">
       <div className="mx-auto space-y-8 max-w-7xl">
-          <title>Earning | Dashboard - Flexify</title>
+        <title>Earning | Dashboard - Flexify</title>
 
         {/* Header */}
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <h1
-              className="text-2xl font-extrabold md:text-3xl"
-              style={{ color: "var(--text-primary)" }}
-            >
+            <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
               Earnings
             </h1>
 
-            <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
+            <p className="leading-relaxed mt-2 text-[var(--text-secondary)]">
               Overview of your financial performance and subscriptions.
             </p>
           </div>
@@ -224,41 +219,61 @@ export default function CoachEarnings() {
         </div>
 
         {/* Chart + Payments */}
-          {/* Chart */}
-          <div className="grid gap-8 lg:grid-cols-5">
-            {/* Chart Section */}
-            <div className="lg:col-span-3">
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={monthlyEarnings.map((item: MonthlyEarning) => ({
-                    month: item?._id?.monthName || item?.month,
-                    total: item?.total,
-                  }))}>
-                    <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="total" radius={[6, 6, 0, 0]}>
-                      {monthlyEarnings.map((_, index: number) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={index === monthlyEarnings.length - 1 ? "var(--primary)" : "#94a3b8"}
-                          fillOpacity={index === monthlyEarnings.length - 1 ? 1 : 0.25}
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-            </div>
+        {/* Chart */}
+        <div className="grid gap-8 lg:grid-cols-5">
+          {/* Chart Section */}
+          <div className="lg:col-span-3">
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart
+                data={monthlyEarnings.map((item: MonthlyEarning) => ({
+                  month: item?._id?.monthName || item?.month,
+                  total: item?.total,
+                }))}
+              >
+                <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="total" radius={[6, 6, 0, 0]}>
+                  {monthlyEarnings.map((_, index: number) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={
+                        index === monthlyEarnings.length - 1
+                          ? "var(--primary)"
+                          : "#94a3b8"
+                      }
+                      fillOpacity={
+                        index === monthlyEarnings.length - 1 ? 1 : 0.25
+                      }
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
 
-            {/* Recent Payments Section */}
-            <div className="lg:col-span-2 card-glass">
-              {recentPayments.map((p: Payment, i: number) => ( // Fix 4 & 5: Explicit types
+          {/* Recent Payments Section */}
+          <div className="lg:col-span-2 card-glass">
+            {recentPayments.map(
+              (
+                p: Payment,
+                i: number, // Fix 4 & 5: Explicit types
+              ) => (
                 <div key={i} className="flex items-center justify-between p-2">
                   <div className="flex items-center gap-3">
-                    <Image src={p?.user?.imageUrl || "/default-avatar.png"} alt={p?.user?.name} width={40} height={40} className="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--primary-light)] text-[var(--primary)] text-xs font-bold" />
+                    <Image
+                      src={p?.user?.imageUrl || "/default-avatar.png"}
+                      alt={p?.user?.name}
+                      width={40}
+                      height={40}
+                      className="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--primary-light)] text-[var(--primary)] text-xs font-bold"
+                    />
                     <div>
                       <p className="text-sm font-semibold">{p?.user?.name}</p>
-                      <p className="text-xs text-[var(--text-muted)]">{p?.user?.planName} Plan</p>
+                      <p className="text-xs text-[var(--text-muted)]">
+                        {p?.user?.planName} Plan
+                      </p>
                     </div>
                   </div>
 
@@ -284,17 +299,18 @@ export default function CoachEarnings() {
                     </p>
                   </div>
                 </div>
-              ))}
-            </div>
-
-            <button
-              className="pt-5 mt-auto text-sm font-semibold"
-              style={{ color: "var(--primary)" }}
-              onClick={() => setIsAllTxModalOpen(true)}
-            >
-              View All Transactions
-            </button>
+              ),
+            )}
           </div>
+
+          <button
+            className="pt-5 mt-auto text-sm font-semibold"
+            style={{ color: "var(--primary)" }}
+            onClick={() => setIsAllTxModalOpen(true)}
+          >
+            View All Transactions
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -347,13 +363,19 @@ export default function CoachEarnings() {
                               height={32}
                               className="rounded-full"
                             />
-                            <span className="text-sm font-semibold">{p.user.name}</span>
+                            <span className="text-sm font-semibold">
+                              {p.user.name}
+                            </span>
                           </div>
                         </td>
                         <td className="px-3 py-2 text-sm">{p.user.planName}</td>
                         <td className="px-3 py-2 text-sm">{p.totalPaid}</td>
-                        <td className="px-3 py-2 text-sm">{p.lastPayment.toLocaleString()}</td>
-                        <td className="px-3 py-2 text-sm uppercase">{p.status}</td>
+                        <td className="px-3 py-2 text-sm">
+                          {p.lastPayment.toLocaleString()}
+                        </td>
+                        <td className="px-3 py-2 text-sm uppercase">
+                          {p.status}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -363,7 +385,6 @@ export default function CoachEarnings() {
           </motion.div>
         )}
       </AnimatePresence>
-
     </div>
   );
 }

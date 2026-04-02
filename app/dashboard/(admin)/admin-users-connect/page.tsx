@@ -84,10 +84,10 @@ export default function ContactRequests() {
       {/* Header & Stats Section */}
       <div className="flex flex-col md:flex-row md:items-center lg:items-start justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-black text-center md:text-start tracking-tighter text-[var(--text-primary)] mb-2 uppercase">
+          <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
             User <span className="text-[var(--primary)]">Connect</span>
           </h1>
-          <p className="text-[var(--text-secondary)] text-center font-medium">
+          <p className="leading-relaxed mt-2 text-[var(--text-secondary)]">
             Manage feedback and support inquiries.
           </p>
         </div>
@@ -130,12 +130,16 @@ export default function ContactRequests() {
                   {/* Status & Date */}
                   <div className="flex items-center gap-2 text-[var(--text-muted)] text-xs font-bold uppercase tracking-widest">
                     <Clock size={14} />
-                    {item.createdAt
-                      ? new Date(item.createdAt).toLocaleDateString(undefined, {
-                          month: "short",
-                          day: "numeric",
-                        })
-                      : "Recent" // Simple string fallback instead of a dynamic Date function
+                    {
+                      item.createdAt
+                        ? new Date(item.createdAt).toLocaleDateString(
+                            undefined,
+                            {
+                              month: "short",
+                              day: "numeric",
+                            },
+                          )
+                        : "Recent" // Simple string fallback instead of a dynamic Date function
                     }
                   </div>
 
