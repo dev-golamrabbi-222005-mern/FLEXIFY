@@ -24,77 +24,118 @@ import {
   Utensils,
   X,
   User,
-  UserCheck2,
   Workflow,
   EarIcon,
   Swords,
   Star,
+  UserCheck2,
 
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { getPlan, PlanId } from "@/lib/plans";
 
 interface SidebarProps {
   open: boolean;
   onClose: () => void;
 }
 
-// ── Menu config — MAIN MENU items was accidentally double-wrapped in an array ──
+function SidebarContent({ onClose }: { onClose: () => void }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  const { data: dbUser, isLoading } = useQuery({
+    queryKey: ["currentUser", session?.user?.email],
+    queryFn: async () => {
+      if (!session?.user?.email) return null;
+      const res = await axios.get(`/api/user/me?email=${session.user.email}`);
+      return res.data;
+    },
+    enabled: !!session?.user?.email,
+  });
+
+  if (isLoading) return null;
+
+  const userRole = dbUser?.role || "user";
+  const userStatus = dbUser?.status || "approved";
+  const userName = dbUser?.name || "User";
+  const userImage = dbUser?.image || session?.user?.image;
+  const userInitial = userName.charAt(0).toUpperCase();
+  const userPlan = (dbUser?.plan as PlanId) || "free";
+
+  const planOrder: Record<PlanId, number> = {
+    free: 0,
+    pro: 1,
+    elite: 2,
+  };
+  const plan = getPlan(userPlan);
+  const hasPlanAccess = (requiredPlan: PlanId) =>
+    planOrder[plan.id] >= planOrder[requiredPlan];
+
+  // ── Menu config — MAIN MENU items was accidentally double-wrapped in an array ──
 const menuConfig = [
   {
     label: "MAIN MENU",
     items: 
-[
-  {
-    name: "Dashboard",
-    href: "/dashboard",
-    icon: Home,
-    roles: ["user", "admin", "coach"],
-  },
-  {
-    name: "Create Workout",
-    href: "/dashboard/create-workout",
-    icon: PlusCircle,
-    roles: ["user"],
-  },
-  {
-    name: "Your Workouts",
-    href: "/dashboard/your-workouts",
-    icon: Dumbbell,
-    roles: ["user"],
-  },
-  {
-    name: "Challenges",
-    href: "/dashboard/my-challenges",
-    icon: Swords,
-    roles: ["user"],
-  },
-  {
-    name: "My Coach",
-    href: "/dashboard/my-coach",
-    icon: UserCheck2,
-    roles: ["user"],
-  },
-  {
-    name: "Nutrition",
-    href: "/dashboard/nutrition-tracker",
-    icon: Utensils,
-    roles: ["user"],
-  },
-  {
-    name: "Schedule",
-    href: "/dashboard/schedule",
-    icon: Calendar,
-    roles: ["user"],
-  },
-  {
-    name: "Achievements",
-    href: "/dashboard/achievements",
-    icon: Trophy,
-    roles: ["user"],
-  },
-],
-  
+    [
+      {
+        name: "Dashboard",
+        href: "/dashboard",
+        icon: Home,
+        roles: ["user", "admin", "coach"],
+        minPlan: "free" as PlanId,
+      },
+      {
+        name: "Create Workout",
+        href: "/dashboard/create-workout",
+        icon: PlusCircle,
+        roles: ["user"],
+        minPlan: "pro" as PlanId,
+      },
+      {
+        name: "Your Workouts",
+        href: "/dashboard/your-workouts",
+        icon: Dumbbell,
+        roles: ["user"],
+        minPlan: "free" as PlanId,
+      },
+      {
+        name: "Challenges",
+        href: "/dashboard/my-challenges",
+        icon: Swords,
+        roles: ["user"],
+        minPlan: "free" as PlanId,
+      },
+      {
+        name: "My Coach",
+        href: "/dashboard/my-coach",
+        icon: UserCheck2,
+        roles: ["user"],
+        minPlan: "elite" as PlanId,
+      },
+      {
+        name: "Nutrition",
+        href: "/dashboard/nutrition-tracker",
+        icon: Utensils,
+        roles: ["user"],
+        minPlan: "pro" as PlanId,
+      },
+      {
+        name: "Schedule",
+        href: "/dashboard/schedule",
+        icon: Calendar,
+        roles: ["user"],
+        minPlan: "free" as PlanId,
+      },
+      {
+        name: "Achievements",
+        href: "/dashboard/achievements",
+        icon: Trophy,
+        roles: ["user"],
+        minPlan: "pro" as PlanId,
+      },
+    ],
   },
   {
     label: "ADMIN",
@@ -192,30 +233,6 @@ const menuConfig = [
   },
 ];
 
-function SidebarContent({ onClose }: { onClose: () => void }) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const { data: session } = useSession();
-
-  const { data: dbUser, isLoading } = useQuery({
-    queryKey: ["currentUser", session?.user?.email],
-    queryFn: async () => {
-      if (!session?.user?.email) return null;
-      const res = await axios.get(`/api/user/me?email=${session.user.email}`);
-      return res.data;
-    },
-    enabled: !!session?.user?.email,
-  });
-
-  if (isLoading) return null;
-
-  const userRole = dbUser?.role || "user";
-  const userStatus = dbUser?.status || "approved";
-  const userName = dbUser?.name || "User";
-  const userImage = dbUser?.image || session?.user?.image;
-  const userInitial = userName.charAt(0).toUpperCase();
-  const userPlan = dbUser?.plan ?? "free";
-
   return (
     <div className="flex flex-col h-full overflow-y-auto custom-scrollbar">
       {/* Mobile close */}
@@ -246,11 +263,11 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
               <img
                 src={userImage}
                 alt={userName}
-                className="w-16 h-16 rounded-full object-cover"
+                className="object-cover w-16 h-16 rounded-full"
               />
             ) : (
               <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-base text-white"
+                className="flex items-center justify-center w-10 h-10 text-base font-black text-white rounded-xl"
                 style={{ background: "var(--primary)" }}
               >
                 {userInitial}
@@ -266,7 +283,7 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
           </div>
           <div className="flex-1 min-w-0 text-center">
             <p
-              className="font-extrabold truncate leading-tight"
+              className="font-extrabold leading-tight truncate"
               style={{ color: "var(--text-primary)" }}
             >
               {userName}
@@ -286,10 +303,15 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
         {menuConfig.map((group) => {
           const filtered = group.items.filter((item) => {
             const hasRole = item.roles.includes(userRole);
+            const requiredPlan = (item as { minPlan?: PlanId }).minPlan ?? "free";
+            const hasPlan = hasPlanAccess(requiredPlan);
+
             if (userRole === "coach" && userStatus === "pending") {
               return hasRole && item.name === "Dashboard";
             }
-            return hasRole;
+            if (!hasRole) return false;
+            if (userRole === "user" && !hasPlan) return false;
+            return true;
           });
           if (filtered.length === 0) return null;
 
@@ -340,8 +362,8 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
             return (
               <div className="px-4 pb-4">
                 <div className="bg-gradient-to-br from-[#7c3aed] to-[#059669] rounded-[1.5rem] p-5 text-white shadow-lg relative overflow-hidden">
-                  <div className="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full" />
-                  <div className="bg-white/20 w-9 h-9 rounded-xl flex items-center justify-center mb-3 backdrop-blur-sm text-lg">
+                  <div className="absolute w-20 h-20 rounded-full -right-4 -top-4 bg-white/10" />
+                  <div className="flex items-center justify-center mb-3 text-lg bg-white/20 w-9 h-9 rounded-xl backdrop-blur-sm">
                     🏆
                   </div>
                   <h4 className="mb-1 text-sm font-bold">
@@ -362,8 +384,8 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
             return (
               <div className="px-4 pb-4">
                 <div className="bg-gradient-to-br from-[#f47920] to-[#dc2626] rounded-[1.5rem] p-5 text-white shadow-lg relative overflow-hidden">
-                  <div className="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full" />
-                  <div className="bg-white/20 w-9 h-9 rounded-xl flex items-center justify-center mb-3 backdrop-blur-sm">
+                  <div className="absolute w-20 h-20 rounded-full -right-4 -top-4 bg-white/10" />
+                  <div className="flex items-center justify-center mb-3 bg-white/20 w-9 h-9 rounded-xl backdrop-blur-sm">
                     <Trophy size={18} />
                   </div>
                   <h4 className="mb-1 text-sm font-bold">Upgrade to Elite</h4>
@@ -372,7 +394,7 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
                   </p>
                   <button
                     onClick={() => (window.location.href = "/#pricing")}
-                    className="w-full bg-white py-2 rounded-xl text-xs font-extrabold hover:bg-orange-50 transition-all active:scale-95"
+                    className="w-full py-2 text-xs font-extrabold transition-all bg-white rounded-xl hover:bg-orange-50 active:scale-95"
                     style={{ color: "#f47920" }}
                   >
                     Go Elite →
@@ -384,8 +406,8 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
           return (
             <div className="px-4 pb-4">
               <div className="bg-gradient-to-br from-[#F59E0B] to-[#059669] rounded-[1.5rem] p-5 text-white shadow-lg relative overflow-hidden">
-                <div className="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full" />
-                <div className="bg-white/20 w-9 h-9 rounded-xl flex items-center justify-center mb-3 backdrop-blur-sm">
+                <div className="absolute w-20 h-20 rounded-full -right-4 -top-4 bg-white/10" />
+                <div className="flex items-center justify-center mb-3 bg-white/20 w-9 h-9 rounded-xl backdrop-blur-sm">
                   <Trophy size={18} />
                 </div>
                 <h4 className="mb-1 text-sm font-bold">Upgrade to Pro</h4>
@@ -395,7 +417,7 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
                 </p>
                 <button
                   onClick={() => (window.location.href = "/#pricing")}
-                  className="w-full bg-white py-2 rounded-xl text-xs font-extrabold hover:bg-emerald-50 transition-all active:scale-95"
+                  className="w-full py-2 text-xs font-extrabold transition-all bg-white rounded-xl hover:bg-emerald-50 active:scale-95"
                   style={{ color: "var(--primary)" }}
                 >
                   Upgrade Now

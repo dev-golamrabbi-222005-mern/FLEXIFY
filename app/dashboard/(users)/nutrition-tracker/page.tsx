@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import PlanAccessModal from "@/components/modals/PlanAccessModal";
+import { PlanId } from "@/lib/plans";
 import { Coffee, Sun, Moon, Utensils, Sparkles, X, LayoutList, Loader2 } from "lucide-react"; 
 import type { FoodItem, MealSection, FoodEntry } from "@/types/food";
 import CircularProgress from "../../components/nutritions/CircularProgress";
@@ -28,6 +30,20 @@ interface LogPayload {
 export default function CalorieTracker() {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
+  
+  // Fetch user data to check plan
+  const { data: dbUser } = useQuery({
+    queryKey: ["currentUser", session?.user?.email],
+    queryFn: async () => {
+      if (!session?.user?.email) return null;
+      const res = await axios.get(`/api/user/me?email=${session.user.email}`);
+      return res.data;
+    },
+    enabled: !!session?.user?.email,
+  });
+
+  const userPlan = (dbUser?.plan as PlanId) || "free";
+
   const today = new Date();
   const todayDate = today.toISOString().split('T')[0];
   const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
@@ -174,6 +190,18 @@ const addFood = (item: FoodItem, qty: number) => {
     </div>
   );
 }
+
+  if (userPlan === "free") {
+    return (
+      <PlanAccessModal
+        currentPlan={userPlan}
+        requiredPlan="pro"
+        isOpen={true}
+        onClose={() => {}}
+      />
+    );
+  }
+
   return (
     <div className="max-w-full">
         <title>Nutrition Tracker | Dashboard - Flexify</title>
@@ -197,7 +225,7 @@ const addFood = (item: FoodItem, qty: number) => {
       <div className="mb-8">
         <div className="h-3 bg-[var(--bg-secondary)] rounded-full overflow-hidden border border-[var(--border-color)]">
           <div 
-            className="h-full rounded-full transition-all duration-1000 ease-out"
+            className="h-full transition-all duration-1000 ease-out rounded-full"
             style={{ 
               width: `${calPct * 100}%`, 
               backgroundColor: calPct > 1 ? "#ef4444" : calPct > 0.8 ? "#f59e0b" : "var(--primary)" 
@@ -247,7 +275,7 @@ const addFood = (item: FoodItem, qty: number) => {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Sparkles size={16} className="text-[var(--primary)]" />
-                  <span className="font-bold text-sm">Smart Insights</span>
+                  <span className="text-sm font-bold">Smart Insights</span>
                 </div>
                 <button onClick={() => setInsightDismissed(true)} className="text-[var(--text-secondary)] hover:text-red-500 transition-colors">
                   <X size={16} />
@@ -255,13 +283,13 @@ const addFood = (item: FoodItem, qty: number) => {
               </div>
               <div className="space-y-3">
                 {totals.protein < GOALS.protein * 0.5 && (
-                  <div className="bg-blue-500/5 border border-blue-500/10 p-3 rounded-xl">
+                  <div className="p-3 border bg-blue-500/5 border-blue-500/10 rounded-xl">
                     <p className="text-[10px] font-black text-blue-500 uppercase mb-1">Low Protein</p>
                     <p className="text-[12px] text-[var(--text-secondary)]">Try adding eggs or chicken to your next meal.</p>
                   </div>
                 )}
                 {glasses < 4 && (
-                  <div className="bg-cyan-500/5 border border-cyan-500/10 p-3 rounded-xl">
+                  <div className="p-3 border bg-cyan-500/5 border-cyan-500/10 rounded-xl">
                     <p className="text-[10px] font-black text-cyan-500 uppercase mb-1">Hydration Hint</p>
                     <p className="text-[12px] text-[var(--text-secondary)]">You've only had {glasses} glasses. Aim for 8.</p>
                   </div>

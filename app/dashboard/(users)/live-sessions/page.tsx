@@ -17,7 +17,7 @@
 //   return (
 //     <div className="min-h-screen bg-[var(--bg-primary)] p-3 md:p-6">
 
-//       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-4">
+//       <div className="grid gap-4 mx-auto max-w-7xl lg:grid-cols-2">
 
 //         {/* LEFT: SESSION CARD */}
 //         <div className="bg-[var(--bg-secondary)] border border-white/10 rounded-3xl shadow-xl flex flex-col h-[75vh]">
@@ -36,7 +36,7 @@
 //           </div>
 
 //           {/* Messages */}
-//           <div className="flex-1 overflow-y-auto p-4 space-y-3">
+//           <div className="flex-1 p-4 space-y-3 overflow-y-auto">
 //             {dummyMessages.map((msg, i) => (
 //               <div
 //                 key={i}
@@ -60,7 +60,7 @@
 //           </div>
 
 //           {/* Input */}
-//           <div className="p-3 border-t border-white/10 flex gap-2">
+//           <div className="flex gap-2 p-3 border-t border-white/10">
 //             <input
 //               value={text}
 //               onChange={(e) => setText(e.target.value)}
@@ -68,7 +68,7 @@
 //               className="flex-1 bg-[var(--bg-tertiary)] border border-white/20 rounded-xl px-3 py-2 text-sm focus:outline-none"
 //             />
 
-//             <button className="bg-blue-400 hover:bg-blue-500 px-4 rounded-xl flex items-center">
+//             <button className="flex items-center px-4 bg-blue-400 hover:bg-blue-500 rounded-xl">
 //               <Send size={16} />
 //             </button>
 //           </div>
@@ -79,12 +79,12 @@
 //         <div className="bg-[var(--bg-secondary)] backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-xl">
 
 //           {/* Header */}
-//           <div className="flex justify-between items-center mb-6">
-//             <h2 className="text-lg md:text-xl font-semibold">
+//           <div className="flex items-center justify-between mb-6">
+//             <h2 className="text-lg font-semibold md:text-xl">
 //               Live Session
 //             </h2>
 
-//             <span className="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-xs font-semibold animate-pulse">
+//             <span className="px-3 py-1 text-xs font-semibold text-red-400 rounded-full bg-red-500/20 animate-pulse">
 //               LIVE
 //             </span>
 //           </div>
@@ -93,11 +93,11 @@
 //           <div className="flex items-center gap-4 mb-6">
 //             <img
 //               src="https://i.ibb.co.com/Pv0wP422/user.png"
-//               className="w-14 h-14 rounded-full border border-white/10"
+//               className="border rounded-full w-14 h-14 border-white/10"
 //             />
 
 //             <div>
-//               <p className="font-semibold text-lg">Coach John</p>
+//               <p className="text-lg font-semibold">Coach John</p>
 //               <p className="text-sm text-[var(--text-secondary)] flex items-center gap-1">
 //                 <User size={14} /> Personal Trainer
 //               </p>
@@ -121,13 +121,13 @@
 //             <a
 //               href={meetLink}
 //               target="_blank"
-//               className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 transition py-3 rounded-xl font-semibold"
+//               className="flex items-center justify-center flex-1 gap-2 py-3 font-semibold transition bg-green-600 hover:bg-green-700 rounded-xl"
 //             >
 //               <Video size={18} />
 //               Join
 //             </a>
 
-//             <button className="flex items-center justify-center bg-white/10 hover:bg-white/20 p-3 rounded-xl">
+//             <button className="flex items-center justify-center p-3 bg-white/10 hover:bg-white/20 rounded-xl">
 //               <Phone size={18} />
 //             </button>
 //           </div>
@@ -144,6 +144,11 @@
 
 import { Video, Clock, User, Send, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import PlanAccessModal from "@/components/modals/PlanAccessModal";
+import { PlanId } from "@/lib/plans";
 
 // Types
 interface Message {
@@ -159,10 +164,24 @@ interface Session {
 }
 
 export default function LiveSessionPage() {
+  const { data: sessionData } = useSession();
   const [text, setText] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  
+  // Fetch user data to check plan
+  const { data: dbUser } = useQuery({
+    queryKey: ["currentUser", sessionData?.user?.email],
+    queryFn: async () => {
+      if (!sessionData?.user?.email) return null;
+      const res = await axios.get(`/api/user/me?email=${sessionData.user.email}`);
+      return res.data;
+    },
+    enabled: !!sessionData?.user?.email,
+  });
+
+  const userPlan = (dbUser?.plan as PlanId) || "free";
 
   // 🔥 Fetch dynamic session data
   useEffect(() => {
@@ -205,6 +224,17 @@ export default function LiveSessionPage() {
     return <div className="p-6">Loading...</div>;
   }
 
+  if (userPlan === "free") {
+    return (
+      <PlanAccessModal
+        currentPlan={userPlan}
+        requiredPlan="elite"
+        isOpen={true}
+        onClose={() => {}}
+      />
+    );
+  }
+
   if (!session) {
     return <div className="p-6 text-red-400">No session found</div>;
   }
@@ -212,7 +242,7 @@ export default function LiveSessionPage() {
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] p-3 md:p-6">
        <title>Live Sessions | Dashboard - Flexify</title>
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-4">
+      <div className="grid gap-4 mx-auto max-w-7xl lg:grid-cols-2">
 
         {/* LEFT: CHAT */}
         <div className="bg-[var(--bg-secondary)] border border-white/10 rounded-3xl shadow-xl flex flex-col h-[75vh]">
@@ -231,7 +261,7 @@ export default function LiveSessionPage() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          <div className="flex-1 p-4 space-y-3 overflow-y-auto">
             {messages.map((msg, i) => (
               <div
                 key={i}
@@ -255,7 +285,7 @@ export default function LiveSessionPage() {
           </div>
 
           {/* Input */}
-          <div className="p-3 border-t border-white/10 flex gap-2">
+          <div className="flex gap-2 p-3 border-t border-white/10">
             <input
               value={text}
               onChange={(e) => setText(e.target.value)}
@@ -265,7 +295,7 @@ export default function LiveSessionPage() {
 
             <button
               onClick={handleSend}
-              className="bg-blue-400 hover:bg-blue-500 px-4 rounded-xl flex items-center"
+              className="flex items-center px-4 bg-blue-400 hover:bg-blue-500 rounded-xl"
             >
               <Send size={16} />
             </button>
@@ -276,12 +306,12 @@ export default function LiveSessionPage() {
         <div className="bg-[var(--bg-secondary)] backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-xl">
 
           {/* Header */}
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-lg md:text-xl font-semibold">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-semibold md:text-xl">
               Live Session
             </h2>
 
-            <span className="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-xs font-semibold animate-pulse">
+            <span className="px-3 py-1 text-xs font-semibold text-red-400 rounded-full bg-red-500/20 animate-pulse">
               LIVE
             </span>
           </div>
@@ -290,11 +320,11 @@ export default function LiveSessionPage() {
           <div className="flex items-center gap-4 mb-6">
             <img
               src={session.coachImage}
-              className="w-14 h-14 rounded-full border border-white/10"
+              className="border rounded-full w-14 h-14 border-white/10"
             />
 
             <div>
-              <p className="font-semibold text-lg">{session.coachName}</p>
+              <p className="text-lg font-semibold">{session.coachName}</p>
               <p className="text-sm text-[var(--text-secondary)] flex items-center gap-1">
                 <User size={14} /> Personal Trainer
               </p>
@@ -318,13 +348,13 @@ export default function LiveSessionPage() {
             <a
               href={session.meetLink}
               target="_blank"
-              className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 transition py-3 rounded-xl font-semibold"
+              className="flex items-center justify-center flex-1 gap-2 py-3 font-semibold transition bg-green-600 hover:bg-green-700 rounded-xl"
             >
               <Video size={18} />
               Join
             </a>
 
-            <button className="flex items-center justify-center bg-white/10 hover:bg-white/20 p-3 rounded-xl">
+            <button className="flex items-center justify-center p-3 bg-white/10 hover:bg-white/20 rounded-xl">
               <Phone size={18} />
             </button>
           </div>
