@@ -16,7 +16,12 @@ export async function PATCH(req: NextRequest) {
     const user = await dbConnect("users").findOne({
         email: session?.user?.email,
     });
-    if (!user || !user.password) return null;
+    if (!user || !user.password) {
+        return NextResponse.json(
+            {message: "User not found or password not set"},
+            {status: 404}
+        );
+    }
     const isMatched = await bcrypt.compare(currentPassword, user.password);
     if(!isMatched) return NextResponse.json(
         {message: "Incorrect Password"},
