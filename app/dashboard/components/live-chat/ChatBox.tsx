@@ -16,7 +16,7 @@ interface IMessage {
 interface ChatBoxProps {
   coachUserId: string;
   currentUserId: string;
-  initialMessages: IMessage[]; // এটি যোগ করা হয়েছে এরর সরাতে
+  initialMessages: IMessage[]; 
 }
 
 interface SocketUpdatePayload {
