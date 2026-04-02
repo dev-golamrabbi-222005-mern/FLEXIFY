@@ -13,12 +13,26 @@ export async function GET(req: NextRequest) {
     const coaches = await coachUsersCol
       .find({ userId, status: "approved" })
       .toArray();
-    return NextResponse.json(coaches);
+    
+    const formattedCoaches = coaches.map(c => ({
+      ...c,
+      messages: c.messages || [] 
+    }));
+
+    return NextResponse.json(formattedCoaches);
   }
 
   if (coachId) {
-    const trainees = await coachUsersCol.find({ coachId }).toArray();
-    return NextResponse.json(trainees);
+    const trainees = await coachUsersCol
+      .find({ coachId }) 
+      .toArray();
+
+    const formattedTrainees = trainees.map(t => ({
+      ...t,
+      messages: t.messages || []
+    }));
+
+    return NextResponse.json(formattedTrainees);
   }
 
   return NextResponse.json(
