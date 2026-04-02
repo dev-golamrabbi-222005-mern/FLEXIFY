@@ -41,6 +41,7 @@ export default function Articles() {
 
   // LOGIC: 1 Featured + Top 3 Latest
   const featuredBlog = blogs[0];
+  const remainBlogs = blogs.slice(1);
 
   return (
     <section className="max-w-7xl mx-auto px-6 mt-8 md:mt-12 lg:mt-16 mb-10 space-y-12">
@@ -107,7 +108,7 @@ export default function Articles() {
 
       {/* Grid Layout for exactly 3 Blogs */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {blogs.map((blog) => (
+        {remainBlogs.map((blog) => (
           <NextLink
             key={blog._id}
             href={`/blogs/${blog._id}`}

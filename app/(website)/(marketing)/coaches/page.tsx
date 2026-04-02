@@ -37,16 +37,26 @@ const CoachesPage = () => {
     trainingType: "",
   });
 
-const { data: coaches, isLoading, isFetching, isError } = useQuery({
-    queryKey: ["coaches", filters],
-    queryFn: async () => {
-      const { search, specialty, experience, trainingType } = filters;
-      const { data } = await axios.get(
-        `/api/coach?search=${search}&specialty=${specialty}&experience=${experience}&trainingType=${trainingType}`
-      );
-      return data;
-    },
-  });
+  const [sort, setSort] = useState<string>("");
+
+
+const {
+  data: coaches,
+  isLoading,
+  isFetching,
+  isError,
+} = useQuery({
+  queryKey: ["coaches", filters, sort],
+  queryFn: async () => {
+    const { search, specialty, experience, trainingType } = filters;
+
+    const { data } = await axios.get(
+      `/api/coach?search=${search}&specialty=${specialty}&experience=${experience}&trainingType=${trainingType}&sort=${sort}`,
+    );
+
+    return data;
+  },
+});
 
  const resetFilters = () =>
     setFilters({ search: "", specialty: "", experience: "", trainingType: "" });
@@ -78,6 +88,25 @@ const { data: coaches, isLoading, isFetching, isError } = useQuery({
             value={filters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
           />
+        </div>
+
+        <div>
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="px-4 py-2 h-14 rounded-xl text-sm font-semibold outline-none"
+            style={{
+              background: "var(--bg-secondary)",
+              border: "1px solid var(--border-color)",
+              color: "var(--text-primary)",
+            }}
+          >
+            <option value="">Sort By</option>
+            <option value="price_low">Price: Low → High</option>
+            <option value="price_high">Price: High → Low</option>
+            <option value="experience_high">Experience: High → Low</option>
+            <option value="experience_low">Experience: Low → High</option>
+          </select>
         </div>
 
         <button
