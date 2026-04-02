@@ -37,7 +37,7 @@ const CoachCard = ({ coach }: CoachCardProps) => {
         />
 
         <div className="absolute bottom-3 left-3 bg-[var(--primary)] text-white px-3 py-1 rounded-lg text-sm font-black shadow-lg">
-          {coach.pricing?.monthly ? `$${coach.pricing?.monthly}/MO` : "Contact"}
+          {coach.pricing?.monthly ? `$${coach.pricing.monthly} /Month` : "Contact"}
         </div>
       </div>
 
