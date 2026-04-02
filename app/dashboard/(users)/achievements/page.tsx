@@ -8,6 +8,9 @@ import {
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useSession } from "next-auth/react";
+import PlanAccessModal from "@/components/modals/PlanAccessModal";
+import { PlanId } from "@/lib/plans";
 
 interface AchievementItem {
   id: string;
@@ -46,6 +49,21 @@ const ALL_ACHIEVEMENTS: Achievement[] = [
 ];
 
 export default function AchievementsPage() {
+  const { data: session } = useSession();
+
+  // Fetch user data to check plan
+  const { data: dbUser } = useQuery({
+    queryKey: ["currentUser", session?.user?.email],
+    queryFn: async () => {
+      if (!session?.user?.email) return null;
+      const res = await axios.get(`/api/user/me?email=${session.user.email}`);
+      return res.data;
+    },
+    enabled: !!session?.user?.email,
+  });
+
+  const userPlan = (dbUser?.plan as PlanId) || "free";
+
   const { data: unlocked = [], isLoading } = useQuery<AchievementItem[]>({
     queryKey: ["user-achievements"],
     queryFn: async () => {
@@ -68,8 +86,20 @@ export default function AchievementsPage() {
     </div>
   );
 
+  if (userPlan === "free") {
+    return (
+      <PlanAccessModal
+        currentPlan={userPlan}
+        requiredPlan="pro"
+        isOpen={true}
+        onClose={() => {}}
+      />
+    );
+  }
+
   return (
-    <div className="max-w-full">
+    <>
+      <div className="max-w-full">
       {/* Header */}
       <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4 bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-color)] shadow-sm">
         <div className="flex items-center gap-4">
@@ -92,7 +122,7 @@ export default function AchievementsPage() {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {sortedAchievements.map((badge) => {
           const unlockData = unlocked.find((u) => u.id === badge.id);
           const isUnlocked = !!unlockData;
@@ -141,6 +171,7 @@ export default function AchievementsPage() {
           );
         })}
       </div>
-    </div>
+      </div>
+    </>
   );
 }
