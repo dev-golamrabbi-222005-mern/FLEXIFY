@@ -477,7 +477,16 @@ function UserFitnessTab({
   const save = async () => {
     setSaving(true);
     try {
-      await axios.patch("/api/user/me", { fitnessProfile: form });
+      await axios.patch("/api/user/me", {
+          fitnessProfile: {
+          ...form,
+          age: Number(form.age),
+          height: Number(form.height),
+          weight: Number(form.weight),
+          sleepHours: Number(form.sleepHours),
+          waterIntake: Number(form.waterIntake),
+        }
+      });
       toast.success("Fitness profile updated!");
       onSaved();
     } catch {
