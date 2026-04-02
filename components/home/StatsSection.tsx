@@ -107,8 +107,8 @@ export default function StatsSection() {
     },
   ];
   return (
-    <section className="relative overflow-hidden pb-8 md:pb-12 bg-[var(--bg-primary)]">
-      <div className="relative px-6 mx-auto max-w-7xl">
+    <section className="relative overflow-hidden py-8 md:py-12 lg:py-16">
+      <div className="relative">
         <SectionTitle
           title="Flexify Impact"
           subtitle="Building healthier lifestyles through smart fitness tracking"

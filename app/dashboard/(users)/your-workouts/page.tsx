@@ -109,7 +109,7 @@ export default function YourWorkoutsPage() {
   const customCount = myRoutines?.length ?? 0;
 
   return (
-    <div className="space-y-8" style={{ fontFamily: "'Sora', sans-serif" }}>
+    <div className="space-y-8">
       <title>Your Workouts | Dashboard - Flexify</title>
 
       {/* ── Page Header ─────────────────────────────────────────────────── */}
@@ -123,11 +123,7 @@ export default function YourWorkoutsPage() {
               — Your Training
             </p>
             <h1
-              className="font-black tracking-tighter"
-              style={{
-                fontSize: "clamp(28px, 5vw, 42px)",
-                color: "var(--text-primary)",
-              }}
+              className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]"
             >
               Your Workouts
             </h1>
@@ -142,7 +138,7 @@ export default function YourWorkoutsPage() {
             <Dumbbell size={20} style={{ color: "var(--primary)" }} />
           </div>
         </div>
-        <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+        <p className="leading-relaxed mt-2 text-[var(--text-secondary)]">
           Ready to achieve your goals today?
         </p>
       </motion.div>
@@ -207,9 +203,7 @@ export default function YourWorkoutsPage() {
             />
             <div className="flex items-center gap-2">
               <Dumbbell size={22} style={{ color: "var(--primary)" }} />
-              <p
-                className="text-3xl font-bold uppercase tracking-[0.1em]"
-              >
+              <p className="text-3xl font-bold uppercase tracking-[0.1em]">
                 Suggested Plans
               </p>
             </div>

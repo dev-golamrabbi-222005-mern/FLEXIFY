@@ -49,17 +49,14 @@ export default function CoachReviews() {
   return (
     <>
       <div className="max-w-full space-y-8">
-          <title>Reviews | Dashboard - Flexify</title>
+        <title>Reviews | Dashboard - Flexify</title>
 
         {/* Header */}
         <div>
-          <h1
-            className="text-2xl font-bold"
-            style={{ color: "var(--text-primary)" }}
-          >
+          <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
             Reviews & Ratings
           </h1>
-          <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
+          <p className="leading-relaxed mt-2 text-[var(--text-secondary)]">
             Client feedback and public coach profile
           </p>
         </div>

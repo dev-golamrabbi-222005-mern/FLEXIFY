@@ -149,18 +149,18 @@ export default function CoachWorkouts() {
         {/* Header */}
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h1
-              className="text-2xl font-extrabold md:text-3xl"
-              style={{ color: "var(--text-primary)" }}
-            >
+            <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
               Workout Programs
             </h1>
-            <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
+            <p className="leading-relaxed mt-2 text-[var(--text-secondary)]">
               Design, track, and scale your coaching impact.
             </p>
           </div>
 
-          <button onClick={openModal} className="flex items-center gap-2 btn-primary">
+          <button
+            onClick={openModal}
+            className="flex items-center gap-2 btn-primary"
+          >
             <Plus size={18} />
             Create Plan
           </button>
@@ -178,54 +178,95 @@ export default function CoachWorkouts() {
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
+                  <h3
+                    className="text-lg font-bold"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     {plan.exerciseName}
                   </h3>
                 </div>
 
-                <button className="p-2 transition rounded-lg hover:bg-gray-200/20" style={{ color: "var(--text-muted)" }}>
+                <button
+                  className="p-2 transition rounded-lg hover:bg-gray-200/20"
+                  style={{ color: "var(--text-muted)" }}
+                >
                   <MoreVertical size={18} />
                 </button>
               </div>
 
               <div className="mb-5">
-                <div className="p-3 border rounded-xl" style={{ borderColor: "var(--border-color)", background: "var(--bg-secondary)" }}>
-                  <div className="flex items-center gap-2 text-xs font-semibold" style={{ color: "var(--text-muted)" }}>
+                <div
+                  className="p-3 border rounded-xl"
+                  style={{
+                    borderColor: "var(--border-color)",
+                    background: "var(--bg-secondary)",
+                  }}
+                >
+                  <div
+                    className="flex items-center gap-2 text-xs font-semibold"
+                    style={{ color: "var(--text-muted)" }}
+                  >
                     <Users size={14} />
                     Client
                   </div>
-                  <p className="mt-1 text-lg font-bold" style={{ color: "var(--text-primary)" }}>
+                  <p
+                    className="mt-1 text-lg font-bold"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     {plan.clientName}
                   </p>
-                  <p className="text-sm text-(--text-muted)">{plan.clientEmail}</p>
+                  <p className="text-sm text-(--text-muted)">
+                    {plan.clientEmail}
+                  </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 mb-5 text-sm" style={{ color: "var(--text-secondary)" }}>
+              <div
+                className="flex items-center gap-2 mb-5 text-sm"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 <Calendar size={16} style={{ color: "var(--primary)" }} />
                 Date:
-                <span className="font-semibold" style={{ color: "var(--text-primary)" }}>
+                <span
+                  className="font-semibold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   {plan.date}
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 mb-5 text-sm" style={{ color: "var(--text-secondary)" }}>
+              <div
+                className="flex items-center gap-2 mb-5 text-sm"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 <Clock size={16} style={{ color: "var(--primary)" }} />
                 Time:
-                <span className="font-semibold" style={{ color: "var(--text-primary)" }}>
+                <span
+                  className="font-semibold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   {formatTime12h(plan.time)}
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 mb-5 text-sm" style={{ color: "var(--text-secondary)" }}>
+              <div
+                className="flex items-center gap-2 mb-5 text-sm"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 <UserPen size={16} style={{ color: "var(--primary)" }} />
                 Assigned By:
-                <span className="font-semibold" style={{ color: "var(--text-primary)" }}>
+                <span
+                  className="font-semibold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   {plan.assignedBy}
                 </span>
               </div>
 
-              <div className="flex gap-2 pt-4 border-t" style={{ borderColor: "var(--border-color)" }}>
+              <div
+                className="flex gap-2 pt-4 border-t"
+                style={{ borderColor: "var(--border-color)" }}
+              >
                 <button className="flex items-center justify-center flex-1 gap-1 text-xs btn-secondary">
                   <Edit size={14} /> Edit
                 </button>
@@ -234,7 +275,11 @@ export default function CoachWorkouts() {
                   <Copy size={14} /> Copy
                 </button>
 
-                <button onClick={() => deleteWorkoutPlan(plan._id)} className="p-2 transition rounded-xl hover:bg-red-500/10" style={{ color: "var(--danger)" }}>
+                <button
+                  onClick={() => deleteWorkoutPlan(plan._id)}
+                  className="p-2 transition rounded-xl hover:bg-red-500/10"
+                  style={{ color: "var(--danger)" }}
+                >
                   <Trash2 size={16} />
                 </button>
               </div>
@@ -263,7 +308,9 @@ export default function CoachWorkouts() {
                   <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl">
                     <Dumbbell size={24} className="text-white" />
                   </div>
-                  <h2 className="text-xl font-bold text-(--text-primary)">Create Workout Plan</h2>
+                  <h2 className="text-xl font-bold text-(--text-primary)">
+                    Create Workout Plan
+                  </h2>
                 </div>
                 <button
                   onClick={closeModal}
@@ -274,9 +321,11 @@ export default function CoachWorkouts() {
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit(handleSavePlan)} className="space-y-6">
-                <div
-                  className="grid grid-cols-2 gap-4">
+              <form
+                onSubmit={handleSubmit(handleSavePlan)}
+                className="space-y-6"
+              >
+                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
                       <Calendar size={16} className="text-blue-500" />
@@ -308,7 +357,11 @@ export default function CoachWorkouts() {
                   </label>
                   <select
                     {...register("clientEmail")}
-                    onChange={(e) => setClientName(e.target.options[e.target.selectedIndex].outerText)}
+                    onChange={(e) =>
+                      setClientName(
+                        e.target.options[e.target.selectedIndex].outerText,
+                      )
+                    }
                     className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
                   >
                     <option value="">Select client</option>

@@ -177,10 +177,10 @@ export default function SchedulePage() {
             <CalendarDays size={32} />
           </div>
           <div>
-            <h1 className="text-2xl md:text-3xl font-black tracking-tighter uppercase leading-none">
+            <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
               Weekly Schedule
             </h1>
-            <p className="text-[var(--text-secondary)] text-sm font-medium mt-1">
+            <p className="leading-relaxed mt-2 text-[var(--text-secondary)]">
               Active Goal:{" "}
               <span className="text-[var(--primary)] font-bold">
                 {data?.workoutDays} Days / Week
@@ -288,12 +288,12 @@ export default function SchedulePage() {
                     <select
                       value={
                         data?.routines?.some(
-                          (r) => r.name === scheduleValue.routine
+                          (r) => r.name === scheduleValue.routine,
                         )
                           ? scheduleValue.routine
                           : isRestDay
-                          ? "Rest Day"
-                          : "Custom"
+                            ? "Rest Day"
+                            : "Custom"
                       }
                       onChange={(e) => {
                         if (e.target.value === "Custom") openManualModal(day);

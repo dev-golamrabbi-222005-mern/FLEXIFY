@@ -133,28 +133,24 @@ export default function CoachSchedule() {
 
   return (
     <>
-
       <div className="max-w-full space-y-8">
         <title>Schedule | Dashboard - Flexify</title>
 
         {/* Header */}
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h1
-              className="text-2xl font-bold"
-              style={{ color: "var(--text-primary)" }}
-            >
+            <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
               Schedule
             </h1>
 
-            <p
-              className="mt-1 text-sm"
-              style={{ color: "var(--text-muted)" }}
-            >
+            <p className="leading-relaxed mt-2 text-[var(--text-secondary)]">
               Manage your availability and training sessions
             </p>
           </div>
-          <button onClick={openModal} className="flex items-center gap-2 btn-primary">
+          <button
+            onClick={openModal}
+            className="flex items-center gap-2 btn-primary"
+          >
             <Plus size={18} />
             Add Schedule
           </button>
@@ -166,10 +162,8 @@ export default function CoachSchedule() {
           animate={{ opacity: 1, y: 0 }}
           className="card-glass"
         >
-
           {/* Month header */}
           <div className="flex items-center justify-between mb-6">
-
             <button
               onClick={() => {
                 const prevMonth = new Date(currentMonth);
@@ -200,12 +194,10 @@ export default function CoachSchedule() {
             >
               <ChevronRight size={20} />
             </button>
-
           </div>
 
           {/* Week Days */}
           <div className="grid grid-cols-7 gap-1 mb-2">
-
             {daysOfWeek.map((d) => (
               <div
                 key={d}
@@ -215,16 +207,18 @@ export default function CoachSchedule() {
                 {d}
               </div>
             ))}
-
           </div>
 
           {/* Calendar Grid */}
           <div className="grid grid-cols-7 gap-2">
-
             {calendarDays.map((day, i) => {
-
               const daySessions = day
-                ? sessions.filter((s: Session) => s.day === day && s.month === currentMonth.getMonth() + 1 && s.year === currentMonth.getFullYear())
+                ? sessions.filter(
+                    (s: Session) =>
+                      s.day === day &&
+                      s.month === currentMonth.getMonth() + 1 &&
+                      s.year === currentMonth.getFullYear(),
+                  )
                 : [];
 
               return (
@@ -236,7 +230,6 @@ export default function CoachSchedule() {
                     background: "var(--bg-secondary)",
                   }}
                 >
-
                   {day && (
                     <>
                       {/* Day Number */}
@@ -252,13 +245,9 @@ export default function CoachSchedule() {
                               ? "var(--primary)"
                               : "transparent",
                           padding:
-                            day === new Date().getDate()
-                              ? "2px 6px"
-                              : "0",
+                            day === new Date().getDate() ? "2px 6px" : "0",
                           borderRadius:
-                            day === new Date().getDate()
-                              ? "999px"
-                              : "0",
+                            day === new Date().getDate() ? "999px" : "0",
                         }}
                       >
                         {day}
@@ -274,17 +263,15 @@ export default function CoachSchedule() {
                             color: "var(--primary)",
                           }}
                         >
-                          {formatTime12h(s.time)} – {s?.clientInfo?.name?.split(" ")[0]}
+                          {formatTime12h(s.time)} –{" "}
+                          {s?.clientInfo?.name?.split(" ")[0]}
                         </div>
                       ))}
-
                     </>
                   )}
-
                 </div>
               );
             })}
-
           </div>
         </motion.div>
 
@@ -295,7 +282,6 @@ export default function CoachSchedule() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-
           <h3
             className="mb-4 font-semibold"
             style={{ color: "var(--text-primary)" }}
@@ -304,9 +290,7 @@ export default function CoachSchedule() {
           </h3>
 
           <div className="space-y-3">
-
             {upcomingSessions.map((s, i) => (
-
               <div
                 key={i}
                 className="flex items-center justify-between p-3 rounded-xl"
@@ -315,7 +299,6 @@ export default function CoachSchedule() {
                   border: "1px solid var(--border-color)",
                 }}
               >
-
                 <div>
                   <span
                     className="text-sm font-medium"
@@ -324,16 +307,12 @@ export default function CoachSchedule() {
                     {s?.clientInfo?.name}
                   </span>
 
-                  <p
-                    className="text-xs"
-                    style={{ color: "var(--text-muted)" }}
-                  >
+                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>
                     {s.type}
                   </p>
                 </div>
 
                 <div className="text-right">
-
                   <span
                     className="font-mono text-xs"
                     style={{ color: "var(--primary)" }}
@@ -341,19 +320,15 @@ export default function CoachSchedule() {
                     {formatTime12h(s.time)}
                   </span>
 
-                  <p
-                    className="text-xs"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    {new Date(s.year, s.month - 1).toLocaleString("default", { month: "long" })} {s.day}
+                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                    {new Date(s.year, s.month - 1).toLocaleString("default", {
+                      month: "long",
+                    })}{" "}
+                    {s.day}
                   </p>
-
                 </div>
-
               </div>
-
             ))}
-
           </div>
         </motion.div>
 
@@ -378,7 +353,9 @@ export default function CoachSchedule() {
                   <div className="p-2">
                     <Calendar size={24} className="text-(--primary)" />
                   </div>
-                  <h2 className="text-xl font-bold text-(--text-primary)">Create Session</h2>
+                  <h2 className="text-xl font-bold text-(--text-primary)">
+                    Create Session
+                  </h2>
                 </div>
                 <button
                   onClick={closeModal}
@@ -391,23 +368,34 @@ export default function CoachSchedule() {
 
               <form
                 onSubmit={handleSubmit(handleAddSession)}
-                className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                className="grid grid-cols-1 gap-6 md:grid-cols-2"
+              >
                 <div>
                   <label className="block mb-2 text-sm font-medium">Day</label>
                   <select
                     {...register("day")}
                     className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
                   >
-                    {[...Array(31)].map((_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}
+                    {[...Array(31)].map((_, i) => (
+                      <option key={i} value={i + 1}>
+                        {i + 1}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block mb-2 text-sm font-medium">Month</label>
+                  <label className="block mb-2 text-sm font-medium">
+                    Month
+                  </label>
                   <select
                     {...register("month")}
                     className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
                   >
-                    {[...Array(12)].map((_, i) => <option key={i} value={i + 1}>{i + 1}</option>)}
+                    {[...Array(12)].map((_, i) => (
+                      <option key={i} value={i + 1}>
+                        {i + 1}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div>
@@ -416,7 +404,11 @@ export default function CoachSchedule() {
                     {...register("year")}
                     className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
                   >
-                    {[...Array(11)].map((_, i) => <option key={i} value={i + new Date().getFullYear()}>{i + new Date().getFullYear()}</option>)}
+                    {[...Array(11)].map((_, i) => (
+                      <option key={i} value={i + new Date().getFullYear()}>
+                        {i + new Date().getFullYear()}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div>
@@ -428,12 +420,18 @@ export default function CoachSchedule() {
                   />
                 </div>
                 <div>
-                  <label className="block mb-2 text-sm font-medium">Client</label>
+                  <label className="block mb-2 text-sm font-medium">
+                    Client
+                  </label>
                   <select
                     {...register("clientEmail")}
                     className="w-full border p-3 rounded-lg bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none"
                   >
-                    {trainees.map((t, i) => <option key={i} value={t.userEmail}>{t.name}</option>)}
+                    {trainees.map((t, i) => (
+                      <option key={i} value={t.userEmail}>
+                        {t.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div>
@@ -456,9 +454,7 @@ export default function CoachSchedule() {
             </motion.div>
           </motion.div>
         )}
-
       </div>
-
     </>
   );
 }

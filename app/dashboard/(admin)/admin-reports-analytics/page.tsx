@@ -46,22 +46,40 @@ export default function ReportsAnalyticsPage() {
   return (
     <div className="space-y-8 min-h-screen text-[var(--text-primary)]">
       <title>Reports Analytics | Dashboard - Flexify</title>
-      
+
       <div>
-        <h1 className="text-3xl font-black tracking-tight">Analytics Dashboard</h1>
-        <p className="text-[var(--text-secondary)]">Platform performance based on real-time data</p>
+        <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
+          Analytics Dashboard
+        </h1>
+        <p className="leading-relaxed mt-2 text-[var(--text-secondary)]">
+          Platform performance based on real-time data
+        </p>
       </div>
 
       {/* SUMMARY CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard title="Total Users" value={data?.summary.totalUsers || 0} Icon={TrendingUp} color="from-emerald-400 to-emerald-600" />
-        <StatCard title="Engagement" value={data?.summary.engagement || "0"} Icon={Activity} color="from-blue-400 to-indigo-600" />
-        <StatCard title="Total Revenue" value={`৳${data?.summary.totalRevenue.toLocaleString()}`} Icon={DollarSign} color="from-orange-400 to-pink-500" />
+        <StatCard
+          title="Total Users"
+          value={data?.summary.totalUsers || 0}
+          Icon={TrendingUp}
+          color="from-emerald-400 to-emerald-600"
+        />
+        <StatCard
+          title="Engagement"
+          value={data?.summary.engagement || "0"}
+          Icon={Activity}
+          color="from-blue-400 to-indigo-600"
+        />
+        <StatCard
+          title="Total Revenue"
+          value={`৳${data?.summary.totalRevenue.toLocaleString()}`}
+          Icon={DollarSign}
+          color="from-orange-400 to-pink-500"
+        />
       </div>
 
       {/* CHARTS SECTION */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-        
         {/* User Growth Line Chart */}
         <div className="card-glass p-6">
           <h2 className="text-lg font-bold mb-6 flex items-center gap-2 text-[var(--primary)]">
@@ -69,11 +87,40 @@ export default function ReportsAnalyticsPage() {
           </h2>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={data?.userGrowth}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" opacity={0.3} />
-              <XAxis dataKey="month" axisLine={false} tickLine={false} fontSize={12} stroke="var(--text-secondary)" />
-              <YAxis allowDecimals={false} axisLine={false} tickLine={false} fontSize={12} stroke="var(--text-secondary)" />
-              <Tooltip contentStyle={{ background: "var(--bg-secondary)", border: "1px solid var(--border-color)", borderRadius: "12px" }} />
-              <Line type="monotone" dataKey="users" stroke="var(--primary)" strokeWidth={4} dot={{ r: 6, fill: "var(--primary)" }} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke="var(--border-color)"
+                opacity={0.3}
+              />
+              <XAxis
+                dataKey="month"
+                axisLine={false}
+                tickLine={false}
+                fontSize={12}
+                stroke="var(--text-secondary)"
+              />
+              <YAxis
+                allowDecimals={false}
+                axisLine={false}
+                tickLine={false}
+                fontSize={12}
+                stroke="var(--text-secondary)"
+              />
+              <Tooltip
+                contentStyle={{
+                  background: "var(--bg-secondary)",
+                  border: "1px solid var(--border-color)",
+                  borderRadius: "12px",
+                }}
+              />
+              <Line
+                type="monotone"
+                dataKey="users"
+                stroke="var(--primary)"
+                strokeWidth={4}
+                dot={{ r: 6, fill: "var(--primary)" }}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -85,11 +132,39 @@ export default function ReportsAnalyticsPage() {
           </h2>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={data?.engagementData}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" opacity={0.3} />
-              <XAxis dataKey="name" axisLine={false} tickLine={false} fontSize={12} stroke="var(--text-secondary)" />
-              <YAxis axisLine={false} tickLine={false} fontSize={12} stroke="var(--text-secondary)" />
-              <Tooltip cursor={{fill: 'var(--bg-tertiary)', opacity: 0.2}} contentStyle={{ background: "var(--bg-secondary)", border: "1px solid var(--border-color)", borderRadius: "12px" }} />
-              <Bar dataKey="value" fill="var(--secondary)" radius={[8, 8, 0, 0]} barSize={40} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke="var(--border-color)"
+                opacity={0.3}
+              />
+              <XAxis
+                dataKey="name"
+                axisLine={false}
+                tickLine={false}
+                fontSize={12}
+                stroke="var(--text-secondary)"
+              />
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                fontSize={12}
+                stroke="var(--text-secondary)"
+              />
+              <Tooltip
+                cursor={{ fill: "var(--bg-tertiary)", opacity: 0.2 }}
+                contentStyle={{
+                  background: "var(--bg-secondary)",
+                  border: "1px solid var(--border-color)",
+                  borderRadius: "12px",
+                }}
+              />
+              <Bar
+                dataKey="value"
+                fill="var(--secondary)"
+                radius={[8, 8, 0, 0]}
+                barSize={40}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -109,18 +184,27 @@ export default function ReportsAnalyticsPage() {
                   innerRadius={80}
                   outerRadius={120}
                   paddingAngle={8}
-                  label={renderCustomizedLabel} 
+                  label={renderCustomizedLabel}
                 >
                   {data?.revenueStats?.map((_, index) => (
-                    <Cell key={index} fill={COLORS[index % COLORS.length]} stroke="none" />
+                    <Cell
+                      key={index}
+                      fill={COLORS[index % COLORS.length]}
+                      stroke="none"
+                    />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ background: "var(--bg-secondary)", border: "1px solid var(--border-color)", borderRadius: "12px" }} />
+                <Tooltip
+                  contentStyle={{
+                    background: "var(--bg-secondary)",
+                    border: "1px solid var(--border-color)",
+                    borderRadius: "12px",
+                  }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
         </div>
-
       </div>
     </div>
   );

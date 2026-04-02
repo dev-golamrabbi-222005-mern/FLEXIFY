@@ -1164,7 +1164,7 @@ export default function SettingsPage() {
   if (!dbUser) return null;
 
   return (
-    <div className="space-y-6" style={{ fontFamily: "'Sora', sans-serif" }}>
+    <div className="space-y-6">
       <title>Settings | Dashboard - Flexify</title>
 
       {/* Header */}
@@ -1181,13 +1181,7 @@ export default function SettingsPage() {
             >
               — Preferences
             </p>
-            <h1
-              className="font-black tracking-tighter"
-              style={{
-                fontSize: "clamp(28px, 5vw, 42px)",
-                color: "var(--text-primary)",
-              }}
-            >
+            <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
               Settings
             </h1>
           </div>

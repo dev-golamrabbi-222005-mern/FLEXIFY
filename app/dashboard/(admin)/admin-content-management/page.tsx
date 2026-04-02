@@ -126,7 +126,7 @@ export default function AdminContentManagementPage() {
 
       {/* --- SEARCH HEADER --- */}
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-        <h1 className="text-3xl font-black text-[var(--text-primary)]">
+        <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
           Content Manager
         </h1>
         <div className="relative w-full md:max-w-72 flex items-center gap-4">

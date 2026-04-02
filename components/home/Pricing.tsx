@@ -252,7 +252,7 @@ const Pricing = () => {
   };
 
   return (
-    <section className="pb-8 md:pb-12 bg-[var(--bg-primary)]" id="pricing">
+    <section className="py-8 md:py-12 lg:py-16" id="pricing">
       <div className="px-4 md:px-6 mx-auto max-w-7xl">
         <SectionTitle
           title="Choose Your Plan"

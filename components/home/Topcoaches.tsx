@@ -66,7 +66,7 @@ const topCoaches = coaches
     );
 
   return (
-    <section className="relative px-6 py-8 mx-auto overflow-hidden md:py-12 max-w-7xl">
+    <section className="relative py-8 md:py-12 lg:py-16 overflow-hidden">
       {/* Title */}
       <div className="flex flex-col gap-3 mb-10">
         <motion.h2

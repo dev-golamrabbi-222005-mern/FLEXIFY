@@ -169,8 +169,10 @@ export default function PaymentsSubscriptionsPage() {
 
       {/* HEADER */}
       <div>
-        <h1 className="text-3xl font-black">Payments & Subscriptions</h1>
-        <p className="text-[var(--text-secondary)]">
+        <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
+          Payments & Subscriptions
+        </h1>
+        <p className="leading-relaxed mt-2 text-[var(--text-secondary)]">
           Manage revenue, active plans, and user transactions
         </p>
       </div>
@@ -230,15 +232,16 @@ export default function PaymentsSubscriptionsPage() {
                 )}
               </p>
               <div className="flex gap-2 mt-4">
-                <button 
+                <button
                   onClick={() => handleEdit(plan)}
                   className="flex-1 flex items-center justify-center gap-2 bg-[var(--bg-tertiary)] py-2 rounded-lg hover:bg-[var(--primary)] hover:text-white transition duration-300"
                 >
-                  {updatePlanMutation.isPending && updatePlanMutation.variables?.id === plan._id ? (
-                     <Loader2 className="animate-spin" size={16} />
+                  {updatePlanMutation.isPending &&
+                  updatePlanMutation.variables?.id === plan._id ? (
+                    <Loader2 className="animate-spin" size={16} />
                   ) : (
                     <Edit size={16} />
-                  )} 
+                  )}
                   Edit
                 </button>
               </div>
@@ -299,8 +302,8 @@ export default function PaymentsSubscriptionsPage() {
                     t.status === "success"
                       ? "bg-green-500/10 text-green-500"
                       : t.status === "pending"
-                      ? "bg-yellow-500/10 text-yellow-500"
-                      : "bg-red-500/10 text-red-500"
+                        ? "bg-yellow-500/10 text-yellow-500"
+                        : "bg-red-500/10 text-red-500"
                   }`}
                 >
                   {t.status}

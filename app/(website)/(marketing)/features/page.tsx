@@ -118,7 +118,7 @@ function FeatureCard({
       transition={{ delay: index * 0.1, duration: 0.6, ease: "easeOut" }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      className={`grid md:grid-cols-2 gap-8 items-center my-12 md:my-20 ${
+      className={`grid md:grid-cols-2 gap-8 items-center my-20 md:my-24 lg:my-28 ${
         isEven ? "" : "md:grid-flow-dense"
       }`}
     >
@@ -281,72 +281,6 @@ const rounded = useTransform(count, (latest) =>
   );
 }
 
-function StatsSection() {
-  const stats = [
-    { number: 50, suffix: "K+", label: "Active Users" },
-    { number: 300, suffix: "K+", label: "Workouts Completed" },
-    { number: 100, suffix: "+", label: "Certified Coaches" },
-    { number: 4.9, suffix: "★", label: "Average Rating", decimals: 1 },
-  ];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.7 }}
-      className="grid grid-cols-2 md:grid-cols-4 gap-8 py-16 my-16 px-8 rounded-3xl relative overflow-hidden"
-      style={{
-        backgroundColor: "var(--bg-secondary)",
-        border: "1px solid var(--border-color)",
-      }}
-    >
-      {/* Background gradient orbs */}
-      <div
-        className="absolute -top-20 -left-20 w-60 h-60 rounded-full blur-3xl opacity-10"
-        style={{ backgroundColor: "var(--primary)" }}
-      />
-      <div
-        className="absolute -bottom-20 -right-20 w-60 h-60 rounded-full blur-3xl opacity-10"
-        style={{ backgroundColor: "var(--success)" }}
-      />
-
-      {stats.map((stat, i) => (
-        <motion.div
-          key={i}
-          initial={{ scale: 0 }}
-          whileInView={{ scale: 1 }}
-          viewport={{ once: true }}
-          transition={{
-            delay: i * 0.1,
-            type: "spring",
-            stiffness: 200,
-            damping: 15,
-          }}
-          className="text-center relative z-10"
-        >
-          <div
-            className="text-3xl md:text-4xl font-extrabold mb-2"
-            style={{ color: "var(--primary)" }}
-          >
-            <Counter
-              value={stat.number}
-              suffix={stat.suffix}
-              decimals={stat.decimals}
-            />
-          </div>
-          <div
-            className="text-sm md:text-base font-medium"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            {stat.label}
-          </div>
-        </motion.div>
-      ))}
-    </motion.div>
-  );
-}
-
 // Parallax Hero Section
 function HeroSection() {
   const ref = useRef(null);
@@ -362,7 +296,7 @@ function HeroSection() {
     <motion.div
       ref={ref}
       style={{ y, opacity }}
-      className="text-center mt-8 md:mt-12 mb-10"
+      className="text-center mb-6 md:mb-8 lg:mb-10"
     >
       {/* Floating badge */}
       <motion.div
@@ -416,24 +350,18 @@ function HeroSection() {
 // Main Page
 export default function FeaturesPage() {
   return (
-    <div
-      className="min-h-screen overflow-hidden"
-      style={{ backgroundColor: "var(--bg-primary)" }}
-    >
-          <title>Features - Flexify</title>
-      <div className="max-w-7xl mx-auto px-6">
+    <div className="min-h-screen overflow-hidden">
+      <title>Features - Flexify</title>
+      <div className="mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6">
         {/* Hero */}
         <HeroSection />
 
         {/* Features Grid */}
-        <div className="mb-20">
+        <div>
           {FEATURES.map((feature, index) => (
             <FeatureCard key={feature.id} feature={feature} index={index} />
           ))}
         </div>
-
-        {/* Stats */}
-        <StatsSection />
 
         {/* CTA Section */}
         <motion.div
@@ -441,7 +369,7 @@ export default function FeaturesPage() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="text-center py-12 my:py-20 mb-12 px-8 rounded-3xl relative overflow-hidden"
+          className="text-center py-8 md:py-12 lg:py-16 mb-8 md:mb-12 lg:mb-16 rounded-3xl relative overflow-hidden"
           style={{
             backgroundColor: "var(--bg-secondary)",
             border: "1px solid var(--border-color)",

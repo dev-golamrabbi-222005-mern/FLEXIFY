@@ -734,10 +734,10 @@ export default function HowItWorksPage() {
       }}
     >
       <title>How it works - Flexify</title>
-      
+
       <SideNav active={activeRole} onChange={scrollToRole} />
 
-      <div className="max-w-7xl mx-auto px-6 mt-8 md:mt-12 mb-10">
+      <div className="mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6">
         {/* ── HERO ── */}
         <motion.div ref={ref} style={{ y, opacity }} className="text-center">
           {/* Floating badge */}

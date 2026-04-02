@@ -49,7 +49,7 @@ const Motivation = () => {
 
   return (
     <section
-      className="relative mt-12 md:mt-16 overflow-hidden"
+      className="relative mt-8 md:mt-12 lg:mt-16 overflow-hidden"
       style={{ minHeight: 420 }}
     >
       {/* Background image */}
@@ -121,9 +121,7 @@ const Motivation = () => {
             100% Free — No signup needed
           </div>
 
-          <h2
-            className="text-3xl md:text-4xl font-extrabold text-white leading-tight mb-3 tracking-tight"
-          >
+          <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight mb-3 tracking-tight">
             Turn motivation
             <br />
             into <span style={{ color: "var(--primary)" }}>real results.</span>
