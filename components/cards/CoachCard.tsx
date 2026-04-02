@@ -14,8 +14,8 @@ type Coach = {
   trainingTypes?: string[];
   specialties?: string; 
   pricing?: {
-    monthly: number;
-    perSession: number;
+    monthly?: number;
+    perSession?: number;
   };
 };
 
