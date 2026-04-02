@@ -14,7 +14,7 @@ export default function BecomeCoachCTA() {
     {
       icon: <FaUsers />,
       title: "Growing Client Base",
-      description: "Access to 50K+ active users",
+      description: "Access to a growing community of active users",
     },
     {
       icon: <FaChartLine />,
