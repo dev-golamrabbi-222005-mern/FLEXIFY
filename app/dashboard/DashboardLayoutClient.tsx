@@ -50,13 +50,13 @@ export default function DashboardLayoutClient({
           <Clock size={48} style={{ color: "var(--primary)" }} />
         </div>
         <h2
-          className="text-3xl font-black mb-2"
+          className="mb-2 text-3xl font-black"
           style={{ color: "var(--text-primary)" }}
         >
           Application Pending
         </h2>
         <p
-          className="text-sm max-w-md mb-8"
+          className="max-w-md mb-8 text-sm"
           style={{ color: "var(--text-secondary)" }}
         >
           Thanks for applying to be a coach. Our team is currently reviewing
@@ -88,7 +88,7 @@ export default function DashboardLayoutClient({
       {/* ❷ flex-1 + overflow-hidden — fills remaining height, clips children */}
       <div className="flex flex-1 overflow-hidden">
         {/* ❸ Sidebar — h-full keeps it exactly as tall as this row */}
-        <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} user={dbUser} />
+        <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
         {/* ❹ Only this scrolls — sidebar stays put */}
         <main className="flex-1 overflow-y-auto bg-[var(--bg-primary)] pl-4 md:pr-2 md:py-8">
