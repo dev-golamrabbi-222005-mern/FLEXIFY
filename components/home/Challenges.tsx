@@ -44,19 +44,19 @@ const CHALLENGES = [
 const Challenges = () => {
   const router = useRouter();
   return (
-    <section className="py-8 md:py-12 lg:py-16 transition-colors duration-400">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-col gap-3 mt-8 md:mt-12 lg:mt-16 mb-10">
-          <h1 className="text-3xl text-center font-bold tracking-tight md:text-4xl">
+    <section className="py-8 transition-colors md:py-12 lg:py-16 duration-400">
+      <div className="px-4 mx-auto max-w-7xl">
+        <div className="flex flex-col gap-3 mt-8 mb-10 md:mt-12 lg:mt-16">
+          <h1 className="text-3xl font-bold tracking-tight text-center md:text-4xl">
             <span>7x4</span> <span className="uppercase">Home Challenges</span>
           </h1>
           <span className="h-1 w-14 rounded-full bg-(--primary) mx-auto" />
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-12">
+        <div className="grid grid-cols-1 gap-6 mt-12 lg:grid-cols-2">
           {CHALLENGES.map((c, i) => (
             <div
               key={i}
-              className="group relative rounded-3xl overflow-hidden cursor-pointer"
+              className="relative overflow-hidden cursor-pointer group rounded-3xl"
               style={{ minHeight: 420 }}
             >
               {/* Background image */}
@@ -79,7 +79,7 @@ const Challenges = () => {
 
               {/* Accent color wash on hover */}
               <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                className="absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100"
                 style={{
                   background: `linear-gradient(135deg, rgba(${c.accentRgb},0.25) 0%, transparent 60%)`,
                 }}
@@ -87,14 +87,14 @@ const Challenges = () => {
 
               {/* Diagonal accent stripe */}
               <div
-                className="absolute -left-8 top-0 bottom-0 w-2 skew-x-6 origin-top opacity-80"
+                className="absolute top-0 bottom-0 w-2 origin-top skew-x-6 -left-8 opacity-80"
                 style={{ background: c.accent }}
               />
 
               {/* Content */}
-              <div className="relative z-10 h-full flex flex-col justify-between p-8 md:p-10">
+              <div className="relative z-10 flex flex-col justify-between h-full p-8 md:p-10">
                 {/* Top: tag + stats */}
-                <div className="flex items-start justify-between">
+                <div className="flex flex-wrap items-start justify-between gap-2">
                   {/* Tag */}
                   <div
                     className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em]"
@@ -112,18 +112,18 @@ const Challenges = () => {
                   </div>
 
                   {/* Stat pills */}
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {c.stats.map((s) => (
                       <div
                         key={s.label}
-                        className="text-center px-3 py-2 rounded-xl backdrop-blur-sm"
+                        className="px-3 py-2 text-center rounded-xl backdrop-blur-sm"
                         style={{
                           background: "rgba(255,255,255,0.08)",
                           border: "1px solid rgba(255,255,255,0.12)",
                         }}
                       >
                         <p
-                          className="font-black text-sm leading-none"
+                          className="text-sm font-black leading-none"
                           style={{ color: c.accent }}
                         >
                           {s.val}
@@ -163,7 +163,7 @@ const Challenges = () => {
                   </div>
 
                   <p
-                    className="text-sm leading-relaxed mb-6 max-w-xs"
+                    className="max-w-xs mb-6 text-sm leading-relaxed"
                     style={{ color: "rgba(255,255,255,0.65)" }}
                   >
                     {c.desc}
