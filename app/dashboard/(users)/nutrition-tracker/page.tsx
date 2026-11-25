@@ -341,7 +341,7 @@ const addFood = (item: FoodItem, qty: number) => {
                       Hydration Hint
                     </p>
                     <p className="text-[12px] text-[var(--text-secondary)]">
-                      You've only had {glasses} glasses. Aim for 8.
+                      You&apos;ve only had {glasses} glasses. Aim for 8.
                     </p>
                   </div>
                 )}

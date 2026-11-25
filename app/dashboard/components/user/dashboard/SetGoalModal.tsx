@@ -53,7 +53,7 @@ export const SetGoalModal = ({
           >
             <div className="p-5 border-b border-[var(--border-color)] flex items-center justify-between">
               <h2 className="text-lg font-black text-[var(--text-primary)]">
-                Set Today's Goal
+                Set Today&apos;s Goal
               </h2>
               <button
                 onClick={onClose}

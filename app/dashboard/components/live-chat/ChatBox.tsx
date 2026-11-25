@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import socket from "@/lib/socket";
+import Pusher from "pusher-js";
 import api from "@/lib/axios";
 import { Send, Edit2, Trash2, X, Check, ArrowUpCircle } from "lucide-react";
 
@@ -52,11 +52,25 @@ export default function ChatBox({ coachUserId, currentUserId, initialMessages }:
   useEffect(() => {
     setMessages(initialMessages);
     setHasMore(true);
-    socket.emit("join_room", coachUserId);
 
-    socket.on("receive_message", (msg: IMessage) => setMessages((prev) => [...prev, msg]));
+    const pusherKey = process.env.NEXT_PUBLIC_PUSHER_KEY;
+    if (!pusherKey) return;
+
+    const pusher = new Pusher(pusherKey, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || "ap2",
+    });
+
+    const channelName = `chat-${coachUserId}`;
+    const channel = pusher.subscribe(channelName);
+
+    channel.bind("receive_message", (msg: IMessage) => {
+      setMessages((prev) => {
+        if (prev.some((m) => m.id === msg.id)) return prev;
+        return [...prev, msg];
+      });
+    });
     
-    socket.on("message_updated", ({ messageId, text, action }: SocketUpdatePayload) => {
+    channel.bind("message_updated", ({ messageId, text, action }: SocketUpdatePayload) => {
       setMessages((prev) => prev.map((m) => {
         if (m.id === messageId) {
           if (action === "edit" && text) return { ...m, text, isEdited: true };
@@ -67,8 +81,8 @@ export default function ChatBox({ coachUserId, currentUserId, initialMessages }:
     });
 
     return () => {
-      socket.off("receive_message");
-      socket.off("message_updated");
+      channel.unbind_all();
+      pusher.unsubscribe(channelName);
     };
   }, [coachUserId, initialMessages]);
 
@@ -81,11 +95,14 @@ export default function ChatBox({ coachUserId, currentUserId, initialMessages }:
   const sendMessage = async () => {
     if (!input.trim()) return;
     try {
-      const res = await api.post("/api/coach-users/messages", { coachUserId, senderId: currentUserId, text: input });
-      const newMessage: IMessage = res.data;
-      socket.emit("send_message", { roomId: coachUserId, ...newMessage });
-      setMessages((prev) => [...prev, newMessage]);
+      const currentInput = input;
       setInput("");
+      const res = await api.post("/api/coach-users/messages", { coachUserId, senderId: currentUserId, text: currentInput });
+      const newMessage: IMessage = res.data;
+      setMessages((prev) => {
+        if (prev.some((m) => m.id === newMessage.id)) return prev;
+        return [...prev, newMessage];
+      });
       setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
     } catch (error) {
       console.error(error);
@@ -95,7 +112,6 @@ export default function ChatBox({ coachUserId, currentUserId, initialMessages }:
   const handleAction = async (messageId: string, action: "edit" | "deleteEveryone", newText?: string) => {
     try {
       await api.patch("/api/coach-users/messages", { coachUserId, messageId, action, text: newText });
-      socket.emit("update_message", { roomId: coachUserId, messageId, text: newText, action });
       setMessages((prev) => prev.map((m) => {
         if (m.id === messageId) {
           if (action === "edit" && newText) return { ...m, text: newText, isEdited: true };

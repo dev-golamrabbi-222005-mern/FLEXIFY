@@ -5,7 +5,14 @@ import axios from "axios";
 import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
 import ExerciseCard from "@/components/cards/ExerciseCard";
 import SkeletonCard from "@/components/cards/SkeletonCard";
-import { title } from "process";
+
+interface ExerciseItem {
+  _id: string;
+  name: string;
+  level: string;
+  equipment: string;
+  images: string[];
+}
 
 const MUSCLES = [
   "Abdominals",
@@ -364,7 +371,7 @@ const ExercisesPage = () => {
         ) : (
           <>
             {data?.pages.map((page) =>
-              page.exercises.map((ex: any) => (
+              page.exercises.map((ex: ExerciseItem) => (
                 <ExerciseCard key={ex._id} exercise={ex} />
               )),
             )}

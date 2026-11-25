@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
     const normalized = exercises.map((ex) => ({
       ...ex,
       // Use existing `id` string field, fall back to string version of _id
-      id: (ex as any).id ?? ex._id?.toString(),
+      id: (ex as { id?: string; _id?: { toString(): string } }).id ?? ex._id?.toString(),
     }));
 
     return NextResponse.json({

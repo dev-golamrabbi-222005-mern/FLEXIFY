@@ -216,7 +216,7 @@ const stats = [
         <div className="absolute w-40 h-40 rounded-full -right-8 -top-8 bg-white/10" />
         <div className="relative z-10">
           <p className="text-white/70 text-[11px] font-black uppercase tracking-widest mb-1">
-            Today's Schedule
+            Today&apos;s Schedule
           </p>
           <p className="text-lg font-black text-white">
             {todaySessions?.length || 0} Sessions

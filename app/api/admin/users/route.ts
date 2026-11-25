@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
-import { ObjectId, Filter, Document } from "mongodb";
+import { ObjectId, Filter } from "mongodb";
+import { requireAdmin } from "@/lib/adminGuard";
 
 interface UserDocument {
   _id?: ObjectId;
@@ -17,6 +18,9 @@ interface UpdateStatusBody {
 }
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  const auth = await requireAdmin();
+  if (!auth.authorized) return auth.response!;
+
   try {
     const { searchParams } = new URL(req.url);
     const search = searchParams.get("search") || "";
@@ -38,7 +42,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       ];
     }
 
-    const users = await usersCol.find(query).toArray();
+    // Exclude password hashes from response
+    const users = await usersCol.find(query, { projection: { password: 0 } }).toArray();
     return NextResponse.json(users);
   } catch (error) {
     console.error("Fetch Users Error:", error);
@@ -47,6 +52,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 }
 
 export async function PATCH(req: NextRequest): Promise<NextResponse> {
+  const auth = await requireAdmin();
+  if (!auth.authorized) return auth.response!;
+
   try {
     const body: UpdateStatusBody = await req.json();
     const { id, status } = body;
@@ -59,7 +67,7 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
 
     const result = await usersCol.updateOne(
       { _id: new ObjectId(id) } as Filter<UserDocument>,
-      { $set: { status: status } }
+      { $set: { status: status, updatedAt: new Date() } }
     );
 
     if (result.matchedCount === 0) {

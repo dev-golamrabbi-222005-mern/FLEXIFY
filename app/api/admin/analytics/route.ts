@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
+import { requireAdmin } from "@/lib/adminGuard";
 
 export async function GET() {
+  const auth = await requireAdmin();
+  if (!auth.authorized) return auth.response!;
+
   try {
     const usersCol = await dbConnect("users");
     const paymentsCol = await dbConnect("payments");
@@ -70,6 +74,7 @@ export async function GET() {
       engagementData
     });
   } catch (error) {
+    console.error("Admin Analytics Error:", error);
     return NextResponse.json({ error: "Analytics failed" }, { status: 500 });
   }
 }

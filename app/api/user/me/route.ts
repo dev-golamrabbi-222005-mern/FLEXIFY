@@ -10,58 +10,129 @@ interface UserDoc {
   status?: string;
   name?: string;
   image?: string;
+  imageUrl?: string;
+  phone?: string;
+  bio?: string;
+  fullName?: string;
+  location?: string;
+  specialties?: string;
+  experienceYears?: number;
+  education?: string;
+  trainingTypes?: string[];
+  availableDays?: string[];
+  preferredClients?: string[];
+  languages?: string;
+  maxClients?: number;
+  isProfileComplete?: boolean;
 }
 
 export async function GET(request: Request) {
   try {
     const session = await getServerSession(authOptions);
-    const { searchParams } = new URL(request.url);
-    const emailFromQuery = searchParams.get("email");
-    
-    const targetEmail = session?.user?.email || emailFromQuery;
-
-    if (!targetEmail) {
+    if (!session?.user?.email) {
       return NextResponse.json(
-        { message: "Email not provided" }, 
-        { status: 400 }
+        { message: "Authentication required" },
+        { status: 401 }
       );
     }
 
-    const usersCollection = await dbConnect<UserDoc>("users"); 
-    const user = await usersCollection.findOne({ email: targetEmail });
+    const { searchParams } = new URL(request.url);
+    const emailFromQuery = searchParams.get("email");
+
+    // Only administrators can query another user's profile by email
+    let targetEmail = session.user.email;
+    if (emailFromQuery && emailFromQuery !== session.user.email) {
+      if (session.user.role === "admin") {
+        targetEmail = emailFromQuery;
+      } else {
+        return NextResponse.json(
+          { message: "Forbidden: Cannot access other user profiles" },
+          { status: 403 }
+        );
+      }
+    }
+
+    const usersCollection = await dbConnect<UserDoc>("users");
+    // Explicitly exclude password hash from the projection
+    const user = await usersCollection.findOne(
+      { email: targetEmail },
+      { projection: { password: 0 } }
+    );
 
     if (!user) {
       return NextResponse.json(null, { status: 200 });
     }
 
     return NextResponse.json(user, { status: 200 });
-
-  } catch (error) {
+  } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     console.error("Error fetching user:", errorMessage);
-    
+
     return NextResponse.json(
-      { message: "Internal Server Error" }, 
+      { message: "Internal Server Error" },
       { status: 500 }
     );
   }
 }
 
 export async function PATCH(request: Request) {
-  const session = await getServerSession(authOptions);
-  if(!session) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { message: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+
+    // Whitelist allowed profile fields to prevent privilege escalation (OWASP Mass Assignment)
+    const allowedFields = [
+      "name",
+      "fullName",
+      "phone",
+      "imageUrl",
+      "bio",
+      "location",
+      "specialties",
+      "experienceYears",
+      "education",
+      "trainingTypes",
+      "availableDays",
+      "preferredClients",
+      "languages",
+      "pricing",
+      "maxClients",
+      "isProfileComplete",
+      "fitnessProfile",
+    ];
+
+    const safeUpdate: Record<string, unknown> = {
+      updatedAt: new Date(),
+    };
+
+    for (const key of allowedFields) {
+      if (key in body) {
+        safeUpdate[key] = body[key];
+      }
+    }
+
+    const result = await dbConnect("users").updateOne(
+      { email: session.user.email },
+      { $set: safeUpdate }
+    );
+
+    return NextResponse.json({
+      success: true,
+      modifiedCount: result.modifiedCount,
+    });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Update failed";
+    console.error("User profile update error:", errorMessage);
     return NextResponse.json(
-      {message: "Unauthorized"},
-      {status: 401}
+      { message: "Failed to update profile" },
+      { status: 500 }
     );
   }
-  const body = await request.json();
-  const result = await dbConnect("users").updateOne({
-    email: session?.user?.email,
-  }, {
-    $set: {
-      ...body
-    }
-  });
-  return NextResponse.json(result);
 }

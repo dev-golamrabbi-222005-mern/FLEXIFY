@@ -40,6 +40,10 @@ export default function DashboardLayoutClient({
     );
   }
 
+  if (!dbUser) {
+    return <RoleSelectionModal email={session?.user?.email || ""} />;
+  }
+
   if (dbUser.role === "" && dbUser.status === "pending") {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-[var(--bg-primary)] p-6 text-center">
@@ -71,7 +75,8 @@ export default function DashboardLayoutClient({
       </div>
     );
   }
-  if (!dbUser || dbUser.role === "") {
+
+  if (dbUser.role === "") {
     return <RoleSelectionModal email={session?.user?.email || ""} />;
   }
 

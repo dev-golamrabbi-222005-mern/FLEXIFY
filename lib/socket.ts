@@ -1,5 +1,9 @@
 // lib/socket.ts
-import { io, Socket } from "socket.io-client";
+// Deprecated: Realtime messaging has been migrated to Pusher channels.
+const socket = {
+  emit: () => {},
+  on: () => {},
+  off: () => {},
+};
 
-const socket: Socket = io("http://localhost:3000"); // same port
 export default socket;

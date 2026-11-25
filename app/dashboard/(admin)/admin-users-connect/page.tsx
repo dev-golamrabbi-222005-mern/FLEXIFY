@@ -165,7 +165,7 @@ export default function ContactRequests() {
                       size={20}
                     />
                     <p className="text-[var(--text-secondary)] text-sm leading-relaxed italic">
-                      "{item.message}"
+                      &ldquo;{item.message}&rdquo;
                     </p>
                   </div>
                 </div>

@@ -1,15 +1,12 @@
 import { dbConnect } from "@/lib/dbConnect";
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/authOptions";
+import { requireAdmin } from "@/lib/adminGuard";
 
 export async function GET() {
-  try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const auth = await requireAdmin();
+  if (!auth.authorized) return auth.response!;
 
+  try {
     const usersCol = await dbConnect("users");
     const paymentsCol = await dbConnect("payments");
     const logsCol = await dbConnect("workout_logs");

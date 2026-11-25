@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
       );
       if (alreadyDone) {
         await progress.updateOne(
-          { userEmail: session.user.email, type },
+          { userEmail: session.user.email, type, level },
           {
             $set: {
               "completedDays.$[elem]": dayRecord,
@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
         );
       } else {
         await progress.updateOne(
-          { userEmail: session.user.email, type },
+          { userEmail: session.user.email, type, level },
           {
             $push: { completedDays: dayRecord },
             $set: { updatedAt: now },

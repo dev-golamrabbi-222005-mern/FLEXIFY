@@ -1,7 +1,11 @@
-import {  NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
+import { requireAdmin } from "@/lib/adminGuard";
 
 export const GET = async () => {
+  const auth = await requireAdmin();
+  if (!auth.authorized) return auth.response!;
+
   try {
     const users = await dbConnect("users");
     const logs = await dbConnect("workout_logs");
@@ -40,6 +44,7 @@ export const GET = async () => {
       performanceData: finalData
     });
   } catch (error) {
+    console.error("Coach Stats GET Error:", error);
     return NextResponse.json({ error: "Analytics failed" }, { status: 500 });
   }
 };

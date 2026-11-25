@@ -50,16 +50,10 @@ export default function RegisterPage(): JSX.Element {
   } = useForm<RegisterFormData>();
 
   const handleRegister = async (data: RegisterFormData) => {
-    // Manual check for the image upload since it's outside the standard form inputs
-    if (!uploadedImageUrl) {
-      toast.error("Please upload a profile picture");
-      return;
-    }
-
     const payload = {
       ...data,
       role, // Using the role state
-      imageUrl: uploadedImageUrl,
+      imageUrl: uploadedImageUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
     };
 
     const result = await postUser(payload);
@@ -102,7 +96,7 @@ export default function RegisterPage(): JSX.Element {
         <form className="space-y-5" onSubmit={handleSubmit(handleRegister)}>
           {/* Profile Image Upload - Merged compact UI */}
           <div className="space-y-1.5">
-            <label className="text-sm text-gray-300">Profile Picture</label>
+            <label className="text-sm text-gray-300">Profile Picture <span className="text-xs text-gray-400">(Optional)</span></label>
             <ImageUpload
               onUploadSuccess={(url) => setUploadedImageUrl(url)}
               className="min-h-[10px] py-4"
@@ -218,7 +212,7 @@ export default function RegisterPage(): JSX.Element {
 
           <button
             type="submit"
-            disabled={!agree || !uploadedImageUrl}
+            disabled={!agree}
             className="w-full py-3 font-semibold text-black transition rounded-lg bg-[var(--primary)] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Register

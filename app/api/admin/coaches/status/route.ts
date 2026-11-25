@@ -2,8 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
 import { ObjectId } from "mongodb";
 import { pusherServer } from "@/lib/pusher";
+import { requireAdmin } from "@/lib/adminGuard";
 
 export const GET = async (req: NextRequest) => {
+  const auth = await requireAdmin();
+  if (!auth.authorized) return auth.response!;
+
   try {
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status");
@@ -14,18 +18,26 @@ export const GET = async (req: NextRequest) => {
         ...(status && { status }) 
     };
 
-    const coaches = await collection.find(query).toArray();
+    const coaches = await collection.find(query, { projection: { password: 0 } }).toArray();
     return NextResponse.json(coaches);
   } catch (error) {
+    console.error("Fetch Coaches Status Error:", error);
     return NextResponse.json({ error: "Fetch failed" }, { status: 500 });
   }
 };
 
 export const PATCH = async (req: NextRequest) => {
+  const auth = await requireAdmin();
+  if (!auth.authorized) return auth.response!;
+
   try {
     const { id, status } = await req.json();
+    if (!id || !status) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
     const collection = await dbConnect("users");
-const user = await collection.findOne({ _id: new ObjectId(id) });
+    const user = await collection.findOne({ _id: new ObjectId(id) });
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
@@ -39,7 +51,7 @@ const user = await collection.findOne({ _id: new ObjectId(id) });
         } 
       }
     );
- if (result.modifiedCount > 0) {
+    if (result.modifiedCount > 0) {
       const channelName = `user-${user.email.replace(/[@.]/g, "-")}`;
       
       const message = status === "approved" 
@@ -53,6 +65,7 @@ const user = await collection.findOne({ _id: new ObjectId(id) });
 
     return NextResponse.json({ success: result.modifiedCount > 0 });
   } catch (error) {
+    console.error("Coach Status Update Error:", error);
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 };

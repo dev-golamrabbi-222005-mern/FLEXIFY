@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const isGlobalSearch = !!(search || level || equipment);
 
    if (isGlobalSearch) {
-    const query: any = {};
+    const query: Record<string, unknown> = {};
     if (search) query.name = { $regex: search, $options: "i" };
     if (level) query.level = level.toLowerCase();
     if (equipment) query.equipment = equipment.toLowerCase();
@@ -62,7 +62,7 @@ const dynamicStats = await collection.aggregate([
     ]).toArray();
     const builderData = await Promise.all(
       bodyParts.map(async (part) => {
-        let muscleQuery: any = { primaryMuscles: { $in: [part] } };
+        let muscleQuery: Record<string, unknown> = { primaryMuscles: { $in: [part] } };
         
         if (part === "back") {
           muscleQuery = { primaryMuscles: { $in: ["back", "lats", "middle back", "lower back"] } };

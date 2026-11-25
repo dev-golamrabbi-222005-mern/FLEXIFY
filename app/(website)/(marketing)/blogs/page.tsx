@@ -132,7 +132,7 @@ export default function Articles() {
                 {blog.title}
               </h3>
               <p className="text-sm text-[var(--text-secondary)] line-clamp-3 flex-grow leading-relaxed italic">
-                "{blog.content}"
+                &ldquo;{blog.content}&rdquo;
               </p>
               <div className="pt-4 border-t border-[var(--border-color)] flex items-center justify-between text-[var(--primary)] text-xs font-bold">
                 <span>View Details</span>

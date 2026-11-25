@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
+import { requireAdmin } from "@/lib/adminGuard";
 
 export const GET = async () => {
+  const auth = await requireAdmin();
+  if (!auth.authorized) return auth.response!;
+
   try {
     const exercises = await dbConnect("exercises");
     const logs = await dbConnect("workout_logs");
@@ -42,6 +46,7 @@ export const GET = async () => {
       workoutUsage: workoutUsage.length > 0 ? workoutUsage : [{ month: "No Data", workouts: 0 }]
     });
   } catch (error) {
+    console.error("Workout Stats GET Error:", error);
     return NextResponse.json({ error: "Failed to fetch workout stats" }, { status: 500 });
   }
 };

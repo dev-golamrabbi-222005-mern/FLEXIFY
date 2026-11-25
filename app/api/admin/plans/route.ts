@@ -1,18 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
 import { ObjectId } from "mongodb";
+import { requireAdmin } from "@/lib/adminGuard";
 
 export async function GET() {
+  const auth = await requireAdmin();
+  if (!auth.authorized) return auth.response!;
+
   try {
     const plansCol = await dbConnect("plans");
     const plans = await plansCol.find({}).toArray();
     return NextResponse.json(plans);
   } catch (error) {
+    console.error("Admin Plans GET Error:", error);
     return NextResponse.json({ error: "Failed to fetch plans" }, { status: 500 });
   }
 }
 
 export async function PATCH(req: NextRequest) {
+  const auth = await requireAdmin();
+  if (!auth.authorized) return auth.response!;
+
   try {
     const body = await req.json();
     const { id, price, duration } = body;
@@ -29,6 +37,7 @@ export async function PATCH(req: NextRequest) {
         $set: {
           price: Number(price), 
           duration: duration,
+          updatedAt: new Date(),
         },
       }
     );

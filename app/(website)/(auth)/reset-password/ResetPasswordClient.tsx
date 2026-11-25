@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import {  FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
-import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 
 interface ApiErrorResponse {
@@ -15,6 +14,7 @@ export default function ResetPasswordClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get("email");
+  const token = searchParams.get("token");
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -23,6 +23,10 @@ export default function ResetPasswordClient() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!token) {
+      return toast.error("Reset token is missing or invalid. Please request a new link.");
+    }
 
     if (password !== confirmPassword) {
       return toast.error("Passwords do not match!");
@@ -37,6 +41,7 @@ export default function ResetPasswordClient() {
       const response = await axios.post("/api/auth/reset-password", {
         email,
         password,
+        token,
       });
 
       if (response.status === 200) {
@@ -54,10 +59,17 @@ export default function ResetPasswordClient() {
     }
   };
 
-  if (!email) {
+  if (!email || !token) {
     return (
-      <div className="flex items-center justify-center min-h-screen text-white">
-        Invalid or expired reset link.
+      <div className="flex flex-col items-center justify-center min-h-screen text-white text-center px-4">
+        <h2 className="text-xl font-bold mb-2">Invalid or Expired Reset Link</h2>
+        <p className="text-gray-400 mb-4">Please request a new password reset link from the forgot password page.</p>
+        <button
+          onClick={() => router.push("/forgotPassword")}
+          className="btn-primary px-6 py-2"
+        >
+          Request New Link
+        </button>
       </div>
     );
   }

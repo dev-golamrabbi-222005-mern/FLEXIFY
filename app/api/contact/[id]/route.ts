@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
 import { ObjectId } from "mongodb";
+import { requireAdmin } from "@/lib/adminGuard";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }, // 👈 1. Update the type to a Promise
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const auth = await requireAdmin();
+  if (!auth.authorized) return auth.response!;
+
   try {
-    // 👈 2. Await the params to extract the ID safely
     const { id } = await params;
 
     if (!ObjectId.isValid(id)) {
@@ -16,16 +19,19 @@ export async function PATCH(
 
     const body = await req.json();
 
-    // Only update status and repliedAt
-    const updateDoc: Record<string, unknown> = {};
+    const updateDoc: Record<string, unknown> = {
+      updatedAt: new Date(),
+    };
     if (body.status === "replied") {
       updateDoc.status = "replied";
       updateDoc.repliedAt = new Date();
+    } else if (body.status) {
+      updateDoc.status = body.status;
     }
 
     const collection = await dbConnect("contacts");
     await collection.updateOne(
-      { _id: new ObjectId(id) }, // 👈 3. Use the extracted id
+      { _id: new ObjectId(id) },
       { $set: updateDoc },
     );
 

@@ -57,7 +57,7 @@ export default function PlanAccessModal({
           {/* Message */}
           <div className="text-center space-y-3">
             <p className="text-[var(--text-primary)] font-semibold">
-              You aren't accessible for this feature.
+              You aren&apos;t accessible for this feature.
             </p>
             <p className="text-[var(--text-secondary)] text-sm">
               For access to this feature, you need to upgrade to the{" "}

@@ -34,7 +34,7 @@ export default function NutritionGuidePage() {
             EAT LIKE A <span className="text-[var(--primary)]">CHAMPION</span>
           </h1>
           <p className="max-w-2xl mx-auto text-[var(--text-secondary)] text-lg">
-            Fitness is 30% training and 70% nutrition. Whether you're bulking,
+            Fitness is 30% training and 70% nutrition. Whether you&apos;re bulking,
             cutting, or maintaining, your results start in the kitchen.
           </p>
         </div>
@@ -88,7 +88,7 @@ export default function NutritionGuidePage() {
               </div>
               <h3 className="text-xl font-bold mb-3">Energy Source (Carbs)</h3>
               <p className="text-sm text-[var(--text-secondary)] mb-4">
-                Your body's preferred fuel for high-intensity training. Focus on
+                Your body&apos;s preferred fuel for high-intensity training. Focus on
                 complex carbohydrates.
               </p>
               <ul className="space-y-2 text-xs font-bold text-[var(--text-muted)] uppercase">
@@ -153,8 +153,8 @@ export default function NutritionGuidePage() {
             <div className="space-y-4">
               <div className="p-4 rounded-xl bg-blue-500/5 border border-blue-500/10">
                 <p className="text-sm font-semibold italic text-blue-400">
-                  "If you feel thirsty, you're already dehydrated. Drink 500ml
-                  as soon as you wake up."
+                  &ldquo;If you feel thirsty, you&apos;re already dehydrated. Drink 500ml
+                  as soon as you wake up.&rdquo;
                 </p>
               </div>
             </div>
@@ -213,7 +213,7 @@ export default function NutritionGuidePage() {
               <h4 className="text-xs font-black text-[var(--primary)] uppercase tracking-widest mb-2">
                 Tip 03
               </h4>
-              <p className="font-bold">Don't Fear Salt (Electrolytes)</p>
+              <p className="font-bold">Don&apos;t Fear Salt (Electrolytes)</p>
             </div>
             <div className="text-center md:text-left">
               <h4 className="text-xs font-black text-[var(--primary)] uppercase tracking-widest mb-2">

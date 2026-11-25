@@ -49,7 +49,7 @@ export default function BlogDetails() {
           Article Not Found
         </h2>
         <p className="text-[var(--text-secondary)]">
-          The insights you're looking for might have been moved or archived.
+          The insights you&apos;re looking for might have been moved or archived.
         </p>
         <button
           onClick={() => router.push("/blog")}

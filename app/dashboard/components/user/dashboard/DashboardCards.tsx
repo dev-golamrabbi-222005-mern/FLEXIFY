@@ -60,7 +60,7 @@ export const TodayGoalCard = ({
     <div className="relative z-10 flex items-center justify-between gap-4">
       <div className={planName ? "text-white" : "text-[var(--text-secondary)]"}>
         <p className="text-[11px] font-black uppercase tracking-widest mb-1 opacity-70">
-          Today's Goal
+          Today&apos;s Goal
         </p>
         {planName ? (
           <>

@@ -81,7 +81,7 @@ export const postUser = async (payload: UserPayload) => {
     return { success: false, message: "Email already exists" };
   }
 
-  const hashedPassword = password ? await bcrypt.hash(password, 14) : undefined;
+  const hashedPassword = password ? await bcrypt.hash(password, 12) : undefined;
 
   const newUser: DbUser = {
     name: name || "",
@@ -89,8 +89,8 @@ export const postUser = async (payload: UserPayload) => {
     phone: phone || "",
     imageUrl: imageUrl || "",
     password: hashedPassword,
-    role: "",       
-    status: "none",
+    role: (role === "coach" ? "" : (role || "user")) as DbUser["role"],       
+    status: (role === "coach" ? "pending" : "none") as DbUser["status"],
     updatedAt: new Date(),
   };
 
