@@ -2,32 +2,9 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { FaDumbbell, FaUsers, FaChartLine, FaRocket } from "react-icons/fa";
+import { COACH_BENEFITS } from "./coachBenefits";
 
 export default function BecomeCoachCTA() {
-  const benefits = [
-    {
-      icon: <FaDumbbell />,
-      title: "Flexible Hours",
-      description: "Work on your own schedule",
-    },
-    {
-      icon: <FaUsers />,
-      title: "Growing Client Base",
-      description: "Access to a growing community of active users",
-    },
-    {
-      icon: <FaChartLine />,
-      title: "Premium Earnings",
-      description: "Competitive rates & bonuses",
-    },
-    {
-      icon: <FaRocket />,
-      title: "Career Growth",
-      description: "Professional development support",
-    },
-  ];
-
   return (
     <section className="relative overflow-hidden py-12 md:py-16 lg:py-20">
       <div className="relative z-10 mx-auto max-w-7xl">
@@ -54,79 +31,54 @@ export default function BecomeCoachCTA() {
             }}
           />
 
-          {/* Dark + Blur Overlay */}
-          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
-
-          {/* Animated Dots Pattern */}
-          <div
-            className="absolute inset-0 opacity-20"
-            style={{
-              backgroundImage: `radial-gradient(circle, #fff 2px, transparent 2px)`,
-              backgroundSize: "40px 40px",
-            }}
-          />
-
-          {/* Floating Glow Elements */}
+          {/* Gradients */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-black/60" />
           <motion.div
-            className="absolute w-32 h-32 rounded-full top-10 left-10 bg-white/10 blur-3xl"
-            animate={{ y: [0, 20, 0], x: [0, 10, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute inset-0 bg-gradient-to-tr from-[var(--primary)]/30 to-transparent"
+            animate={{ opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           />
 
-          <motion.div
-            className="absolute w-40 h-40 rounded-full bottom-10 right-10 bg-white/10 blur-3xl"
-            animate={{ y: [0, -30, 0], x: [0, -15, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          />
-
-          {/* Content */}
-          <div className="relative z-10 p-8 md:p-16">
+          {/* Content Container */}
+          <div className="relative z-10 p-8 md:p-12 lg:p-16">
             <div className="grid items-center grid-cols-1 gap-12 lg:grid-cols-2">
               {/* Left Content */}
               <div>
                 <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.2 }}
-                  className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-white/20 backdrop-blur-md"
+                  className="inline-block px-4 py-2 mb-4 border bg-white/10 backdrop-blur-md rounded-full border-white/20"
                 >
-                  <span className="text-sm font-bold text-white">
-                    🔥 We are Hiring
+                  <span className="text-sm font-semibold text-white">
+                    ⭐ Join Our Elite Coaching Team
                   </span>
                 </motion.div>
 
                 <motion.h2
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.3 }}
-                  className="mb-6 text-4xl font-extrabold leading-tight text-white md:text-5xl lg:text-6xl"
+                  className="mb-6 text-3xl font-bold text-white md:text-5xl"
                 >
-                  Join Flexify as a
-                  <br />
-                  <span className="relative inline-block text-[var(--primary)] ">
-                    Certified Coach
-                    <motion.div
-                      className="absolute left-0 right-0 h-2 bg-white rounded-full -bottom-2"
-                      initial={{ scaleX: 0 }}
-                      whileInView={{ scaleX: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.6, duration: 0.6 }}
-                    />
+                  Share Your Passion.{" "}
+                  <span className="text-[var(--primary)]">
+                    Inspire Growth.
                   </span>
                 </motion.h2>
 
                 <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.4 }}
-                  className="mb-8 text-lg leading-relaxed md:text-xl text-white/90"
+                  className="mb-8 text-lg leading-relaxed text-white/80"
                 >
-                  Transform lives, build your brand, and earn on your terms.
-                  Join our community of elite fitness professionals making a
-                  real difference.
+                  Join Flexify as a certified coach. Help thousands achieve
+                  their fitness goals with our AI-powered platform and earn on
+                  your terms.
                 </motion.p>
 
                 <motion.div
@@ -137,16 +89,9 @@ export default function BecomeCoachCTA() {
                 >
                   <Link href="/applycoach">
                     <motion.button
-                      className="inline-flex items-center gap-3 px-8 py-4 text-lg font-bold shadow-2xl cursor-pointer group rounded-xl"
-                      style={{
-                        backgroundColor: "#fff",
-                        color: "#10B981",
-                      }}
-                      whileHover={{
-                        scale: 1.05,
-                        boxShadow: "0 15px 50px rgba(255,255,255,0.4)",
-                      }}
+                      whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2 px-8 py-4 text-lg font-bold text-white shadow-2xl rounded-2xl bg-[var(--primary)] transition-colors cursor-pointer"
                     >
                       Apply Now
                       <motion.span
@@ -169,7 +114,7 @@ export default function BecomeCoachCTA() {
 
               {/* Right Benefits */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                {benefits.map((benefit, i) => (
+                {COACH_BENEFITS.map((benefit, i) => (
                   <motion.div
                     key={i}
                     initial={{ opacity: 0, y: 30 }}

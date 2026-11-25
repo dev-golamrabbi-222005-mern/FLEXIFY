@@ -1,65 +1,30 @@
 "use client";
 
+import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import body01 from "../../../public/upper-body.png";
-import body02 from "../../../public/lower-body.png";
-import SectionTitle from "@/app/(website)/components/ui/section-title";
+import { HOME_CHALLENGES } from "./challengesData";
 
-const CHALLENGES = [
-  {
-    id: "upper-body",
-    tag: "Full Body",
-    title: "FULL BODY",
-    subtitle: "7×4 CHALLENGE",
-    desc: "Target every muscle group. Burn fat. Build strength. 28 days to a completely transformed physique.",
-    stats: [
-      { val: "28", label: "Days" },
-      { val: "7", label: "Workouts/wk" },
-      { val: "500+", label: "Kcal/day" },
-    ],
-    image: body01,
-    alt: "Full Body Challenge",
-    accent: "var(--primary)",
-    accentRgb: "244,121,32",
-  },
-  {
-    id: "lower-body",
-    tag: "Lower Body",
-    title: "LOWER BODY",
-    subtitle: "7×4 CHALLENGE",
-    desc: "Sculpt powerful legs, glutes, and calves. Dominate your lower half in 4 intense weeks.",
-    stats: [
-      { val: "28", label: "Days" },
-      { val: "7", label: "Workouts/wk" },
-      { val: "400+", label: "Kcal/day" },
-    ],
-    image: body02,
-    alt: "Lower Body Challenge",
-    accent: "var(--danger)",
-    accentRgb: "230,57,70",
-  },
-];
-
-const Challenges = () => {
+export default function Challenges() {
   const router = useRouter();
+
   return (
     <section className="py-12 transition-colors md:py-16 lg:py-20 duration-400">
       <div className="px-4 mx-auto max-w-7xl">
         <div className="flex flex-col gap-3 mb-10">
-          <h1 className="text-3xl font-bold tracking-tight text-center md:text-4xl">
+          <h1 className="text-3xl font-bold tracking-tight text-center md:text-4xl text-[var(--text-primary)]">
             <span>7x4</span> <span className="uppercase">Home Challenges</span>
           </h1>
-          <span className="h-1 w-14 rounded-full bg-(--primary) mx-auto" />
+          <span className="h-1 w-14 rounded-full bg-[var(--primary)] mx-auto" />
         </div>
         <div className="grid grid-cols-1 gap-6 mt-12 lg:grid-cols-2">
-          {CHALLENGES.map((c, i) => (
+          {HOME_CHALLENGES.map((c, i) => (
             <div
               key={i}
+              onClick={() => router.push(`/dashboard/challenges/${c.id}`)}
               className="relative overflow-hidden cursor-pointer group rounded-3xl"
               style={{ minHeight: 420 }}
             >
-              {/* Background image */}
               <div className="absolute inset-0">
                 <Image
                   src={c.image}
@@ -69,7 +34,6 @@ const Challenges = () => {
                 />
               </div>
 
-              {/* Dark gradient overlay */}
               <div
                 className="absolute inset-0"
                 style={{
@@ -77,7 +41,6 @@ const Challenges = () => {
                 }}
               />
 
-              {/* Accent color wash on hover */}
               <div
                 className="absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100"
                 style={{
@@ -85,17 +48,13 @@ const Challenges = () => {
                 }}
               />
 
-              {/* Diagonal accent stripe */}
               <div
                 className="absolute top-0 bottom-0 w-2 origin-top skew-x-6 -left-8 opacity-80"
                 style={{ background: c.accent }}
               />
 
-              {/* Content */}
               <div className="relative z-10 flex flex-col justify-between h-full p-8 md:p-10">
-                {/* Top: tag + stats */}
                 <div className="flex flex-wrap items-start justify-between gap-2">
-                  {/* Tag */}
                   <div
                     className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em]"
                     style={{
@@ -111,7 +70,6 @@ const Challenges = () => {
                     {c.tag}
                   </div>
 
-                  {/* Stat pills */}
                   <div className="flex flex-wrap gap-2">
                     {c.stats.map((s) => (
                       <div
@@ -136,9 +94,7 @@ const Challenges = () => {
                   </div>
                 </div>
 
-                {/* Bottom: title + desc + CTA */}
                 <div>
-                  {/* Big title */}
                   <div className="mb-4">
                     <p
                       className="font-black leading-none tracking-tighter"
@@ -162,43 +118,26 @@ const Challenges = () => {
                     </p>
                   </div>
 
-                  <p
-                    className="max-w-xs mb-6 text-sm leading-relaxed"
-                    style={{ color: "rgba(255,255,255,0.65)" }}
-                  >
+                  <p className="text-sm leading-relaxed mb-6 max-w-md text-white/70">
                     {c.desc}
                   </p>
 
-                  {/* CTA */}
                   <button
-                    onClick={() => router.push(`/dashboard/challenges/${c.id}`)}
-                    className="group/btn relative flex items-center gap-3 px-7 py-3.5 rounded-2xl font-black text-sm uppercase tracking-wider text-white overflow-hidden transition-all duration-300 hover:scale-[1.03] active:scale-[0.97]"
+                    className="flex items-center gap-2 px-6 py-3 rounded-2xl font-black text-sm uppercase tracking-wider transition-all hover:gap-3 cursor-pointer"
                     style={{
                       background: c.accent,
-                      boxShadow: `0 8px 32px rgba(${c.accentRgb}, 0.5)`,
+                      color: "#fff",
+                      boxShadow: `0 4px 20px rgba(${c.accentRgb}, 0.4)`,
                     }}
                   >
-                    <span className="relative z-10">Start Challenge</span>
-                    <span className="relative z-10 transition-transform duration-300 group-hover/btn:translate-x-1">
-                      →
-                    </span>
+                    Start 28-Day Challenge →
                   </button>
                 </div>
               </div>
-
-              {/* Bottom glow line */}
-              <div
-                className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{
-                  background: `linear-gradient(to right, transparent, ${c.accent}, transparent)`,
-                }}
-              />
             </div>
           ))}
         </div>
       </div>
     </section>
   );
-};
-
-export default Challenges;
+}
