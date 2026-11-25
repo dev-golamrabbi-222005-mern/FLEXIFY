@@ -44,7 +44,7 @@ export default function Articles() {
   const latestThree = blogs.slice(1, 4); // Grabs index 1, 2, and 3
 
   return (
-    <section className="py-8 md:py-12 lg:py-16 space-y-12">
+    <section className="py-12 md:py-16 lg:py-20 space-y-12">
       {/* Header Section */}
       <div className="text-center space-y-4 mb-6 md:mb-8 lg:mb-10">
         {" "}

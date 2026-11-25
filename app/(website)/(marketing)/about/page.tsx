@@ -64,7 +64,7 @@ const About = () => {
   ];
 
   return (
-    <div className="mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6">
+    <div className="mx-auto my-10 md:my-12 lg:my-16 max-w-7xl px-4 md:px-6">
       <title>About - Flexify</title>
       <section className="pb-8 md:pb-12 lg:pb-16">
         {/* About Section */}
@@ -96,7 +96,7 @@ const About = () => {
         </div>
       </section>
 
-      <section className="py-8 md:py-12 lg:py-16">
+      <section className="py-12 md:py-16 lg:py-20">
         {/* 🔹 Mission + Vision */}
         <div className="grid md:grid-cols-2 gap-10">
           <div className="bg-[var(--card-bg)] p-6 md:p-8 rounded-2xl border border-[var(--border-color)]">
@@ -124,7 +124,7 @@ const About = () => {
       </section>
 
       {/* 🔹 Why Flexify */}
-      <section className="py-8 md:py-12 lg:py-16">
+      <section className="py-12 md:py-16 lg:py-20">
         <div className="text-center mb-10">
           <SectionTitle
             title="Why Flexify?"

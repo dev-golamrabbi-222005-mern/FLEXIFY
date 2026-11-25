@@ -506,7 +506,7 @@ function RoleSection({ role }: { role: (typeof ROLES)[0] }) {
   const numY = useTransform(scrollYProgress, [0, 1], [0, -40]);
 
   return (
-    <div ref={sectionRef} className="relative py-12 md:py-20">
+    <div ref={sectionRef} className="relative py-16 md:py-20 lg:py-28">
       {/* ── Parallax verb watermark ── */}
       <motion.div
         style={{ y: verbY }}
@@ -722,7 +722,7 @@ export default function HowItWorksPage() {
     offset: ["start start", "end start"],
   });
 
-   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   return (
@@ -737,7 +737,7 @@ export default function HowItWorksPage() {
 
       <SideNav active={activeRole} onChange={scrollToRole} />
 
-      <div className="mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6">
+      <div className="mx-auto my-10 md:my-12 lg:my-16 max-w-7xl px-4 md:px-6">
         {/* ── HERO ── */}
         <motion.div ref={ref} style={{ y, opacity }} className="text-center">
           {/* Floating badge */}
@@ -780,7 +780,7 @@ export default function HowItWorksPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.7 }}
-            className="text-lg max-w-3xl mx-auto mb-6"
+            className="text-lg max-w-xl mx-auto mb-6"
             style={{ color: "var(--text-secondary)" }}
           >
             Three interfaces. One ecosystem. Built for users who train, coaches

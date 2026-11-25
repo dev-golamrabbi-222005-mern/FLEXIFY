@@ -13,9 +13,9 @@ const Footer = () => {
     }`;
 
   return (
-    <footer className="pt-10 shadow-md bg-[var(--bg-nav-footer)] border-t-2 border-[#add4c7]">
+    <footer className="pt-12 md:pt-16 lg:pt-20 shadow-md bg-[var(--bg-nav-footer)] border-t-2 border-[#add4c7]">
       {/* Updated grid to support 4 columns on large screens */}
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-16">
         {/* 1. Left Section */}
         <div>
           <Link href="/" className="flex items-center gap-2 mb-4">
@@ -116,8 +116,8 @@ const Footer = () => {
       </div>
 
       {/* Divider */}
-      <div className="border-t-2 border-[#add4c7] mt-10">
-        <p className="text-center text-[15px] font-semibold py-6 text-gray-500">
+      <div className="border-t-2 border-[#add4c7] mt-12 md:mt-16 lg:mt-20">
+        <p className="text-center text-[15px] font-semibold py-3 text-gray-500">
           © 2026 Flexify. All rights reserved.
         </p>
       </div>

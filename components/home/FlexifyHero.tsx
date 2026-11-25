@@ -51,7 +51,7 @@ export default function FlexifyHero() {
   }, []);
 
   return (
-    <section className="relative min-h-[500px] py-7 w-full bg-[var(--bg-primary)] overflow-hidden transition-colors duration-700 font-sans flex items-center">
+    <section className="relative min-h-[500px] py-12 md:py-16 lg:py-20 w-full bg-[var(--bg-primary)] overflow-hidden transition-colors duration-700 font-sans flex items-center">
       <div className="absolute inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.div
@@ -72,7 +72,7 @@ export default function FlexifyHero() {
         </AnimatePresence>
       </div>
 
-      <div className="relative z-10 flex flex-col items-center justify-center w-full gap-12 px-4 md:px-6 mx-auto mb-8 max-w-7xl md:mb-12 md:flex-row md:gap-16">
+      <div className="relative z-10 flex flex-col items-center justify-center w-full gap-12 px-4 md:px-6 mx-auto mb-8 max-w-7xl md:mb-12 md:flex-row md:gap-20">
         <div className="w-full md:w-1/2">
           <AnimatePresence mode="wait">
             <motion.div

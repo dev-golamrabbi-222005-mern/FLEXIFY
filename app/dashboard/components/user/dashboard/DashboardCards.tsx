@@ -26,6 +26,7 @@ const fadeUp = (delay = 0): HTMLMotionProps<"div"> => ({
   },
 });
 
+
 export const GreetingHeader = ({ name }: { name: string }) => {
   const h = new Date().getHours();
   const greet =

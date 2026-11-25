@@ -410,10 +410,9 @@ function InstructionsTab({
               key={i}
               onClick={() => toggle(i)}
               className={`flex gap-3 p-3 rounded-xl cursor-pointer transition-all border
-                ${
-                  checked.includes(i)
-                    ? "border-[var(--primary)]/20 bg-[var(--primary)]/5"
-                    : "border-transparent hover:bg-[var(--bg-primary)]"
+                ${checked.includes(i)
+                  ? "border-[var(--primary)]/20 bg-[var(--primary)]/5"
+                  : "border-transparent hover:bg-[var(--bg-primary)]"
                 }`}
             >
               <div
@@ -934,7 +933,7 @@ function HistoryTab() {
             label: "Avg Volume",
             val: Math.round(
               MOCK_HISTORY.reduce((s, h) => s + vol(h), 0) /
-                MOCK_HISTORY.length,
+              MOCK_HISTORY.length,
             ),
             unit: " kg",
           },
@@ -1431,9 +1430,9 @@ function DetailView({
   const [activeTab, setActiveTab] = useState<Tab>("Instructions");
   const tabs: Tab[] = ["Instructions", "Muscles", "Equipment", "History"];
   const lc = LEVEL_STYLE[ex.level] ?? { bg: "#f1f5f9", text: "#64748b" };
-  
+
   return (
-    <div className="mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6">
+    <div className="mx-auto my-10 md:my-12 lg:my-16 max-w-7xl px-4 md:px-6">
       {/* Breadcrumb */}
       <nav
         className="flex items-center gap-1.5 text-xs mb-4"
@@ -1579,10 +1578,9 @@ function DetailView({
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2.5 text-sm font-semibold whitespace-nowrap border-b-2 transition-all
-              ${
-                activeTab === tab
-                  ? "border-[var(--primary)] font-black"
-                  : "border-transparent hover:text-[var(--text-primary)]"
+              ${activeTab === tab
+                ? "border-[var(--primary)] font-black"
+                : "border-transparent hover:text-[var(--text-primary)]"
               }`}
             style={{
               color:
@@ -1733,7 +1731,7 @@ function SessionView({
   const currentSet = setsCompleted + 1;
 
   return (
-    <div className="mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6 space-y-4">
+    <div className="mx-auto my-10 md:my-12 lg:my-16 max-w-7xl px-4 md:px-6 space-y-4">
       {/* Top bar */}
       <div className="flex items-center justify-between pt-1">
         <button
@@ -2117,7 +2115,7 @@ function CompleteView({
   const zoneMax = Math.max(...Object.values(zones));
 
   return (
-    <div className="mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6 flex flex-col gap-4">
+    <div className="mx-auto my-10 md:my-12 lg:my-16 max-w-7xl px-4 md:px-6 flex flex-col gap-4">
       {/* Well Done */}
       <motion.div
         initial={{ opacity: 0, scale: 0.94 }}

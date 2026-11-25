@@ -90,10 +90,10 @@ export default function LoginClient(): JSX.Element {
         {/* Form */}{" "}
         <div className="mt-6 mb-4">
           <div className="flex items-center justify-between mb-2.5">
-            <span className="text-[11px] font-semibold tracking-wider text-emerald-400 uppercase bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
-              ⚡ 1-Click Recruiter Demo
+            <span className="text-[11px] font-semibold tracking-wider text-emerald-400 uppercase">
+               Want a Quick Look of Flexify?
             </span>
-            <span className="text-[11px] text-gray-400">No typing needed</span>
+            <span className="text-[11px] text-gray-400">Here's Demo Login</span>
           </div>
           <div className="grid grid-cols-3 gap-2.5">
           {/* User Mock  */}

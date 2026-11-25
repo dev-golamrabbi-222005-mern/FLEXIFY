@@ -118,15 +118,13 @@ function FeatureCard({
       transition={{ delay: index * 0.1, duration: 0.6, ease: "easeOut" }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      className={`grid md:grid-cols-2 gap-8 items-center my-20 md:my-24 lg:my-28 ${
-        isEven ? "" : "md:grid-flow-dense"
-      }`}
+      className={`grid md:grid-cols-2 gap-8 items-center my-24 md:my-48 lg:my-52 ${isEven ? "" : "md:grid-flow-dense"
+        }`}
     >
       {/* Icon Circle - Animated */}
       <motion.div
-        className={`relative flex items-center justify-center ${
-          isEven ? "md:order-1" : "md:order-2"
-        }`}
+        className={`relative flex items-center justify-center ${isEven ? "md:order-1" : "md:order-2"
+          }`}
         animate={{
           scale: isHovered ? 1.05 : 1,
           rotate: isHovered ? 5 : 0,
@@ -257,9 +255,9 @@ function Counter({
   decimals?: number;
 }) {
   const count = useMotionValue(0);
-const rounded = useTransform(count, (latest) =>
-  decimals > 0 ? latest.toFixed(decimals) : Math.round(latest).toString(),
-);
+  const rounded = useTransform(count, (latest) =>
+    decimals > 0 ? latest.toFixed(decimals) : Math.round(latest).toString(),
+  );
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -352,7 +350,7 @@ export default function FeaturesPage() {
   return (
     <div className="min-h-screen overflow-hidden">
       <title>Features - Flexify</title>
-      <div className="mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6">
+      <div className="mx-auto my-10 md:my-12 lg:my-16 max-w-7xl px-4 md:px-6">
         {/* Hero */}
         <HeroSection />
 
@@ -369,7 +367,7 @@ export default function FeaturesPage() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="text-center py-8 md:py-12 lg:py-16 mb-8 md:mb-12 lg:mb-16 rounded-3xl relative overflow-hidden"
+          className="text-center py-12 md:py-16 lg:py-20 mb-8 md:mb-12 lg:mb-16 rounded-3xl relative overflow-hidden"
           style={{
             backgroundColor: "var(--bg-secondary)",
             border: "1px solid var(--border-color)",

@@ -27,7 +27,7 @@ export default function BecomeCoachCTA() {
   ];
 
   return (
-    <section className="px-6 pt-12 overflow-hidden md:pt-20">
+    <section className="px-4 md:px-6 pt-12 overflow-hidden md:pt-16 lg:pt-20">
       <div className="mx-auto max-w-7xl">
         <div className="relative group">
           {/* 1. Background Glow Effect */}

@@ -25,7 +25,7 @@ interface Workout {
 }
 
 export default function PopularWorkouts() {
-  const {data: workouts = []} = useQuery({
+  const { data: workouts = [] } = useQuery({
     queryKey: ["workouts"],
     queryFn: async () => {
       const res = await axios.get("/api/exercises");
@@ -33,7 +33,7 @@ export default function PopularWorkouts() {
     }
   });
   return (
-    <section className="py-8 md:py-12 lg:py-16">
+    <section className="py-12 md:py-16 lg:py-20">
       <div className="mx-auto max-w-7xl">
         {/* ✅ BMI Style Section Title */}
         <SectionTitle title="Popular Workouts" />

@@ -4,16 +4,16 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { motion } from "framer-motion";
-import CoachCard from "../cards/CoachCard"; 
+import CoachCard from "../cards/CoachCard";
 
 type Coach = {
   _id: string;
   name: string;
   imageUrl?: string;
   location?: string;
-  experienceYears?: number; 
+  experienceYears?: number;
   trainingTypes?: string[];
-  specialties?: string; 
+  specialties?: string;
   pricing?: {
     monthly: number;
     perSession: number;
@@ -33,12 +33,12 @@ const TopCoaches = () => {
     },
   });
 
-const topCoaches = coaches
-  ? [...coaches]
+  const topCoaches = coaches
+    ? [...coaches]
       .filter((c) => c.experienceYears !== undefined)
       .sort((a, b) => b.experienceYears! - a.experienceYears!)
       .slice(0, 3)
-  : [];
+    : [];
 
   console.log(topCoaches);
 
@@ -68,7 +68,7 @@ const topCoaches = coaches
     );
 
   return (
-    <section className="relative py-8 md:py-12 lg:py-16 overflow-hidden">
+    <section className="relative py-12 md:py-16 lg:py-20 overflow-hidden">
       {/* Title */}
       <div className="flex flex-col gap-3 mb-10">
         <motion.h2

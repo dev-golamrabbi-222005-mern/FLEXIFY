@@ -47,30 +47,30 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
 }
 
 export default function StatsSection() {
-  const {data: users} = useQuery({
+  const { data: users } = useQuery({
     queryKey: ["users"],
-    queryFn: async() => {
+    queryFn: async () => {
       const res = await axios.get(`/api/user?role=user`);
       return res.data;
     }
   });
-  const {data: achievements} = useQuery({
+  const { data: achievements } = useQuery({
     queryKey: ["achievements"],
-    queryFn: async() => {
+    queryFn: async () => {
       const res = await axios.get(`/api/stats/goal-achieved`);
       return res.data;
     }
   });
-  const {data: completedWorkouts} = useQuery({
+  const { data: completedWorkouts } = useQuery({
     queryKey: ["completedWorkouts"],
-    queryFn: async() => {
+    queryFn: async () => {
       const res = await axios.get(`/api/stats/workout-complete`);
       return res.data;
     }
   });
-  const {data: coaches} = useQuery({
+  const { data: coaches } = useQuery({
     queryKey: ["coaches"],
-    queryFn: async() => {
+    queryFn: async () => {
       const res = await axios.get(`/api/coach`);
       return res.data;
     }
@@ -107,7 +107,7 @@ export default function StatsSection() {
     },
   ];
   return (
-    <section className="relative overflow-hidden py-8 md:py-12 lg:py-16">
+    <section className="relative overflow-hidden py-12 md:py-16 lg:py-20">
       <div className="relative">
         <SectionTitle
           title="Flexify Impact"

@@ -59,7 +59,7 @@ const FAQ = () => {
   };
 
   return (
-    <section className="py-8 md:py-12 lg:py-16 relative overflow-hidden">
+    <section className="py-12 md:py-16 lg:py-20 relative overflow-hidden">
       <SectionTitle title="Frequently Asked Questions" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -107,11 +107,10 @@ const FAQ = () => {
 
             {/* Answer */}
             <div
-              className={`overflow-hidden transition-all duration-500 ${
-                openIndex === index
+              className={`overflow-hidden transition-all duration-500 ${openIndex === index
                   ? "max-h-40 opacity-100"
                   : "max-h-0 opacity-0"
-              }`}
+                }`}
             >
               <p
                 className="text-[var(--text-secondary)] leading-relaxed

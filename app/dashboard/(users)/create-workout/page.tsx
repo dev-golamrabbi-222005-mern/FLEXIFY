@@ -206,25 +206,23 @@ export default function WorkoutBuilder() {
       />
       <div className="max-w-full min-h-screen overflow-x-hidden">
         <title>Create Workout | Dashboard - Flexify</title>
-        <header className="mb-8">
-          <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
-            Custom <span className="text-[var(--primary)]">Routine</span>
-          </h1>
-          <p className="leading-relaxed mt-2 text-[var(--text-secondary)]">
-            Build your ultimate workout
-          </p>
-        </header>
-
-        {/* Filter Section */}
-        <div className="sticky top-0 z-40 bg-[var(--bg-primary)]/80 backdrop-blur-md pb-6 space-y-6">
+        <header className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
+              Custom <span className="text-[var(--primary)]">Routine</span>
+            </h1>
+            <p className="leading-relaxed mt-2 text-[var(--text-secondary)]">
+              Build your ultimate workout
+            </p>
+          </div>
           <div className="relative">
             <Search
               className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
               size={20}
             />
             <input
-              className="input-style !pl-12 !py-4 shadow-sm"
-              placeholder="Search exercises (e.g. Bench Press)..."
+              className="input-style !pl-12 !pr-32 !py-4 shadow-sm"
+              placeholder="Search exercises..."
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -240,6 +238,10 @@ export default function WorkoutBuilder() {
               </button>
             )}
           </div>
+        </header>
+
+        {/* Filter Section */}
+        <div className="sticky top-0 z-40 bg-[var(--bg-primary)]/80 backdrop-blur-md pb-6 space-y-6">
 
           <FilterSection
             levels={levels}

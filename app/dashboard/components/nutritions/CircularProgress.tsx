@@ -44,7 +44,7 @@ export default function CircularProgress({
           y={size / 2 - 8}
           textAnchor="middle"
           dominantBaseline="middle"
-          fill="#2c2c2c"
+          fill={color}
           fontSize="18"
           fontWeight="700"
           style={{

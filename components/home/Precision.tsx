@@ -5,7 +5,7 @@ import { MdSettingsInputComponent } from "react-icons/md";
 
 const Precision = () => {
   return (
-    <section className="py-8 md:py-12 lg:py-16">
+    <section className="py-12 md:py-16 lg:py-20">
       <div className="max-w-7xl mx-auto px-4 text-center">
         <SectionTitle
           title="Precision Programming"

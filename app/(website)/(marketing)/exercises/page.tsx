@@ -40,7 +40,7 @@ const ExercisesPage = () => {
     level: "",
     equipment: "",
   });
-  
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
       queryKey: ["exercises", filters],
@@ -63,19 +63,19 @@ const ExercisesPage = () => {
   ) => {
     setFilters((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  
+
   const resetFilters = () =>
     setFilters({ search: "", muscle: "", level: "", equipment: "" });
-  
+
   const activeFilterCount = [
     filters.muscle,
     filters.level,
     filters.equipment,
   ].filter(Boolean).length;
-  
+
   return (
-    <div className="min-h-screen mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6">
-    <title>Exercises - Flexify</title>
+    <div className="min-h-screen mx-auto my-8 md:my-12 lg:my-16 max-w-7xl px-4 md:px-6">
+      <title>Exercises - Flexify</title>
       <div className="mb-10 text-center">
         <h1 className="text-3xl md:text-5xl font-bold text-[var(--text-primary)] tracking-tighter">
           Workouts <span className="text-[var(--primary)]">Vault</span>

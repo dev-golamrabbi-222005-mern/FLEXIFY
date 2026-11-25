@@ -1,4 +1,4 @@
-"use client" 
+"use client"
 import React from "react";
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
@@ -10,35 +10,35 @@ import { toast } from "react-toastify";
 const Contact = () => {
   const [loading, setLoading] = useState(false);
 
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setLoading(true);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
 
-  const form = e.target as HTMLFormElement;
+    const form = e.target as HTMLFormElement;
 
-const data = {
-  name: (form.elements.namedItem("name") as HTMLInputElement).value,
-  email: (form.elements.namedItem("email") as HTMLInputElement).value,
-  message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
-};
+    const data = {
+      name: (form.elements.namedItem("name") as HTMLInputElement).value,
+      email: (form.elements.namedItem("email") as HTMLInputElement).value,
+      message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
+    };
 
-  try {
-    await axios.post("/api/contact", data);
+    try {
+      await axios.post("/api/contact", data);
 
-    toast.success("Message sent successfully!");
-    form.reset();
-  } catch (err) {
-    console.error(err);
-    toast.error("Something went wrong");
-  } finally {
-    setLoading(false);
-  }
-};
+      toast.success("Message sent successfully!");
+      form.reset();
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
       <title>Contact - Flexify</title>
-      <section className="mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6">
+      <section className="mx-auto my-10 md:my-12 lg:my-16 max-w-7xl px-4 md:px-6">
         <div className="grid items-start grid-cols-1 gap-12 mx-auto max-w-7xl md:grid-cols-2">
           {/* Left: Contact Info */}
           <div>

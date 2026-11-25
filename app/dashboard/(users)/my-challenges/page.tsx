@@ -153,7 +153,7 @@ function StreakSection({ records }: { records: ChallengeRecord[] }) {
       )}
 
       <div className="relative z-10">
-         <title>My Challenges | Dashboard - Flexify</title>
+        <title>My Challenges | Dashboard - Flexify</title>
         {/* Top row */}
         <div className="flex items-start justify-between mb-5">
           <div>
@@ -400,7 +400,7 @@ export default function MyChallengesPage() {
             </h1>
           </div>
           <div
-            className="w-11 h-11 rounded-2xl flex items-center justify-center"
+            className="w-15 h-15 rounded-2xl flex items-center justify-center"
             style={{
               background: "rgba(16,185,129,0.12)",
               border: "1px solid rgba(16,185,129,0.25)",
@@ -528,7 +528,7 @@ export default function MyChallengesPage() {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div
-                      className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl"
+                      className="w-15 h-15 rounded-2xl flex items-center justify-center text-xl"
                       style={{
                         background: isActive
                           ? "rgba(16,185,129,0.1)"
@@ -558,15 +558,15 @@ export default function MyChallengesPage() {
                     style={
                       isActive
                         ? {
-                            background: "rgba(16,185,129,0.1)",
-                            color: "var(--primary)",
-                            border: "1px solid rgba(16,185,129,0.25)",
-                          }
+                          background: "rgba(16,185,129,0.1)",
+                          color: "var(--primary)",
+                          border: "1px solid rgba(16,185,129,0.25)",
+                        }
                         : {
-                            background: "var(--bg-primary)",
-                            color: "var(--text-muted)",
-                            border: "1px solid var(--border-color)",
-                          }
+                          background: "var(--bg-primary)",
+                          color: "var(--text-muted)",
+                          border: "1px solid var(--border-color)",
+                        }
                     }
                   >
                     {isActive ? "Active" : "Start"}

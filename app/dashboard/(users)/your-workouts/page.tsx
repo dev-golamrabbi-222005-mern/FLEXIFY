@@ -129,7 +129,7 @@ export default function YourWorkoutsPage() {
             </h1>
           </div>
           <div
-            className="w-11 h-11 rounded-2xl flex items-center justify-center"
+            className="w-15 h-15 rounded-2xl flex items-center justify-center"
             style={{
               background: "rgba(16,185,129,0.12)",
               border: "1px solid rgba(16,185,129,0.25)",

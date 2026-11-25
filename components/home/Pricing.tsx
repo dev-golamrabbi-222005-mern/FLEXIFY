@@ -252,7 +252,7 @@ const Pricing = () => {
   };
 
   return (
-    <section className="py-8 md:py-12 lg:py-16" id="pricing">
+    <section className="py-12 md:py-16 lg:py-20" id="pricing">
       <div className="px-4 md:px-6 mx-auto max-w-7xl">
         <SectionTitle
           title="Choose Your Plan"

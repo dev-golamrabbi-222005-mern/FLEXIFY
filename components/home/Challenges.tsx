@@ -44,9 +44,9 @@ const CHALLENGES = [
 const Challenges = () => {
   const router = useRouter();
   return (
-    <section className="py-8 transition-colors md:py-12 lg:py-16 duration-400">
+    <section className="py-12 transition-colors md:py-16 lg:py-20 duration-400">
       <div className="px-4 mx-auto max-w-7xl">
-        <div className="flex flex-col gap-3 mt-8 mb-10 md:mt-12 lg:mt-16">
+        <div className="flex flex-col gap-3 mb-10">
           <h1 className="text-3xl font-bold tracking-tight text-center md:text-4xl">
             <span>7x4</span> <span className="uppercase">Home Challenges</span>
           </h1>

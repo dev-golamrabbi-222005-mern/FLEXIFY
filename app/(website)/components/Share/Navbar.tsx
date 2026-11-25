@@ -61,12 +61,12 @@ const Navbar = () => {
   const activeCls =
     "border-b-2 border-[var(--border-highlight)] font-bold px-2.5 py-1.5 rounded-lg text-[var(--primary)] text-sm";
   const normalCls =
-    "hover:text-[var(--primary)] px-2.5 py-1.5 rounded-lg transition-colors text-sm font-medium";
+    "hover:text-[var(--primary)] px-2.5 py-1.5 rounded-lg transition-colors text-sm";
   const linkCls = (path: string) => (pathname === path ? activeCls : normalCls);
 
   return (
     <nav className="bg-[var(--bg-nav-footer)] sticky top-0 z-50 shadow-md">
-      <div className="flex items-center justify-between px-4 py-1 mx-auto max-w-7xl">
+      <div className="flex items-center justify-between px-4 py-3 mx-auto max-w-7xl">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 my-2 shrink-0">
           <Image src="/Logo-Flexify.png" alt="logo" width={110} height={110} />
@@ -181,7 +181,7 @@ const Navbar = () => {
 
           {/* CTA — hidden on mobile (shown in drawer) */}
           <motion.button
-            className="hidden md:flex btn-primary font-semibold shadow-xl"
+            className="hidden md:flex btn-primary font-semibold shadow-xl py-2"
             whileHover={{
               scale: 1.05,
               boxShadow: "0 10px 40px rgba(16,185,129,0.3)",

@@ -41,30 +41,30 @@ const CoachesPage = () => {
   const [sort, setSort] = useState<string>("");
 
 
-const {
-  data: coaches,
-  isLoading,
-  isFetching,
-  isError,
-} = useQuery({
-  queryKey: ["coaches", filters, sort],
-  queryFn: async () => {
-    const { search, specialty, experience, trainingType } = filters;
+  const {
+    data: coaches,
+    isLoading,
+    isFetching,
+    isError,
+  } = useQuery({
+    queryKey: ["coaches", filters, sort],
+    queryFn: async () => {
+      const { search, specialty, experience, trainingType } = filters;
 
-    const { data } = await axios.get(
-      `/api/coach?search=${search}&specialty=${specialty}&experience=${experience}&trainingType=${trainingType}&sort=${sort}`,
-    );
+      const { data } = await axios.get(
+        `/api/coach?search=${search}&specialty=${specialty}&experience=${experience}&trainingType=${trainingType}&sort=${sort}`,
+      );
 
-    return data;
-  },
-});
+      return data;
+    },
+  });
 
- const resetFilters = () =>
+  const resetFilters = () =>
     setFilters({ search: "", specialty: "", experience: "", trainingType: "" });
 
   const activeFilterCount = [filters.specialty, filters.experience, filters.trainingType].filter(Boolean).length;
   return (
-    <div className="min-h-screen mx-auto my-6 md:my-8 lg:my-10 max-w-7xl px-4 md:px-6">
+    <div className="min-h-screen mx-auto my-8 md:my-12 lg:my-16 max-w-7xl px-4 md:px-6">
       <title>Coaches - Flexify</title>
 
       <h1 className="text-3xl mb-10 md:text-5xl font-bold text-[var(--text-primary)] text-center tracking-tighter">
@@ -222,7 +222,7 @@ const {
         </div>
       </div>
 
-      <div className="relative min-h-[400px]">
+      <div className="relative mb-12 md:mb-16 lg:mb-20 min-h-[400px]">
         {(isLoading || isFetching) && (
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-start pt-20 bg-[var(--bg-primary)] bg-opacity-60 backdrop-blur-[2px] transition-all">
             <Loader2
