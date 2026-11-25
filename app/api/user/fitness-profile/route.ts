@@ -63,7 +63,17 @@ export async function GET() {
 
     const goals = profile ? calculateGoals(profile) : null;
 
-    return NextResponse.json({fitnessProfile: profile || {}, calculatedGoals: goals});
+    return NextResponse.json({
+      fitnessProfile: profile || {},
+      fitness_profile: profile || {},
+      calculatedGoals: goals || {
+        calories: 2200,
+        protein: 160,
+        carbs: 260,
+        fats: 70,
+        waterGoal: 8,
+      },
+    });
   } catch (error) {
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }

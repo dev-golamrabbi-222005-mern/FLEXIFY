@@ -1,6 +1,6 @@
 "use client";
 
-import { fadeUp, SectionHeader } from "@/app/dashboard/page";
+import { fadeUp, SectionHeader } from "@/app/dashboard/components/dashboard-shared";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { motion } from "framer-motion";

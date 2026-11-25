@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed:demo": "node scripts/seed-demo-users.js"
+    "seed:demo": "node scripts/seed-demo-users.js",
+    "seed:user": "node scripts/seed-user-data.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

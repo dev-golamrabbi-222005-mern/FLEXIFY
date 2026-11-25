@@ -1,6 +1,6 @@
 "use client";
 
-import { ChartCard } from "@/app/dashboard/page";
+import { ChartCard } from "@/app/dashboard/components/dashboard-shared";
 import React from "react";
 import { motion } from "framer-motion";
 import axios from "axios";

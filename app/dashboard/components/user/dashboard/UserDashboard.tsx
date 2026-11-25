@@ -231,6 +231,8 @@ export default function UserDashboard({ name }: { name: string }) {
 
   const todayChartData = weeklyData.find((d) => d.day === todayName);
 
+  const profile = userData?.fitnessProfile || userData?.fitness_profile;
+
   const stats: StatCardProps[] = [
     {
       icon: Dumbbell,
@@ -267,8 +269,8 @@ export default function UserDashboard({ name }: { name: string }) {
     {
       icon: Moon,
       label: "Sleep",
-      value: userData?.fitness_profile?.sleepHours
-        ? `${userData.fitness_profile.sleepHours}h`
+      value: profile?.sleepHours
+        ? `${profile.sleepHours}h`
         : "8h",
       sub: "Every night",
       iconColor: "#7c5cbf",
@@ -279,7 +281,7 @@ export default function UserDashboard({ name }: { name: string }) {
       icon: Droplets,
       label: "Water",
       value: `${nutritionData?.waterIntake || 0} / ${
-        userData?.calculatedGoals?.waterGoal || 8
+        userData?.calculatedGoals?.waterGoal || (profile?.waterIntake ? profile.waterIntake * 4 : 8)
       }`,
       sub: "glasses",
       iconColor: "#4b9eff",

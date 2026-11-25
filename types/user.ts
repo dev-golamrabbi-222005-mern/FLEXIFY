@@ -20,8 +20,9 @@ export interface UserGoals {
 }
 
 export interface UserProfileResponse {
-  fitness_profile: FitnessProfile;
-  calculatedGoals: UserGoals;
+  fitnessProfile?: FitnessProfile;
+  fitness_profile?: FitnessProfile;
+  calculatedGoals: UserGoals | null;
 }
 
 export type GoalType = "WEIGHT_LOSS" | "MUSCLE_GAIN" | "WATER_INTAKE" | "WORKOUT_DAYS";

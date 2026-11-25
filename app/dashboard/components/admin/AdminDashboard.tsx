@@ -5,7 +5,7 @@ import { Users, UserCheck, DollarSign, CreditCard, ShieldCheck, Clock, Loader2 }
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { fadeUp, greeting, StatCard, ChartCard, SectionHeader } from "../../page";
+import { fadeUp, greeting, StatCard, ChartCard, SectionHeader } from "../dashboard-shared";
 
 interface DashboardStats {
   totalUsers: number;
