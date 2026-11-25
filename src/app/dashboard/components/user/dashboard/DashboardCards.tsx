@@ -112,9 +112,9 @@ export const StatCard = ({
 }: StatCardProps) => (
   <motion.div
     {...fadeUp(delay)}
-    className="flex flex-col gap-3 p-5 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-secondary)]"
+    className="relative overflow-hidden group flex flex-col justify-between gap-3 p-5 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-secondary)] transition-all duration-300 hover:border-[var(--primary)]/40 hover:shadow-lg"
   >
-    <div className="flex items-start justify-between">
+    <div className="relative z-10 flex items-start justify-between">
       <div
         className="flex items-center justify-center w-10 h-10 rounded-xl"
         style={{ backgroundColor: iconBg }}
@@ -138,7 +138,7 @@ export const StatCard = ({
         </div>
       )}
     </div>
-    <div>
+    <div className="relative z-10">
       <p className="text-[11px] font-black uppercase tracking-wider mb-1 text-[var(--text-secondary)]">
         {label}
       </p>
@@ -148,6 +148,15 @@ export const StatCard = ({
       {sub && (
         <p className="mt-1 text-xs text-[var(--text-secondary)]">{sub}</p>
       )}
+    </div>
+
+    {/* Watermark Background Icon */}
+    <div
+      className="absolute -bottom-3 -right-3 pointer-events-none transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-6 select-none opacity-[0.07] dark:opacity-[0.11]"
+      style={{ color: iconColor }}
+      aria-hidden="true"
+    >
+      <Icon size={84} strokeWidth={1.5} />
     </div>
   </motion.div>
 );

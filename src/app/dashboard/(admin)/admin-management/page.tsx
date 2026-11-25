@@ -214,13 +214,20 @@ export default function AdminDashboard() {
 
 function StatCard({ title, value, icon: Icon, color }: StatCardProps) {
   return (
-    <div className="bg-[var(--card-bg)] rounded-2xl p-5 flex items-center justify-between border border-[var(--border-color)] shadow-sm hover:shadow-md transition">
-      <div>
+    <div className="relative overflow-hidden bg-[var(--card-bg)] rounded-2xl p-5 flex items-center justify-between border border-[var(--border-color)] shadow-sm hover:shadow-md transition group">
+      <div className="relative z-10">
         <p className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">{title}</p>
         <h3 className="mt-1 text-3xl font-black">{value}</h3>
       </div>
-      <div className={`p-3 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg`}>
+      <div className={`relative z-10 p-3 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg`}>
         <Icon size={22} />
+      </div>
+      {/* Watermark Background Icon */}
+      <div
+        className="absolute -bottom-3 -right-3 pointer-events-none transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-6 select-none opacity-[0.08] dark:opacity-[0.12] text-[var(--text-primary)]"
+        aria-hidden="true"
+      >
+        <Icon size={76} strokeWidth={1.5} />
       </div>
     </div>
   );

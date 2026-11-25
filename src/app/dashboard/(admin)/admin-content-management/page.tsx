@@ -364,8 +364,12 @@ function StatCard({
   colorClass: string;
 }) {
   return (
-    <div className="card-glass flex items-center justify-between p-6">
-      <div>
+    <div className="card-glass relative overflow-hidden flex items-center justify-between p-6">
+      {/* Watermark Icon */}
+      <div className="absolute -bottom-3 -right-3 pointer-events-none opacity-[0.07] transform -rotate-12 select-none text-[var(--text-primary)]">
+        <Icon size={76} />
+      </div>
+      <div className="relative z-10">
         <p className="text-xs text-[var(--text-muted)] font-bold uppercase tracking-widest">
           {title}
         </p>
@@ -374,7 +378,7 @@ function StatCard({
         </h2>
       </div>
       <div
-        className={`p-4 rounded-2xl bg-gradient-to-br ${colorClass} text-white shadow-lg`}
+        className={`relative z-10 p-4 rounded-2xl bg-gradient-to-br ${colorClass} text-white shadow-lg`}
       >
         <Icon size={28} />
       </div>

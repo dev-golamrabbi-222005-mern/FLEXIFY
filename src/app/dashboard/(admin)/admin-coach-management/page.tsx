@@ -272,13 +272,20 @@ interface StatCardProps {
 
 function StatCard({ title, value, icon: Icon, color }: StatCardProps) {
   return (
-    <div className="bg-[var(--card-bg)] p-5 rounded-2xl border border-[var(--border-color)] flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
-      <div>
+    <div className="relative overflow-hidden group bg-[var(--card-bg)] p-5 rounded-2xl border border-[var(--border-color)] flex items-center justify-between shadow-sm hover:shadow-md transition-all">
+      <div className="relative z-10">
         <h4 className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">{title}</h4>
         <p className="mt-1 text-2xl font-black">{value}</p>
       </div>
-      <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center text-white shadow-lg`}>
+      <div className={`relative z-10 w-11 h-11 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center text-white shadow-lg`}>
         <Icon size={20} />
+      </div>
+      {/* Watermark Background Icon */}
+      <div
+        className="absolute -bottom-3 -right-3 pointer-events-none transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-6 select-none opacity-[0.08] dark:opacity-[0.12] text-[var(--text-primary)]"
+        aria-hidden="true"
+      >
+        <Icon size={76} strokeWidth={1.5} />
       </div>
     </div>
   );

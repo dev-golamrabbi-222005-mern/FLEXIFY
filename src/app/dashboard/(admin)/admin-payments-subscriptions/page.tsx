@@ -339,17 +339,24 @@ export default function PaymentsSubscriptionsPage() {
 // StatCard Component with LucideIcon type
 function StatCard({ title, value, Icon, color }: StatCardProps) {
   return (
-    <div className="card-glass p-5 flex items-center justify-between group transition-all duration-300 border border-[var(--border-color)]">
-      <div>
+    <div className="relative overflow-hidden card-glass p-5 flex items-center justify-between group transition-all duration-300 border border-[var(--border-color)] hover:shadow-lg">
+      <div className="relative z-10">
         <p className="text-xs text-[var(--text-secondary)] font-bold uppercase tracking-widest">
           {title}
         </p>
         <h2 className="mt-1 text-3xl font-black">{value || 0}</h2>
       </div>
       <div
-        className={`p-4 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg transform group-hover:rotate-12 transition-transform`}
+        className={`relative z-10 p-4 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg transform group-hover:rotate-12 transition-transform`}
       >
         <Icon size={24} />
+      </div>
+      {/* Watermark Background Icon */}
+      <div
+        className="absolute -bottom-3 -right-3 pointer-events-none transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-6 select-none opacity-[0.08] dark:opacity-[0.12] text-[var(--text-primary)]"
+        aria-hidden="true"
+      >
+        <Icon size={80} strokeWidth={1.5} />
       </div>
     </div>
   );

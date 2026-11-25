@@ -44,13 +44,13 @@ export function StatCard({
   return (
     <motion.div
       {...fadeUp(delay)}
-      className="flex flex-col gap-3 p-5 transition-transform duration-200 cursor-default rounded-2xl hover:-translate-y-1"
+      className="relative overflow-hidden group flex flex-col justify-between gap-3 p-5 transition-transform duration-200 cursor-default rounded-2xl hover:-translate-y-1 hover:border-[var(--primary)]/40 hover:shadow-lg"
       style={{
         background: "var(--bg-secondary)",
         border: "1px solid var(--border-color)",
       }}
     >
-      <div className="flex items-start justify-between">
+      <div className="relative z-10 flex items-start justify-between">
         <div
           className="flex items-center justify-center w-10 h-10 rounded-xl"
           style={{ backgroundColor: iconBg }}
@@ -74,7 +74,7 @@ export function StatCard({
           </div>
         )}
       </div>
-      <div>
+      <div className="relative z-10">
         <p
           className="text-[11px] font-black uppercase tracking-wider mb-1"
           style={{ color: "var(--text-secondary)" }}
@@ -95,6 +95,15 @@ export function StatCard({
             {sub}
           </p>
         )}
+      </div>
+
+      {/* Watermark Background Icon */}
+      <div
+        className="absolute -bottom-3 -right-3 pointer-events-none transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-6 select-none opacity-[0.07] dark:opacity-[0.11]"
+        style={{ color: iconColor }}
+        aria-hidden="true"
+      >
+        <Icon size={84} strokeWidth={1.5} />
       </div>
     </motion.div>
   );

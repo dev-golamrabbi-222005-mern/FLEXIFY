@@ -246,16 +246,23 @@ interface StatCardProps {
 function StatMiniCard({ label, value, color, icon }: StatCardProps) {
   return (
     <div
-      className="card-glass !p-3 flex items-center gap-4 min-w-[140px] border-b-4 transition-transform hover:translate-y-[-2px]"
+      className="card-glass relative overflow-hidden !p-3 flex items-center gap-4 min-w-[140px] border-b-4 transition-transform hover:translate-y-[-2px]"
       style={{ borderBottomColor: color }}
     >
+      {/* Watermark Icon */}
       <div
-        className="p-2.5 rounded-xl bg-[var(--bg-primary)] shadow-inner"
+        className="absolute -bottom-2.5 -right-2.5 pointer-events-none opacity-[0.08] transform -rotate-12 select-none"
         style={{ color: color }}
       >
         {icon}
       </div>
-      <div>
+      <div
+        className="relative z-10 p-2.5 rounded-xl bg-[var(--bg-primary)] shadow-inner"
+        style={{ color: color }}
+      >
+        {icon}
+      </div>
+      <div className="relative z-10">
         <p className="text-xs font-black uppercase text-[var(--text-muted)] leading-none mb-1.5 tracking-wider">
           {label}
         </p>

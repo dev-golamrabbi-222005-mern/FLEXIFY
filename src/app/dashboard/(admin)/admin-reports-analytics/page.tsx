@@ -213,13 +213,20 @@ export default function ReportsAnalyticsPage() {
 // StatCard Component with proper typing
 function StatCard({ title, value, Icon, color }: StatCardProps) {
   return (
-    <div className="card-glass flex items-center justify-between group hover:border-[var(--primary)] transition-all duration-300">
-      <div>
+    <div className="relative overflow-hidden card-glass flex items-center justify-between group hover:border-[var(--primary)] transition-all duration-300">
+      <div className="relative z-10">
         <p className="text-xs text-[var(--text-secondary)] font-bold uppercase tracking-widest">{title}</p>
         <h2 className="text-3xl font-black mt-1">{value}</h2>
       </div>
-      <div className={`p-4 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg transform group-hover:scale-110 transition-transform`}>
+      <div className={`relative z-10 p-4 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg transform group-hover:scale-110 transition-transform`}>
         <Icon size={26} />
+      </div>
+      {/* Watermark Background Icon */}
+      <div
+        className="absolute -bottom-3 -right-3 pointer-events-none transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-6 select-none opacity-[0.08] dark:opacity-[0.12] text-[var(--text-primary)]"
+        aria-hidden="true"
+      >
+        <Icon size={80} strokeWidth={1.5} />
       </div>
     </div>
   );
