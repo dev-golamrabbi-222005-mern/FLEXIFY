@@ -3,6 +3,7 @@ import { dbConnect } from "@/lib/dbConnect";
 import { ObjectId } from "mongodb";
 import { pusherServer } from "@/lib/pusher";
 import { requireAdmin } from "@/lib/adminGuard";
+import { toSafeObjectId } from "@/lib/security/sanitize";
 
 export const GET = async (req: NextRequest) => {
   const auth = await requireAdmin();
@@ -37,12 +38,13 @@ export const PATCH = async (req: NextRequest) => {
 
   try {
     const { id, status } = await req.json();
-    if (!id || !status) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    const safeId = toSafeObjectId(id);
+    if (!safeId || !status) {
+      return NextResponse.json({ error: "Missing or invalid required fields (id, status)" }, { status: 400 });
     }
 
     const collection = await dbConnect("users");
-    const user = await collection.findOne({ _id: new ObjectId(id) });
+    const user = await collection.findOne({ _id: safeId });
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
@@ -56,7 +58,7 @@ export const PATCH = async (req: NextRequest) => {
     };
 
     const result = await collection.updateOne(
-      { _id: new ObjectId(id) },
+      { _id: safeId },
       updateDoc
     );
 

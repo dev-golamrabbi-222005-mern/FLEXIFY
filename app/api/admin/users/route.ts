@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
 import { ObjectId, Filter } from "mongodb";
 import { requireAdmin } from "@/lib/adminGuard";
+import { sanitizeRegex, toSafeObjectId } from "@/lib/security/sanitize";
 
 interface UserDocument {
   _id?: ObjectId;
@@ -35,10 +36,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     }
 
     if (search) {
+      const safeSearch = sanitizeRegex(search.trim());
       query.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { fullName: { $regex: search, $options: "i" } },
-        { email: { $regex: search, $options: "i" } },
+        { name: { $regex: safeSearch, $options: "i" } },
+        { fullName: { $regex: safeSearch, $options: "i" } },
+        { email: { $regex: safeSearch, $options: "i" } },
       ];
     }
 
@@ -63,10 +65,15 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    const safeId = toSafeObjectId(id);
+    if (!safeId) {
+      return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
+    }
+
     const usersCol = await dbConnect<UserDocument>("users");
 
     const result = await usersCol.updateOne(
-      { _id: new ObjectId(id) } as Filter<UserDocument>,
+      { _id: safeId } as Filter<UserDocument>,
       { $set: { status: status, updatedAt: new Date() } }
     );
 
