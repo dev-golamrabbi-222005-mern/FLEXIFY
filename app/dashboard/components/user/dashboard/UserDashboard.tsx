@@ -33,6 +33,7 @@ import {
 import WeeklyStreakCard from "./WeeklyStreakCard";
 import MonthlyStreakCalendar from "./MonthlyStreakCalendar";
 import { UserProfileResponse } from "@/types/user";
+import FlexifyAICopilot from "../../ai/FlexifyAICopilot";
 import { useSession } from "next-auth/react";
 import { MealSection } from "@/types/food";
 
@@ -305,6 +306,8 @@ export default function UserDashboard({ name }: { name: string }) {
         progress={todayGoal?.progress || 0}
         onSetGoal={() => setIsGoalModalOpen(true)}
       />
+
+      <FlexifyAICopilot />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {stats.map((s) => (
