@@ -5,6 +5,7 @@ import axios from "axios";
 import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
 import ExerciseCard from "@/components/cards/ExerciseCard";
 import SkeletonCard from "@/components/cards/SkeletonCard";
+import { useDebounce } from "@/lib/hooks/useDebounce";
 
 interface ExerciseItem {
   _id: string;
@@ -41,13 +42,25 @@ const ExercisesPage = () => {
     equipment: "",
   });
 
+  const debouncedSearch = useDebounce(filters.search, 300);
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
-      queryKey: ["exercises", filters],
+      queryKey: [
+        "exercises",
+        debouncedSearch,
+        filters.muscle,
+        filters.level,
+        filters.equipment,
+      ],
       queryFn: async ({ pageParam = 1 }) => {
-        const { search, muscle, level, equipment } = filters;
+        const { muscle, level, equipment } = filters;
         const res = await axios.get(
-          `/api/exercises?page=${pageParam}&limit=12&search=${search}&muscle=${muscle}&level=${level}&equipment=${equipment}`,
+          `/api/exercises?page=${pageParam}&limit=12&search=${encodeURIComponent(
+            debouncedSearch
+          )}&muscle=${encodeURIComponent(muscle)}&level=${encodeURIComponent(
+            level
+          )}&equipment=${encodeURIComponent(equipment)}`,
         );
         return res.data;
       },
@@ -56,6 +69,8 @@ const ExercisesPage = () => {
         lastPage.currentPage < lastPage.totalPages
           ? lastPage.currentPage + 1
           : undefined,
+      staleTime: 1000 * 60 * 5, // 5 minutes cache
+      placeholderData: (prev) => prev,
     });
 
   const handleFilterChange = (

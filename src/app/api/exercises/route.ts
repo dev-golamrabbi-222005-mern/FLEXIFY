@@ -23,13 +23,26 @@ export async function GET(req: NextRequest) {
       filter.primaryMuscles = { $elemMatch: { $regex: muscle, $options: "i" } };
     if (equipment) filter.equipment = { $regex: equipment, $options: "i" };
 
+    const hasFilter = Object.keys(filter).length > 0;
+
     const [exercises, total] = await Promise.all([
       collection
         .find(filter)
+        .project({
+          name: 1,
+          category: 1,
+          level: 1,
+          primaryMuscles: 1,
+          equipment: 1,
+          images: 1,
+          id: 1,
+        })
         .skip((page - 1) * limit)
         .limit(limit)
         .toArray(),
-      collection.countDocuments(filter),
+      hasFilter
+        ? collection.countDocuments(filter)
+        : collection.estimatedDocumentCount(),
     ]);
 
     // Ensure every exercise has a usable `id` field for routing
@@ -39,14 +52,21 @@ export async function GET(req: NextRequest) {
       id: (ex as { id?: string; _id?: { toString(): string } }).id ?? ex._id?.toString(),
     }));
 
-    return NextResponse.json({
-      exercises: normalized,
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page,
-    });
+    return NextResponse.json(
+      {
+        exercises: normalized,
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+        currentPage: page,
+      },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+        },
+      }
+    );
   } catch (err) {
     console.error("Exercises fetch error:", err);
     return NextResponse.json(
