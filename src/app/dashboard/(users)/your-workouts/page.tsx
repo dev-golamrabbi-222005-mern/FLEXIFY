@@ -109,7 +109,7 @@ export default function YourWorkoutsPage() {
   const customCount = myRoutines?.length ?? 0;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 md:space-y-12 lg:space-y-16">
       <title>Your Workouts | Dashboard - Flexify</title>
 
       {/* ── Page Header ─────────────────────────────────────────────────── */}

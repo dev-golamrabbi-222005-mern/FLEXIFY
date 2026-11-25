@@ -67,7 +67,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="space-y-8 min-h-screen max-w-full text-[var(--text-primary)]">
+    <div className="space-y-8 md:space-y-12 lg:space-y-16 min-h-screen max-w-full text-[var(--text-primary)]">
       <title>Management | Dashboard - Flexify</title>
       <header>
         <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">

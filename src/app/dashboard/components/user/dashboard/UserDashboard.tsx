@@ -300,7 +300,7 @@ export default function UserDashboard({ name }: { name: string }) {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 md:space-y-12 lg:space-y-16">
       <div className="flex justify-between items-center">
       <GreetingHeader name={name} />
 
@@ -313,7 +313,7 @@ export default function UserDashboard({ name }: { name: string }) {
 
       <FlexifyAICopilot />
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-6 lg:gap-6">
         {stats.map((s) => (
           <StatCard key={s.label} {...s} />
         ))}
@@ -321,7 +321,7 @@ export default function UserDashboard({ name }: { name: string }) {
 
       <DashboardCharts data={weeklyData} isLoading={isChartLoading} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8 lg:gap-10 items-stretch">
         <div className="lg:col-span-3 min-h-[300px]">
           <MonthlyStreakCalendar workoutLogs={allWorkoutLogs} />
         </div>

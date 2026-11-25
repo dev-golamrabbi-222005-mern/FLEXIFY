@@ -99,7 +99,7 @@ export default function MyCoachPage() {
 
 
   return (
-    <div className="space-y-6 text-[var(--text-primary)] pb-10 relative">
+    <div className="space-y-8 md:space-y-12 lg:space-y-16 text-[var(--text-primary)] pb-10 relative">
       <title>My Coach | Dashboard - Flexify</title>
       <div 
         ref={stickyRef}

@@ -378,7 +378,7 @@ export default function MyChallengesPage() {
   );
 
   return (
-    <div className="max-w-full space-y-6">
+    <div className="max-w-full space-y-8 md:space-y-12 lg:space-y-16">
       {/* ── Header ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}

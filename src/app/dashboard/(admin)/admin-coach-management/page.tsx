@@ -59,7 +59,7 @@ export default function AdminCoachCenter() {
   }
 
   return (
-    <div className="space-y-6 text-[var(--text-primary)]">
+    <div className="space-y-8 md:space-y-12 lg:space-y-16 text-[var(--text-primary)]">
       <title>Coach Center | Admin - Flexify</title>
 
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">

@@ -145,7 +145,7 @@ export default function CoachWorkouts() {
   return (
     <div className="max-w-full">
       <title>Workouts | Dashboard - Flexify</title>
-      <div className="mx-auto space-y-8 max-w-7xl">
+      <div className="mx-auto space-y-8 md:space-y-12 lg:space-y-16 max-w-7xl">
         {/* Header */}
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>

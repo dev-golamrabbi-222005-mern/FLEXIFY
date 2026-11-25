@@ -64,7 +64,7 @@ export default function AdminDashboard({ name }: { name: string }) {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 md:space-y-12 lg:space-y-16">
       <motion.div {...fadeUp(0)}>
         <p className="leading-relaxed mb-2 text-[var(--text-secondary)]">
           {greeting()}, Admin
@@ -74,7 +74,7 @@ export default function AdminDashboard({ name }: { name: string }) {
         </h1>
       </motion.div>
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-6 lg:gap-6">
         {statConfig.map((s) => (
           <StatCard key={s.label} {...s} />
         ))}

@@ -80,7 +80,7 @@ export default function ContactRequests() {
     );
 
   return (
-    <div className="space-y-8 p-1">
+    <div className="space-y-8 md:space-y-12 lg:space-y-16 p-1">
       {/* Header & Stats Section */}
       <div className="flex flex-col md:flex-row md:items-center lg:items-start justify-between gap-6">
         <div>

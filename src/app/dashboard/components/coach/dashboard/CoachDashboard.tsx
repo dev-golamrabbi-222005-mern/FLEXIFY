@@ -192,7 +192,7 @@ const CoachDashboard = ({ name }: { name: string }) => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 md:space-y-12 lg:space-y-16">
       {/* Greeting */}
       <motion.div {...fadeUp(0)}>
         <p
@@ -230,7 +230,7 @@ const CoachDashboard = ({ name }: { name: string }) => {
       </motion.div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-6 lg:gap-6">
         {stats.map((s) => (
           <StatCard key={s.label} {...s} />
         ))}

@@ -121,7 +121,7 @@ export default function SchedulePage() {
     );
 
   return (
-    <div className="max-w-full relative">
+    <div className="max-w-full relative space-y-8 md:space-y-12 lg:space-y-16">
       <title>Schedule | Dashboard - Flexify</title>
       {/* Custom Manual Entry Modal */}
       {isModalOpen && (

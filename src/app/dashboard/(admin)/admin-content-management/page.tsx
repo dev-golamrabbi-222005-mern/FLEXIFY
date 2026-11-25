@@ -121,7 +121,7 @@ export default function AdminContentManagementPage() {
   }
 
   return (
-    <div className="space-y-8 relative">
+    <div className="space-y-8 md:space-y-12 lg:space-y-16 relative">
       <title>Content Management | Flexify</title>
 
       {/* --- SEARCH HEADER --- */}

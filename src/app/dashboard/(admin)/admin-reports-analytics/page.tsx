@@ -44,7 +44,7 @@ export default function ReportsAnalyticsPage() {
   );
 
   return (
-    <div className="space-y-8 min-h-screen text-[var(--text-primary)]">
+    <div className="space-y-8 md:space-y-12 lg:space-y-16 min-h-screen text-[var(--text-primary)]">
       <title>Reports Analytics | Dashboard - Flexify</title>
 
       <div>
