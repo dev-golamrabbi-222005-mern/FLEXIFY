@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export interface FitnessProfile {
   age: number;
   gender: "Male" | "Female" | "Other";
@@ -45,10 +47,51 @@ export interface GoalFormData {
   unit: string;
 }
 
- 
-  export interface DaySchedule {
+export interface DaySchedule {
   routine: string;
   time: string;
 }
 
+export interface AchievementItem {
+  id: string;
+  title: string;
+  description: string;
+  icon?: string;
+  unlockedAt?: string;
+  progress?: number;
+  target?: number;
+}
 
+export interface Achievement {
+  _id?: string | ObjectId;
+  userId: string;
+  badgeId: string;
+  badgeName: string;
+  unlockedAt: string | Date;
+}
+
+export interface ICoachRelation {
+  coachId: string;
+  coachName: string;
+  coachEmail: string;
+  coachImage?: string;
+  status: "active" | "pending" | "ended";
+  planName?: string;
+}
+
+export interface IMessage {
+  id: string;
+  senderId: string;
+  senderName: string;
+  receiverId: string;
+  text: string;
+  createdAt: string | Date;
+}
+
+export interface UserRoutine {
+  _id?: string | ObjectId;
+  routineId?: string;
+  name: string;
+  planName?: string;
+  exercises?: any[];
+}
