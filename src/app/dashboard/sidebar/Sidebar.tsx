@@ -1,37 +1,15 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import React from "react";
+import { useSession, signOut } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { signOut } from "next-auth/react";
-import {
-  Calendar,
-  CircleDollarSign,
-  Dumbbell,
-  FileCog,
-  Home,
-  LayersPlus,
-  LogOut,
-  MessageSquareWarning,
-  PlusCircle,
-  Settings,
-  SquareLibrary,
-  TableOfContents,
-  Trophy,
-  UserRoundCog,
-  Utensils,
-  X,
-  User,
-  Workflow,
-  Swords,
-  Star,
-  UserCheck2,
-
-} from "lucide-react";
+import { LogOut, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { getPlan, PlanId } from "@/lib/plans";
+import { SidebarUserProfile } from "./SidebarUserProfile";
+import { SidebarNavList } from "./SidebarNavList";
+import { SidebarUpgradeCard } from "./SidebarUpgradeCard";
 
 interface SidebarProps {
   open: boolean;
@@ -39,8 +17,6 @@ interface SidebarProps {
 }
 
 function SidebarContent({ onClose }: { onClose: () => void }) {
-  const pathname = usePathname();
-  const router = useRouter();
   const { data: session } = useSession();
 
   const { data: dbUser, isLoading } = useQuery({
@@ -71,166 +47,6 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
   const hasPlanAccess = (requiredPlan: PlanId) =>
     planOrder[plan.id] >= planOrder[requiredPlan];
 
-  // ── Menu config — MAIN MENU items was accidentally double-wrapped in an array ──
-const menuConfig = [
-  {
-    label: "MAIN MENU",
-    items: 
-    [
-      {
-        name: "Dashboard",
-        href: "/dashboard",
-        icon: Home,
-        roles: ["user", "admin", "coach"],
-        minPlan: "free" as PlanId,
-      },
-      {
-        name: "Create Workout",
-        href: "/dashboard/create-workout",
-        icon: PlusCircle,
-        roles: ["user"],
-        minPlan: "pro" as PlanId,
-      },
-      {
-        name: "Your Workouts",
-        href: "/dashboard/your-workouts",
-        icon: Dumbbell,
-        roles: ["user"],
-        minPlan: "free" as PlanId,
-      },
-      {
-        name: "Challenges",
-        href: "/dashboard/my-challenges",
-        icon: Swords,
-        roles: ["user"],
-        minPlan: "free" as PlanId,
-      },
-      {
-        name: "My Coach",
-        href: "/dashboard/my-coach",
-        icon: UserCheck2,
-        roles: ["user"],
-        minPlan: "elite" as PlanId,
-      },
-      {
-        name: "Nutrition",
-        href: "/dashboard/nutrition-tracker",
-        icon: Utensils,
-        roles: ["user"],
-        minPlan: "pro" as PlanId,
-      },
-      {
-        name: "Schedule",
-        href: "/dashboard/schedule",
-        icon: Calendar,
-        roles: ["user"],
-        minPlan: "free" as PlanId,
-      },
-      {
-        name: "Achievements",
-        href: "/dashboard/achievements",
-        icon: Trophy,
-        roles: ["user"],
-        minPlan: "pro" as PlanId,
-      },
-    ],
-  },
-  {
-    label: "ADMIN",
-    items: [
-      {
-        name: "Users Management",
-        href: "/dashboard/admin-management",
-        icon: UserRoundCog,
-        roles: ["admin"],
-      },
-     
-      {
-        name: "Coach Management",
-        href: "/dashboard/admin-coach-management",
-        icon: LayersPlus,
-        roles: ["admin"],
-      },
-      {
-        name: "Workout Library",
-        href: "/dashboard/admin-workout-library",
-        icon: SquareLibrary,
-        roles: ["admin"],
-      },
-      {
-        name: "Content Management",
-        href: "/dashboard/admin-content-management",
-        icon: TableOfContents,
-        roles: ["admin"],
-      },
-      {
-        name: "Reports & Analytics",
-        href: "/dashboard/admin-reports-analytics",
-        icon: MessageSquareWarning,
-        roles: ["admin"],
-      },
-      {
-        name: "Payments / Subscriptions",
-        href: "/dashboard/admin-payments-subscriptions",
-        icon: CircleDollarSign,
-        roles: ["admin"],
-      },
-      {
-        name: "Wants to connect",
-        href: "/dashboard/admin-users-connect",
-        icon: FileCog,
-        roles: ["admin"],
-      },
-    ],
-  },
-  {
-    label: "COACH",
-    items: [
-      {
-        name: "My Trainees",
-        href: "/dashboard/coach-my-trainees",
-        icon: User,
-        roles: ["coach"],
-      },
-      {
-        name: "Workouts",
-        href: "/dashboard/coach-workouts",
-        icon: Workflow,
-        roles: ["coach"],
-      },
-      {
-        name: "Earning",
-        href: "/dashboard/coach-earning",
-        icon: CircleDollarSign,
-        roles: ["coach"],
-      },
-      {
-        name: "Schedule",
-        href: "/dashboard/coach-schedule",
-        icon: Calendar,
-        roles: ["coach"],
-      },
-      {
-        name: "Reviews",
-        href: "/dashboard/coach-reviews",
-        icon: Star,
-        roles: ["coach"],
-      },
-    ],
-  },
-  {
-    label: "ACCOUNT",
-    items: [
-      {
-        name: "Settings",
-        href: "/dashboard/settings",
-        icon: Settings,
-        roles: ["user", "admin", "coach"],
-      },
-    ],
-  },
-];
-
   return (
     <div className="flex flex-col h-full overflow-y-auto custom-scrollbar">
       {/* Mobile close */}
@@ -246,186 +62,27 @@ const menuConfig = [
         </button>
       </div>
 
-      {/* Profile card */}
-      <div className="px-4 py-5">
-        <button
-          onClick={() => {
-            router.push("/dashboard/profile");
-            onClose();
-          }}
-          className="w-full flex items-center flex-col gap-3 px-4 py-6 rounded-2xl transition-all group hover:bg-[var(--bg-secondary)]"
-          style={{ border: "1px solid var(--border-color)" }}
-        >
-          <div className="relative shrink-0">
-            {userImage ? (
-              <img
-                src={userImage}
-                alt={userName}
-                className="object-cover w-16 h-16 rounded-full"
-              />
-            ) : (
-              <div
-                className="flex items-center justify-center w-10 h-10 text-base font-black text-white rounded-xl"
-                style={{ background: "var(--primary)" }}
-              >
-                {userInitial}
-              </div>
-            )}
-            <span
-              className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2"
-              style={{
-                background: "#22c55e",
-                borderColor: "var(--bg-nav-footer)",
-              }}
-            />
-          </div>
-          <div className="flex-1 min-w-0 text-center">
-            <p
-              className="font-extrabold leading-tight truncate"
-              style={{ color: "var(--text-primary)" }}
-            >
-              {userName}
-            </p>
-            <p
-              className="text-[10px] font-bold uppercase tracking-wider mt-0.5"
-              style={{ color: "var(--primary)" }}
-            >
-              {userRole}
-            </p>
-          </div>
-        </button>
-      </div>
+      <SidebarUserProfile
+        userName={userName}
+        userRole={userRole}
+        userImage={userImage}
+        userInitial={userInitial}
+        onClose={onClose}
+      />
 
-      {/* Nav */}
-      <nav className="flex-1 px-4 py-5 space-y-7">
-        {menuConfig.map((group) => {
-          const filtered = group.items.filter((item) => {
-            const hasRole = item.roles.includes(userRole);
-            const requiredPlan = (item as { minPlan?: PlanId }).minPlan ?? "free";
-            const hasPlan = hasPlanAccess(requiredPlan);
+      <SidebarNavList
+        userRole={userRole}
+        userStatus={userStatus}
+        hasPlanAccess={hasPlanAccess}
+        onClose={onClose}
+      />
 
-            if (userRole === "coach" && userStatus === "pending") {
-              return hasRole && item.name === "Dashboard";
-            }
-            if (!hasRole) return false;
-            if (userRole === "user" && !hasPlan) return false;
-            return true;
-          });
-          if (filtered.length === 0) return null;
+      <SidebarUpgradeCard
+        userRole={userRole}
+        userStatus={userStatus}
+        userPlan={userPlan}
+      />
 
-          return (
-            <div key={group.label}>
-              <h3 className="px-4 text-[10px] font-black text-[var(--text-secondary)] tracking-[0.18em] mb-2.5">
-                {group.label}
-              </h3>
-              <div className="space-y-0.5">
-                {filtered.map((item) => {
-                  const isActive =
-                    pathname === item.href ||
-                    (item.href !== "/dashboard" &&
-                      pathname.startsWith(item.href));
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={onClose}
-                      className={`flex items-center justify-between px-4 py-2.5 rounded-2xl transition-all group ${
-                        isActive
-                          ? "bg-[var(--primary)]/10 font-semibold"
-                          : "text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]"
-                      }`}
-                      style={{ color: isActive ? "var(--primary)" : undefined }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <item.icon size={18} />
-                        <span className="text-[13px]">{item.name}</span>
-                      </div>
-                      {isActive && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-[var(--primary)]" />
-                      )}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-      </nav>
-
-      {/* Upgrade card — dynamic based on plan */}
-      {userRole === "user" &&
-        userStatus === "approved" &&
-        (() => {
-          if (userPlan === "elite") {
-            return (
-              <div className="px-4 pb-4">
-                <div className="bg-gradient-to-br from-[#7c3aed] to-[#059669] rounded-[1.5rem] p-5 text-white shadow-lg relative overflow-hidden">
-                  <div className="absolute w-20 h-20 rounded-full -right-4 -top-4 bg-white/10" />
-                  <div className="flex items-center justify-center mb-3 text-lg bg-white/20 w-9 h-9 rounded-xl backdrop-blur-sm">
-                    🏆
-                  </div>
-                  <h4 className="mb-1 text-sm font-bold">
-                    You&apos;re on Elite!
-                  </h4>
-                  <p className="text-[11px] text-purple-100 mb-1 leading-relaxed">
-                    You have full access — AI coaching, personal coach, and
-                    everything in between.
-                  </p>
-                  <p className="text-[10px] text-white/50 font-semibold uppercase tracking-wider">
-                    Maximum level unlocked 🎉
-                  </p>
-                </div>
-              </div>
-            );
-          }
-          if (userPlan === "pro") {
-            return (
-              <div className="px-4 pb-4">
-                <div className="bg-gradient-to-br from-[#f47920] to-[#dc2626] rounded-[1.5rem] p-5 text-white shadow-lg relative overflow-hidden">
-                  <div className="absolute w-20 h-20 rounded-full -right-4 -top-4 bg-white/10" />
-                  <div className="flex items-center justify-center mb-3 bg-white/20 w-9 h-9 rounded-xl backdrop-blur-sm">
-                    <Trophy size={18} />
-                  </div>
-                  <h4 className="mb-1 text-sm font-bold">Upgrade to Elite</h4>
-                  <p className="text-[11px] text-orange-100 mb-3 leading-relaxed">
-                    Get a personal coach, custom plans, and direct messaging.
-                  </p>
-                  <button
-                    onClick={() => (window.location.href = "/#pricing")}
-                    className="w-full py-2 text-xs font-extrabold transition-all bg-white rounded-xl hover:bg-orange-50 active:scale-95"
-                    style={{ color: "#f47920" }}
-                  >
-                    Go Elite →
-                  </button>
-                </div>
-              </div>
-            );
-          }
-          return (
-            <div className="px-4 pb-4">
-              <div className="bg-gradient-to-br from-[#F59E0B] to-[#059669] rounded-[1.5rem] p-5 text-white shadow-lg relative overflow-hidden">
-                <div className="absolute w-20 h-20 rounded-full -right-4 -top-4 bg-white/10" />
-                <div className="flex items-center justify-center mb-3 bg-white/20 w-9 h-9 rounded-xl backdrop-blur-sm">
-                  <Trophy size={18} />
-                </div>
-                <h4 className="mb-1 text-sm font-bold">Upgrade to Pro</h4>
-                <p className="text-[11px] text-emerald-100 mb-3 leading-relaxed">
-                  Unlock AI coaching, full workout library, and advanced
-                  analytics.
-                </p>
-                <button
-                  onClick={() => (window.location.href = "/#pricing")}
-                  className="w-full py-2 text-xs font-extrabold transition-all bg-white rounded-xl hover:bg-emerald-50 active:scale-95"
-                  style={{ color: "var(--primary)" }}
-                >
-                  Upgrade Now
-                </button>
-              </div>
-            </div>
-          );
-        })()}
-
-      {/* Logout */}
       <div className="px-4 pb-5">
         <button
           onClick={() => signOut()}
@@ -439,7 +96,7 @@ const menuConfig = [
   );
 }
 
-const Sidebar = ({ open, onClose }: SidebarProps) => {
+export default function Sidebar({ open, onClose }: SidebarProps) {
   return (
     <>
       <aside className="hidden md:flex flex-col w-64 shrink-0 h-full overflow-hidden border-r border-[var(--border-color)] bg-[var(--bg-nav-footer)]">
@@ -470,6 +127,4 @@ const Sidebar = ({ open, onClose }: SidebarProps) => {
       </AnimatePresence>
     </>
   );
-};
-
-export default Sidebar;
+}
