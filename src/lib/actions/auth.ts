@@ -102,6 +102,8 @@ export const postUser = async (payload: UserPayload) => {
   return { success: false, message: "Something went wrong." };
 };
 
+export const registerUser = postUser;
+
 export const loginUser = async (payload: UserPayload) => {
   const { email, password } = payload;
   if (!email || !password) return null;
