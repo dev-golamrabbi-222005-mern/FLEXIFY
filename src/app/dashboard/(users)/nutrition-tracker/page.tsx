@@ -1,295 +1,63 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { useSession } from "next-auth/react";
 import PlanAccessModal from "@/components/modals/PlanAccessModal";
-import { PlanId } from "@/lib/plans";
-import { Coffee, Sun, Moon, Utensils, Sparkles, X, LayoutList, Loader2 } from "lucide-react"; 
-import type { FoodItem, MealSection, FoodEntry } from "@/types/food";
-import CircularProgress from "../../components/nutritions/CircularProgress";
+import { LayoutList, Loader2 } from "lucide-react"; 
 import AddFoodModal from "../../components/nutritions/AddFoodModal";
 import MealCard from "../../components/nutritions/MealCard";
 import WaterTracker from "../../components/nutritions/WaterTracker";
-import { UserProfileResponse } from "@/types/user";
-
-
-interface LogPayload {
-  date: string;
-  type: "WATER_UPDATE" | "ADD_FOOD" | "REMOVE_FOOD";
-  data: {
-    glasses?: number;
-    mealId?: string;
-    entry?: FoodEntry;
-    entryId?: string;
-    caloriesToRemove?: number;
-  };
-}
+import NutritionHeader from "@/components/dashboard/nutrition/NutritionHeader";
+import MacroStatsGrid from "@/components/dashboard/nutrition/MacroStatsGrid";
+import SmartInsightsCard from "@/components/dashboard/nutrition/SmartInsightsCard";
+import CalorieSplitCard from "@/components/dashboard/nutrition/CalorieSplitCard";
+import { useNutritionTracker } from "@/components/dashboard/nutrition/useNutritionTracker";
 
 export default function CalorieTracker() {
-  const { data: session } = useSession();
-  const queryClient = useQueryClient();
-  
-  // Fetch user data to check plan
-  const { data: dbUser } = useQuery({
-    queryKey: ["currentUser", session?.user?.email],
-    queryFn: async () => {
-      if (!session?.user?.email) return null;
-      const res = await axios.get(`/api/user/me?email=${session.user.email}`);
-      return res.data;
-    },
-    enabled: !!session?.user?.email,
-  });
-
-  const userPlan = (dbUser?.plan as PlanId) || "free";
-
-  const today = new Date();
-  const todayDate = today.toISOString().split('T')[0];
-  const dayName = today.toLocaleDateString("en-US", { weekday: "long" });
-  const dateStr = today.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-
-  const { data: dbData, isLoading } = useQuery({
-    queryKey: ["dailyLogs", todayDate],
-    queryFn: async () => {
-      const { data } = await axios.get(`/api/logs?date=${todayDate}`);
-      return data;
-    },
-    enabled: !!session?.user,
-  });
-
-  const mutation = useMutation({
-    mutationFn: (payload: LogPayload) => axios.post("/api/logs", payload),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["dailyLogs"] }),
-  });
-
-  const { data: userData } = useQuery<UserProfileResponse>({
-    queryKey: ["userProfile"],
-    queryFn: async () => {
-      const { data } = await axios.get("/api/user/fitness-profile");
-      return data;
-    },
-    enabled: !!session?.user,
-  });
-
-
-  const GOALS = useMemo(() => {
-    return userData?.calculatedGoals || { 
-      calories: 2200, 
-      protein: 150, 
-      carbs: 250, 
-      fats: 70, 
-      waterGoal: 8 
-    };
-  }, [userData]);
-
-const glasses = dbData?.waterIntake || 0;
-  const [insightDismissed, setInsightDismissed] = useState(false);
-  const [modal, setModal] = useState({ open: false, mealId: "", mealName: "" });
-
-  const meals = useMemo<MealSection[]>(() => {
-    const baseMeals: MealSection[] = [
-      {
-        id: "breakfast",
-        name: "Breakfast",
-        icon: <Coffee size={18} className="text-orange-500" />,
-        iconColor: "#f97316",
-        entries: [],
-      },
-      {
-        id: "lunch",
-        name: "Lunch",
-        icon: <Sun size={18} className="text-yellow-500" />,
-        iconColor: "#eab308",
-        entries: [],
-      },
-      {
-        id: "dinner",
-        name: "Dinner",
-        icon: <Moon size={18} className="text-indigo-500" />,
-        iconColor: "#6366f1",
-        entries: [],
-      },
-      {
-        id: "snacks",
-        name: "Snacks",
-        icon: <Utensils size={18} className="text-green-500" />,
-        iconColor: "#22c55e",
-        entries: [],
-      },
-    ];
-
-    if (!dbData) return baseMeals;
-
-    return baseMeals.map((m) => ({
-      ...m,
-      entries: dbData.meals?.[m.id]?.entries || [],
-    }));
-  }, [dbData]);
-
-  const totals = useMemo(() => {
-    return meals.reduce((acc, meal) => {
-      meal.entries.forEach((e) => {
-        acc.calories += e.foodItem.calories * e.quantity;
-        acc.protein += e.foodItem.protein * e.quantity;
-        acc.carbs += e.foodItem.carbs * e.quantity;
-        acc.fats += e.foodItem.fats * e.quantity;
-      });
-      return acc;
-    }, { calories: 0, protein: 0, carbs: 0, fats: 0 });
-  }, [meals]);
-
-const remaining = GOALS.calories - totals.calories;
-  const calPct = Math.min(totals.calories / GOALS.calories, 1);
-const handleWaterUpdate = (val: number | ((prev: number) => number)) => {
-  const nextValue = typeof val === "function" ? val(glasses) : val;
-
-  mutation.mutate({
-    date: todayDate,
-    type: "WATER_UPDATE",
-    data: { glasses: nextValue },
-  });
-};
-
-const addFood = (item: FoodItem, qty: number) => {
-   
-   const randomId = crypto.randomUUID();
-
-    const entry: FoodEntry = { 
-      id: `${modal.mealId}-${randomId}`, 
-      foodItem: item, 
-      quantity: qty 
-    };
-
-    mutation.mutate({ 
-      date: todayDate, 
-      type: "ADD_FOOD", 
-      data: { mealId: modal.mealId, entry } 
-    });
-  };
-
-  const removeEntry = (mealId: string, entryId: string) => {
-    const meal = meals.find(m => m.id === mealId);
-    const entry = meal?.entries.find(e => e.id === entryId);
-    if (entry) {
-      mutation.mutate({
-        date: todayDate,
-        type: "REMOVE_FOOD",
-        data: { mealId, entryId, caloriesToRemove: entry.foodItem.calories * entry.quantity }
-      });
-    }
-  };
+  const {
+    userPlan,
+    dayName,
+    dateStr,
+    isLoading,
+    GOALS,
+    glasses,
+    meals,
+    totals,
+    remaining,
+    calPct,
+    insightDismissed,
+    setInsightDismissed,
+    modal,
+    setModal,
+    handleWaterUpdate,
+    addFood,
+    removeEntry,
+  } = useNutritionTracker();
 
   if (isLoading) {
-  return (
-    <div className="min-h-[400px] flex flex-col items-center justify-center gap-4">
-      <Loader2 className="animate-spin text-[var(--primary)]" size={40} />
-      <p className="text-[var(--text-secondary)] font-medium animate-pulse">
-        Syncing your nutrition data...
-      </p>
-    </div>
-  );
-}
+    return (
+      <div className="min-h-[400px] flex flex-col items-center justify-center gap-4">
+        <Loader2 className="animate-spin text-[var(--primary)]" size={40} />
+        <p className="text-[var(--text-secondary)] font-medium animate-pulse">Syncing your nutrition data...</p>
+      </div>
+    );
+  }
 
   if (userPlan === "free") {
-    return (
-      <PlanAccessModal
-        currentPlan={userPlan}
-        requiredPlan="pro"
-        isOpen={true}
-        onClose={() => {}}
-      />
-    );
+    return <PlanAccessModal currentPlan={userPlan} requiredPlan="pro" isOpen={true} onClose={() => {}} />;
   }
 
   return (
     <div className="max-w-full space-y-8 md:space-y-12 lg:space-y-16">
       <title>Nutrition Tracker | Dashboard - Flexify</title>
-      {/* Header Section */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <p className="leading-relaxed mb-2 text-[var(--text-secondary)]">
-            {dayName}, {dateStr}
-          </p>
-          <h1 className="font-bold text-3xl md:text-4xl tracking-tight uppercase text-[var(--text-primary)]">
-            Daily Calorie Progress
-          </h1>
-        </div>
-        <div className="text-right">
-          <p
-            className={`text-4xl font-black leading-none ${remaining >= 0 ? "text-[var(--primary)]" : "text-red-500"}`}
-          >
-            {Math.abs(Math.round(remaining))}
-          </p>
-          <p className="text-[11px] uppercase tracking-wider text-[var(--text-secondary)] font-bold mt-1">
-            {remaining >= 0 ? "kcal remaining" : "kcal over limit"}
-          </p>
-        </div>
-      </div>
+      <NutritionHeader
+        dayName={dayName}
+        dateStr={dateStr}
+        remaining={remaining}
+        calPct={calPct}
+        consumedCalories={totals.calories}
+        calorieGoal={GOALS.calories}
+      />
+      <MacroStatsGrid totals={totals} goals={GOALS} />
 
-      {/* Main Progress Bar */}
-      <div className="mb-8">
-        <div className="h-3 bg-[var(--bg-secondary)] rounded-full overflow-hidden border border-[var(--border-color)]">
-          <div
-            className="h-full transition-all duration-1000 ease-out rounded-full"
-            style={{
-              width: `${calPct * 100}%`,
-              backgroundColor:
-                calPct > 1
-                  ? "#ef4444"
-                  : calPct > 0.8
-                    ? "#f59e0b"
-                    : "var(--primary)",
-            }}
-          />
-        </div>
-        <div className="flex justify-between mt-2">
-          <span className="text-xs font-bold text-[var(--text-primary)]">
-            {Math.round(totals.calories)} kcal consumed
-          </span>
-          <span className="text-xs font-medium text-[var(--text-secondary)]">
-            Daily Goal: {GOALS.calories} kcal
-          </span>
-        </div>
-      </div>
-
-      {/* Macro Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        {[
-          {
-            label: "Protein",
-            val: totals.protein,
-            max: GOALS.protein,
-            color: "#4b9eff",
-          },
-          {
-            label: "Carbs",
-            val: totals.carbs,
-            max: GOALS.carbs,
-            color: "var(--primary)",
-          },
-          {
-            label: "Fats",
-            val: totals.fats,
-            max: GOALS.fats,
-            color: "#9b59b6",
-          },
-        ].map((macro) => (
-          <div
-            key={macro.label}
-            className="bg-[var(--bg-secondary)] p-5 rounded-2xl border border-[var(--border-color)] shadow-sm"
-          >
-            <CircularProgress
-              value={macro.val}
-              max={macro.max}
-              label={macro.label}
-              color={macro.color}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* 2-Column Dashboard */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
         <div className="space-y-4">
           <h2 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
@@ -300,9 +68,7 @@ const addFood = (item: FoodItem, qty: number) => {
               <MealCard
                 key={meal.id}
                 meal={meal}
-                onAddFood={() =>
-                  setModal({ open: true, mealId: meal.id, mealName: meal.name })
-                }
+                onAddFood={() => setModal({ open: true, mealId: meal.id, mealName: meal.name })}
                 onRemoveEntry={(id) => removeEntry(meal.id, id)}
               />
             ))}
@@ -311,83 +77,15 @@ const addFood = (item: FoodItem, qty: number) => {
 
         <div className="space-y-5">
           {!insightDismissed && (
-            <div className="bg-[var(--bg-secondary)] rounded-2xl p-5 border border-[var(--border-color)] relative overflow-hidden">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <Sparkles size={16} className="text-[var(--primary)]" />
-                  <span className="text-sm font-bold">Smart Insights</span>
-                </div>
-                <button
-                  onClick={() => setInsightDismissed(true)}
-                  className="text-[var(--text-secondary)] hover:text-red-500 transition-colors"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-              <div className="space-y-3">
-                {totals.protein < GOALS.protein * 0.5 && (
-                  <div className="p-3 border bg-blue-500/5 border-blue-500/10 rounded-xl">
-                    <p className="text-[10px] font-black text-blue-500 uppercase mb-1">
-                      Low Protein
-                    </p>
-                    <p className="text-[12px] text-[var(--text-secondary)]">
-                      Try adding eggs or chicken to your next meal.
-                    </p>
-                  </div>
-                )}
-                {glasses < 4 && (
-                  <div className="p-3 border bg-cyan-500/5 border-cyan-500/10 rounded-xl">
-                    <p className="text-[10px] font-black text-cyan-500 uppercase mb-1">
-                      Hydration Hint
-                    </p>
-                    <p className="text-[12px] text-[var(--text-secondary)]">
-                      You&apos;ve only had {glasses} glasses. Aim for 8.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
+            <SmartInsightsCard
+              protein={totals.protein}
+              proteinGoal={GOALS.protein}
+              glasses={glasses}
+              onDismiss={() => setInsightDismissed(true)}
+            />
           )}
-
-          <WaterTracker
-            glasses={glasses}
-            setGlasses={handleWaterUpdate}
-            goal={GOALS.waterGoal}
-          />
-
-          <div className="bg-[var(--bg-secondary)] rounded-2xl p-5 border border-[var(--border-color)]">
-            <h3 className="text-xs font-black text-[var(--text-secondary)] uppercase tracking-widest mb-4">
-              Calorie Split
-            </h3>
-            <div className="space-y-4">
-              {meals.map((meal) => {
-                const mealCal = meal.entries.reduce(
-                  (s, e) => s + e.foodItem.calories * e.quantity,
-                  0,
-                );
-                const pct =
-                  totals.calories > 0 ? (mealCal / totals.calories) * 100 : 0;
-                return (
-                  <div key={meal.id} className="group">
-                    <div className="flex justify-between mb-1.5">
-                      <span className="text-xs font-bold text-[var(--text-primary)] flex items-center gap-2">
-                        {meal.icon} {meal.name}
-                      </span>
-                      <span className="text-[11px] font-medium text-[var(--text-secondary)]">
-                        {Math.round(mealCal)} kcal
-                      </span>
-                    </div>
-                    <div className="h-1.5 bg-[var(--bg-primary)] rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-[var(--primary)] transition-all duration-500"
-                        style={{ width: `${pct}%`, opacity: 0.6 + pct / 200 }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          <WaterTracker glasses={glasses} setGlasses={handleWaterUpdate} goal={GOALS.waterGoal} />
+          <CalorieSplitCard meals={meals} totalCalories={totals.calories} />
         </div>
       </div>
 
