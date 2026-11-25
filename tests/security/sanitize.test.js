@@ -2,7 +2,7 @@
 const assert = require("assert");
 const path = require("path");
 const jiti = require("jiti")(path.join(process.cwd(), "dummy.js"));
-const sanitize = jiti("./lib/security/sanitize.ts");
+const sanitize = jiti("./src/lib/security/sanitize.ts");
 
 function runTests() {
   console.log("Running Sanitize Unit Tests...");

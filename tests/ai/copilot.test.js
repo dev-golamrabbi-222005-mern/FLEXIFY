@@ -5,7 +5,7 @@ const path = require("path");
 let copilotHandler;
 try {
   const jiti = require("jiti")(path.join(process.cwd(), "dummy.js"));
-  copilotHandler = jiti("./app/api/ai/copilot/route.ts");
+  copilotHandler = jiti("./src/app/api/ai/copilot/route.ts");
 } catch (e) {
   copilotHandler = null;
 }

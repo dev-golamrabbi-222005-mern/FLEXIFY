@@ -5,7 +5,7 @@ const path = require("path");
 let contracts;
 try {
   const jiti = require("jiti")(path.join(process.cwd(), "dummy.js"));
-  contracts = jiti("./lib/validators/contracts.ts");
+  contracts = jiti("./src/lib/validators/contracts.ts");
 } catch (e) {
   contracts = null;
 }
