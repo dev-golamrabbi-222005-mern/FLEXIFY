@@ -1,19 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
 import { requireAdmin } from "@/lib/adminGuard";
+import { ContactInquirySchema, validateBody } from "@/lib/validators/contracts";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-
-    const { name, email, message } = body;
-
-    if (!name || !email || !message) {
+    const validation = validateBody(ContactInquirySchema, body);
+    if (!validation.success) {
       return NextResponse.json(
-        { error: "All fields required" },
+        { error: validation.error },
         { status: 400 },
       );
     }
+
+    const { name, email, message, subject } = validation.data;
 
     const collection = await dbConnect("contacts");
 
@@ -21,6 +22,7 @@ export async function POST(req: NextRequest) {
       name,
       email,
       message,
+      ...(subject && { subject }),
       createdAt: new Date(),
       status: "pending",
     });

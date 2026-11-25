@@ -2,6 +2,7 @@ import { dbConnect } from "@/lib/dbConnect";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
+import { UserGoalSchema, validateBody } from "@/lib/validators/contracts";
 
 export async function GET() {
   try {
@@ -32,15 +33,20 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    const validation = validateBody(UserGoalSchema, body);
+    if (!validation.success) {
+      return NextResponse.json({ message: validation.error }, { status: 400 });
+    }
+
     const collection = await dbConnect("user-goals");
 
     const newGoal = {
       userId: session.user.email,
-      type: body.type,
-      title: body.title,
-      targetValue: Number(body.targetValue),
+      type: validation.data.type || validation.data.goalType || "General",
+      title: validation.data.title || validation.data.goalType || "Daily Goal",
+      targetValue: validation.data.targetValue,
       currentValue: 0,
-      unit: body.unit,
+      unit: validation.data.unit || "unit",
       createdAt: new Date(),
     };
 
