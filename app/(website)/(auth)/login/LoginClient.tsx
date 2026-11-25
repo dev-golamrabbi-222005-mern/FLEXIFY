@@ -88,7 +88,14 @@ export default function LoginClient(): JSX.Element {
           <p className="mt-2 text-gray-400"> Continue your fitness journey </p>{" "}
         </div>{" "}
         {/* Form */}{" "}
-        <div className="grid grid-cols-3 gap-3 mt-6 mb-4">
+        <div className="mt-6 mb-4">
+          <div className="flex items-center justify-between mb-2.5">
+            <span className="text-[11px] font-semibold tracking-wider text-emerald-400 uppercase bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+              ⚡ 1-Click Recruiter Demo
+            </span>
+            <span className="text-[11px] text-gray-400">No typing needed</span>
+          </div>
+          <div className="grid grid-cols-3 gap-2.5">
           {/* User Mock  */}
           <button
           disabled={isMockLoading}
@@ -162,6 +169,7 @@ export default function LoginClient(): JSX.Element {
           >
             {isMockLoading ? "Processing..." : "Admin Login"}
           </button>
+          </div>
         </div>
         <form className="space-y-5" onSubmit={handleSubmit}>
           {" "}
