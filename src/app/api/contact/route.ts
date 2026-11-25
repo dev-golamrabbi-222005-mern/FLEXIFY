@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
 import { requireAdmin } from "@/lib/adminGuard";
 import { ContactInquirySchema, validateBody } from "@/lib/validators/contracts";
+import { sendNotificationToRole } from "@/lib/notifications/dispatch";
 
 export async function POST(req: NextRequest) {
   try {
@@ -25,6 +26,14 @@ export async function POST(req: NextRequest) {
       ...(subject && { subject }),
       createdAt: new Date(),
       status: "pending",
+    });
+
+    // Dispatch real-time alert to all online admins
+    await sendNotificationToRole("admin", {
+      title: "New Support Inquiry",
+      message: `📬 ${name} sent an inquiry: "${message.slice(0, 45)}..."`,
+      type: "contact",
+      link: "/dashboard/admin-users-connect",
     });
 
     return NextResponse.json({ success: true });

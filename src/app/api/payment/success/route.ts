@@ -3,7 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPlan, computeExpiry } from "@/lib/plans";
 import { dbConnect } from "@/lib/dbConnect";
 import { ObjectId } from "mongodb";
-import { pusherServer } from "@/lib/pusher";
+import {
+  sendNotificationToUser,
+  sendNotificationToRole,
+} from "@/lib/notifications/dispatch";
 
 type CoachUser = {
   _id?: ObjectId;
@@ -150,22 +153,30 @@ export async function POST(req: NextRequest) {
         });
       }
     }
-    // user
-const userChannel = `user-${payment.userEmail.replace(/[@.]/g, "-")}`;
-    await pusherServer.trigger(userChannel, "new-update", {
-      message: `🎉 Success! Your ${plan.name} subscription is now active until ${expiry.toLocaleDateString()}.`,
+    // ── Real-Time Notifications Dispatch ─────────────────────────────
+    // 1. Notify User
+    await sendNotificationToUser(payment.userEmail, {
+      title: "Plan Activated",
+      message: `🎉 Success! Your ${plan.name} subscription is active until ${expiry.toLocaleDateString()}.`,
+      type: "payment",
+      link: "/dashboard",
     });
 
-    // Admin 
-    await pusherServer.trigger("admin-updates", "new-payment", {
-      message: `💰 New Revenue: ${payment.userName} paid ${amount} BDT for ${plan.name} Plan.`,
+    // 2. Notify Admin
+    await sendNotificationToRole("admin", {
+      title: "New Payment Received",
+      message: `💰 ${payment.userName || "Customer"} paid ${amount} BDT for ${plan.name} Plan.`,
+      type: "payment",
+      link: "/dashboard/admin-payments-subscriptions",
     });
 
-    // coach 
+    // 3. Notify Coach (if Elite plan with coach)
     if (payment.coachId) {
-      const coachChannel = `user-${payment.coachId.replace(/[@.]/g, "-")}`;
-      await pusherServer.trigger(coachChannel, "new-update", {
-        message: `👟 New Client Alert! ${payment.userName} has joined your coaching program.`,
+      await sendNotificationToUser(payment.coachId, {
+        title: "New Trainee Assigned",
+        message: `👟 New Client Alert! ${payment.userName} joined your coaching roster.`,
+        type: "coach",
+        link: "/dashboard/coach-clients",
       });
     }
     return NextResponse.redirect(
